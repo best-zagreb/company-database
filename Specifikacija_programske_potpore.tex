@@ -32,13 +32,23 @@
 			
 			
 			\begin{packed_enum}
+				\item  \underbar{ Neprijavljeni korisnik (inicijator) moze: }
+
+				\begin{packed_enum}
+
+					\item Ako je nadodan od strane administratora može se prijaviti svojim mailom
+					\item U slučaju da je prvi neprijavljeni korisnik postaje administrator
+
+				\end{packed_enum}
+
 				\item  \underbar{Zaposlenik kompanije(Kontakt/Osoba zadužena za prodaju) (inicijator) može: }
 				
 				\begin{packed_enum}
 					
 					\item Pregledavati projekte
 					\item Pregledavati kompanije (naziv i područje)
-					\item Pregledavati informacija o projektima (datum početka, datum završetka, FR-responsiblea)
+					\item Pregledavati informacija o projektima (datum početka, datum završetka, oganizator)
+					\item Modifikacija svojih podataka
 					
 				\end{packed_enum}
 
@@ -54,6 +64,7 @@
 					\item Modificirati sažetake suradnja
 					\item Modificirati vrijednosti suranje
 					\item Pregledavati i modificirati sve podatke za dodijeljenu kompaniju
+					\item Modifikacija svojih podataka
 
 				\end{packed_enum}
 
@@ -70,6 +81,7 @@
 					\item Modificirati vrijednosti suranje
 					\item Pregledavati i modificirati sve podatke za dodijeljenu kompaniju
 					\item Odabrati kompanije iz popisa kompanija s kojima će surađivati na projektu
+					\item Modifikacija svojih podataka
 
 				\end{packed_enum}
 
@@ -89,6 +101,7 @@
 					\item Dodati i obrisati kategoriju projekata
 					\item Stvoriti i obrisati vlastito stvorene projekte
 					\item Dodijeliti nekom korisniku mogućnosti organizatora projekta na projektu koji je stvorio
+					\item Modifikacija svojih podataka
 
 				\end{packed_enum}
 
@@ -108,6 +121,9 @@
 					\item Dodati i obrisati kategoriju projekata
 					\item Stvoriti i obrisati vlastito stvorene projekte
 					\item Dodijeliti nekom korisniku bilo koju od prije navedenih pozicija
+					\item Registrirati korisnika u sustav
+					\item Registrirati sebe u sustav pri prvom pokretanju
+					\item Modifikacija svojih podataka
 
 				\end{packed_enum}
 			
@@ -115,59 +131,133 @@
 				
 				\begin{packed_enum}
 					
-					\item Pohranjuje sve podatke o projektima i njihovim sudionicima
+					\item Pohranjuje sve podatke o projektima
 					\item Pohranjuje sve podatke o kompanijama i njihovim kontaktima
 					
+				\end{packed_enum}
+
+				\item  \underbar{Gmail api (sudionik) može:}
+
+				\begin{packed_enum}
+
+					\item Prijavljuje korisnika pomoću njegovog gmaila
+
 				\end{packed_enum}
 			\end{packed_enum}
 			
 			\eject 
 			
-			
-				
+
+
 			\subsection{Obrasci uporabe}
 				
 				\textbf{\textit{dio 1. revizije}}
 				
 				\subsubsection{Opis obrazaca uporabe}
 					\textit{Funkcionalne zahtjeve razraditi u obliku obrazaca uporabe. Svaki obrazac je potrebno razraditi prema donjem predlošku. Ukoliko u nekom koraku može doći do odstupanja, potrebno je to odstupanje opisati i po mogućnosti ponuditi rješenje kojim bi se tijek obrasca vratio na osnovni tijek.}\\
-					
 
-					\noindent \underbar{\textbf{UC$<$broj obrasca$>$ -$<$ime obrasca$>$}}
+					\noindent \underbar{\textbf{UC$<$1$>$ -$<$Registracija administratora$>$}}
+					\begin{packed_item}
+
+						\item \textbf{Glavni sudionik: }$<$Neprijavljeni korisnik$>$
+						\item  \textbf{Cilj:} $<$Stvoriti administratov korisnički račun za pristup sustavu$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka, Gmail API$>$
+						\item  \textbf{Preduvjet:} $<$-$>$
+						\item  \textbf{Opis osnovnog tijeka:}
+
+						\item[] \begin{packed_enum}
+
+							\item $<$Korisnik dolazi na stranicu za prijavu$>$
+							\item $<$Prebacuje se na googlovu prijavi gmailom$>$
+							\item $<$Korisnik se prijavljuje mailom$>$
+							\item $<$Dolazi na našu stranicu i dobiva rolu administratora$>$
+						\end{packed_enum}
+					\end{packed_item}
+
+					\noindent \underbar{\textbf{UC$<$2$>$ -$<$Registracija$>$}}
+					\begin{packed_item}
+
+						\item \textbf{Glavni sudionik: }$<$Administrator$>$
+						\item  \textbf{Cilj:} $<$Stvoriti korisnicki račun za pristup sustavu$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka$>$
+						\item  \textbf{Preduvjet:} $<$-$>$
+						\item  \textbf{Opis osnovnog tijeka:}
+
+						\item[] \begin{packed_enum}
+
+									\item $<$Administrator dolazi do svoje forme za registraciju$>$
+									\item $<$Unosi gmail korisnika i njegovu rolu$>$
+									\item $<$Dobiva obavijest o uspješnoj registraciji$>$
+						\end{packed_enum}
+
+						\item  \textbf{Opis mogućih odstupanja:}
+
+						\item[] \begin{packed_item}
+
+							\item[2.a] $<$Odabir vec zauzetog gmaila, unos korisničkih
+							podatka u nedozvoljenom formatu ili pružanje neispravnoga gmaila$>$
+							\item[] \begin{packed_enum}
+
+								\item $<$Sustav obavještava administratora o neuspjelom upisu$>$
+								\item $<$Administrator mijenja potrebne podatke te završava unos ili
+								odustaje od registracije$>$
+
+							\end{packed_enum}
+
+						\end{packed_item}
+					\end{packed_item}
+
+					\noindent \underbar{\textbf{UC$<$3$>$ -$<$Prijava na stranicu$>$}}
 					\begin{packed_item}
 	
-						\item \textbf{Glavni sudionik: }$<$sudionik$>$
-						\item  \textbf{Cilj:} $<$cilj$>$
-						\item  \textbf{Sudionici:} $<$sudionici$>$
-						\item  \textbf{Preduvjet:} $<$preduvjet$>$
+						\item \textbf{Glavni sudionik: }$<$Neprijavljeni korisnik$>$
+						\item  \textbf{Cilj:} $<$Dati korisniku pristup stranici$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka$>$
+						\item  \textbf{Preduvjet:} $<$Registracija$>$
 						\item  \textbf{Opis osnovnog tijeka:}
 						
 						\item[] \begin{packed_enum}
 	
-							\item $<$opis korak jedan$>$
-							\item $<$opis korak dva$>$
-							\item $<$opis korak tri$>$
-							\item $<$opis korak četiri$>$
-							\item $<$opis korak pet$>$
+							\item $<$Korisnik dolazi na stranicu za prijavu$>$
+							\item $<$Prebacuje se na googlovu prijavi gmailom$>$
+							\item $<$Korisnik se prijavljuje mailom$>$
+							\item $<$Dolazi na našu stranicu$>$
 						\end{packed_enum}
-						
-						\item  \textbf{Opis mogućih odstupanja:}
-						
-						\item[] \begin{packed_item}
-	
-							\item[2.a] $<$opis mogućeg scenarija odstupanja u koraku 2$>$
-							\item[] \begin{packed_enum}
-								
-								\item $<$opis rješenja mogućeg scenarija korak 1$>$
-								\item $<$opis rješenja mogućeg scenarija korak 2$>$
-								
-							\end{packed_enum}
-							\item[2.b] $<$opis mogućeg scenarija odstupanja u koraku 2$>$
-							\item[3.a] $<$opis mogućeg scenarija odstupanja  u koraku 3$>$
-							
-						\end{packed_item}
 					\end{packed_item}
-				
+
+					\noindent \underbar{\textbf{UC$<$4$>$ -$<$Pregled projekata$>$}}
+					\begin{packed_item}
+
+						\item \textbf{Glavni sudionik: }$<$Zaposlenik kompanije$>$
+						\item  \textbf{Cilj:} $<$Pregledati projekte$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka$>$
+						\item  \textbf{Preduvjet:} $<$Klient je prijavljen$>$
+						\item  \textbf{Opis osnovnog tijeka:}
+
+						\item[] \begin{packed_enum}
+
+							\item $<$Korisnik odabire opciiju "Projekti"$>$
+							\item $<$Aplikacija prikazuje listu osnovnih podataka o projektima
+							(naziv projekta, datum početka, datum završetka, organizatora)$>$
+						\end{packed_enum}
+					\end{packed_item}
+
+					\noindent \underbar{\textbf{UC$<$5$>$ -$<$Pregled kompanija$>$}}
+					\begin{packed_item}
+
+						\item \textbf{Glavni sudionik: }$<$Zaposlenik kompanije$>$
+						\item  \textbf{Cilj:} $<$Pregledati kompanije$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka$>$
+						\item  \textbf{Preduvjet:} $<$Klient je prijavljen$>$
+						\item  \textbf{Opis osnovnog tijeka:}
+
+						\item[] \begin{packed_enum}
+
+							\item $<$Korisnik odabire opciiju "Kompanije"$>$
+							\item $<$Aplikacija prikazuje listu osnovnih podataka o kompanijama
+							(naziv kompanije i područje)$>$
+						\end{packed_enum}
+					\end{packed_item}
 					
 				\subsubsection{Dijagrami obrazaca uporabe}
 					
