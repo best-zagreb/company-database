@@ -4,6 +4,7 @@ import com.example.backend.controller.dto.EmailDTO;
 import com.example.backend.controller.dto.OnlyEmailDTO;
 import com.example.backend.model.Email;
 import com.example.backend.service.EmailService;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class EmailController {
 
     @PostMapping("/add-email")
     @ResponseBody
+    @Secured("ROLE_ADMIN")
     public Email addEmail(@RequestBody EmailDTO emailDTO){
         return emailService.addEmail(emailDTO);
     }
@@ -34,12 +36,14 @@ public class EmailController {
 
     @DeleteMapping("/delete-email")
     @ResponseBody
+    @Secured("ROLE_ADMIN")
     public Long deleteEmail(@RequestBody OnlyEmailDTO email){
         return emailService.deleteEmail(email.getEmail());
     }
 
     @GetMapping("/get-all")
     @ResponseBody
+    @Secured("ROLE_ADMIN")
     public List<Email> findAll(){
         return emailService.findAll();
     }
