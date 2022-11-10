@@ -13,12 +13,13 @@ Frontend će treba biti rađen u React-u, dok Backend treba koristiti postgresql
 *Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.*
 
 ## Authors and acknowledgment
-Ivor Baričević  
-Petar Hajduk  
-Matej Balog  
-Marko Čengić  
-Nikola Capan  
-Jakov Jakovac  
+Ivor Baričević
+Petar Hajduk
+Matej Balog
+Marko Čengić
+Nikola Capan
+Jakov Jakovac
+Lovro Čunović
 
 ## License
 *For open source projects, say how it is licensed.*
