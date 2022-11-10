@@ -1,10 +1,8 @@
-import { Navigate, Link } from "react-router-dom";
+import { Navigate, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import jwt_decode from "jwt-decode";
 
 import "./Login.css";
-
-import Button from "@mui/material/Button";
-import GoogleIcon from "@mui/icons-material/Google";
 
 export default function Login() {
   // const [bool, setBool] = useState({ gdje: <Navigate to="/setup" /> });
@@ -22,30 +20,41 @@ export default function Login() {
   //   dataFetch();
   // }, []);
 
+  const [user, setUser] = useState({});
+  const navigate = useNavigate();
+
+  function handleCallbackResponse(response) {
+    // console.log("Encoded JWT ID token: " + response.credential);
+    const userObject = jwt_decode(response.credential);
+    // console.log(userObject);
+    setUser(userObject);
+  }
+
+  useEffect(() => {
+    if (Object.keys(user).length !== 0) {
+      navigate("/", { state: { user } });
+    }
+
+    /* global google */
+    google.accounts.id.initialize({
+      client_id:
+        "56088533156-igg1fia7dcuntrlp1gn1m3qns48hbp41.apps.googleusercontent.com",
+      callback: handleCallbackResponse,
+    });
+
+    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
+      theme: "outline",
+      size: "large",
+    });
+  }, [user]);
+
   return (
     <div className="Login">
-      <div>
-        <h1>Login with your google account:</h1>
+      <h1>Company Database</h1>
+      <h2>Login with your google account to proceed:</h2>
+      <br />
 
-        <Link to="/">
-          <Button
-            variant="outlined"
-            sx={{
-              width: "60%",
-              aspectRatio: "1",
-              margin: "5%",
-              borderRadius: "50%",
-            }}
-          >
-            <GoogleIcon
-              sx={{
-                width: "100%",
-                height: "100%",
-              }}
-            />
-          </Button>
-        </Link>
-      </div>
+      <div id="signInDiv"></div>
     </div>
   );
 }

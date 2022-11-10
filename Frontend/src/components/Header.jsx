@@ -1,5 +1,5 @@
 import "./Header.css";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -29,7 +29,9 @@ export default function Header() {
         </nav>
 
         <div className="menu">
+          {/* replace ime prezime with nickname if exists, otherwise with name and surname from database */}
           <p className="username">Ime Prezime</p>
+
           <Link to="/login">
             <Button variant="outlined" size="large">
               <LogoutIcon />
