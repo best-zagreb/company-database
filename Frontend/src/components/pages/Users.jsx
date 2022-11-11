@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { usersData } from "../../data/users"; // temp data created with mockaroo
 
 import Button from "@mui/material/Button";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 export default function Users() {
   // TODO: add correct url to get data from
@@ -21,8 +22,8 @@ export default function Users() {
   return (
     <>
       <Link to="new">
-        <Button variant="contained" size="large">
-          New user
+        <Button variant="contained" size="large" startIcon={<AddCircleIcon />}>
+          Add user
         </Button>
       </Link>
       {/* 
