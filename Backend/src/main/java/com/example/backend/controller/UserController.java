@@ -23,7 +23,7 @@ public class UserController {
     @ResponseBody
     @Secured("ROLE_ADMIN")
     public AppUser addEmail(@RequestBody UserDTO userDTO){
-        return userService.addEmail(userDTO);
+        return userService.addUser(userDTO);
     }
 
     @GetMapping("/get-user")
@@ -36,7 +36,7 @@ public class UserController {
     @ResponseBody
     @Secured("ROLE_ADMIN")
     public Long deleteEmail(@RequestBody OnlyEmailDTO email){
-        return userService.deleteEmail(email.getEmail());
+        return userService.deleteUser(email.getEmail());
     }
 
     @GetMapping("/get-users")
@@ -49,5 +49,11 @@ public class UserController {
     @GetMapping("/exists-any")
     public boolean existsAny(){
         return userService.existsAny();
+    }
+
+    @PutMapping("/update-user")
+    public AppUser updateUser(@RequestBody UserDTO userDTO){
+        userService.deleteUser(userDTO.getLoginEmailString());
+        return userService.addUser(userDTO);
     }
 }
