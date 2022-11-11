@@ -1,9 +1,22 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { usersData } from "../../data/users"; // temp data created with mockaroo
+
 import UserForm from "../forms/UserForm";
 
-import Button from "@mui/material/Button";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import Button from "@mui/material/Button";
+import {
+  Box,
+  TextField,
+  TableCell,
+  TableHead,
+  Paper,
+  TableContainer,
+  TableRow,
+  TableBody,
+  Table,
+} from "@mui/material";
 
 export default function Users() {
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
@@ -21,6 +34,35 @@ export default function Users() {
   //   fetchUsers();
   // }, []);
 
+  //zanemari endpoint ceka se zadnja verzija backenda
+  const deleteUser = async (userid) => {
+    await fetch("http://localhost:8080/users/delete-user/" + userid, {
+      method: "POST",
+    });
+  };
+
+  const handleDelete = (e, userid) => {
+    e.preventDefault();
+
+    console.log("user" + userid + " Deleted");
+    deleteUser(userid).then((res) => {
+      // display success or error msg
+      navigate("/users");
+    });
+  };
+  let navigate = useNavigate();
+
+  function editHandler(e, userid) {
+    e.preventDefault();
+
+    navigate(`edit/${userid}`);
+  }
+
+  function search(e) {
+    e.preventDefault();
+    console.log(document.getElementById("search").value);
+  }
+
   return (
     <>
       <Button
@@ -32,17 +74,54 @@ export default function Users() {
         Add user
       </Button>
 
-      <ul>
-        {usersData.map((user) => (
-          // TODO: display in table and add in each row edit and delete button
-          <li key={user.id}>{user.nickname}</li>
-        ))}
-      </ul>
-
       <UserForm
         openModal={openUserFormModal}
         setOpenModal={setOpenUserFormModal}
       />
+
+      <Box m={1}>
+        <TextField id="search" label="Search" variant="filled" />
+        <Button variant="contained" size="small" onClick={(e) => search(e)}>
+          Search
+        </Button>
+      </Box>
+
+      <TableContainer component={Paper}>
+        <Table aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>User Nickname</TableCell>
+              <TableCell>Edit User</TableCell>
+              <TableCell>Delete User</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {usersData.map((user) => (
+              <TableRow key={user.id} className={user.nickname}>
+                <TableCell>{user.nickname}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    onClick={(e) => editHandler(e, user.id)}
+                  >
+                    Edit user
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    onClick={(e) => handleDelete(e, user.id)}
+                  >
+                    Delete user
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 }
