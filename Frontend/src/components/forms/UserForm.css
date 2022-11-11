@@ -17,6 +17,12 @@
   box-shadow: #666 2px 2px 8px;
 }
 
+.UserFormModal h2 {
+  margin: 0;
+  /* text-align: center; */
+  text-transform: uppercase;
+}
+
 .UserFormModal .action-btns {
   margin-block: 3%;
 
