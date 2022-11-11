@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import static org.springframework.security.core.authority.AuthorityUtils.commaSeparatedStringToAuthorityList;
 
 @Service
-public class EmailUserDetailsService implements UserDetailsService {
+public class SimpleUserDetailsService implements UserDetailsService {
     @Value("${com.example.backend.admin.password}")
     private String adminPasswordHash;
 
@@ -22,6 +22,6 @@ public class EmailUserDetailsService implements UserDetailsService {
                     adminPasswordHash,
                     commaSeparatedStringToAuthorityList("ROLE_ADMIN")
             );
-        else throw new UsernameNotFoundException("No email " + username + " found");
+        else throw new UsernameNotFoundException("No user " + username + " found");
     }
 }
