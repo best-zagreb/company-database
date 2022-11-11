@@ -11,7 +11,7 @@
   overflow-y: scroll;
 
   border-radius: min(3vw, 1.5rem);
-  padding: min(3vw, 1.5rem);
+  padding: min(2vw, 1rem) min(3vw, 1.5rem);
 
   background-color: whitesmoke;
   box-shadow: #666 2px 2px 8px;

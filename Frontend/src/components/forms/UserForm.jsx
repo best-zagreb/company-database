@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import Backdrop from "@mui/material/Backdrop";
@@ -10,6 +9,16 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
 import "./UserForm.css";
+
+const user = {
+  name: "",
+  surname: "",
+  nickname: "",
+  loginEmail: "",
+  notificationEmail: "",
+  authLevel: "",
+  description: "",
+};
 
 const authLevels = [
   {
@@ -26,16 +35,6 @@ const authLevels = [
   },
 ];
 
-const user = {
-  name: "",
-  surname: "",
-  nickname: "",
-  loginEmail: "",
-  notificationEmail: "",
-  authLevel: "",
-  description: "",
-};
-
 function ValidateEmail(inputEmail) {
   const mailformat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
   if (inputEmail.match(mailformat)) {
@@ -45,9 +44,49 @@ function ValidateEmail(inputEmail) {
   }
 }
 
-export default function UserForm() {
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(true);
+export default function UserForm({ openModal, setOpenModal }) {
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    if (
+      nameIsValid &&
+      surnameIsValid &&
+      nicknameIsValid &&
+      loginEmailIsValid &&
+      notificationEmailIsValid &&
+      authLevelIsValid &&
+      descriptionIsValid
+    ) {
+      user.name = name;
+      user.surname = surname;
+      user.nickname = nickname;
+      user.loginEmail = loginEmail;
+      user.notificationEmail = notificationEmail;
+      user.authLevel = authLevel;
+      user.description = description;
+      // console.log(user);
+
+      // TODO: post user to correct URL
+      //   const namePost = async () => {
+      //     await fetch("http://localhost:8080/users/add-user", {
+      //       method: "POST",
+      //       headers: {
+      //         Accept: "application/json",
+      //         "Content-Type": "application/json",
+      //       },
+      //       body: JSON.stringify({ TODO }),
+      //     });
+      //   };
+
+      handleClose();
+
+      // TODO: add success toast for adding a user
+    }
+  };
+
+  const handleClose = () => {
+    setOpenModal(false);
+  };
 
   const [name, setName] = useState();
   const [surname, setSurname] = useState();
@@ -145,44 +184,13 @@ export default function UserForm() {
     setDescription(input);
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-
-    if (
-      nameIsValid &&
-      surnameIsValid &&
-      nicknameIsValid &&
-      loginEmailIsValid &&
-      notificationEmailIsValid &&
-      authLevelIsValid &&
-      descriptionIsValid
-    ) {
-      user.name = name;
-      user.surname = surname;
-      user.nickname = nickname;
-      user.loginEmail = loginEmail;
-      user.notificationEmail = notificationEmail;
-      user.authLevel = authLevel;
-      user.description = description;
-      console.log(user);
-      // post user
-
-      handleClose();
-    }
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    navigate("/users");
-  };
-
   return (
     <div>
       <Modal
         className="UserFormModal"
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
-        open={open}
+        open={openModal}
         onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
@@ -190,7 +198,7 @@ export default function UserForm() {
           timeout: 500,
         }}
       >
-        <Fade in={open}>
+        <Fade in={openModal}>
           <Box className="Box">
             <h2>Add new user</h2>
 
@@ -348,26 +356,3 @@ export default function UserForm() {
     </div>
   );
 }
-
-// export default function NewUser() {
-//   // TODO: post to correct URL
-//   const namePost = async () => {
-//     await fetch("http://localhost:8080/users/add-user", {
-//       method: "POST",
-//       headers: {
-//         Accept: "application/json",
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({ nickname: name, maxAuthLevel: "observer" }),
-//     });
-//   };
-
-//   const handleSubmit = (e) => {
-//     namePost().then((res) => {
-//       // display success or error msg
-//       navigate("/users");
-//     });
-//   };
-
-//   );
-// }

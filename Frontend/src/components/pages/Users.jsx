@@ -1,11 +1,13 @@
-import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { usersData } from "../../data/users"; // temp data created with mockaroo
+import UserForm from "../forms/UserForm";
 
 import Button from "@mui/material/Button";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 export default function Users() {
+  const [openUserFormModal, setOpenUserFormModal] = useState(false);
+
   // TODO: add correct url to get data from
   // const [users, setUsers] = useState([]);
 
@@ -21,23 +23,14 @@ export default function Users() {
 
   return (
     <>
-      <Link to="new">
-        <Button variant="contained" size="large" startIcon={<AddCircleIcon />}>
-          Add user
-        </Button>
-      </Link>
-      {/* 
-      <Link to="edit/1">
-        <Button variant="outlined" size="large">
-          TEST Edit user
-        </Button>
-      </Link>
-
-      <Link to="delete/1">
-        <Button variant="outlined" size="large">
-          TEST Delete user
-        </Button>
-      </Link> */}
+      <Button
+        variant="contained"
+        size="large"
+        startIcon={<AddCircleIcon />}
+        onClick={() => setOpenUserFormModal(true)}
+      >
+        Add user
+      </Button>
 
       <ul>
         {usersData.map((user) => (
@@ -45,6 +38,11 @@ export default function Users() {
           <li key={user.id}>{user.nickname}</li>
         ))}
       </ul>
+
+      <UserForm
+        openModal={openUserFormModal}
+        setOpenModal={setOpenUserFormModal}
+      />
     </>
   );
 }
