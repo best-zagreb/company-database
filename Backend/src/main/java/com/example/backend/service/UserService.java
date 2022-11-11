@@ -22,11 +22,11 @@ public class UserService {
         return userRepository.findByLoginEmailString(email);
     }
 
-    public AppUser addEmail(UserDTO userDTO){
+    public AppUser addUser(UserDTO userDTO){
         return userRepository.save(userDTO.toUser());
     }
 
-    public Long deleteEmail(String email){
+    public Long deleteUser(String email){
         return userRepository.deleteByLoginEmailString(email);
     }
 
@@ -37,5 +37,9 @@ public class UserService {
     public boolean existsAny() {
         long i = userRepository.count();
         return i > 0;
+    }
+
+    public AppUser updateUser(UserDTO userDTO){
+        return userRepository.save(userDTO.toUser());
     }
 }
