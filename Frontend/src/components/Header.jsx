@@ -22,8 +22,7 @@ export default function Header() {
             </li>
           </ul>
 
-          <Button variant="contained">
-            <AddCircleIcon />
+          <Button variant="contained" startIcon={<AddCircleIcon />}>
             Create project
           </Button>
         </nav>
