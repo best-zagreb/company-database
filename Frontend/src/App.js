@@ -1,4 +1,9 @@
 import { Route, Routes } from "react-router-dom";
+import { useEffect, useContext } from "react";
+import {
+  UserContextProvider,
+  UserContext,
+} from "./components/contexts/UserContext";
 
 import "./App.css";
 
@@ -24,22 +29,24 @@ export default function App() {
     <>
       <CssBaseline enableColorScheme />
 
-      <Routes>
-        <Route path="/" element={<Header />}>
-          <Route index element={<Home />} />
+      <UserContext.Provider>
+        <Routes>
+          <Route path="/" element={<Header />}>
+            <Route index element={<Home />} />
 
-          <Route path="users">
-            <Route index element={<Users />} />
-            <Route path="new" element={<NewUser />} />
-            <Route path="edit/:id" element={<EditUser />} />
-            <Route path="delete/:id" element={<DeleteUser />} />
+            <Route path="users">
+              <Route index element={<Users />} />
+              <Route path="new" element={<NewUser />} />
+              <Route path="edit/:id" element={<EditUser />} />
+              <Route path="delete/:id" element={<DeleteUser />} />
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
           </Route>
 
-          <Route path="*" element={<NotFound />} />
-        </Route>
-
-        <Route path="login" element={<Login />} />
-      </Routes>
+          <Route path="login" element={<Login />} />
+        </Routes>
+      </UserContext.Provider>
     </>
   );
 }

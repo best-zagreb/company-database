@@ -1,4 +1,4 @@
-import { Navigate, Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 
@@ -20,7 +20,7 @@ export default function Login() {
   //   dataFetch();
   // }, []);
 
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   function handleCallbackResponse(response) {
@@ -31,7 +31,7 @@ export default function Login() {
   }
 
   useEffect(() => {
-    if (Object.keys(user).length !== 0) {
+    if (user !== null) {
       navigate("/", { state: { user } });
     }
 
