@@ -1,0 +1,15 @@
+.Login {
+  height: 100vh;
+
+  display: grid;
+  place-items: center;
+}
+
+.Login > div {
+  display: grid;
+  place-items: center;
+
+  padding-inline: min(2vw, 1rem);
+
+  text-align: center;
+}
