@@ -1,115 +1,82 @@
 \chapter{Opis projektnog zadatka}
 		
-		\textbf{\textit{dio 1. revizije}}\\
 		
-		\textit{Na osnovi projektnog zadatka detaljno opisati korisničke zahtjeve. Što jasnije opisati cilj projektnog zadatka, razraditi problematiku zadatka, dodati nove aspekte problema i potencijalnih rješenja. Očekuje se minimalno 3, a poželjno 4-5 stranica opisa.	Teme koje treba dodatno razraditi u ovom poglavlju su:}
+		
+		{Porastom broja neprofitnih organizacija iz godine u godinu, raste i potreba za kvalitetnim aplikacijama koje bi takvim organizacijama omogućile nesmetan rad i funkcioniranje. Najveći problem navedenih organizacija jest prihod. Kako nisu u mogućnosti samostalno postići zadovoljavajuću razinu prihoda, primorane su na suradnju s kompanijama sponzorima.}
+
+		{Odaziv sponzora je često vrlo malen te je stoga potrebno kontaktirati velik broj kompanija. Praćenje statusa suradnji (uspješne / neuspješne) i osoba zaduženih za kontaktiranje sponzora postaje kompleksno i neefikasno, a također dolazi i do mogućnosti curenja informacija. Raste potreba za aplikacijom koja će omogućiti evidenciju navedenih stavki te korisnicima dodijeliti razinu ovlasti kako bi umanjili mogućnost curenja informacija.}
+
+		{Cilj ovog projekta je razviti programsku podršku za stvaranje web aplikacije \textit{”Company Database“} koja će služiti za evidenciju statusa suradnje kompanija na projektima i jednostavan uvid od strane \underbar{ovlaštenih} korisnika.}\vspace{0.2cm}
+
+		{Korisnici će se u web aplikaciju prijavljivati koristeći Google račun kojeg registriraju putem web aplikacije. Svaki je korisnik definiran sljedećim parametrima:}
 		\begin{packed_item}
-			\item \textit{potencijalna korist ovog projekta}
-			\item \textit{postojeća slična rješenja (istražiti i ukratko opisati razlike u odnosu na zadani zadatak). Dodajte slike koja predočavaju slična rješenja.}
-			\item \textit{skup korisnika koji bi mogao biti zainteresiran za ostvareno rješenje.}
-			\item \textit{mogućnost prilagodbe rješenja }
-			\item \textit{opseg projektnog zadatka}
-			\item \textit{moguće nadogradnje projektnog zadatka}
+			\item {imenom}
+			\item {prezimenom}
+			\item {nadimkom}
+			\item {kratkim opisom}
+			\item {opseg projektnog zadatka}
+			\item {najvišom razinom ovlasti koju posjeduje (ukoliko je pripadnik više različitih razina ovlasti)}
 		\end{packed_item}
-		
-		\textit{Za pomoć pogledati reference navedene u poglavlju „Popis literature“, a po potrebi konzultirati sadržaj na internetu koji nudi dobre smjernice u tom pogledu.}
-		\eject
-		
-		\section{Primjeri u \LaTeX u}
-		
-		\textit{Ovo potpoglavlje izbrisati.}\\
 
-		U nastavku se nalaze različiti primjeri kako koristiti osnovne funkcionalnosti \LaTeX a koje su potrebne za izradu dokumentacije. Za dodatnu pomoć obratiti se asistentu na projektu ili potražiti upute na sljedećim web sjedištima:
-		\begin{itemize}
-			\item Upute za izradu diplomskog rada u \LaTeX u - \url{https://www.fer.unizg.hr/_download/repository/LaTeX-upute.pdf}
-			\item \LaTeX\ projekt - \url{https://www.latex-project.org/help/}
-			\item StackExchange za Tex - \url{https://tex.stackexchange.com/}\\
-		
-		\end{itemize} 	
+		{Svaki korisnik određene razine ovlasti ima sve mogućnosti svoje i svih nižih razina ovlasti sustava. Također ima mogućnost dodjeljivanja i oduzimanja \underbar{razina ovlasti} korisnicima nižih razina od svoje.}
 
+		{Iznimka je \underbar{administrator}, najviša razina ovlasti sustava, koji može dodijeliti i oduzeti ovlasti svima, uključujući i ostale administratore sustava.}\\
+\\
+%vertical space za estetiku
 
-		
-		\noindent \underbar{podcrtani tekst}, \textbf{podebljani tekst}, 	\textit{nagnuti tekst}\\
-		\noindent \normalsize primjer \large primjer \Large primjer \LARGE {primjer} \huge {primjer} \Huge primjer \normalsize
-				
+		{Razlikovati ćemo 5 razina ovlasti, a to su redom od najviše prema najnižoj:}
 		\begin{packed_item}
-			
-			\item  primjer
-			\item  primjer
-			\item  primjer
-			\item[] \begin{packed_enum}
-				\item primjer
-				\item[] \begin{packed_enum}
-					\item[1.a] primjer
-					\item[b] primjer
-				\end{packed_enum}
-				\item primjer
-			\end{packed_enum}
-			
+			\item {Administrator}
+			\item {Moderator}
+			\item {Fundraising (FR) responsible}
+			\item {Fundraising (FR) team member}
+			\item {Observer}
 		\end{packed_item}
-		
-		\noindent primjer url-a: \url{https://www.fer.unizg.hr/predmet/proinz/projekt}
-		
-		\noindent posebni znakovi: \# \$ \% \& \{ \} \_ 
-		$|$ $<$ $>$ 
-		\^{} 
-		\~{} 
-		$\backslash$ 
-		
-		
-		\begin{longtblr}[
-			label=none,
-			entry=none
-			]{
-				width = \textwidth,
-				colspec={|X[8,l]|X[8, l]|X[16, l]|}, 
-				rowhead = 1,
-			} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-			\hline \multicolumn{3}{|c|}{\textbf{naslov unutar tablice}}	 \\ \hline[3pt]
-			\SetCell{LightGreen}IDKorisnik & INT	&  	Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  	\\ \hline
-			korisnickoIme	& VARCHAR &   	\\ \hline 
-			email & VARCHAR &   \\ \hline 
-			ime & VARCHAR	&  		\\ \hline 
-			\SetCell{LightBlue} primjer	& VARCHAR &   	\\ \hline 
-		\end{longtblr}
-		
 
-		\begin{longtblr}[
-				caption = {Naslov s referencom izvan tablice},
-				entry = {Short Caption},
-			]{
-				width = \textwidth, 
-				colspec = {|X[8,l]|X[8,l]|X[16,l]|}, 
-				rowhead = 1,
-			}
-			\hline
-			\SetCell{LightGreen}IDKorisnik & INT	&  	Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  	\\ \hline
-			korisnickoIme	& VARCHAR &   	\\ \hline 
-			email & VARCHAR &   \\ \hline 
-			ime & VARCHAR	&  		\\ \hline 
-			\SetCell{LightBlue} primjer	& VARCHAR &   	\\ \hline 
-		\end{longtblr}
+		{\underbar{Moderator} može dodati i obrisati kategoriju projekata, stvoriti i obrisati vlastite projekte te dodijeliti nekom korisniku razinu ovlasti FR responsible za vlastito stvoreni projekt.}\vspace{0.5}
+
+		{\underbar{FR responsible} može za dodijeljeni projekt odabrati kompanije iz popisa kompanija s kojima želi surađivati na dodijeljenom projektu. Za svaku suradnju potrebno je odabrati korisnika koji će dobiti ovlasti FR team member koji u tom trenutku dobiva na email obavijest o zaduženju.}\vspace{0.5cm}
+
+		{\underbar{FR team member} ima mogućnost:}
+		\begin{packed_item}
+			\item {modifikacije kategorije, statusa, komentara i vrijednosti suradnje}
+			\item {pregleda i modificiranja svih podataka za dodijeljenu kompaniju}
+		\end{packed_item}
+
+		{Članovi FR tima određenog projekta dobivaju notifikaciju („ping”) na email i početni ekran na datum prvog i drugog „pinga“ tog projekta}			\vspace{0.5cm}
+
+		{\underbar{Observer} ima mogućnost pregleda:}
+		\begin{packed_item}
+			\item {popisa svih projekata}
+			\item {popisa svih kompanija (naziv i područje kompanije)}
+			\item {informacija o projektu (datum početka, datum završetka, tko je FR responsible za navedeni projekt)}\vspace{0.3cm}
+		\end{packed_item}
+
+		{\underbar{Projekt} je obilježen nazivom, kategorijom, tipom, početkom i krajem (timestamp), FR responsible-om zaduženim za navedeni projekt, popisom FR team member-a, FR ciljem (željeni prihod od projekta), prvim i drugom „pingom“ (timestamp) te popisom kompanija.}\\
+\\
+\\
+%vertical space za estetiku
+
+		\vspace*{0.5}{\underbar{Kompanija} je definirana: nazivom, područjem kojim se bavi (npr. IT), mjesecom planiranja budžeta (bilo koji od 12 mjeseci u godini), državom, poštanskim brojem, gradom, adresom, linkom na web stranicu, kratkim opisom, boolean varijablom \textit{„kontaktirati“} (koja označava treba li tu tvrtku u budućnosti kontaktirati) te popisom zaposlenika.}\vspace{0.3cm}
+		
+		{\underbar{Popis kompanija} moguće je uzlazno i silazno sortirati prema:}
+		\begin{packed_item}
+			\item {nazivu}
+			\item {području}
+			\item {mjesecu planiranja budžeta}
+			\item {linku na web stranicu}
+		\end{packed_item}
+
+		{Popis kompanija moguće je dodatno pretraživati po nazivu.}
+
+		{\underbar{Zaposlenik} kao entitet pripada kompaniji, a definiran je imenom, prezimenom, email adresom, brojem mobitela, ulogom u kompaniji (npr. CEO) te kratkim opisom.}\vspace{0.3cm}
+
+		{\underbar{Suradnja} predstavlja poveznicu između projekta i kompanije, a obilježena je FR team member-om koji je za nju zadužen, kontaktiranom osobom u kompaniji, kategorijom (financijska, materijalna ili akademska suradnja), vlastitim statusom (kontaktirano, ping, dopis, sastanak, uspješno ili neuspješno), komentarom / sažetkom suradnje te vrijednošću suradnje (koje se sumiraju i popunjavaju FR cilj – željeni prihod od projekta).}\\
+
+		{Aplikacija, sa svim navedenim funkcionalnostima i specifičnostima, biti će izvedena kao web aplikacija kojoj korisnici pristupaju pomoću Google autentifikatora. Biti će jednostavna za korištenje zahvaljujući preglednom i intuitivnom sučelju.
+Sustav će podržavati rad više korisnika u stvarnom vremenu, frontend će biti ostvaren u React-u, a backend će koristiti relacijsku bazu podataka i Spring boot.}
+
 	
-
-
-		
-		
-		%unos slike
-		\begin{figure}[H]
-			\includegraphics[scale=0.4]{slike/aktivnost.PNG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
-			\centering
-			\caption{Primjer slike s potpisom}
-			\label{fig:promjene}
-		\end{figure}
-		
-		\begin{figure}[H]
-			\includegraphics[width=\textwidth]{slike/aktivnost.PNG} %veličina u odnosu na širinu linije
-			\caption{Primjer slike s potpisom 2}
-			\label{fig:promjene2} %label mora biti drugaciji za svaku sliku
-		\end{figure}
-		
-		Referenciranje slike \ref{fig:promjene2} u tekstu.
-		
 		\eject
 		
 	
