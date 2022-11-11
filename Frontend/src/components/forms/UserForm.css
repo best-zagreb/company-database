@@ -8,7 +8,7 @@
   width: 30rem;
 
   max-height: 95%;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   border-radius: min(3vw, 1.5rem);
   padding: min(2vw, 1rem) min(3vw, 1.5rem);
