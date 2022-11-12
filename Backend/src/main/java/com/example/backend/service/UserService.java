@@ -39,7 +39,17 @@ public class UserService {
         return i > 0;
     }
 
-    public AppUser updateUser(UserDTO userDTO){
-        return userRepository.save(userDTO.toUser());
+    public AppUser updateUser(UserDTO userDTO, Long id){
+        AppUser appUser = userRepository.findById(id).get();
+
+        appUser.setLoginEmailString(userDTO.getLoginEmailString());
+        appUser.setAuthority(userDTO.getAuthority());
+        appUser.setFirstName(userDTO.getFirstName());
+        appUser.setLastName(userDTO.getLastName());
+        appUser.setNotificationEmailString(userDTO.getNotificationEmailString());
+        appUser.setDescription(userDTO.getDescription());
+        appUser.setNickname(userDTO.getNickname());
+
+        return userRepository.save(appUser);
     }
 }
