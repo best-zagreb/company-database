@@ -205,7 +205,7 @@ export default function UserForm({ openModal, setOpenModal }) {
       >
         <Fade in={openModal}>
           <Box className="Box">
-            <h2>Add new user</h2>
+            <h2>Add a new user</h2>
 
             <form onSubmit={onSubmit}>
               <TextField

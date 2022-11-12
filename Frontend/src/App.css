@@ -1,0 +1,21 @@
+#search__bar{
+    background-color: aqua;
+    margin-right: 10px;
+    font-size: 30px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border-color:rgb(157, 49, 49);
+    border-width: 0px;
+
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+#search__button{
+   height: 35px;
+   width: 40px;
+   border-radius: 5px;
+    background-color: #1976d2;
+    border-width: 0px;
+   
+}
+

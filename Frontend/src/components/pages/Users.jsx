@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { usersData } from "../../data/users"; // temp data created with mockaroo
 
@@ -19,25 +19,13 @@ import {
   Table,
 } from "@mui/material";
 
+import SearchBar from "../search_bar/SearchBar";
+import ListPage from "../search_bar/ListPage";
 export default function Users() {
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
   const [openEditFormModal, setEditFormModal] = useState(false);
   const[bestUser,setUser] = useState([])
 
-  // TODO: add correct url to get data from
-  // const [users, setUsers] = useState([]);
-
-  // const fetchUsers = async () => {
-  //   const data = await fetch("https://localhost:8080/users/get-all").json();
-
-  //   setUsers(data);
-  // };
-
-  // useEffect(() => {
-  //   fetchUsers();
-  // }, []);
-
-  //zanemari endpoint ceka se zadnja verzija backenda
   const deleteUser = async (userid) => {
     await fetch("http://localhost:8080/users/delete-user/" + userid, {
       method: "POST",
@@ -55,16 +43,21 @@ export default function Users() {
   };
   let navigate = useNavigate();
 
-  function editHandler(e, userid) {
+  function editHandler(e, user) {
     e.preventDefault();
-
-    navigate(`edit/${userid}`);
+    setEditFormModal(true)
+    setUser(user)
   }
 
-  function search(e) {
-    e.preventDefault();
-    console.log(document.getElementById("search").value);
-  }
+
+  const [posts, setPosts] = useState([])
+  const [searchResults, setSearchResults] = useState([])
+
+  useEffect(() => {
+      setPosts(usersData)
+      setSearchResults(usersData)
+  }, [])
+  
 
   return (
     <>
@@ -89,50 +82,28 @@ export default function Users() {
         
       />
 
-      <Box m={1}>
-        <TextField id="search" label="Search" variant="filled" />
-        <Button variant="contained" size="small" onClick={(e) => search(e)}>
-          Search
-        </Button>
-      </Box>
-
+      <SearchBar posts = {posts}  setSearchResults = {setSearchResults} id = "trazilica"/>
+     
+    
       <TableContainer component={Paper}>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>User Nickname</TableCell>
-              <TableCell>Edit User</TableCell>
-              <TableCell>Delete User</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>Surname</TableCell>
+            <TableCell>Nickname</TableCell>
+            <TableCell>E-mail</TableCell>
+            <TableCell>Authorization level</TableCell>
+            <TableCell>Edit User</TableCell>
+            <TableCell>Delete User</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {usersData.map((user) => (
-              <TableRow key={user.id} className={user.nickname}>
-                <TableCell>{user.nickname}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="outlined"
-                    size="large"
-                    onClick={(e) => {setEditFormModal(true)
-                                      setUser(user)}}
-                  >
-                    Edit user
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    variant="outlined"
-                    size="large"
-                    onClick={(e) => handleDelete(e, user.id)}
-                  >
-                    Delete user
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
+            <ListPage searchResults = {searchResults} editHandler = {editHandler} handleDelete = {handleDelete} />
           </TableBody>
         </Table>
       </TableContainer>
+
     </>
   );
 }
