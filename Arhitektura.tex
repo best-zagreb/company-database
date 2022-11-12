@@ -19,14 +19,19 @@
 			
 			\textbf{\textit{dio 1. revizije}}\\
 			
-		\textit{Potrebno je opisati koju vrstu i implementaciju baze podataka ste odabrali, glavne komponente od kojih se sastoji i slično.}
-		
+		\textit{Podaci u našoj aplikaciji će se spremati u relacijsku bazu podataka koristeći Postgres kao DBMS. Baza će se sastojati od sljedećih entiteta:}
+		\begin{itemize}
+			\item Korisnik
+			\item Tvrtka
+			\item Projekt
+			\item KategorijaProjekta
+			\item ProjectFrTeamMembers
+			\item Grad
+			\item Zaposlenik
+			\item Suradnja
+		\end{itemize}
 			\subsection{Opis tablica}
-			
 
-				\textit{Svaku tablicu je potrebno opisati po zadanom predlošku. Lijevo se nalazi točno ime varijable u bazi podataka, u sredini se nalazi tip podataka, a desno se nalazi opis varijable. Svjetlozelenom bojom označite primarni ključ. Svjetlo plavom označite strani ključ}
-				
-				
 				\begin{longtblr}[
 					label=none,
 					entry=none
@@ -35,18 +40,136 @@
 						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \multicolumn{3}{|c|}{\textbf{korisnik - ime tablice}}	 \\ \hline[3pt]
-					\SetCell{LightGreen}IDKorisnik & INT	&  	Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  	\\ \hline
-					korisnickoIme	& VARCHAR &   	\\ \hline 
-					email & VARCHAR &   \\ \hline 
-					ime & VARCHAR	&  		\\ \hline 
-					\SetCell{LightBlue} primjer	& VARCHAR &   	\\ \hline 
+						\hline \multicolumn{3}{|c|}{\textbf{Korisnik}}	 \\ \hline[3pt]
+						\SetCell{LightGreen}IDKorisnik & INT & ID kosisnika  	\\ \hline
+						Ime	& VARCHAR & Ime korisnika \\ \hline 
+						Prezime & VARCHAR & Prezime korisnika \\ \hline 
+						NickName & VARCHAR	& Nadimak korisnika \\ \hline 
+                    				LoginEmail & VARCHAR	& Email adresa pomoću kojeg se user logira \\ \hline 
+                    				NotificationEmail & VARCHAR	& Email adresa na koju korisnik prima obavijesti \\ \hline 
+						MaxRazinaOvlasti & VARCHAR & Maksimalna razina ovlasti na projektima \\ \hline
 				\end{longtblr}
-				
+
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+						\hline \multicolumn{3}{|c|}{\textbf{Tvrtka}}	 \\ \hline[3pt]
+						\SetCell{LightGreen} IdTvrtka & INT	&  Id tvrtke	\\ \hline
+						Naziv & VARCHAR & Naziv tvrtke \\ \hline 
+						Podrucje & VARCHAR &  Područje kojim se tvrtka bavi \\ \hline 
+						ABCKategorija & CHAR & Kategorija tvrtke (A B ili C) \\ \hline 
+				                MjesecPlaniranjaBudzeta & INT & Mjesec u kojem tvrtka planira budžet \\ \hline
+				                Drzava & VARCHAR & Država u kojoj tvrtka posluje \\ \hline
+				                \SetCell{LightBlue} PostanskiBr & VARCHAR & Poštanski broj grada tvrtke \\ \hline
+						Adresa & VARCHAR & Adresa sjedišta tvrtke \\ \hline
+	    		                 	WebStranica & VARCHAR & Adresa web stranice tvrtke \\ \hline
+				                Kontaktirati & BOOLEAN & Da li ubuduće tu tvrtku treba kontaktirati \\ \hline
+				\end{longtblr}
+
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \multicolumn{3}{|c|}{\textbf{Projekt}}	 \\ \hline[3pt]
+					\SetCell{LightGreen}IDProjekt & INT	& Id projekta \\ \hline
+					Naziv & VARCHAR & Naziv projekta \\ \hline 
+					\SetCell{LightBlue} KategorijaProjekta & INT & Kategorija projekta \\ \hline 
+					TipProjekta & VARCHAR & Eksterni ili interni projekt \\ \hline 
+					Pocetak & TIMESTAMP & Datum početka projekta \\ \hline 
+			                Završetak & TIMESTAMP & Datum završetka projekta \\ \hline 
+			                \SetCell{LightBlue} FrResponsibleUserId & INT & Id FR responsible usera \\ \hline
+			                FRCilj & FLOAT & Količina novca koja se želi prikupiti za projekt \\ \hline
+			                FirstPing & TIMESTAMP & Trenutak prvog "ping"-a \\ \hline
+			                SecondPing & TIMESTAMP & Trenutak drugog "ping"-a \\ \hline
+				\end{longtblr}
+
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \multicolumn{3}{|c|}{\textbf{TipProjekta}}	 \\ \hline[3pt]
+					\SetCell{LightGreen}IDTipProjekt & INT	& Id tipa projekta \\ \hline
+					TipProjekta	& VARCHAR & Tip projekta \\ \hline 
+				\end{longtblr}
+
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \multicolumn{3}{|c|}{\textbf{ProjectFrTeamMembers}}	 \\ \hline[3pt]
+					\SetCell{LightGreen}IDKorisnik & INT & Id korisnika koji je FR team member projekta \\ \hline
+					\SetCell{LightGreen}IDProjekt & INT & Id projekta \\ \hline
+				\end{longtblr}
+
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \multicolumn{3}{|c|}{\textbf{Grad}}	 \\ \hline[3pt]
+					\SetCell{LightGreen} PostanskiBrojGrad & VARCHAR & Poštanski broj grada \\ \hline
+					NazivGrad & VARCHAR & Naziv grada \\ \hline
+				\end{longtblr}
+
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \multicolumn{3}{|c|}{\textbf{Zaposlenik}}	 \\ \hline[3pt]
+						\SetCell{LightGreen} IDZaposlenik & INT	& Id zaposlenika \\ \hline
+						\SetCell{LightBlue} IDTvrtke & INT & Id tvrtke za koju zaposlenik radi\\ \hline 
+						Ime & VARCHAR & Ime zaposlenika \\ \hline 
+						Prezime & VARCHAR	& Prezime zaposlenika \\ \hline 
+			                    Email & VARCHAR	& Email adresa zaposlenika \\ \hline 
+			                    BrojTelefona & VARCHAR	& Broj telefona zaposlenika \\ \hline 
+			                    Uloga & VARCHAR	& Uloga zaposlenika u tvrtci (npr. CEO) \\ \hline 
+			                    Opis & VARCHAR	& Opis zaposlenika (npr. glavni kontakt) \\ \hline 
+				\end{longtblr}
+
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \multicolumn{3}{|c|}{\textbf{Suradnja}}	 \\ \hline[3pt]
+					\SetCell{LightGreen}IDProjekt & INT	& Id projekta \\ \hline
+			                \SetCell{LightGreen}IdTvrtke & INT	& Id tvrtke \\ \hline
+					\SetCell{LightBlue}IdKontakt & INT & Id kontakt osobe u tvrtci \\ \hline 
+					KategorijaSuradnje & VARCHAR & Kategorija suradnje (Financijska, materijalna ili akademska) \\ \hline
+		                    Status & VARCHAR & Kontaktirano, ping, dopis, sastanak, uspješno ili neuspješno \\ \hline
+		                    VrijednostSuradnje & FLOAT & Novčana vrijednost suradnje \\ \hline
+				\end{longtblr}
 				
 			
 			\subsection{Dijagram baze podataka}
-				\textit{ U ovom potpoglavlju potrebno je umetnuti dijagram baze podataka. Primarni i strani ključevi moraju biti označeni, a tablice povezane. Bazu podataka je potrebno normalizirati. Podsjetite se kolegija "Baze podataka".}
+				\includegraphics[scale=0.5]{DBDiagram}
 			
 			\eject
 			
