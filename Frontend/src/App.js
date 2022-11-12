@@ -1,9 +1,5 @@
-import { Route, Routes } from "react-router-dom";
-import { useEffect, useContext } from "react";
-import {
-  UserContextProvider,
-  UserContext,
-} from "./components/contexts/UserContext";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import "./App.css";
 
@@ -14,38 +10,49 @@ import "@fontsource/roboto/700.css";
 
 import CssBaseline from "@mui/material/CssBaseline";
 
-import Home from "./components/pages/Home";
-import NotFound from "./components/pages/NotFound";
+import Setup from "./components/pages/Setup";
 import Login from "./components/pages/Login";
+import NotFound from "./components/pages/NotFound";
+import Home from "./components/pages/Home";
 import Users from "./components/pages/Users";
-import UserForm from "./components/forms/UserForm";
-import DeleteUser from "./components/pages/DeleteUser";
 
 import Header from "./components/Header";
 
 export default function App() {
+  const [appIsSetup, setAppIsSetup] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // if (!appIsSetup) {
+    //   navigate("/setup");
+    // } else
+    if (!isLoggedIn) {
+      navigate("/login");
+    } else {
+      navigate("/");
+    }
+  }, [appIsSetup, isLoggedIn]);
+
   return (
     <>
       <CssBaseline enableColorScheme />
 
-      <UserContext.Provider>
-        <Routes>
-          <Route path="/" element={<Header />}>
-            <Route index element={<Home />} />
+      <Routes>
+        <Route path="/" element={<Header setIsLoggedIn={setIsLoggedIn} />}>
+          <Route index element={<Home />} />
 
-            <Route path="users">
-              <Route index element={<Users />} />
-              <Route path="new" element={<UserForm />} />
-              <Route path="edit/:id" element={<UserForm />} />
-              <Route path="delete/:id" element={<DeleteUser />} />
-            </Route>
-
-            <Route path="*" element={<NotFound />} />
+          <Route path="users">
+            <Route index element={<Users />} />
           </Route>
 
-          <Route path="login" element={<Login />} />
-        </Routes>
-      </UserContext.Provider>
+          <Route path="*" element={<NotFound />} />
+        </Route>
+
+        <Route path="login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+        {/* <Route path="setup" element={<Setup setAppIsSetup={setAppIsSetup} />} /> */}
+      </Routes>
     </>
   );
 }

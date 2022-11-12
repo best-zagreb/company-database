@@ -4,37 +4,31 @@ import jwt_decode from "jwt-decode";
 
 import "./Login.css";
 
-export default function Login() {
-  // const [bool, setBool] = useState({ gdje: <Navigate to="/setup" /> });
-
-  // const dataFetch = async () => {
-  //   const data = await (
-  //     await fetch("http://localhost:8080/email/get-all")
-  //   ).json();
-  //   if (data.length > 0) {
-  //     setBool((bool.gdje = <Navigate to="/login" />));
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   dataFetch();
-  // }, []);
-
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
-
+export default function Login({ setIsLoggedIn }) {
   function handleCallbackResponse(response) {
     // console.log("Encoded JWT ID token: " + response.credential);
     const userObject = jwt_decode(response.credential);
     // console.log(userObject);
-    setUser(userObject);
+
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: userObject.email,
+    };
+    fetch("/users/get-user", options).then((response) => {
+      if (response.status === 401) {
+        // display error msg toast
+      } else {
+        setIsLoggedIn(true);
+      }
+    });
+
+    setIsLoggedIn(true); // for testing, delete when connected to backend
   }
 
   useEffect(() => {
-    if (user !== null) {
-      navigate("/", { state: { user } });
-    }
-
     /* global google */
     google.accounts.id.initialize({
       client_id:
@@ -46,7 +40,7 @@ export default function Login() {
       theme: "outline",
       size: "large",
     });
-  }, [user]);
+  }, []);
 
   return (
     <div className="Login">

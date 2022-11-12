@@ -5,7 +5,11 @@ import Button from "@mui/material/Button";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-export default function Header() {
+export default function Header({ setIsLoggedIn, userData }) {
+  function onClick() {
+    setIsLoggedIn(false);
+  }
+
   return (
     <>
       <header className="header">
@@ -28,14 +32,14 @@ export default function Header() {
         </nav>
 
         <div className="menu">
-          {/* replace ime prezime with nickname if exists, otherwise with name and surname from database */}
-          <p className="username">Ime Prezime</p>
+          {/* replace ime prezime with nickname if exists, otherwise with firstName and lastName from database */}
+          <p className="username">
+            {userData ? userData.nickname : "Unknown user"}
+          </p>
 
-          <Link to="/login">
-            <Button variant="outlined" size="large">
-              <LogoutIcon />
-            </Button>
-          </Link>
+          <Button variant="outlined" size="large" onClick={onClick}>
+            <LogoutIcon />
+          </Button>
         </div>
       </header>
 
