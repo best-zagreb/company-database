@@ -44,9 +44,10 @@ function ValidateEmail(inputEmail) {
   }
 }
 
-export default function UserForm({ openModal, setOpenModal }) {
+export default function UserForm({ openModal, setOpenModal ,bestuser}) {
   const onSubmit = (e) => {
     e.preventDefault();
+    console.log("van")
 
     if (
       nameIsValid &&
@@ -57,6 +58,7 @@ export default function UserForm({ openModal, setOpenModal }) {
       authLevelIsValid &&
       descriptionIsValid
     ) {
+        console.log("unutra")
       user.name = name;
       user.surname = surname;
       user.nickname = nickname;
@@ -68,8 +70,8 @@ export default function UserForm({ openModal, setOpenModal }) {
         
       // TODO: post user to correct URL
       //   const namePost = async () => {
-      //     await fetch("http://localhost:8080/users/add-user", {
-      //       method: "POST",
+      //     await fetch("http://localhost:8080/users/edit-user", {
+      //       method: "PUT",
       //       headers: {
       //         Accept: "application/json",
       //         "Content-Type": "application/json",
@@ -79,9 +81,9 @@ export default function UserForm({ openModal, setOpenModal }) {
       //   };
 
       handleClose();
-      console.log(user)
+      
       setTimeout(function(){
-        alert('Congrats,you just added a new user! Woop,woop!');
+        alert('Congrats,you just edited a user! Woop,woop!');
         
     }, 1000);
       
@@ -101,7 +103,7 @@ export default function UserForm({ openModal, setOpenModal }) {
   const [authLevel, setAuthLevel] = useState("Observer");
   const [description, setDescription] = useState();
 
-  const [nameIsValid, setNameIsValid] = useState(false);
+  const [nameIsValid, setNameIsValid] = useState(true);
   const [nameDirty, setNameDirty] = useState(false);
   const handleNameChange = (e) => {
     const input = e.target.value;
@@ -113,7 +115,7 @@ export default function UserForm({ openModal, setOpenModal }) {
 
     setName(input);
   };
-  const [surnameIsValid, setSurnameIsValid] = useState(false);
+  const [surnameIsValid, setSurnameIsValid] = useState(true);
   const [surnameDirty, setSurnameDirty] = useState(false);
   const handleSurnameChange = (e) => {
     const input = e.target.value;
@@ -136,7 +138,7 @@ export default function UserForm({ openModal, setOpenModal }) {
 
     setNickname(input);
   };
-  const [loginEmailIsValid, setLoginEmailIsValid] = useState(false);
+  const [loginEmailIsValid, setLoginEmailIsValid] = useState(true);
   const [loginEmailDirty, setLoginEmailDirty] = useState(false);
   const handleLoginEmailChange = (e) => {
     const input = e.target.value;
@@ -149,7 +151,7 @@ export default function UserForm({ openModal, setOpenModal }) {
     setLoginEmail(input);
   };
   const [notificationEmailIsValid, setNotificationEmailIsValid] =
-    useState(false);
+    useState(true);
   const [notificationEmailDirty, setNotificationEmailDirty] = useState(false);
   const handleNotificationEmailChange = (e) => {
     const input = e.target.value;
@@ -161,7 +163,7 @@ export default function UserForm({ openModal, setOpenModal }) {
 
     setNotificationEmail(input);
   };
-  const [authLevelIsValid, setAuthLevelIsValid] = useState(false);
+  const [authLevelIsValid, setAuthLevelIsValid] = useState(true);
   const [authLevelDirty, setAuthLevelDirty] = useState(false);
   const handleAuthLevelChange = (e) => {
     const input = e.target.value;
@@ -210,6 +212,7 @@ export default function UserForm({ openModal, setOpenModal }) {
             <form onSubmit={onSubmit}>
               <TextField
                 id="outlined"
+                defaultValue={bestuser.name}
                 label="Name"
                 type="text"
                 required
@@ -230,6 +233,7 @@ export default function UserForm({ openModal, setOpenModal }) {
               />
               <TextField
                 id="outlined"
+                defaultValue={bestuser.surname}
                 label="Surname"
                 type="text"
                 required
@@ -251,6 +255,7 @@ export default function UserForm({ openModal, setOpenModal }) {
               <TextField
                 id="outlined"
                 label="Nickname"
+                defaultValue={bestuser.nickname}
                 type="text"
                 fullWidth
                 margin="dense"
@@ -264,6 +269,7 @@ export default function UserForm({ openModal, setOpenModal }) {
 
               <TextField
                 id="outlined"
+                defaultValue={bestuser.loginEmail}
                 label="Login email"
                 type="text"
                 required
@@ -284,6 +290,7 @@ export default function UserForm({ openModal, setOpenModal }) {
               />
               <TextField
                 id="outlined"
+                defaultValue={bestuser.notificationEmail}
                 label="Notification email"
                 type="text"
                 required
@@ -305,6 +312,7 @@ export default function UserForm({ openModal, setOpenModal }) {
 
               <TextField
                 id="outlined-select-authorization-level"
+                defaultValue={bestuser.authLevel}
                 select
                 label="Authorization level"
                 required
@@ -332,6 +340,7 @@ export default function UserForm({ openModal, setOpenModal }) {
               <TextField
                 id="outlined-multiline-static"
                 label="Description"
+                defaultValue={bestuser.description}
                 fullWidth
                 multiline
                 minRows={2}
@@ -351,7 +360,7 @@ export default function UserForm({ openModal, setOpenModal }) {
                 </Button>
 
                 <Button variant="contained" type="submit">
-                  Add user
+                  Edit user
                 </Button>
               </div>
             </form>

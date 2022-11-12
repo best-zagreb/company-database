@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { usersData } from "../../data/users"; // temp data created with mockaroo
 
 import UserForm from "../forms/UserForm";
+import EditUserForm from "../forms/EditUserForm";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Button from "@mui/material/Button";
@@ -20,6 +21,8 @@ import {
 
 export default function Users() {
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
+  const [openEditFormModal, setEditFormModal] = useState(false);
+  const[bestUser,setUser] = useState([])
 
   // TODO: add correct url to get data from
   // const [users, setUsers] = useState([]);
@@ -77,6 +80,13 @@ export default function Users() {
       <UserForm
         openModal={openUserFormModal}
         setOpenModal={setOpenUserFormModal}
+        
+      />
+         <EditUserForm
+        openModal={openEditFormModal}
+        setOpenModal={setEditFormModal}
+        bestuser={bestUser}
+        
       />
 
       <Box m={1}>
@@ -103,7 +113,8 @@ export default function Users() {
                   <Button
                     variant="outlined"
                     size="large"
-                    onClick={(e) => editHandler(e, user.id)}
+                    onClick={(e) => {setEditFormModal(true)
+                                      setUser(user)}}
                   >
                     Edit user
                   </Button>
