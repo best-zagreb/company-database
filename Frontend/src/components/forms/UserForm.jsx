@@ -11,13 +11,13 @@ import MenuItem from "@mui/material/MenuItem";
 import "./UserForm.css";
 
 const user = {
-  name: "",
-  surname: "",
-  nickname: "",
-  loginEmail: "",
-  notificationEmail: "",
-  authLevel: "",
-  description: "",
+  firstName: null,
+  lastName: null,
+  nickname: null,
+  loginEmailString: null,
+  notificationEmailString: null,
+  authority: null,
+  description: null,
 };
 
 const authLevels = [
@@ -57,35 +57,34 @@ export default function UserForm({ openModal, setOpenModal }) {
       authLevelIsValid &&
       descriptionIsValid
     ) {
-      user.name = name;
-      user.surname = surname;
+      user.firstName = name;
+      user.lastName = surname;
       user.nickname = nickname;
-      user.loginEmail = loginEmail;
-      user.notificationEmail = notificationEmail;
-      user.authLevel = authLevel;
+      user.loginEmailString = loginEmail;
+      user.notificationEmailString = notificationEmail;
+      user.authority = authLevel;
       user.description = description;
       // console.log(user);
-        
-      // TODO: post user to correct URL
-      //   const namePost = async () => {
-      //     await fetch("http://localhost:8080/users/add-user", {
-      //       method: "POST",
-      //       headers: {
-      //         Accept: "application/json",
-      //         "Content-Type": "application/json",
-      //       },
-      //       body: JSON.stringify({ TODO }),
-      //     });
-      //   };
+
+      fetch("http://159.65.127.217:8080/users/add-user/", {
+        method: "POST",
+        headers: {
+          Authorization: "Basic " + window.btoa("admin:pass"),
+
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          console.log(json);
+        });
 
       handleClose();
-      console.log(user)
-      setTimeout(function(){
-        alert('Congrats,you just added a new user! Woop,woop!');
-        
-    }, 1000);
-      
-     
+
+      setTimeout(function () {
+        alert("Congrats,you just added a new user! Woop,woop!");
+      }, 1000);
     }
   };
 
@@ -161,7 +160,7 @@ export default function UserForm({ openModal, setOpenModal }) {
 
     setNotificationEmail(input);
   };
-  const [authLevelIsValid, setAuthLevelIsValid] = useState(false);
+  const [authLevelIsValid, setAuthLevelIsValid] = useState(true);
   const [authLevelDirty, setAuthLevelDirty] = useState(false);
   const handleAuthLevelChange = (e) => {
     const input = e.target.value;

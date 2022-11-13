@@ -3,19 +3,18 @@ const SearchBar = ({ posts, setSearchResults }) => {
 
   const handleSearchChange = (e) => {
     if (!e.target.value) {
-      console.log("tu sam");
       return setSearchResults(posts); //ako nema nista u search baru renderaj samo sve sto je i bilo prije
     }
 
     const resultsArray = posts.filter((post) => {
       return (
-        post.nickname.includes(e.target.value) ||
-        post.name.includes(e.target.value) ||
-        post.surname.includes(e.target.value) ||
-        post.loginEmail.includes(e.target.value)
+        post.firstName.includes(e.target.value) ||
+        post.lastName.includes(e.target.value) ||
+        post.nickname?.includes(e.target.value) ||
+        post.loginEmailString.includes(e.target.value)
       );
     });
-    console.log(resultsArray);
+
     setSearchResults(resultsArray);
   };
 

@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { usersData } from "../../data/users"; // temp data created with mockaroo
 
 import UserForm from "../forms/UserForm";
 import EditUserForm from "../forms/EditUserForm";
@@ -24,40 +22,51 @@ import ListPage from "../search_bar/ListPage";
 export default function Users() {
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
   const [openEditFormModal, setEditFormModal] = useState(false);
-  const[bestUser,setUser] = useState([])
+  const [bestUser, setUser] = useState([]);
 
-  const deleteUser = async (userid) => {
-    await fetch("http://localhost:8080/users/delete-user/" + userid, {
-      method: "POST",
-    });
-  };
-
-  const handleDelete = (e, userid) => {
+  const handleDelete = (e, email) => {
     e.preventDefault();
 
-    console.log("user" + userid + " Deleted");
-    deleteUser(userid).then((res) => {
-      // display success or error msg
-      navigate("/users");
-    });
+    console.log(email);
+    fetch("http://159.65.127.217:8080/users/delete-user/", {
+      method: "DELETE",
+      headers: {
+        Authorization: "Basic " + window.btoa("admin:pass"),
+
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: "jane.doe@gmail.com" }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+      });
   };
-  let navigate = useNavigate();
 
   function editHandler(e, user) {
     e.preventDefault();
-    setEditFormModal(true)
-    setUser(user)
+    setEditFormModal(true);
+    setUser(user);
   }
 
-
-  const [posts, setPosts] = useState([])
-  const [searchResults, setSearchResults] = useState([])
+  const [posts, setPosts] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
-      setPosts(usersData)
-      setSearchResults(usersData)
-  }, [])
-  
+    fetch("http://159.65.127.217:8080/users/get-users", {
+      method: "GET",
+      headers: { Authorization: "Basic " + window.btoa("admin:pass") },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.status === 401) {
+          // display error
+        } else {
+          setPosts(json);
+          setSearchResults(json);
+        }
+      });
+  }, []);
 
   return (
     <>
@@ -73,37 +82,40 @@ export default function Users() {
       <UserForm
         openModal={openUserFormModal}
         setOpenModal={setOpenUserFormModal}
-        
       />
-         <EditUserForm
+      <EditUserForm
         openModal={openEditFormModal}
         setOpenModal={setEditFormModal}
         bestuser={bestUser}
-        
       />
 
-      <SearchBar posts = {posts}  setSearchResults = {setSearchResults} id = "trazilica"/>
-     
-    
+      <SearchBar
+        posts={posts}
+        setSearchResults={setSearchResults}
+        id="trazilica"
+      />
+
       <TableContainer component={Paper}>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Surname</TableCell>
-            <TableCell>Nickname</TableCell>
-            <TableCell>E-mail</TableCell>
-            <TableCell>Authorization level</TableCell>
-            <TableCell>Edit User</TableCell>
-            <TableCell>Delete User</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Surname</TableCell>
+              <TableCell>Nickname</TableCell>
+              <TableCell>E-mail</TableCell>
+              <TableCell>Authorization level</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            <ListPage searchResults = {searchResults} editHandler = {editHandler} handleDelete = {handleDelete} />
+            <ListPage
+              searchResults={searchResults}
+              editHandler={editHandler}
+              handleDelete={handleDelete}
+            />
           </TableBody>
         </Table>
       </TableContainer>
-
     </>
   );
 }
