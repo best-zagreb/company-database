@@ -11,13 +11,13 @@ import MenuItem from "@mui/material/MenuItem";
 import "./UserForm.css";
 
 const user = {
-  firstName: null,
-  lastName: null,
-  nickname: null,
-  loginEmailString: null,
-  notificationEmailString: null,
-  authority: null,
-  description: null,
+  name: "",
+  surname: "",
+  nickname: "",
+  loginEmail: "",
+  notificationEmail: "",
+  authLevel: "",
+  description: "",
 };
 
 const authLevels = [
@@ -44,9 +44,10 @@ function ValidateEmail(inputEmail) {
   }
 }
 
-export default function UserForm({ openModal, setOpenModal }) {
+export default function UserForm({ openModal, setOpenModal ,bestuser}) {
   const onSubmit = (e) => {
     e.preventDefault();
+    console.log("van")
 
     if (
       nameIsValid &&
@@ -57,34 +58,36 @@ export default function UserForm({ openModal, setOpenModal }) {
       authLevelIsValid &&
       descriptionIsValid
     ) {
-      user.firstName = name;
-      user.lastName = surname;
+        console.log("unutra")
+      user.name = name;
+      user.surname = surname;
       user.nickname = nickname;
-      user.loginEmailString = loginEmail;
-      user.notificationEmailString = notificationEmail;
-      user.authority = authLevel;
+      user.loginEmail = loginEmail;
+      user.notificationEmail = notificationEmail;
+      user.authLevel = authLevel;
       user.description = description;
       // console.log(user);
-
-      fetch("http://159.65.127.217:8080/users/add-user/", {
-        method: "POST",
-        headers: {
-          Authorization: "Basic " + window.btoa("admin:pass"),
-
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user),
-      })
-        .then((response) => response.json())
-        .then((json) => {
-          console.log(json);
-        });
+        
+      // TODO: post user to correct URL
+      //   const namePost = async () => {
+      //     await fetch("http://localhost:8080/users/edit-user", {
+      //       method: "PUT",
+      //       headers: {
+      //         Accept: "application/json",
+      //         "Content-Type": "application/json",
+      //       },
+      //       body: JSON.stringify({ TODO }),
+      //     });
+      //   };
 
       handleClose();
-
-      setTimeout(function () {
-        alert("Congrats,you just added a new user! Woop,woop!");
-      }, 1000);
+      
+      setTimeout(function(){
+        alert('Congrats,you just edited a user! Woop,woop!');
+        
+    }, 1000);
+      
+     
     }
   };
 
@@ -100,7 +103,7 @@ export default function UserForm({ openModal, setOpenModal }) {
   const [authLevel, setAuthLevel] = useState("Observer");
   const [description, setDescription] = useState();
 
-  const [nameIsValid, setNameIsValid] = useState(false);
+  const [nameIsValid, setNameIsValid] = useState(true);
   const [nameDirty, setNameDirty] = useState(false);
   const handleNameChange = (e) => {
     const input = e.target.value;
@@ -112,7 +115,7 @@ export default function UserForm({ openModal, setOpenModal }) {
 
     setName(input);
   };
-  const [surnameIsValid, setSurnameIsValid] = useState(false);
+  const [surnameIsValid, setSurnameIsValid] = useState(true);
   const [surnameDirty, setSurnameDirty] = useState(false);
   const handleSurnameChange = (e) => {
     const input = e.target.value;
@@ -135,7 +138,7 @@ export default function UserForm({ openModal, setOpenModal }) {
 
     setNickname(input);
   };
-  const [loginEmailIsValid, setLoginEmailIsValid] = useState(false);
+  const [loginEmailIsValid, setLoginEmailIsValid] = useState(true);
   const [loginEmailDirty, setLoginEmailDirty] = useState(false);
   const handleLoginEmailChange = (e) => {
     const input = e.target.value;
@@ -148,7 +151,7 @@ export default function UserForm({ openModal, setOpenModal }) {
     setLoginEmail(input);
   };
   const [notificationEmailIsValid, setNotificationEmailIsValid] =
-    useState(false);
+    useState(true);
   const [notificationEmailDirty, setNotificationEmailDirty] = useState(false);
   const handleNotificationEmailChange = (e) => {
     const input = e.target.value;
@@ -204,11 +207,12 @@ export default function UserForm({ openModal, setOpenModal }) {
       >
         <Fade in={openModal}>
           <Box className="Box">
-            <h2>Add a new user</h2>
+            <h2>Edit the user</h2>
 
             <form onSubmit={onSubmit}>
               <TextField
                 id="outlined"
+                defaultValue={bestuser.name}
                 label="Name"
                 type="text"
                 required
@@ -229,6 +233,7 @@ export default function UserForm({ openModal, setOpenModal }) {
               />
               <TextField
                 id="outlined"
+                defaultValue={bestuser.surname}
                 label="Surname"
                 type="text"
                 required
@@ -250,6 +255,7 @@ export default function UserForm({ openModal, setOpenModal }) {
               <TextField
                 id="outlined"
                 label="Nickname"
+                defaultValue={bestuser.nickname}
                 type="text"
                 fullWidth
                 margin="dense"
@@ -263,6 +269,7 @@ export default function UserForm({ openModal, setOpenModal }) {
 
               <TextField
                 id="outlined"
+                defaultValue={bestuser.loginEmail}
                 label="Login email"
                 type="text"
                 required
@@ -283,6 +290,7 @@ export default function UserForm({ openModal, setOpenModal }) {
               />
               <TextField
                 id="outlined"
+                defaultValue={bestuser.notificationEmail}
                 label="Notification email"
                 type="text"
                 required
@@ -304,6 +312,7 @@ export default function UserForm({ openModal, setOpenModal }) {
 
               <TextField
                 id="outlined-select-authorization-level"
+                defaultValue={bestuser.authLevel}
                 select
                 label="Authorization level"
                 required
@@ -331,6 +340,7 @@ export default function UserForm({ openModal, setOpenModal }) {
               <TextField
                 id="outlined-multiline-static"
                 label="Description"
+                defaultValue={bestuser.description}
                 fullWidth
                 multiline
                 minRows={2}
@@ -350,7 +360,7 @@ export default function UserForm({ openModal, setOpenModal }) {
                 </Button>
 
                 <Button variant="contained" type="submit">
-                  Add user
+                  Edit user
                 </Button>
               </div>
             </form>

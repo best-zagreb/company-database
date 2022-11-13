@@ -9,7 +9,7 @@ public class AppUser {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "loginmailstring", unique = true, nullable = false, length = 60)
+    @Column(name = "loginmailstring", nullable = false, length = 60)
     private String loginEmailString;
 
     @Column(nullable = false)

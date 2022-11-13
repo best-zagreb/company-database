@@ -22,20 +22,20 @@ public class UserController {
     @PostMapping("/add-user")
     @ResponseBody
     @Secured("ROLE_ADMIN")
-    public AppUser addEmail(@RequestBody UserDTO userDTO){
+    public AppUser addUser(@RequestBody UserDTO userDTO){
         return userService.addUser(userDTO);
     }
 
     @GetMapping("/get-user")
     @ResponseBody
-    public List<AppUser> findEmail(@RequestBody String email){
+    public List<AppUser> findUser(@RequestParam String email){
         return userService.findByEmail(email);
     }
 
     @DeleteMapping("/delete-user")
     @ResponseBody
     @Secured("ROLE_ADMIN")
-    public Long deleteEmail(@RequestBody OnlyEmailDTO email){
+    public Long deleteUser(@RequestBody OnlyEmailDTO email){
         return userService.deleteUser(email.getEmail());
     }
 
@@ -51,9 +51,8 @@ public class UserController {
         return userService.existsAny();
     }
 
-    @PutMapping("/update-user")
-    public AppUser updateUser(@RequestBody UserDTO userDTO){
-        userService.deleteUser(userDTO.getLoginEmailString());
-        return userService.addUser(userDTO);
+    @PutMapping("/update-user/{id}")
+    public AppUser updateUser(@RequestBody UserDTO userDTO, @PathVariable Long id){
+        return userService.updateUser(userDTO, id);
     }
 }

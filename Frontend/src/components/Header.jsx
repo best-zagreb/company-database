@@ -26,7 +26,8 @@ export default function Header({ setIsLoggedIn, userData }) {
             </li>
           </ul>
 
-          <Button variant="contained" startIcon={<AddCircleIcon />}>
+          <Button variant="contained">
+            <AddCircleIcon />
             Create project
           </Button>
         </nav>
