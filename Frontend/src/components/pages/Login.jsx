@@ -1,5 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import jwt_decode from "jwt-decode";
 
 import "./Login.css";
@@ -10,22 +9,26 @@ export default function Login({ setIsLoggedIn }) {
     const userObject = jwt_decode(response.credential);
     // console.log(userObject);
 
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: userObject.email,
-    };
-    fetch("/users/get-user", options).then((response) => {
-      if (response.status === 401) {
-        // display error msg toast
-      } else {
-        setIsLoggedIn(true);
+    fetch(
+      "http://159.65.127.217:8080/users/get-user?email=" + userObject.email,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Basic " + window.btoa("admin:pass"),
+        },
       }
-    });
-
-    setIsLoggedIn(true); // for testing, delete when connected to backend
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        // console.log(json);
+        if (json.length > 0) {
+          setIsLoggedIn(true);
+        } else {
+          console.error(
+            "You do not have access to Company Database. If you believe this is a mistake, contact your administrator at email@example.com."
+          );
+        }
+      });
   }
 
   useEffect(() => {

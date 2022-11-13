@@ -44,7 +44,7 @@ function ValidateEmail(inputEmail) {
   }
 }
 
-export default function UserForm({ openModal, setOpenModal }) {
+export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -77,19 +77,14 @@ export default function UserForm({ openModal, setOpenModal }) {
       })
         .then((response) => response.json())
         .then((json) => {
+          // if error display error toast
           console.log(json);
+
+          // if success display success toast, close modal and update users list
+          setOpenModal(false);
+          fetchUsers();
         });
-
-      handleClose();
-
-      setTimeout(function () {
-        alert("Congrats,you just added a new user! Woop,woop!");
-      }, 1000);
     }
-  };
-
-  const handleClose = () => {
-    setOpenModal(false);
   };
 
   const [name, setName] = useState();
@@ -195,7 +190,9 @@ export default function UserForm({ openModal, setOpenModal }) {
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={openModal}
-        onClose={handleClose}
+        onClose={() => {
+          setOpenModal(false);
+        }}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -345,7 +342,12 @@ export default function UserForm({ openModal, setOpenModal }) {
               />
 
               <div className="action-btns">
-                <Button variant="outlined" onClick={handleClose}>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    setOpenModal(false);
+                  }}
+                >
                   Cancel
                 </Button>
 

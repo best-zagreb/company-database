@@ -27,7 +27,6 @@ export default function Users() {
   const handleDelete = (e, email) => {
     e.preventDefault();
 
-    console.log(email);
     fetch("http://159.65.127.217:8080/users/delete-user/", {
       method: "DELETE",
       headers: {
@@ -35,11 +34,11 @@ export default function Users() {
 
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email: "jane.doe@gmail.com" }),
+      body: JSON.stringify({ email: email }),
     })
       .then((response) => response.json())
       .then((json) => {
-        console.log(json);
+        fetchUsers();
       });
   };
 
@@ -52,7 +51,7 @@ export default function Users() {
   const [posts, setPosts] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
-  useEffect(() => {
+  function fetchUsers() {
     fetch("http://159.65.127.217:8080/users/get-users", {
       method: "GET",
       headers: { Authorization: "Basic " + window.btoa("admin:pass") },
@@ -60,12 +59,17 @@ export default function Users() {
       .then((response) => response.json())
       .then((json) => {
         if (json.status === 401) {
+          console.log(json);
           // display error
         } else {
           setPosts(json);
           setSearchResults(json);
         }
       });
+  }
+
+  useEffect(() => {
+    fetchUsers();
   }, []);
 
   return (
@@ -82,6 +86,7 @@ export default function Users() {
       <UserForm
         openModal={openUserFormModal}
         setOpenModal={setOpenUserFormModal}
+        fetchUsers={fetchUsers}
       />
       <EditUserForm
         openModal={openEditFormModal}
@@ -103,7 +108,7 @@ export default function Users() {
               <TableCell>Surname</TableCell>
               <TableCell>Nickname</TableCell>
               <TableCell>E-mail</TableCell>
-              <TableCell>Authorization level</TableCell>
+              <TableCell>Max authorization level</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
