@@ -1,4 +1,4 @@
-\chapter{Arhitektura i dizajn sustava}
+Arhitektura i dizajn sustava}
 		
 		\textbf{\textit{dio 1. revizije}}\\
 
@@ -24,9 +24,8 @@
 			\item Korisnik
 			\item Tvrtka
 			\item Projekt
-			\item KategorijaProjekta
-			\item ProjectFrTeamMembers
-			\item Grad
+			\item ProjectFRTeamMembers
+			\item Mjesto
 			\item Zaposlenik
 			\item Suradnja
 		\end{itemize}
@@ -44,9 +43,9 @@
 						\SetCell{LightGreen}IDKorisnik & INT & ID kosisnika  	\\ \hline
 						Ime	& VARCHAR & Ime korisnika \\ \hline 
 						Prezime & VARCHAR & Prezime korisnika \\ \hline 
-						NickName & VARCHAR	& Nadimak korisnika \\ \hline 
-                    				LoginEmail & VARCHAR	& Email adresa pomoću kojeg se user logira \\ \hline 
-                    				NotificationEmail & VARCHAR	& Email adresa na koju korisnik prima obavijesti \\ \hline 
+						Nadimak & VARCHAR	& Nadimak korisnika \\ \hline 
+        				LoginEmail & VARCHAR	& Email adresa pomoću kojeg se user logira \\ \hline 
+        				NotificationEmail & VARCHAR	& Email adresa na koju korisnik prima obavijesti \\ \hline 
 						MaxRazinaOvlasti & VARCHAR & Maksimalna razina ovlasti na projektima \\ \hline
 				\end{longtblr}
 
@@ -63,12 +62,12 @@
 						Naziv & VARCHAR & Naziv tvrtke \\ \hline 
 						Podrucje & VARCHAR &  Područje kojim se tvrtka bavi \\ \hline 
 						ABCKategorija & CHAR & Kategorija tvrtke (A B ili C) \\ \hline 
-				                MjesecPlaniranjaBudzeta & INT & Mjesec u kojem tvrtka planira budžet \\ \hline
-				                Drzava & VARCHAR & Država u kojoj tvrtka posluje \\ \hline
-				                \SetCell{LightBlue} PostanskiBr & VARCHAR & Poštanski broj grada tvrtke \\ \hline
-						Adresa & VARCHAR & Adresa sjedišta tvrtke \\ \hline
-	    		                 	WebStranica & VARCHAR & Adresa web stranice tvrtke \\ \hline
-				                Kontaktirati & BOOLEAN & Da li ubuduće tu tvrtku treba kontaktirati \\ \hline
+		                MjesecPlaniranjaBudzeta & INT & Mjesec u kojem tvrtka planira budžet \\ \hline
+		                Drzava & VARCHAR & Država u kojoj tvrtka posluje \\ \hline
+		                \SetCell{LightBlue} PBr & VARCHAR & Poštanski broj mjesta tvrtke \\ \hline
+						Adresa & VARCHAR & Adresa tvrtke \\ \hline
+	                 	WebStranica & VARCHAR & Adresa web stranice tvrtke \\ \hline
+		                Kontaktirati & BOOLEAN & Treba li ubuduće tu tvrtku treba kontaktirati \\ \hline
 				\end{longtblr}
 
 				\begin{longtblr}[
@@ -82,14 +81,14 @@
 					\hline \multicolumn{3}{|c|}{\textbf{Projekt}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}IDProjekt & INT	& Id projekta \\ \hline
 					Naziv & VARCHAR & Naziv projekta \\ \hline 
-					\SetCell{LightBlue} KategorijaProjekta & INT & Kategorija projekta \\ \hline 
+					\SetCell{LightBlue} KategorijaProjekta & INT & Kategorija u koju spada projekt \\ \hline 
 					TipProjekta & VARCHAR & Eksterni ili interni projekt \\ \hline 
-					Pocetak & TIMESTAMP & Datum početka projekta \\ \hline 
-			                Završetak & TIMESTAMP & Datum završetka projekta \\ \hline 
-			                \SetCell{LightBlue} FrResponsibleUserId & INT & Id FR responsible usera \\ \hline
-			                FRCilj & FLOAT & Količina novca koja se želi prikupiti za projekt \\ \hline
-			                FirstPing & TIMESTAMP & Trenutak prvog "ping"-a \\ \hline
-			                SecondPing & TIMESTAMP & Trenutak drugog "ping"-a \\ \hline
+					DatumPočetka & TIMESTAMP & Datum početka projekta \\ \hline 
+	                DatumZavršetka & TIMESTAMP & Datum završetka projekta \\ \hline 
+	                \SetCell{LightBlue} FRResponsibleUserId & INT & Id korisnika odgovornog za odnose s tvrtkama projekta \\ \hline
+	                FRCilj & INT & Količina novca koja se želi prikupiti za projekt \\ \hline
+	                FirstPing & TIMESTAMP & Datum prvog "ping"-a \\ \hline
+	                SecondPing & TIMESTAMP & Datum drugog "ping"-a \\ \hline
 				\end{longtblr}
 
 				\begin{longtblr}[
@@ -113,7 +112,7 @@
 						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \multicolumn{3}{|c|}{\textbf{ProjectFrTeamMembers}}	 \\ \hline[3pt]
+					\hline \multicolumn{3}{|c|}{\textbf{ProjectFRTeamMembers}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}IDKorisnik & INT & Id korisnika koji je FR team member projekta \\ \hline
 					\SetCell{LightGreen}IDProjekt & INT & Id projekta \\ \hline
 				\end{longtblr}
@@ -126,7 +125,7 @@
 						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \multicolumn{3}{|c|}{\textbf{Grad}}	 \\ \hline[3pt]
+					\hline \multicolumn{3}{|c|}{\textbf{Mjesto}}	 \\ \hline[3pt]
 					\SetCell{LightGreen} PostanskiBrojGrad & VARCHAR & Poštanski broj grada \\ \hline
 					NazivGrad & VARCHAR & Naziv grada \\ \hline
 				\end{longtblr}
@@ -144,10 +143,10 @@
 						\SetCell{LightBlue} IDTvrtke & INT & Id tvrtke za koju zaposlenik radi\\ \hline 
 						Ime & VARCHAR & Ime zaposlenika \\ \hline 
 						Prezime & VARCHAR	& Prezime zaposlenika \\ \hline 
-			                    Email & VARCHAR	& Email adresa zaposlenika \\ \hline 
-			                    BrojTelefona & VARCHAR	& Broj telefona zaposlenika \\ \hline 
-			                    Uloga & VARCHAR	& Uloga zaposlenika u tvrtci (npr. CEO) \\ \hline 
-			                    Opis & VARCHAR	& Opis zaposlenika (npr. glavni kontakt) \\ \hline 
+	                    Email & VARCHAR	& Email adresa zaposlenika \\ \hline 
+	                    BrojTelefona & VARCHAR	& Broj telefona zaposlenika \\ \hline 
+	                    Uloga & VARCHAR	& Pozicija zaposlenika u tvrtci (npr. PR) \\ \hline 
+	                    Opis & VARCHAR	& Opis zaposlenika (npr. glavni kontakt) \\ \hline 
 				\end{longtblr}
 
 				\begin{longtblr}[
@@ -161,6 +160,7 @@
 					\hline \multicolumn{3}{|c|}{\textbf{Suradnja}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}IDProjekt & INT	& Id projekta \\ \hline
 			                \SetCell{LightGreen}IdTvrtke & INT	& Id tvrtke \\ \hline
+					\SetCell{LightBlue}IdOdgovoran & INT & Id korisnika odgovornog za suradnju s tvrtkom \\ \hline 
 					\SetCell{LightBlue}IdKontakt & INT & Id kontakt osobe u tvrtci \\ \hline 
 					KategorijaSuradnje & VARCHAR & Kategorija suradnje (Financijska, materijalna ili akademska) \\ \hline
 		                    Status & VARCHAR & Kontaktirano, ping, dopis, sastanak, uspješno ili neuspješno \\ \hline
