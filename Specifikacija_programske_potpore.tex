@@ -1,4 +1,4 @@
-\chapter{Specifikacija programske potpore}
+Specifikacija programske potpore}
 		
 	\section{Funkcionalni zahtjevi}
 			
@@ -540,56 +540,48 @@
 						\end{packed_enum}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$18$>$ -$<$Stvaranje projekta$>$}}
+					\noindent \underbar{\textbf{UC$<$15$>$ -$<$Stvaranje projekta$>$}}
 					\begin{packed_item}
 
 						\item \textbf{Glavni sudionik:} $<$Osoba zadužena za stvaranje projekata$>$
 						\item \textbf{Cilj:} $<$Stvoriti projekt$>$
 						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
+						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen, Korisnik ima ovlasti moderator$>$
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Novi projekti"$>$
+							\item $<$Korisnik odabire opciju "Create project"$>$
 							\item $<$Aplikacija prikazuje formu za stvaranje novog projekta$>$
 							\item $<$Korisnik popuni podatke za stvaranje novog projekta$>$
 							\item $<$Korisnik sprema promjene$>$
 							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija vraća korisnika na novu popis projekata$>$
+							\item $<$Aplikacija ažurira popis projekata$>$
 						\end{packed_enum}
 
 						\item \textbf{Opis mogućih odstupanja:}
 
 						\item[] \begin{packed_item}
 
-							\item[7.a] $<$Korisnik upiše podatke za novi projekt, ali ne odabere opciju "Save"$>$
+							\item[7.b] $<$Korisnik unese nevaljane podatke o projektu i odabere opciju "Save"$>$
 							\item[] \begin{packed_enum}
 
-								\item $<$Sustav obavještava korisnika da nije spremio podatke prije izlaska
-								iz prozora i nudi mu opcije da spremi i izađe ili samo izađe$>$
-
-							\end{packed_enum}
-
-							\item[7.b] $<$Korisnik odabere opciju "Save", ali ne upiše neke nužne podatke za 
-							stvaranje novog projekta$>$
-							\item[] \begin{packed_enum}
-
-								\item $<$Sustav obavještava korisnika da nije popunio sve nužne podatke za 
-								stvaranje novog projekta$>$
+								\item $<$Aplikacija obavještava korisnika o neuspjelom upisu$>$
+								\item $<$Korisnik mijenja potrebne podatke te uspješno završava unos ili
+								odustaje od dodavanja suradnje$>$
 
 							\end{packed_enum}
 
 						\end{packed_item}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$19$>$ -$<$Brisanje projekta$>$}}
+					\noindent \underbar{\textbf{UC$<$16$>$ -$<$Brisanje projekta$>$}}
 					\begin{packed_item}
 					
 						\item \textbf{Glavni sudionik:} $<$Osoba zadužena za stvaranje projekata$>$
 						\item \textbf{Cilj:} $<$Izbrisati projekt$>$
 						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
+						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen, Korisnik ima ovlasti administrator$>$
 						\item \textbf{Opis osnovnog tijeka:}
 					
 						\item[] \begin{packed_enum}
@@ -597,232 +589,79 @@
 							\item $<$Korisnik odabire opciju "Projects"$>$
 							\item $<$Korisnik odabire neki od projekata$>$
 							\item $<$Aplikacija prikazuje detalje o tom projektu$>$
-							\item $<$Korisnik odabire opciju za brisanje pored projekta$>$
-							\item $<$Aplikacija prikaže popup koji pita korisnika je li siguran$>$
+							\item $<$Korisnik odabire opciju za brisanje projekta$>$
+							\item $<$Aplikacija prikaže modal koji pita korisnika je li siguran$>$
 							\item $<$Korisnik odabere opciju da je siguran$>$
 							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija vraća korisnika na novu popis projekata$>$
+							\item $<$Aplikacija ažurira popis projekata$>$
 						\end{packed_enum}
 					
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$20$>$ -$<$Dodavanje organizatora na projekt$>$}}
-					\begin{packed_item}
-					
-						\item \textbf{Glavni sudionik:} $<$Osoba zadužena za stvaranje projekata$>$
-						\item \textbf{Cilj:} $<$Dodati organizatora na projekt$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
-						\item \textbf{Opis osnovnog tijeka:}
-					
-						\item[] \begin{packed_enum}
-					
-							\item $<$Korisnik odabire opciju "Projects"$>$
-							\item $<$Aplikacija prikazuje popis naziva projekata$>$
-							\item $<$Korisnik odabire neki od projekata$>$
-							\item $<$Aplikacija prikazuje detalje o tom projektu$>$
-							\item $<$Korisnik odabire opciju za dodavanje organizatora$>$
-							\item $<$Aplikacija prikaže formu s emailom organizatora kojeg želi dodati$>$
-							\item $<$Korisnik upiše email organizatora kojeg želi dodati$>$
-							\item $<$Korisnik odabire opciju spremi$>$
-							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija vraća korisnika na nove detalje projekta$>$
-						\end{packed_enum}
-					
-						\item \textbf{Opis mogućih odstupanja:}
-					
-						\item[] \begin{packed_item}
-					
-							\item[7.a] $<$Korisnik nije stvorio ovaj projekt$>$
-							\item[] \begin{packed_enum}
-			
-								\item $<$Sustav obavještava korisnika da nije stvorio taj pojekt, pa mu ne može nadodati organizatora.
-								Ovo se ne pojavljuje ako je korisnik administrator.$>$
-			
-							\end{packed_enum}
-
-							\item[9.a] $<$Korisnik upiše email organizatora, ali ne odabere opciju "Save"$>$
-							\item[] \begin{packed_enum}
-
-								\item $<$Sustav obavještava korisnika da nije spremio podatke prije izlaska
-								iz prozora i nudi mu opcije da spremi i izađe ili samo izađe$>$
-
-							\end{packed_enum}
-
-							\item[9.b] $<$Korisnik odabere opciju "Save", ali ne upiše važeći email organizatora$>$
-							\item[] \begin{packed_enum}
-
-								\item $<$Sustav obavještava korisnika da nije točan email organizatora$>$
-
-							\end{packed_enum}
-
-							\item[9.c] $<$Korisnik odabere opciju "Save", ali ne upiše email organizatora$>$
-							\item[] \begin{packed_enum}
-
-								\item $<$Sustav obavještava korisnika da mora upisati email organizatora$>$
-
-							\end{packed_enum}
-
-							\item[9.d] $<$Korisnik odabere opciju "Save", ali email koji upiše nije od organizatora$>$
-							\item[] \begin{packed_enum}
-
-								\item $<$Sustav obavještava korisnika i pita ga je li siguran da želi dodijeliti projekt
-								osobi koja nije organizator$>$
-								\item $<$Korisnik odabere opciju da je siguran$>$
-								\item $<$Baza podataka promijeni rolu korisnika na organizatora i dodjeli mu traženi projekt$>$
-
-							\end{packed_enum}
-					
-						\end{packed_item}
-					\end{packed_item}
-
-					\noindent \underbar{\textbf{UC$<$21$>$ -$<$Micanje organizatora sa projekta$>$}}
-					\begin{packed_item}
-
-						\item \textbf{Glavni sudionik:} $<$Osoba zadužena za stvaranje projekata$>$
-						\item \textbf{Cilj:} $<$Maknuti organizatora sa projekt$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
-						\item \textbf{Opis osnovnog tijeka:}
-
-						\item[] \begin{packed_enum}
-
-							\item $<$Korisnik odabire opciju "Projects"$>$
-							\item $<$Aplikacija prikazuje popis naziva projekata$>$
-							\item $<$Korisnik odabire neki od projekata$>$
-							\item $<$Aplikacija prikazuje detalje o tom projektu$>$
-							\item $<$Korisnik odabire opciju za micanje organizatora pored organizatora$>$
-							\item $<$Aplikacija prikaže popup koji pita korisnika je li siguran$>$
-							\item $<$Korisnik odabere opciju da je siguran$>$
-							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija vraća korisnika na nove detalje projekta$>$
-						\end{packed_enum}
-
-						\item \textbf{Opis mogućih odstupanja:}
-
-						\item[] \begin{packed_item}
-
-							\item[7.a] $<$Korisnik nije stvorio ovaj projekt$>$
-							\item[] \begin{packed_enum}
-
-								\item $<$Sustav obavještava korisnika da nije stvorio taj pojekt, pa mu ne može maknuti organizatora.
-								Ovo se ne pojavljuje ako je korisnik administrator.$>$
-
-							\end{packed_enum}
-
-						\end{packed_item}
-					\end{packed_item}
-
-					\noindent \underbar{\textbf{UC$<$22$>$ -$<$Dodavanje člana neprofitabilne organizacije na projekt$>$}}
+						\noindent \underbar{\textbf{UC$<$17$>$ -$<$Dodavanje korisnika na projekt$>$}}
 					\begin{packed_item}
 
 						\item \textbf{Glavni sudionik:} $<$Osoba zadužena za stvaranje projekata$>$
 						\item \textbf{Cilj:} $<$Dodati člana neprofitabilne organizacije na projekt$>$
 						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
+						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen, Korisnik ima ovlasti administrator$>$
 						\item \textbf{Opis osnovnog tijeka:}
-
+					
 						\item[] \begin{packed_enum}
-
+					
 							\item $<$Korisnik odabire opciju "Projects"$>$
-							\item $<$Aplikacija prikazuje popis naziva projekata$>$
+							\item $<$Aplikacija prikazuje popis projekata$>$
 							\item $<$Korisnik odabire neki od projekata$>$
 							\item $<$Aplikacija prikazuje detalje o tom projektu$>$
-							\item $<$Korisnik odabire opciju za dodavanje člana neprofitabilne organizacije$>$
-							\item $<$Aplikacija prikaže formu s emailom člana neprofitabilne organizacije kojeg želi dodati$>$
-							\item $<$Korisnik upiše email člana neprofitabilne organizacije kojeg želi dodati$>$
-							\item $<$Korisnik odabire opciju spremi$>$
+							\item $<$Korisnik odabire opciju za dodavanje korisnika na projekt$>$
+							\item $<$Aplikacija prikaže formu$>$
+							\item $<$Korisnik upiše ime, prezime, nadimak ili email člana kojeg želi dodati$>$
+							\item $<$Korisnik odabire opciju "Add"$>$
 							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija vraća korisnika na nove detalje projekta$>$
+							\item $<$Aplikacija ažurira popis korisnika na projektu$>$
 						\end{packed_enum}
-
+					
 						\item \textbf{Opis mogućih odstupanja:}
-
+					
 						\item[] \begin{packed_item}
-
-							\item[7.a] $<$Korisnik nije stvorio ovaj projekt$>$
+                        
+                        	\item[7.b] $<$Korisnik unese nevaljane podatke o korisniku i odabere opciju "Save"$>$
 							\item[] \begin{packed_enum}
 
-								\item $<$Sustav obavještava korisnika da nije stvorio taj pojekt, pa mu ne može nadodati člana neprofitabilne organizacije. Ovo se ne pojavljuje ako je korisnik administrator.$>$
+								\item $<$Aplikacija obavještava korisnika o neuspjelom upisu$>$
+								\item $<$Korisnik mijenja potrebne podatke te uspješno završava unos ili
+								odustaje od dodavanja suradnje$>$
 
 							\end{packed_enum}
-
-							\item[9.a] $<$Korisnik upiše email člana neprofitabilne organizacije, ali ne odabere opciju "Save"$>$
-							\item[] \begin{packed_enum}
-
-								\item $<$Sustav obavještava korisnika da nije spremio podatke prije izlaska
-								iz prozora i nudi mu opcije da spremi i izađe ili samo izađe$>$
-
-							\end{packed_enum}
-
-							\item[9.b] $<$Korisnik odabere opciju "Save", ali ne upiše važeći email člana neprofitabilne organizacije$>$
-							\item[] \begin{packed_enum}
-
-								\item $<$Sustav obavještava korisnika da nije točan email člana neprofitabilne organizacije$>$
-
-							\end{packed_enum}
-
-							\item[9.c] $<$Korisnik odabere opciju "Save", ali ne upiše email člana neprofitabilne organizacije$>$
-							\item[] \begin{packed_enum}
-
-								\item $<$Sustav obavještava korisnika da mora upisati email člana neprofitabilne organizacije$>$
-
-							\end{packed_enum}
-
-							\item[9.d] $<$Korisnik odabere opciju "Save", ali email koji upiše nije od člana neprofitabilne organizacije$>$
-							\item[] \begin{packed_enum}
-
-								\item $<$Sustav obavještava korisnika i pita ga je li siguran da želi dodijeliti projekt
-								osobi koja nije zaposlenik neprofitabilne organizacije$>$
-								\item $<$Korisnik odabere opciju da je siguran$>$
-								\item $<$Baza podataka promijeni rolu korisnika na zaposlenik neprofitabilne organizacije
-								i stavi ga na traženi projekt$>$
-
-							\end{packed_enum}
-
+					
 						\end{packed_item}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$23$>$ -$<$Micanje člana neprofitabilne organizacije sa projekta$>$}}
+					\noindent \underbar{\textbf{UC$<$18$>$ -$<$Micanje korisnika sa projekta$>$}}
 					\begin{packed_item}
 
 						\item \textbf{Glavni sudionik:} $<$Osoba zadužena za stvaranje projekata$>$
 						\item \textbf{Cilj:} $<$Maknuti člana neprofitabilne organizacije sa projekt$>$
 						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
+						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen, Korisnik ima ovlasti administratora$>$
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
 							\item $<$Korisnik odabire opciju "Projects"$>$
-							\item $<$Aplikacija prikazuje popis naziva projekata$>$
+							\item $<$Aplikacija prikazuje popis projekata$>$
 							\item $<$Korisnik odabire neki od projekata$>$
 							\item $<$Aplikacija prikazuje detalje o tom projektu$>$
-							\item $<$Korisnik odabire opciju za micanje člana neprofitabilne organizacije pored
-							člana neprofitabilne organizacije$>$
-							\item $<$Aplikacija prikaže popup koji pita korisnika je li siguran$>$
+							\item $<$Korisnik odabire opciju za micanje korisnika sa projekta$>$
+							\item $<$Aplikacija prikaže modal koji pita korisnika je li siguran$>$
 							\item $<$Korisnik odabere opciju da je siguran$>$
 							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija vraća korisnika na nove detalje projekta$>$
+							\item $<$Aplikacija ažurira popis korisnika na projektu$>$
 						\end{packed_enum}
 
-						\item \textbf{Opis mogućih odstupanja:}
-
-						\item[] \begin{packed_item}
-
-							\item[7.a] $<$Korisnik nije stvorio ovaj projekt$>$
-							\item[] \begin{packed_enum}
-
-								\item $<$Sustav obavještava korisnika da nije stvorio taj pojekt, pa mu
-								ne može maknuti člana neprofitabilne organizacije.
-								Ovo se ne pojavljuje ako je korisnik administrator.$>$
-
-							\end{packed_enum}
-
-						\end{packed_item}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$24$>$ -$<$Pregled korisnika$>$}}
+					\noindent \underbar{\textbf{UC$<$19$>$ -$<$Pregled korisnika$>$}}
 					\begin{packed_item}
 
 						\item \textbf{Glavni sudionik:} $<$Administrator$>$
@@ -833,30 +672,31 @@
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Korisnici"$>$
+							\item $<$Korisnik odabire opciju "Users"$>$
 							\item $<$Aplikacija prikazuje popis korisnika$>$
+                            
 						\end{packed_enum}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$25$>$ -$<$Mijenjanje role korisnika$>$}}
+					\noindent \underbar{\textbf{UC$<$20$>$ -$<$Promjena razine ovlasti korisnika$>$}}
 					\begin{packed_item}
 
 						\item \textbf{Glavni sudionik:} $<$Administrator$>$
 						\item \textbf{Cilj:} $<$Promijeniti rolu korisnika$>$
 						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
+						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen, Korisnik je administrator$>$
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Korisnici"$>$
+							\item $<$Korisnik odabire opciju "Users"$>$
 							\item $<$Aplikacija prikazuje popis korisnika$>$
-							\item $<$Korisnik odabere opciju "Promijeni rolu" koja se nalazi pored jednog od korisnika$>$
-							\item $<$Aplikacija prikaže formu s mogućnosti odabira role$>$
-							\item $<$Korisnik odabire jednu od rola$>$
+							\item $<$Korisnik odabere opciju za izmjenu podataka o korisniku$>$
+							\item $<$Aplikacija prikaže formu za izmjenu podataka o korisniku$>$
+							\item $<$Korisnik odabire jednu od razina ovlasti$>$
 							\item $<$Korisnik odabire opciju spremi$>$
 							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija vraća korisnika na novu popis korisnika$>$
+							\item $<$Aplikacija ažurira popis korisnika$>$
 
 						\end{packed_enum}
 
@@ -876,7 +716,7 @@
 						\end{packed_item}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$26$>$ -$<$Micanje korisnika iz sustava$>$}}
+					\noindent \underbar{\textbf{UC$<$21$>$ -$<$Brisanje korisnika iz sustava$>$}}
 					\begin{packed_item}
 
 						\item \textbf{Glavni sudionik:} $<$Administrator$>$
@@ -887,13 +727,13 @@
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Korisnici"$>$
+							\item $<$Korisnik odabire opciju "Users"$>$
 							\item $<$Aplikacija prikazuje popis korisnika$>$
-							\item $<$Korisnik odabere opciju micanja korisnika koja se nalazi pored jednog od korisnika$>$
+							\item $<$Korisnik odabere opciju brisanja željenog korisnika$>$
 							\item $<$Aplikacija pita korisnika je li siguran da želi provesti ovu akciju$>$
 							\item $<$Korisnik odabire opciju da je siguran$>$
 							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija vraća korisnika na novu popis korisnika$>$
+							\item $<$Aplikacija ažurira popis korisnika$>$
 
 						\end{packed_enum}
 
@@ -924,10 +764,10 @@
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Korisnici"$>$
+							\item $<$Korisnik odabire opciju "Users"$>$
 							\item $<$Aplikacija prikazuje popis korisnika$>$
 							\item $<$Korisnik upiše tekst u polje za pretragu$>$
-							\item $<$Aplikacija prikazuje samo korisnike koji imaju taj tekst u punom imenu ili emailu$>$
+							\item $<$Aplikacija ažurira popis korisnika tako da prikazuje samo korisnike koji imaju taj tekst u imenu, prezimenu, nadimku ili emailu$>$
 						\end{packed_enum}
 					\end{packed_item}
 					
@@ -948,26 +788,7 @@
 			\textbf{\textit{dio 1. revizije}}\\
 		 
 			 \textit{Nefunkcionalni zahtjevi i zahtjevi domene primjene dopunjuju funkcionalne zahtjeve. Oni opisuju \textbf{kako se sustav treba ponašati} i koja \textbf{ograničenja} treba poštivati (performanse, korisničko iskustvo, pouzdanost, standardi kvalitete, sigurnost...). Primjeri takvih zahtjeva u Vašem projektu mogu biti: podržani jezici korisničkog sučelja, vrijeme odziva, najveći mogući podržani broj korisnika, podržane web/mobilne platforme, razina zaštite (protokoli komunikacije, kriptiranje...)... Svaki takav zahtjev potrebno je navesti u jednoj ili dvije rečenice.}
-
-			\begin{packed_item}
-
-				\item \textit{Sustav treba omogućiti rad više korisnika u stvarnom vremenu}
-				\item \textit{Korisničko sučelje i sustav moraju podržavati hrvatsku abecedu (dijakritičke
-							  znakove) pri unosu i prikazu tekstualnog sadržaja}
-				\item \textit{Izvršavanje dijela programa u kojem se pristupa bazi podataka ne smije trajati
-							  duže od nekoliko sekundi}
-				\item \textit{Sustav treba biti implementiran kao web aplikacija koristeći
-							  objektno-orijentirane jezike}
-				\item \textit{Neispravno korištenje korisničkog sučelja ne smije narušiti funkcionalnost i
-							  rad sustava}
-				\item \textit{Sustav treba biti jednostavan za korištenje, korisnici se moraju znati koristiti
-                              sučeljem bez opširnih uputa}
-				\item \textit{Veza s bazom podataka mora biti kvalitetno zaštičena, brza i otporna na
-						      vanjske greske}
-				\item \textit{Pristup sustavu mora biti omogućen iz javne mreže pomoču HTTPS}
-				\item \textit{Prikazivanje stranice korisniku ne smije trajati dulje od desetak sekundi,
-							  bez obzira na količinu podataka koju prikazuje}
-
-			\end{packed_item}
+			 
+			 
 			 
 	
