@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.10) (preloaded format=pdflatex 2022.11.12)  16 NOV 2022 16:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.10) (preloaded format=pdflatex 2022.11.12)  17 NOV 2022 13:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -981,12 +981,16 @@ LaTeX Font Info:    Trying to load font information for OT1+jkp on input line 8
 (C:\Users\Nikola\AppData\Local\Programs\MiKTeX\tex/latex/kpfonts\ot1jkp.fd
 File: ot1jkp.fd 2007/08/30 Fontinst v1.928 font definitions for OT1/jkp.
 )
-No file PROGI_2022_EkipaZaOcevid_rev0.1.aux.
+(PROGI_2022_EkipaZaOcevid_rev0.1.aux (Dnevnik_promjena_dokumentacije.aux)
+(Opis_projektnog_zadatka.aux) (Specifikacija_programske_potpore.aux)
+(Arhitektura.aux) (Implementacija.aux) (Zakljucak.aux) (Literatura.aux)
+(Dodatak.aux))
 \openout1 = `PROGI_2022_EkipaZaOcevid_rev0.1.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/jkp/m/it on input line 85.
 LaTeX Font Info:    Trying to load font information for OML+jkp on input line 8
 5.
+
 (C:\Users\Nikola\AppData\Local\Programs\MiKTeX\tex/latex/kpfonts\omljkp.fd
 File: omljkp.fd 2006/08/15 v1.0
 )
@@ -1089,11 +1093,13 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 Package hyperref Info: Link coloring ON on input line 85.
+(PROGI_2022_EkipaZaOcevid_rev0.1.out) (PROGI_2022_EkipaZaOcevid_rev0.1.out)
 \@outlinefile=\write3
 \openout3 = `PROGI_2022_EkipaZaOcevid_rev0.1.out'.
 
 LaTeX Font Info:    Trying to load font information for U+jkpsya on input line 
 98.
+
 (C:\Users\Nikola\AppData\Local\Programs\MiKTeX\tex/latex/kpfonts\ujkpsya.fd
 File: ujkpsya.fd 2006/08/15 v1.0
 )
@@ -1124,10 +1130,7 @@ File: ujkpsyc.fd 2006/08/15 v1.0
 [1
 
 {C:/Users/Nikola/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
-No file PROGI_2022_EkipaZaOcevid_rev0.1.toc.
-\tf@toc=\write4
-\openout4 = `PROGI_2022_EkipaZaOcevid_rev0.1.toc'.
-
+(PROGI_2022_EkipaZaOcevid_rev0.1.toc
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1137,21 +1140,30 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 
-LaTeX Warning: Reference `LastPage' on page 1 undefined on input line 122.
-
-
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.122 	\include{Dnevnik_promjena_dokumentacije}
-                                                [1
+l.29 ...: Prikaz aktivnosti grupe}{31}{chapter*.6}
+                                                  % [1
 
-]
+])
+\tf@toc=\write4
+\openout4 = `PROGI_2022_EkipaZaOcevid_rev0.1.toc'.
+
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[2]
 \openout2 = `Dnevnik_promjena_dokumentacije.aux'.
 
-
-(Dnevnik_promjena_dokumentacije.tex
+ (Dnevnik_promjena_dokumentacije.tex
 Poglavlje 1.
 
 Underfull \hbox (badness 10000) in paragraph at lines 3--4
@@ -1334,10 +1346,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 2 undefined on input line 33.
-
-[2
+[3
 
 
 ]
@@ -1369,10 +1378,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 3 undefined on input line 122.
-
-[3]
+[4]
 \openout2 = `Opis_projektnog_zadatka.aux'.
 
  (Opis_projektnog_zadatka.tex
@@ -1395,10 +1401,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 4 undefined on input line 16.
-
-[4
+[5
 
 
 
@@ -1442,10 +1445,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 5 undefined on input line 74.
-
-[5]
+[6]
 > Step: init table outer spec.
 > Step: parse table options.
 > Step: split table.
@@ -1454,7 +1454,7 @@ LaTeX Warning: Reference `LastPage' on page 5 undefined on input line 74.
 > Step: execute table commands.
 > Step: calculate cell and line sizes.
 > Step: build the whole table.
-<slike/aktivnost.PNG, id=45, 670.75594pt x 689.57625pt>
+<slike/aktivnost.PNG, id=184, 670.75594pt x 689.57625pt>
 File: slike/aktivnost.PNG Graphic file (type png)
 <use slike/aktivnost.PNG>
 Package pdftex.def Info: slike/aktivnost.PNG  used on input line 99.
@@ -1472,20 +1472,13 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 6 undefined on input line 110.
-
-[6
+[7
 pdfTeX warning (ext4): destination with the same identifier (name{figure.2.1}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
 l.110 		
          <./slike/aktivnost.PNG>]
-
-LaTeX Warning: Reference `fig:promjene2' on page 7 undefined on input line 111.
-
-
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1494,10 +1487,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 7 undefined on input line 113.
-
-[7
+[8
 pdfTeX warning (ext4): destination with the same identifier (name{figure.2.2}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -1531,10 +1521,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 8 undefined on input line 52.
-
-[8
+[9
 
 
 
@@ -1552,10 +1539,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 9 undefined on input line 103.
-
-[9]
+[10]
 Underfull \hbox (badness 10000) in paragraph at lines 107--108
 
  []
@@ -1568,10 +1552,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 10 undefined on input line 110.
-
-[10]
+[11]
 Underfull \hbox (badness 10000) in paragraph at lines 114--115
 
  []
@@ -1585,14 +1566,14 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 11 undefined on input line 124.
-
-[11]
+[12]
 \openout2 = `Arhitektura.aux'.
 
  (Arhitektura.tex
-Poglavlje 4.
+! Too many }'s.
+l.1 Arhitektura i dizajn sustava}
+                                 
+? 
 
 Underfull \hbox (badness 10000) in paragraph at lines 3--4
 
@@ -1627,7 +1608,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 20--21
 Type <return> to continue.
  ...                                              
                                                   
-l.51 				\end
+l.50 				\end
              {longtblr}
 ? 
 > Step: calculate cell and line sizes.
@@ -1640,11 +1621,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 12 undefined on input line 51.
-
-[12
-
+[13
 
 
 
@@ -1662,18 +1639,18 @@ LaTeX Warning: Reference `LastPage' on page 12 undefined on input line 51.
 Type <return> to continue.
  ...                                              
                                                   
-l.72 				\end
+l.71 				\end
              {longtblr}
 ? 
 > Step: calculate cell and line sizes.
 
-Overfull \hbox (1.3216pt too wide) in paragraph at lines 72--72
+Overfull \hbox (1.3216pt too wide) in paragraph at lines 71--71
 []\OT1/jkp/m/n/12 MjesecPlaniranjaBudzeta  
  []
 
 > Step: build the whole table.
 
-Overfull \hbox (1.3216pt too wide) in paragraph at lines 72--72
+Overfull \hbox (1.3216pt too wide) in paragraph at lines 71--71
 []\OT1/jkp/m/n/12 MjesecPlaniranjaBudzeta  
  []
 
@@ -1689,7 +1666,7 @@ Overfull \hbox (1.3216pt too wide) in paragraph at lines 72--72
 Type <return> to continue.
  ...                                              
                                                   
-l.93 				\end
+l.92 				\end
              {longtblr}
 ? 
 > Step: calculate cell and line sizes.
@@ -1701,90 +1678,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller to compensate:
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-
-LaTeX Warning: Reference `LastPage' on page 13 undefined on input line 93.
-
-[13]
-> Step: init table outer spec.
-> Step: parse table options.
-> Step: split table.
-> Step: init table inner spec.
-> Step: parse table inner spec.
-> Step: execute table commands.
-
-
-! Package tabularray Error: \multicolumn is obsolete; use \SetCell instead.
-
-Type <return> to continue.
- ...                                              
-                                                  
-l.106 				\end
-              {longtblr}
-? 
-> Step: calculate cell and line sizes.
-> Step: build the whole table.
-> Step: init table outer spec.
-> Step: parse table options.
-> Step: split table.
-> Step: init table inner spec.
-> Step: parse table inner spec.
-> Step: execute table commands.
-
-! Package tabularray Error: \multicolumn is obsolete; use \SetCell instead.
-
-Type <return> to continue.
- ...                                              
-                                                  
-l.119 				\end
-              {longtblr}
-? 
-> Step: calculate cell and line sizes.
-> Step: build the whole table.
-> Step: init table outer spec.
-> Step: parse table options.
-> Step: split table.
-> Step: init table inner spec.
-> Step: parse table inner spec.
-> Step: execute table commands.
-
-! Package tabularray Error: \multicolumn is obsolete; use \SetCell instead.
-
-Type <return> to continue.
- ...                                              
-                                                  
-l.132 				\end
-              {longtblr}
-? 
-> Step: calculate cell and line sizes.
-> Step: build the whole table.
-> Step: init table outer spec.
-> Step: parse table options.
-> Step: split table.
-> Step: init table inner spec.
-> Step: parse table inner spec.
-> Step: execute table commands.
-
-! Package tabularray Error: \multicolumn is obsolete; use \SetCell instead.
-
-Type <return> to continue.
- ...                                              
-                                                  
-l.151 				\end
-              {longtblr}
-? 
-> Step: calculate cell and line sizes.
-> Step: build the whole table.
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-
-LaTeX Warning: Reference `LastPage' on page 14 undefined on input line 151.
 
 [14]
 > Step: init table outer spec.
@@ -1800,16 +1693,72 @@ LaTeX Warning: Reference `LastPage' on page 14 undefined on input line 151.
 Type <return> to continue.
  ...                                              
                                                   
-l.168 				\end
+l.105 				\end
               {longtblr}
 ? 
 > Step: calculate cell and line sizes.
 > Step: build the whole table.
-<./slike//DBDiagram.png, id=118, 687.56876pt x 593.21625pt>
-File: ./slike//DBDiagram.png Graphic file (type png)
-<use ./slike//DBDiagram.png>
-Package pdftex.def Info: ./slike//DBDiagram.png  used on input line 172.
-(pdftex.def)             Requested size: 343.78354pt x 296.60739pt.
+> Step: init table outer spec.
+> Step: parse table options.
+> Step: split table.
+> Step: init table inner spec.
+> Step: parse table inner spec.
+> Step: execute table commands.
+
+! Package tabularray Error: \multicolumn is obsolete; use \SetCell instead.
+
+Type <return> to continue.
+ ...                                              
+                                                  
+l.118 				\end
+              {longtblr}
+? 
+> Step: calculate cell and line sizes.
+
+Overfull \hbox (2.95358pt too wide) in paragraph at lines 118--118
+[]\OT1/jkp/b/n/12 ProjectFRTeamMembers  
+ []
+
+> Step: build the whole table.
+
+Overfull \hbox (2.95358pt too wide) in paragraph at lines 118--118
+[]\OT1/jkp/b/n/12 ProjectFRTeamMembers  
+ []
+
+> Step: init table outer spec.
+> Step: parse table options.
+> Step: split table.
+> Step: init table inner spec.
+> Step: parse table inner spec.
+> Step: execute table commands.
+
+! Package tabularray Error: \multicolumn is obsolete; use \SetCell instead.
+
+Type <return> to continue.
+ ...                                              
+                                                  
+l.131 				\end
+              {longtblr}
+? 
+> Step: calculate cell and line sizes.
+> Step: build the whole table.
+> Step: init table outer spec.
+> Step: parse table options.
+> Step: split table.
+> Step: init table inner spec.
+> Step: parse table inner spec.
+> Step: execute table commands.
+
+! Package tabularray Error: \multicolumn is obsolete; use \SetCell instead.
+
+Type <return> to continue.
+ ...                                              
+                                                  
+l.150 				\end
+              {longtblr}
+? 
+> Step: calculate cell and line sizes.
+> Step: build the whole table.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1817,11 +1766,31 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller to compensate:
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-
-LaTeX Warning: Reference `LastPage' on page 15 undefined on input line 174.
 
 [15]
+> Step: init table outer spec.
+> Step: parse table options.
+> Step: split table.
+> Step: init table inner spec.
+> Step: parse table inner spec.
+> Step: execute table commands.
+
+
+! Package tabularray Error: \multicolumn is obsolete; use \SetCell instead.
+
+Type <return> to continue.
+ ...                                              
+                                                  
+l.169 				\end
+              {longtblr}
+? 
+> Step: calculate cell and line sizes.
+> Step: build the whole table.
+<./slike//DBDiagram.png, id=258, 687.56876pt x 593.21625pt>
+File: ./slike//DBDiagram.png Graphic file (type png)
+<use ./slike//DBDiagram.png>
+Package pdftex.def Info: ./slike//DBDiagram.png  used on input line 174.
+(pdftex.def)             Requested size: 412.54443pt x 355.9325pt.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1830,26 +1799,70 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
+[16]
 
-LaTeX Warning: Reference `LastPage' on page 16 undefined on input line 174.
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
 
-[16 <./slike//DBDiagram.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 179--180
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
- []
+[17
+pdfTeX warning (ext4): destination with the same identifier (name{figure.3.1}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.179 			\eject
+                <./slike//DBDiagram.png>]
+<./slike//ModelUml.png, id=271, 834.11626pt x 836.12375pt>
+File: ./slike//ModelUml.png Graphic file (type png)
+<use ./slike//ModelUml.png>
+Package pdftex.def Info: ./slike//ModelUml.png  used on input line 186.
+(pdftex.def)             Requested size: 417.05711pt x 418.06085pt.
+<./slike//DtoUml.png, id=272, 713.66624pt x 633.36626pt>
+File: ./slike//DtoUml.png Graphic file (type png)
+<use ./slike//DtoUml.png>
+Package pdftex.def Info: ./slike//DtoUml.png  used on input line 192.
+(pdftex.def)             Requested size: 356.83224pt x 316.68236pt.
+<./slike//ControllerServiceUml.png, id=273, 809.0225pt x 749.80125pt>
+File: ./slike//ControllerServiceUml.png Graphic file (type png)
+<use ./slike//ControllerServiceUml.png>
+Package pdftex.def Info: ./slike//ControllerServiceUml.png  used on input line 
+198.
+(pdftex.def)             Requested size: 404.51027pt x 374.8997pt.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 181--182
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
 
- []
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
+[18
+pdfTeX warning (ext4): destination with the same identifier (name{figure.3.2}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.202 		\end{figure}
+                     <./slike//ModelUml.png>]
 
-Underfull \hbox (badness 10000) in paragraph at lines 183--184
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
 
- []
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 185--186
+[19
+pdfTeX warning (ext4): destination with the same identifier (name{figure.3.3}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.203 		\section{Dijagram stanja}
+                                  <./slike//DtoUml.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 206--207
 
  []
 
@@ -1861,27 +1874,14 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 17 undefined on input line 191.
-
-[17]
-Underfull \hbox (badness 10000) in paragraph at lines 196--197
-
- []
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-
-LaTeX Warning: Reference `LastPage' on page 18 undefined on input line 201.
-
-[18]
-Underfull \hbox (badness 10000) in paragraph at lines 205--206
+[20
+pdfTeX warning (ext4): destination with the same identifier (name{figure.3.4}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.211 			\eject
+                <./slike//ControllerServiceUml.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 215--216
 
  []
 
@@ -1893,11 +1893,8 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 19 undefined on input line 209.
-
-[19]
-Underfull \hbox (badness 10000) in paragraph at lines 212--213
+[21]
+Underfull \hbox (badness 10000) in paragraph at lines 222--223
 
  []
 
@@ -1910,14 +1907,11 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 20 undefined on input line 125.
-
-[20]
+[22]
 \openout2 = `Implementacija.aux'.
 
  (Implementacija.tex
-Poglavlje 5.
+Poglavlje 4.
 
 Overfull \hbox (10.38434pt too wide) in paragraph at lines 1--1
 |[]\OT1/jkp/b/n/24.88 Implementacija i ko-risni[]cko su[]celje| 
@@ -1931,10 +1925,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 21 undefined on input line 11.
-
-[21
+[23
 
 
 
@@ -1957,10 +1948,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 22 undefined on input line 37.
-
-[22]
+[24]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1969,10 +1957,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 23 undefined on input line 46.
-
-[23]
+[25]
 Underfull \hbox (badness 10000) in paragraph at lines 50--51
 
  []
@@ -1985,14 +1970,11 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 24 undefined on input line 58.
-
-[24])
+[26])
 \openout2 = `Zakljucak.aux'.
 
  (Zakljucak.tex
-Poglavlje 6.
+Poglavlje 5.
 
 Underfull \hbox (badness 10000) in paragraph at lines 3--4
 
@@ -2006,10 +1988,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 25 undefined on input line 9.
-
-[25
+[27
 
 
 
@@ -2038,18 +2017,15 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 26 undefined on input line 128.
-
-[26
+[28
 
 
 
 
-]
-No file PROGI_2022_EkipaZaOcevid_rev0.1.lof.
+] (PROGI_2022_EkipaZaOcevid_rev0.1.lof)
 \tf@lof=\write5
 \openout5 = `PROGI_2022_EkipaZaOcevid_rev0.1.lof'.
+
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -2059,10 +2035,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 27 undefined on input line 143.
-
-[27
+[29
 
 
 
@@ -2082,10 +2055,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 28 undefined on input line 38.
-
-[28
+[30
 
 
 ]
@@ -2181,10 +2151,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 29 undefined on input line 85.
-
-[29]
+[31]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2193,10 +2160,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 30 undefined on input line 88.
-
-[30]
+[32]
 Underfull \hbox (badness 10000) in paragraph at lines 91--92
 
  []
@@ -2210,43 +2174,34 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-
-LaTeX Warning: Reference `LastPage' on page 31 undefined on input line 145.
-
-[31] 
+[33] 
 AED: lastpage setting LastPage
 (PROGI_2022_EkipaZaOcevid_rev0.1.aux (Dnevnik_promjena_dokumentacije.aux)
 (Opis_projektnog_zadatka.aux) (Specifikacija_programske_potpore.aux)
 (Arhitektura.aux) (Implementacija.aux) (Zakljucak.aux) (Literatura.aux)
 (Dodatak.aux))
 
-LaTeX Warning: There were undefined references.
-
-
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
-
-Package rerunfilecheck Warning: File `PROGI_2022_EkipaZaOcevid_rev0.1.out' has 
-changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `PROGI_2022_EkipaZaOcevid_rev0.1.out
-':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  73DC96050B1C6E228BBC05CE1994BB16;4565.
+Package rerunfilecheck Info: File `PROGI_2022_EkipaZaOcevid_rev0.1.out' has not
+ changed.
+(rerunfilecheck)             Checksum: 242E14EAA4675AB67D65D9675B184BD3;4372.
  ) 
 Here is how much of TeX's memory you used:
- 17659 strings out of 475380
- 319790 string characters out of 2776299
- 814102 words of memory out of 3000000
- 38620 multiletter control sequences out of 15000+600000
- 540923 words of font info for 181 fonts, out of 8000000 for 9000
+ 17763 strings out of 475380
+ 322751 string characters out of 2776299
+ 817884 words of memory out of 3000000
+ 38692 multiletter control sequences out of 15000+600000
+ 541025 words of font info for 181 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  84i,12n,116p,911b,1044s stack positions out of 10000i,1000n,20000p,200000b,80000s
 
 pdfTeX warning (dest): name{Hfootnote.1} has been referenced but does not exist
 , replaced by a fixed one
+
+
+pdfTeX warning (dest): name{page.34} has been referenced but does not exist, re
+placed by a fixed one
 
 {C:/Users/Nikola/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C:/
 Users/Nikola/AppData/Local/Programs/MiKTeX/fonts/type1/public/kpfonts/jkpbit8a.
@@ -2257,10 +2212,10 @@ ic/kpfonts/jkpmit8a.pfb><C:/Users/Nikola/AppData/Local/Programs/MiKTeX/fonts/ty
 pe1/public/kpfonts/jkpmn8a.pfb><C:/Users/Nikola/AppData/Local/Programs/MiKTeX/f
 onts/type1/public/kpfonts/jkpsy.pfb><C:/Users/Nikola/AppData/Local/Programs/MiK
 TeX/fonts/type1/public/kpfonts/jkpttmn8a.pfb>
-Output written on PROGI_2022_EkipaZaOcevid_rev0.1.pdf (32 pages, 210445 bytes).
+Output written on PROGI_2022_EkipaZaOcevid_rev0.1.pdf (34 pages, 324324 bytes).
 
 PDF statistics:
- 279 PDF objects out of 1000 (max. 8388607)
- 95 named destinations out of 1000 (max. 500000)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 443 PDF objects out of 1000 (max. 8388607)
+ 101 named destinations out of 1000 (max. 500000)
+ 234 words of extra memory for PDF output out of 10000 (max. 10000000)
 
