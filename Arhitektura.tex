@@ -1,4 +1,4 @@
-Arhitektura i dizajn sustava}
+\chapter{Arhitektura i dizajn sustava}
 		
 		{Arhitekturu možemo podijeliti na 3 podsustava:}
 
@@ -14,7 +14,7 @@ Arhitektura i dizajn sustava}
 
 		{Od ostalih protokola koji služe za komunikaciju i prijenos informacija i podataka između klijenta i poslužitelja treba napomenuti: IP (\textit{Internet Protocol}) koji služi za prijenos podataka u blokovima (paketi, datagrami), komunikacijski protokol ARP (\textit{Address Resolution Protocol}) te ICMP (\textit{Internet Control Message Protocol}) koji je ugrađen u svaki IP modul kako bi omogućio računalima slanje kontrolnih poruka o greškama. ICMP prijavljuje greške, ali nije zadužen za njihovo ispravljanje.}\vspace{0.3cm}
 
-		{Klijent koristi Web aplikaciju za obradu traženih zahtjeva. Aplikacija vrši obradu zahtjeva te, u slučaju pozitivnog ishoda obrade, pristupa bazi podataka. Nakon toga preko Web poslužitelja vraća korisniku odgovor koji mu je razumljiv i vidljiv u Web pregledniku.}\vspace{0.3cm}
+		{Klijent koristi Web aplikaciju, prikazanu u pregledniku, te preko nje šalje zahtjeve Web poslužitelju. Nakon obrade podataka, Web poslužitelj vraća odgovor aplikaciji koja ga potom prikazuje korisniku.}\vspace{0.3cm}
 
 		{Programski i korisnički jezici koje smo koristili su: HTML, CSS i JavaScript za Frontend te Java za Backend. Radni okviri koje smo odabrali su React (Frontend) i Spring Boot (Backend). Od razvojnih okruženja koristili smo IntelliJ u okviru izrade Backenda te Visual Studio Code za izradu Frontenda.}\vspace{0.3cm}
 
@@ -22,21 +22,19 @@ Arhitektura i dizajn sustava}
 
 		{\underbar{REST API} je sučelje koje dva računalna sustava koriste za sigurnu razmjenu informacija putem interneta. Većina Web aplikacija mora komunicirati s drugim internim aplikacijama i aplikacijama trećih strana kako bi izvršile razne zadatke, a REST API podržava ovu razmjenu informacija jer slijedi sigurne, pouzdane i učinkovite softverske komunikacijske standarde.}\pagebreak
 		
-
-
-				
+		
 		\section{Baza podataka}
+		
+%		\textit{Dio 1. implementacije}
 			
-			\textbf{\textit{dio 1. revizije}}\\
-			
-		\textit{Podaci u našoj aplikaciji će se spremati u relacijsku bazu podataka koristeći Postgres kao DBMS. Baza će se sastojati od sljedećih entiteta:}
+		{Podaci u aplikaciji će se spremati u relacijsku bazu podataka koristeći Postgres kao DBMS. Baza će se sastojati od sljedećih entiteta:}
 		\begin{itemize}
 			\item Korisnik
+			\item Mjesto
 			\item Tvrtka
+			\item Zaposlenik
 			\item Projekt
 			\item ProjectFRTeamMembers
-			\item Mjesto
-			\item Zaposlenik
 			\item Suradnja
 		\end{itemize}
 			\subsection{Opis tablica}
@@ -178,7 +176,7 @@ Arhitektura i dizajn sustava}
 			
 		\section{Dijagram razreda}
 		
-			Na sljedećim slikama prikazani su UML dijagrami razreda koji se koriste u aplikaciji. Podijeljeni su u 3 dijela. Prvi dijagram prikazuje klase kojima smo modelirali entitete aplikacije, drugi prikazuje DTO-ove\textit{(Data transfer object)}, a treći prikazuje Controllere. Može se uočiti da postoje veze između klasa iz različitih dijagrama(npr. UserDto sadrži UserSystemAuthority), ali su one izostavljene radi preglednosti.
+			Na sljedećim slikama prikazani su UML dijagrami razreda koji se koriste u aplikaciji. Podijeljeni su u 3 dijela. Prvi dijagram prikazuje klase kojima smo modelirali entitete aplikacije, drugi prikazuje DTO-ove \textit{(Data transfer object)}, a treći prikazuje Controllere. Može se uočiti da postoje veze između klasa iz različitih dijagrama(npr. UserDto sadrži UserSystemAuthority), ali su one izostavljene radi preglednosti.
 			
 			\begin{figure}[H]
 				\includegraphics[scale=0.5]{ModelUml} %veličina slike u odnosu na originalnu datoteku i pozicija slike
@@ -198,13 +196,15 @@ Arhitektura i dizajn sustava}
 				\caption{Controllers and services UML}
 				\label{fig:controllersServicesUml}
 		\end{figure}
+		
+	
+	\iffalse % block comment (zavrsava sa fi)
+	
 		\section{Dijagram stanja}
-			
 			
 			\textbf{\textit{dio 2. revizije}}\\
 			
 			\textit{Potrebno je priložiti dijagram stanja i opisati ga. Dovoljan je jedan dijagram stanja koji prikazuje \textbf{značajan dio funkcionalnosti} sustava. Na primjer, stanja korisničkog sučelja i tijek korištenja neke ključne funkcionalnosti jesu značajan dio sustava, a registracija i prijava nisu. }
-			
 			
 			\eject 
 		
@@ -215,8 +215,11 @@ Arhitektura i dizajn sustava}
 			 \textit{Potrebno je priložiti dijagram aktivnosti s pripadajućim opisom. Dijagram aktivnosti treba prikazivati značajan dio sustava.}
 			
 			\eject
+			
 		\section{Dijagram komponenti}
 		
 			\textbf{\textit{dio 2. revizije}}\\
 		
 			 \textit{Potrebno je priložiti dijagram komponenti s pripadajućim opisom. Dijagram komponenti treba prikazivati strukturu cijele aplikacije.}
+			 
+	\fi % block comment (pocinje sa iffalse)
