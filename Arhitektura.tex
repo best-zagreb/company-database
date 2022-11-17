@@ -46,7 +46,7 @@ Arhitektura i dizajn sustava}
 					entry=none
 					]{
 						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						colspec={|X[14,l]|X[8, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 						\hline \multicolumn{3}{|c|}{\textbf{Korisnik}}	 \\ \hline[3pt]
@@ -54,8 +54,8 @@ Arhitektura i dizajn sustava}
 						Ime	& VARCHAR & Ime korisnika \\ \hline 
 						Prezime & VARCHAR & Prezime korisnika \\ \hline 
 						Nadimak & VARCHAR	& Nadimak korisnika \\ \hline 
-        				LoginEmail & VARCHAR	& Email adresa pomoću kojeg se user logira \\ \hline 
-        				NotificationEmail & VARCHAR	& Email adresa na koju korisnik prima obavijesti \\ \hline 
+		        				LoginEmail & VARCHAR	& Email adresa pomoću kojeg se user logira \\ \hline 
+		        				NotificationEmail & VARCHAR	& Email adresa na koju korisnik prima obavijesti \\ \hline 
 						MaxRazinaOvlasti & VARCHAR & Maksimalna razina ovlasti na projektima \\ \hline
 				\end{longtblr}
 
@@ -64,75 +64,7 @@ Arhitektura i dizajn sustava}
 					entry=none
 					]{
 						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
-						rowhead = 1,
-					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-						\hline \multicolumn{3}{|c|}{\textbf{Tvrtka}}	 \\ \hline[3pt]
-						\SetCell{LightGreen} IdTvrtka & INT	&  Id tvrtke	\\ \hline
-						Naziv & VARCHAR & Naziv tvrtke \\ \hline 
-						Podrucje & VARCHAR &  Područje kojim se tvrtka bavi \\ \hline 
-						ABCKategorija & CHAR & Kategorija tvrtke (A B ili C) \\ \hline 
-		                MjesecPlaniranjaBudzeta & INT & Mjesec u kojem tvrtka planira budžet \\ \hline
-		                Drzava & VARCHAR & Država u kojoj tvrtka posluje \\ \hline
-		                \SetCell{LightBlue} PBr & VARCHAR & Poštanski broj mjesta tvrtke \\ \hline
-						Adresa & VARCHAR & Adresa tvrtke \\ \hline
-	                 	WebStranica & VARCHAR & Adresa web stranice tvrtke \\ \hline
-		                Kontaktirati & BOOLEAN & Treba li ubuduće tu tvrtku treba kontaktirati \\ \hline
-				\end{longtblr}
-
-				\begin{longtblr}[
-					label=none,
-					entry=none
-					]{
-						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
-						rowhead = 1,
-					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \multicolumn{3}{|c|}{\textbf{Projekt}}	 \\ \hline[3pt]
-					\SetCell{LightGreen}IDProjekt & INT	& Id projekta \\ \hline
-					Naziv & VARCHAR & Naziv projekta \\ \hline 
-					\SetCell{LightBlue} KategorijaProjekta & INT & Kategorija u koju spada projekt \\ \hline 
-					TipProjekta & VARCHAR & Eksterni ili interni projekt \\ \hline 
-					DatumPočetka & TIMESTAMP & Datum početka projekta \\ \hline 
-	                DatumZavršetka & TIMESTAMP & Datum završetka projekta \\ \hline 
-	                \SetCell{LightBlue} FRResponsibleUserId & INT & Id korisnika odgovornog za odnose s tvrtkama projekta \\ \hline
-	                FRCilj & INT & Količina novca koja se želi prikupiti za projekt \\ \hline
-	                FirstPing & TIMESTAMP & Datum prvog "ping"-a \\ \hline
-	                SecondPing & TIMESTAMP & Datum drugog "ping"-a \\ \hline
-				\end{longtblr}
-
-				\begin{longtblr}[
-					label=none,
-					entry=none
-					]{
-						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
-						rowhead = 1,
-					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \multicolumn{3}{|c|}{\textbf{TipProjekta}}	 \\ \hline[3pt]
-					\SetCell{LightGreen}IDTipProjekt & INT	& Id tipa projekta \\ \hline
-					TipProjekta	& VARCHAR & Tip projekta \\ \hline 
-				\end{longtblr}
-
-				\begin{longtblr}[
-					label=none,
-					entry=none
-					]{
-						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
-						rowhead = 1,
-					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \multicolumn{3}{|c|}{\textbf{ProjectFRTeamMembers}}	 \\ \hline[3pt]
-					\SetCell{LightGreen}IDKorisnik & INT & Id korisnika koji je FR team member projekta \\ \hline
-					\SetCell{LightGreen}IDProjekt & INT & Id projekta \\ \hline
-				\end{longtblr}
-
-				\begin{longtblr}[
-					label=none,
-					entry=none
-					]{
-						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						colspec={|X[14,l]|X[8, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 					\hline \multicolumn{3}{|c|}{\textbf{Mjesto}}	 \\ \hline[3pt]
@@ -145,18 +77,20 @@ Arhitektura i dizajn sustava}
 					entry=none
 					]{
 						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						colspec={|X[14,l]|X[8, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \multicolumn{3}{|c|}{\textbf{Zaposlenik}}	 \\ \hline[3pt]
-						\SetCell{LightGreen} IDZaposlenik & INT	& Id zaposlenika \\ \hline
-						\SetCell{LightBlue} IDTvrtke & INT & Id tvrtke za koju zaposlenik radi\\ \hline 
-						Ime & VARCHAR & Ime zaposlenika \\ \hline 
-						Prezime & VARCHAR	& Prezime zaposlenika \\ \hline 
-	                    Email & VARCHAR	& Email adresa zaposlenika \\ \hline 
-	                    BrojTelefona & VARCHAR	& Broj telefona zaposlenika \\ \hline 
-	                    Uloga & VARCHAR	& Pozicija zaposlenika u tvrtci (npr. PR) \\ \hline 
-	                    Opis & VARCHAR	& Opis zaposlenika (npr. glavni kontakt) \\ \hline 
+						\hline \multicolumn{3}{|c|}{\textbf{Tvrtka}}	 \\ \hline[3pt]
+						\SetCell{LightGreen} IdTvrtka & INT	&  Id tvrtke	\\ \hline
+						Naziv & VARCHAR & Naziv tvrtke \\ \hline 
+						Podrucje & VARCHAR &  Područje kojim se tvrtka bavi \\ \hline 
+						ABCKategorija & CHAR & Kategorija tvrtke (A B ili C) \\ \hline 
+				                     MjesecPlaniranjaBudzeta & INT & Mjesec u kojem tvrtka planira budžet \\ \hline
+				                     Drzava & VARCHAR & Država u kojoj tvrtka posluje \\ \hline
+				                     \SetCell{LightBlue} PBr & VARCHAR & Poštanski broj mjesta tvrtke \\ \hline
+						Adresa & VARCHAR & Adresa tvrtke \\ \hline
+				                 	WebStranica & VARCHAR & Adresa web stranice tvrtke \\ \hline
+					           Kontaktirati & BOOLEAN & Treba li ubuduće tu tvrtku treba kontaktirati \\ \hline
 				\end{longtblr}
 
 				\begin{longtblr}[
@@ -164,7 +98,60 @@ Arhitektura i dizajn sustava}
 					entry=none
 					]{
 						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						colspec={|X[14,l]|X[8, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \multicolumn{3}{|c|}{\textbf{Zaposlenik}}	 \\ \hline[3pt]
+						\SetCell{LightGreen} IDZaposlenik & INT	& Id zaposlenika \\ \hline
+						\SetCell{LightBlue} IDTvrtke & INT & Id tvrtke za koju zaposlenik radi\\ \hline 
+						Ime & VARCHAR & Ime zaposlenika \\ \hline 
+						Prezime & VARCHAR	& Prezime zaposlenika \\ \hline 
+				                    Email & VARCHAR	& Email adresa zaposlenika \\ \hline 
+				                    BrojTelefona & VARCHAR	& Broj telefona zaposlenika \\ \hline 
+				                    Uloga & VARCHAR	& Pozicija zaposlenika u tvrtci (npr. PR) \\ \hline 
+				                    Opis & VARCHAR	& Opis zaposlenika (npr. glavni kontakt) \\ \hline 
+				\end{longtblr}
+
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[14,l]|X[8, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \multicolumn{3}{|c|}{\textbf{Projekt}}	 \\ \hline[3pt]
+					\SetCell{LightGreen}IDProjekt & INT	& Id projekta \\ \hline
+					Naziv & VARCHAR & Naziv projekta \\ \hline 
+					KategorijaProjekta & INT & Kategorija u koju spada projekt \\ \hline 
+					TipProjekta & INT & Eksterni ili interni projekt \\ \hline 
+					DatumPočetka & TIMESTAMP & Datum početka projekta \\ \hline 
+				                DatumZavršetka & TIMESTAMP & Datum završetka projekta \\ \hline 
+				                \SetCell{LightBlue} FRResponsibleUserId & INT & Id korisnika odgovornog za odnose s tvrtkama projekta \\ \hline
+				                FRCilj & INT & Količina novca koja se želi prikupiti za projekt \\ \hline
+				                FirstPing & TIMESTAMP & Datum prvog "ping"-a \\ \hline
+				                SecondPing & TIMESTAMP & Datum drugog "ping"-a \\ \hline
+				\end{longtblr}
+
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[14,l]|X[8, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \multicolumn{3}{|c|}{\textbf{ProjectFRTeamMembers}}	 \\ \hline[3pt]
+					\SetCell{LightGreen}IDKorisnik & INT & Id korisnika koji je FR team member projekta \\ \hline
+					\SetCell{LightGreen}IDProjekt & INT & Id projekta \\ \hline
+				\end{longtblr}
+
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[14,l]|X[8, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 					\hline \multicolumn{3}{|c|}{\textbf{Suradnja}}	 \\ \hline[3pt]
@@ -180,27 +167,37 @@ Arhitektura i dizajn sustava}
 				
 			
 			\subsection{Dijagram baze podataka}
-				\includegraphics[scale=0.5]{DBDiagram}
-			
+				\begin{figure}[H]
+					\includegraphics[scale=0.6]{DBDiagram}
+					\centering
+					\caption{Database Diagram}
+					\label{fig:dbdiagram}
+				\end{figure}
 			\eject
 			
 			
 		\section{Dijagram razreda}
 		
-			\textit{Potrebno je priložiti dijagram razreda s pripadajućim opisom. Zbog preglednosti je moguće dijagram razlomiti na više njih, ali moraju biti grupirani prema sličnim razinama apstrakcije i srodnim funkcionalnostima.}\\
+			Na sljedećim slikama prikazani su UML dijagrami razreda koji se koriste u aplikaciji. Podijeljeni su u 3 dijela. Prvi dijagram prikazuje klase kojima smo modelirali entitete aplikacije, drugi prikazuje DTO-ove\textit{(Data transfer object)}, a treći prikazuje Controllere. Može se uočiti da postoje veze između klasa iz različitih dijagrama(npr. UserDto sadrži UserSystemAuthority), ali su one izostavljene radi preglednosti.
 			
-			\textbf{\textit{dio 1. revizije}}\\
-			
-			\textit{Prilikom prve predaje projekta, potrebno je priložiti potpuno razrađen dijagram razreda vezan uz \textbf{generičku funkcionalnost} sustava. Ostale funkcionalnosti trebaju biti idejno razrađene u dijagramu sa sljedećim komponentama: nazivi razreda, nazivi metoda i vrste pristupa metodama (npr. javni, zaštićeni), nazivi atributa razreda, veze i odnosi između razreda.}\\
-			
-			\textbf{\textit{dio 2. revizije}}\\			
-			
-			\textit{Prilikom druge predaje projekta dijagram razreda i opisi moraju odgovarati stvarnom stanju implementacije}
-			
-			
-			
-			\eject
-		
+			\begin{figure}[H]
+				\includegraphics[scale=0.5]{ModelUml} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Models UML}
+				\label{fig:modelUml}
+			\end{figure}
+			\begin{figure}[H]
+				\includegraphics[scale=0.5]{DtoUml} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{DtoUml}
+				\label{fig:dtouml}
+			\end{figure}
+			\begin{figure}[H]
+				\includegraphics[scale=0.5]{ControllerServiceUml} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Controllers and services UML}
+				\label{fig:controllersServicesUml}
+		\end{figure}
 		\section{Dijagram stanja}
 			
 			
