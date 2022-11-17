@@ -13,16 +13,16 @@
 			
 			\begin{packed_enum}
 				
-				\item Vlasnik neprofitabline organizacije
+				\item Predsjednik neprofitabline organizacije
 				\item Vlasnik kompanije
 				\item Zaposlenik kompanije
 					\item Kontakt
 					\item Osoba zadužena za prodaju
 				\item Član neprofitabline organizacije
-					\item Osoba zadužena za stvaranje projekata
-					\item Organizator projekta
-					\item Programska podrška
-					\item Javni govornici
+					\item Osoba odgovorna za odnose s tvrtkama
+					\item Osoba odgovorna za odnose s tvrtkama na projektu
+					\item Član tima za odnose s tvrtkama
+					\item Intern
 				\item Administrator
 				\item Razvojni tim
 				
@@ -32,7 +32,7 @@
 			
 			
 			\begin{packed_enum}
-				\item  \underbar{ Neprijavljeni korisnik (inicijator) moze:} 
+				\item  \underbar{Neprijavljeni korisnik (inicijator) moze:}
 
 				\begin{packed_enum}
 
@@ -41,7 +41,7 @@
 
 				\end{packed_enum}
 
-				\item  \underbar{Član organizacije(Kontakt/Osoba zadužena za prodaju) (inicijator) može:} 
+				\item  \underbar{Intern -  rola observer (inicijator) može:}
 				
 				\begin{packed_enum}
 					
@@ -49,46 +49,49 @@
 					\item Pregledavati kompanije (naziv i područje)
 					\item Pregledavati informacija o projektima (datum početka, datum završetka, oganizator)
 					\item Pregledavati suradnje
-					\item Promijeniti osobne podatake
+					\item Pregledati korisnike
+					\item Pregledati podatke o korisniku
 					
 				\end{packed_enum}
 
-				\item  \underbar{Član neprofitabline organizacije(Programska podrška/Javni govornici) (inicijator) može:} 
+				\item  \underbar{Član tima za odnose s tvrtkama - rola FR team member (inicijator) može:}
 
 				\begin{packed_enum}
 
 					\item Pregledavati projekte
 					\item Pregledavati kompanije (naziv i područje)
-					\item Pregledavati informacija o projektima (datum početka, datum završetka, FR-responsiblea)
+					\item Pregledavati informacija o projektima (datum početka, datum završetka, FR- responsiblea)
 					\item Pregledavati suradnje
 					\item Promijeniti podatke o suradnji (kategorija, status, sažetak, vrijednost)
 					\item Pregledavati i promijeniti sve podatke za dodijeljenu kompaniju
-					\item Promijeniti osobne podatake
+					\item Pregledati korisnike
+					\item Pregledati podatke o korisniku
 
 				\end{packed_enum}
 
-				\item  \underbar{Član neprofitabline organizacije(Organizator projekta) (inicijator) može:} 
+				\item  \underbar{Osoba odgovorna za odnose s tvrtkama na projektu -  rola FR responsible (inicijator) može:}
 
 				\begin{packed_enum}
 
 					\item Pregledavati projekte
 					\item Pregledavati kompanije (naziv i područje)
-					\item Pregledavati informacija o projektima (datum početka, datum završetka, FR-responsiblea)
+					\item Pregledavati informacija o projektima (datum početka, datum završetka, FR- responsiblea)
 					\item Pregledavati suradnje
 					\item Promijeniti podatke o suradnji (kategorija, status, sažetak, vrijednost)
 					\item Pregledavati i promijeniti sve podatke za dodijeljenu kompaniju
 					\item Strvoriti i obrisati suradnju
-					\item Promijeniti osobne podatake
+					\item Pregledati korisnike
+					\item Pregledati podatke o korisniku
 
 				\end{packed_enum}
 
-				\item  \underbar{ Osoba zadužena za stvaranje projekata (inicijator) može:} 
+				\item  \underbar{Osoba odgovorna za odnose s tvrtkama -  rola moderator (inicijator) može:}
 
 				\begin{packed_enum}
 
 					\item Pregledavati projekte
 					\item Pregledavati kompanije (naziv i područje)
-					\item Pregledavati informacija o projektima (datum početka, datum završetka, FR-responsiblea)
+					\item Pregledavati informacija o projektima (datum početka, datum završetka, FR- responsiblea)
 					\item Pregledavati suradnje
 					\item Promijeniti podatke o suradnji (kategorija, status, sažetak, vrijednost)
 					\item Pregledavati i promijeniti sve podatke za dodijeljenu kompaniju
@@ -97,17 +100,18 @@
 					\item Stvoriti i obrisati vlastito stvorene projekte
 					\item Dodijeliti i maknuti nekom korisniku mogućnosti organizatora projekta na projektu koji je stvorio
 					\item Staviti i maknuti nekog korisnika s rolom člana neprofitabilne kompanije na projekt koji je stvorio
-					\item Promijeniti osobne podatake
+					\item Pregledati korisnike
+					\item Pregledati podatke o korisniku
 
 				\end{packed_enum}
 
-				\item  \underbar{ Administrator (inicijator) može:} 
+				\item  \underbar{Administrator (inicijator) može:}
 
 				\begin{packed_enum}
 
 					\item Pregledavati projekte
 					\item Pregledavati kompanije (naziv i područje)
-					\item Pregledavati informacija o projektima (datum početka, datum završetka, FR-responsiblea)
+					\item Pregledavati informacija o projektima (datum početka, datum završetka, FR- responsiblea)
 					\item Pregledavati suradnje
 					\item Promijeniti podatke o suradnji (kategorija, status, sažetak, vrijednost)
 					\item Pregledavati i promijeniti sve podatke za dodijeljenu kompaniju
@@ -117,6 +121,7 @@
 					\item Dodijeliti nekom korisniku mogućnosti organizatora projekta na projektu koji je stvorio
 					\item Staviti nekog korisnika s rolom člana neprofitabilne kompanije na projekt koji je stvorio
 					\item Pregledati korisnike
+					\item Pregledati podatke o korisniku
 					\item Dodijeliti nekom korisniku bilo koju od prije navedenih pozicija
 					\item Registrirati i maknuti korisnika iz sustava
 					\item Registrirati sebe u sustav pri prvom pokretanju
@@ -153,250 +158,250 @@
 				\subsubsection{Opis obrazaca uporabe}
 					\textit{Funkcionalne zahtjeve razraditi u obliku obrazaca uporabe. Svaki obrazac je potrebno razraditi prema donjem predlošku. Ukoliko u nekom koraku može doći do odstupanja, potrebno je to odstupanje opisati i po mogućnosti ponuditi rješenje kojim bi se tijek obrasca vratio na osnovni tijek.}
 
-					\noindent \underbar{\textbf{UC$<$1$>$ -$<$Registracija prvog administratora$>$}}
+					\noindent \underbar{\textbf{UC1 - Registracija prvog administratora}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Neprijavljeni korisnik$>$
-						\item \textbf{Cilj:} $<$Stvoriti administratov korisnički račun za pristup aplikaciji$>$
-						\item \textbf{Sudionici:} $<$Baza podataka, Google auth API$>$
-						\item \textbf{Preduvjet:} $<$-$>$
+						\item \textbf{Glavni sudionik:} Neprijavljeni korisnik
+						\item \textbf{Cilj:} Stvoriti administratov korisnički račun za pristup aplikaciji
+						\item \textbf{Sudionici:} Baza podataka, Google auth API
+						\item \textbf{Preduvjet:} - 
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik dolazi na stranicu koja ga preusmjerava na formu za registraciju prvog korisnika$>$
-							\item $<$Korisnik ispunjava formu emailom prvog administratora$>$
-							\item $<$Stranica preusmjerava korisnika na stranicu za prijavu$>$
+							\item Korisnik dolazi na stranicu koja ga preusmjerava na formu za registraciju prvog korisnika
+							\item Korisnik ispunjava formu emailom prvog administratora
+							\item Stranica preusmjerava korisnika na stranicu za prijavu
 						\end{packed_enum}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$2$>$ -$<$Prijava u aplikaciju$>$}}
+					\noindent \underbar{\textbf{UC2 - Prijava u aplikaciju}}
 					\begin{packed_item}
 	
-						\item \textbf{Glavni sudionik:} $<$Neprijavljeni korisnik$>$
-						\item \textbf{Cilj:} $<$Dati korisniku pristup aplikaciji$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Registracija$>$
+						\item \textbf{Glavni sudionik:} Neprijavljeni korisnik
+						\item \textbf{Cilj:} Dati korisniku pristup aplikaciji
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Registracija
 						\item \textbf{Opis osnovnog tijeka:}
 						
 						\item[] \begin{packed_enum}
 	
-							\item $<$Korisnik dolazi na stranicu za prijavu$>$
-							\item $<$Otvara mu se prozor za prijavu s google računom$>$
-							\item $<$Korisnik se prijavljuje google računom$>$
-							\item $<$Korisnik dobiva pristup aplikaciji koja preusmjava na naslovnu stranicu$>$
+							\item Korisnik dolazi na stranicu za prijavu
+							\item Otvara mu se prozor za prijavu s google računom
+							\item Korisnik se prijavljuje google računom
+							\item Korisnik dobiva pristup aplikaciji koja preusmjava na naslovnu stranicu
 						\end{packed_enum}
 						
 						\item \textbf{Opis mogućih odstupanja:}
 
 						\item[] \begin{packed_item}
 
-							\item[2.a] $<$Prijavom s ne-google računom$>$
+							\item[2.a] Prijavom s ne- google računom
 							\item[] \begin{packed_enum}
 
-								\item $<$Aplikacija obavještava korisnika o neuspjeloj prijavi$>$
-								\item $<$Korisnik se ponovo prijavljuje s drugim računom ili odustaje od prijave$>$
+								\item Aplikacija obavještava korisnika o neuspjeloj prijavi
+								\item Korisnik se ponovo prijavljuje s drugim računom ili odustaje od prijave
 
 							\end{packed_enum}
 
-							\item[2.b] $<$Prijavom s računom koji nije u bazi$>$
+							\item[2.b] Prijavom s računom koji nije u bazi
 							\item[] \begin{packed_enum}
 
-								\item $<$Aplikacija obavještava korisnika o neuspjeloj prijavi$>$
-								\item $<$Aplikacija obavještava korisnika na koju email adresu se treba javiti ako korisnik smatra da je to greška$>$
-								\item $<$Korisnik se ponovo prijavljuje s drugim računom ili odustaje od prijave$>$
+								\item Aplikacija obavještava korisnika o neuspjeloj prijavi
+								\item Aplikacija obavještava korisnika na koju email adresu se treba javiti ako korisnik smatra da je to greška
+								\item Korisnik se ponovo prijavljuje s drugim računom ili odustaje od prijave
 
 							\end{packed_enum}
 
 						\end{packed_item}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$3$>$ -$<$Registracija$>$}}
+					\noindent \underbar{\textbf{UC3 - Registracija}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Administrator$>$
-						\item \textbf{Cilj:} $<$Stvoriti korisnički račun za pristup aplikaciji$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$-$>$
+						\item \textbf{Glavni sudionik:} Administrator
+						\item \textbf{Cilj:} Stvoriti korisnički račun za pristup aplikaciji
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} - 
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik (administrator) odabire opciju "Users"$>$
-							\item $<$Aplikacija prikazuje popis korisnika$>$
-							\item $<$Korisnik odabire opciju za dodavanje korisnika$>$
-							\item $<$Aplikacija prikaže formu za dodavanje korisnika$>$
-							\item $<$Korisnik popuni potrebne podatke (ime, prezime, email i razinu ovlasti)$>$
-							\item $<$Korisnik odabere opciju "Add"$>$
-							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija zatvori formu za dodavanje korisnika$>$
-							\item $<$Aplikacija ažurira popis korisnika$>$
+							\item Korisnik (administrator) odabire opciju "Users"
+							\item Aplikacija prikazuje popis korisnika
+							\item Korisnik odabire opciju za dodavanje korisnika
+							\item Aplikacija prikaže formu za dodavanje korisnika
+							\item Korisnik popuni potrebne podatke (ime, prezime, email i razinu ovlasti)
+							\item Korisnik odabere opciju "Add"
+							\item Baza podataka se ažurira
+							\item Aplikacija zatvori formu za dodavanje korisnika
+							\item Aplikacija ažurira popis korisnika
 						\end{packed_enum}
 
 						\item \textbf{Opis mogućih odstupanja:}
 
 						\item[] \begin{packed_item}
 
-							\item[3.a] $<$Upis već postojećeg emaila ili upis korisničkih
-							podatka u nedozvoljenom formatu$>$
+							\item[3.a] Upis već postojećeg emaila ili upis korisničkih
+							podatka u nedozvoljenom formatu
 							\item[] \begin{packed_enum}
 
-								\item $<$Aplikacija obavještava korisnika o neuspjelom upisu$>$
-								\item $<$Administrator mijenja potrebne podatke te uspješno završava unos ili
-								odustaje od dodavanja novog korisnika$>$
+								\item Aplikacija obavještava korisnika o neuspjelom upisu
+								\item Administrator mijenja potrebne podatke te uspješno završava unos ili
+								odustaje od dodavanja novog korisnika
 
 							\end{packed_enum}
 
 						\end{packed_item}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$4$>$ -$<$Pregled projekata$>$}}
+					\noindent \underbar{\textbf{UC4 - Pregled projekata}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Član organizacije$>$
-						\item \textbf{Cilj:} $<$Pregledati projekte$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
+						\item \textbf{Glavni sudionik:} Intern
+						\item \textbf{Cilj:} Pregledati projekte
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Projects"$>$
-							\item $<$Aplikacija prikazuje popis naziva projekata$>$
+							\item Korisnik odabire opciju "Projects"
+							\item Aplikacija prikazuje popis naziva projekata
 						\end{packed_enum}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$5$>$ -$<$Pregled kompanija$>$}}
+					\noindent \underbar{\textbf{UC5 - Pregled kompanija}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Član organizacije$>$
-						\item \textbf{Cilj:} $<$Pregledati kompanije$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
+						\item \textbf{Glavni sudionik:} Intern
+						\item \textbf{Cilj:} Pregledati kompanije
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Companies"$>$
-							\item $<$Aplikacija prikazuje popis kompanijama s osnovnim podacima (naziv, područje, ABC kategorizacija i link na web)$>$
+							\item Korisnik odabire opciju "Companies"
+							\item Aplikacija prikazuje popis kompanijama s osnovnim podacima (naziv, područje, ABC kategorizacija i link na web)
 						\end{packed_enum}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$6$>$ -$<$Pregled podataka o projektu$>$}}
+					\noindent \underbar{\textbf{UC6 - Pregled podataka o projektu}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Član organizacije$>$
-						\item \textbf{Cilj:} $<$Pregledati podatke o projektu$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
+						\item \textbf{Glavni sudionik:} Intern
+						\item \textbf{Cilj:} Pregledati podatke o projektu
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Projects"$>$
-							\item $<$Aplikacija prikazuje popis naziva projekata$>$
-							\item $<$Korisnik klikne na naziv projekta o kojem želi informacije$>$
-							\item $<$Prikažu se detalji projekta$>$
+							\item Korisnik odabire opciju "Projects"
+							\item Aplikacija prikazuje popis naziva projekata
+							\item Korisnik klikne na naziv projekta o kojem želi informacije
+							\item Prikažu se detalji projekta
 						\end{packed_enum}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$7$>$ -$<$Pregled podataka o korisniku$>$}}
+					\noindent \underbar{\textbf{UC7 - Pregled podataka o korisniku}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Član organizacije$>$
-						\item \textbf{Cilj:} $<$Pregledati podatke o željenom korisniku$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
+						\item \textbf{Glavni sudionik:} Intern
+						\item \textbf{Cilj:} Pregledati podatke o željenom korisniku
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Users"$>$
-							\item $<$Aplikacija prikazuje popis korisnika$>$
-							\item $<$Korisnik odabire željenog korisnika iz popisa$>$
-							\item $<$Aplikacija prikazuje podatke o korisniku$>$
+							\item Korisnik odabire opciju "Users"
+							\item Aplikacija prikazuje popis korisnika
+							\item Korisnik odabire željenog korisnika iz popisa
+							\item Aplikacija prikazuje podatke o korisniku
 						\end{packed_enum}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$8$>$ -$<$Promjena podataka o korisniku$>$}}
+					\noindent \underbar{\textbf{UC8 - Promjena podataka o korisniku}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Član organizacije$>$
-						\item \textbf{Cilj:} $<$Promijeniti podatke o korisniku$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen, Korisnik ima razinu ovlasti administrator$>$
+						\item \textbf{Glavni sudionik:} Administrator
+						\item \textbf{Cilj:} Promijeniti podatke o korisniku
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen, Korisnik ima razinu ovlasti administrator
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Users"$>$
-							\item $<$Aplikacija prikazuje popis korisnika$>$
-							\item $<$Korisnik odabire opciju "Edit"$>$
-							\item $<$Aplikacija prikaže formu za izmjenu podataka korisnika$>$
-							\item $<$Korisnik mijenja podatke$>$
-							\item $<$Korisnik odabire opciju spremi$>$
-							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija zatvori formu za dodavanje korisnika$>$
-							\item $<$Aplikacija ažurira popis korisnika$>$
+							\item Korisnik odabire opciju "Users"
+							\item Aplikacija prikazuje popis korisnika
+							\item Korisnik odabire opciju "Edit"
+							\item Aplikacija prikaže formu za izmjenu podataka korisnika
+							\item Korisnik mijenja podatke
+							\item Korisnik odabire opciju spremi
+							\item Baza podataka se ažurira
+							\item Aplikacija zatvori formu za dodavanje korisnika
+							\item Aplikacija ažurira popis korisnika
 						\end{packed_enum}
 
 						\item \textbf{Opis mogućih odstupanja:}
 
 						\item[] \begin{packed_item}
 
-							\item[2.f] $<$Upis već postojećeg emaila ili upis korisničkih
-							podatka u nedozvoljenom formatu$>$
+							\item[2.f] Upis već postojećeg emaila ili upis korisničkih
+							podatka u nedozvoljenom formatu
 							\item[] \begin{packed_enum}
 
-								\item $<$Aplikacija obavještava korisnika o neuspjelom upisu$>$
-								\item $<$Administrator mijenja potrebne podatke te uspješno završava unos ili
-								odustaje od izmjene podataka o korisniku$>$
+								\item Aplikacija obavještava korisnika o neuspjelom upisu
+								\item Administrator mijenja potrebne podatke te uspješno završava unos ili
+								odustaje od izmjene podataka o korisniku
 
 							\end{packed_enum}
 
 						\end{packed_item}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$9$>$ -$<$Pregled suradnji$>$}}
+					\noindent \underbar{\textbf{UC9 - Pregled suradnji}}
 					\begin{packed_item}
 					
-						\item \textbf{Glavni sudionik:} $<$Član organizacije$>$
-						\item \textbf{Cilj:} $<$Pregledati podatke o suradnji$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen, Korisnik je FR team member projekta$>$
+						\item \textbf{Glavni sudionik:} Intern
+						\item \textbf{Cilj:} Pregledati podatke o suradnji
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen, Korisnik je FR team member projekta
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Projects"$>$
-							\item $<$Aplikacija prikazuje popis naziva projekata$>$
-							\item $<$Korisnik klikne na ime projekta u kojem se nalazi suradnja koja ga zanima$>$
-							\item $<$Aplikacija prikazuje popis suradnji vezanih uz taj projekt sa osnovnim podacima (naziv kompanije, odgovoru osobu, status, kategoriju, kontakt, dio komentara, akcije)$>$
+							\item Korisnik odabire opciju "Projects"
+							\item Aplikacija prikazuje popis naziva projekata
+							\item Korisnik klikne na ime projekta u kojem se nalazi suradnja koja ga zanima
+							\item Aplikacija prikazuje popis suradnji vezanih uz taj projekt sa osnovnim podacima (naziv kompanije, odgovoru osobu, status, kategoriju, kontakt, dio komentara, akcije)
 						\end{packed_enum}
 	
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$10$>$ -$<$Promjena podataka o suradnji$>$}}
+					\noindent \underbar{\textbf{UC10 - Promjena podataka o suradnji}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Član organizacije$>$
-						\item \textbf{Cilj:} $<$Promijeniti podatke o suradnji$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen, Korisnik je FR reponsible projekta$>$
+						\item \textbf{Glavni sudionik:} Član tima za odnose s tvrtkama
+						\item \textbf{Cilj:} Promijeniti podatke o suradnji
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen, Korisnik je FR reponsible projekta
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Projects"$>$
-							\item $<$Aplikacija prikazuje popis naziva projekata$>$
-							\item $<$Korisnik klikne na ime projekta u kojem se nalazi suradnja koja ga zanima$>$
-							\item $<$Aplikacija prikazuje popis suradnji vezanih uz taj projekt sa osnovnim podacima (naziv kompanije, odgovoru osobu, status, kategoriju, kontakt, dio komentara, akcije)$>$
-							\item $<$Korisnik odabire opciju "Edit"$>$
-							\item $<$Aplikacija prikaže formu s podacima te suradnje$>$
-							\item $<$Korisnik mijenja podatke o suradnji$>$
-							\item $<$Korisnik odabire opciju "Save"$>$
-							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija ažurira popis suradnji$>$
+							\item Korisnik odabire opciju "Projects"
+							\item Aplikacija prikazuje popis naziva projekata
+							\item Korisnik klikne na ime projekta u kojem se nalazi suradnja koja ga zanima
+							\item Aplikacija prikazuje popis suradnji vezanih uz taj projekt sa osnovnim podacima (naziv kompanije, odgovoru osobu, status, kategoriju, kontakt, dio komentara, akcije)
+							\item Korisnik odabire opciju "Edit"
+							\item Aplikacija prikaže formu s podacima te suradnje
+							\item Korisnik mijenja podatke o suradnji
+							\item Korisnik odabire opciju "Save"
+							\item Baza podataka se ažurira
+							\item Aplikacija ažurira popis suradnji
 
 						\end{packed_enum}
 						
@@ -404,14 +409,14 @@
 
 						\item[] \begin{packed_item}
 
-							\item[1.9.b, 2.7.b] $<$Korisnik promijeni podatke o suradnji na nevažeće vrijednosti
-							i odabere opciju "Save"$>$
+							\item[1.9.b, 2.7.b] Korisnik promijeni podatke o suradnji na nevažeće vrijednosti
+							i odabere opciju "Save"
 							
 							\item[] \begin{packed_enum}
 
-								\item $<$Aplikacija obavještava korisnika o neuspjelom upisu$>$
-								\item $<$Administrator mijenja potrebne podatke te uspješno završava unos ili
-								odustaje od promjene podataka$>$
+								\item Aplikacija obavještava korisnika o neuspjelom upisu
+								\item Administrator mijenja potrebne podatke te uspješno završava unos ili
+								odustaje od promjene podataka
 
 							\end{packed_enum}
 
@@ -419,284 +424,284 @@
 						
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$11$>$ -$<$Pregled podataka o kompaniji$>$}}
+					\noindent \underbar{\textbf{UC11 - Pregled podataka o kompaniji}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Član organizacije$>$
-						\item \textbf{Cilj:} $<$Pregledati podatke o kompaniji$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen, Korisnik ima razinu ovlasti FR responsible$>$
+						\item \textbf{Glavni sudionik:} Član tima za odnose s tvrtkama
+						\item \textbf{Cilj:} Pregledati podatke o kompaniji
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen, Korisnik ima razinu ovlasti FR responsible
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Companies"$>$
-							\item $<$Aplikacija prikaže popis kompanija$>$
-							\item $<$Korisnik odabire kompaniju$>$
-							\item $<$Aplikacija prikaže detalje o toj kompaniji$>$
+							\item Korisnik odabire opciju "Companies"
+							\item Aplikacija prikaže popis kompanija
+							\item Korisnik odabire kompaniju
+							\item Aplikacija prikaže detalje o toj kompaniji
 						\end{packed_enum}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$12$>$ -$<$Promjena podataka o kompaniji$>$}}
+					\noindent \underbar{\textbf{UC12 - Promjena podataka o kompaniji}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Član organizacije$>$
-						\item \textbf{Cilj:} $<$Promijeniti podatke o kompaniji$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen, Korisnik je odgovoran za suradnju s kompanijom$>$
+						\item \textbf{Glavni sudionik:} Član tima za odnose s tvrtkama
+						\item \textbf{Cilj:} Promijeniti podatke o kompaniji
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen, Korisnik je odgovoran za suradnju s kompanijom
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Companies"$>$
-							\item $<$Aplikacija prikaže popis kompanija$>$
-							\item $<$Korisnik odabire kompaniju za koju je dodijeljen$>$
-							\item $<$Aplikacija prikaže podatke o kompaniji$>$
-							\item $<$Korisnik odabire opciju "Edit"$>$
-							\item $<$Aplikacija prikaže formu s podacima o kompaniji$>$
-							\item $<$Korisnik mijenja podatke o kompaniji$>$
-							\item $<$Korisnik sprema promjene$>$
-							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija zatvori formu s podacima o kompaniji$>$
-							\item $<$Aplikacija ažurira podatke o kompaniji$>$
-						\end{packed_enum}
-
-						\item \textbf{Opis mogućih odstupanja:}
-
-						\item[] \begin{packed_item}
-
-							\item[5.b] $<$Korisnik promijeni podatke o kompaniji na nevaljane podatke i odabere opciju "Save"$>$
-							\item[] \begin{packed_enum}
-
-								\item $<$Aplikacija obavještava korisnika o neuspjelom upisu$>$
-								\item $<$Korisnik mijenja potrebne podatke te uspješno završava unos ili
-								odustaje od promjene podataka$>$
-
-							\end{packed_enum}
-
-						\end{packed_item}
-					\end{packed_item}
-
-					\noindent \underbar{\textbf{UC$<$13$>$ -$<$Stvaranje suradnje za dodijeljen projekt$>$}}
-					\begin{packed_item}
-
-						\item \textbf{Glavni sudionik:} $<$Član organizacije$>$
-						\item \textbf{Cilj:} $<$Stvoriti suradnju za dodijeljen projekt$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
-						\item \textbf{Opis osnovnog tijeka:}
-
-						\item[] \begin{packed_enum}
-
-							\item $<$Korisnik odabire opciju "Projects"$>$
-							\item $<$Aplikacija prikazuje popis naziva projekata$>$
-							\item $<$Korisnik klikne na ime projekta u kojem se nalazi suradnja koja ga zanima$>$
-							\item $<$Aplikacija prikazuje popis suradnji vezanih uz taj projekt sa osnovnim podacima (naziv kompanije, odgovoru osobu, status, kategoriju, kontakt, dio komentara, akcije)$>$
-							\item $<$Korisnik odabere opciju "New collaboration"$>$
-							\item $<$Aplikacija prikaže formu za stvaranje nove suradnje$>$
-							\item $<$Korisnik popunjava podatke o suradnji$>$
-							\item $<$Korisnik sprema promjene$>$
-							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija zatvara formu za stvaranje nove suradnje$>$
-							\item $<$Aplikacija ažurira popis suradnji$>$
+							\item Korisnik odabire opciju "Companies"
+							\item Aplikacija prikaže popis kompanija
+							\item Korisnik odabire kompaniju za koju je dodijeljen
+							\item Aplikacija prikaže podatke o kompaniji
+							\item Korisnik odabire opciju "Edit"
+							\item Aplikacija prikaže formu s podacima o kompaniji
+							\item Korisnik mijenja podatke o kompaniji
+							\item Korisnik sprema promjene
+							\item Baza podataka se ažurira
+							\item Aplikacija zatvori formu s podacima o kompaniji
+							\item Aplikacija ažurira podatke o kompaniji
 						\end{packed_enum}
 
 						\item \textbf{Opis mogućih odstupanja:}
 
 						\item[] \begin{packed_item}
 
-							\item[8.c] $<$Korisnik unese nevaljane podatke o suradnji i odabere opciju "Save"$>$
+							\item[5.b] Korisnik promijeni podatke o kompaniji na nevaljane podatke i odabere opciju "Save"
 							\item[] \begin{packed_enum}
 
-								\item $<$Aplikacija obavještava korisnika o neuspjelom upisu$>$
-								\item $<$Korisnik mijenja potrebne podatke te uspješno završava unos ili
-								odustaje od dodavanja suradnje$>$
+								\item Aplikacija obavještava korisnika o neuspjelom upisu
+								\item Korisnik mijenja potrebne podatke te uspješno završava unos ili
+								odustaje od promjene podataka
 
 							\end{packed_enum}
 
 						\end{packed_item}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$14$>$ -$<$Brisanje suradnje$>$}}
+					\noindent \underbar{\textbf{UC13 - Stvaranje suradnje za dodijeljen projekt}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Organizator$>$
-						\item \textbf{Cilj:} $<$Maknuti suradnju sa dodijeljenog projekta$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
+						\item \textbf{Glavni sudionik:} Osoba odgovorna za odnose s tvrtkama na projektu
+						\item \textbf{Cilj:} Stvoriti suradnju za dodijeljen projekt
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Projects"$>$
-							\item $<$Korisnik klikne na ime projekta u kojem se nalazi suradnja koja ga zanima$>$
-							\item $<$Aplikacija prikazuje popis suradnji vezanih uz taj projekt sa osnovnim podacima (naziv kompanije, odgovoru osobu, status, kategoriju, kontakt, dio komentara, akcije)$>$
-                            \item $<$Korisnik odabere opciju za brisanje suradnje$>$
-                            \item $<$Aplikacija pita korisnika je li siguran želi li izbrisati suradnju$>$
-                            \item $<$Korisnik odabire potvrdnu opciju$>$
-                            \item $<$Baza podataka se ažurira$>$
-                            \item $<$Aplikacija ažurira popis suradnji$>$
+							\item Korisnik odabire opciju "Projects"
+							\item Aplikacija prikazuje popis naziva projekata
+							\item Korisnik klikne na ime projekta u kojem se nalazi suradnja koja ga zanima
+							\item Aplikacija prikazuje popis suradnji vezanih uz taj projekt sa osnovnim podacima (naziv kompanije, odgovoru osobu, status, kategoriju, kontakt, dio komentara, akcije)
+							\item Korisnik odabere opciju "New collaboration"
+							\item Aplikacija prikaže formu za stvaranje nove suradnje
+							\item Korisnik popunjava podatke o suradnji
+							\item Korisnik sprema promjene
+							\item Baza podataka se ažurira
+							\item Aplikacija zatvara formu za stvaranje nove suradnje
+							\item Aplikacija ažurira popis suradnji
+						\end{packed_enum}
+
+						\item \textbf{Opis mogućih odstupanja:}
+
+						\item[] \begin{packed_item}
+
+							\item[8.c] Korisnik unese nevaljane podatke o suradnji i odabere opciju "Save"
+							\item[] \begin{packed_enum}
+
+								\item Aplikacija obavještava korisnika o neuspjelom upisu
+								\item Korisnik mijenja potrebne podatke te uspješno završava unos ili
+								odustaje od dodavanja suradnje
+
+							\end{packed_enum}
+
+						\end{packed_item}
+					\end{packed_item}
+
+					\noindent \underbar{\textbf{UC14 - Brisanje suradnje}}
+					\begin{packed_item}
+
+						\item \textbf{Glavni sudionik:} Osoba odgovorna za odnose s tvrtkama na projektu
+						\item \textbf{Cilj:} Maknuti suradnju sa dodijeljenog projekta
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen
+						\item \textbf{Opis osnovnog tijeka:}
+
+						\item[] \begin{packed_enum}
+
+							\item Korisnik odabire opciju "Projects"
+							\item Korisnik klikne na ime projekta u kojem se nalazi suradnja koja ga zanima
+							\item Aplikacija prikazuje popis suradnji vezanih uz taj projekt sa osnovnim podacima (naziv kompanije, odgovoru osobu, status, kategoriju, kontakt, dio komentara, akcije)
+                            \item Korisnik odabere opciju za brisanje suradnje
+                            \item Aplikacija pita korisnika je li siguran želi li izbrisati suradnju
+                            \item Korisnik odabire potvrdnu opciju
+                            \item Baza podataka se ažurira
+                            \item Aplikacija ažurira popis suradnji
                             
 						\end{packed_enum}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$15$>$ -$<$Stvaranje projekta$>$}}
+					\noindent \underbar{\textbf{UC15 - Stvaranje projekta}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Osoba zadužena za stvaranje projekata$>$
-						\item \textbf{Cilj:} $<$Stvoriti projekt$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen, Korisnik ima ovlasti moderator$>$
+						\item \textbf{Glavni sudionik:} Osoba odgovorna za odnose s tvrtkama
+						\item \textbf{Cilj:} Stvoriti projekt
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen, Korisnik ima ovlasti moderator
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Create project"$>$
-							\item $<$Aplikacija prikazuje formu za stvaranje novog projekta$>$
-							\item $<$Korisnik popuni podatke za stvaranje novog projekta$>$
-							\item $<$Korisnik sprema promjene$>$
-							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija ažurira popis projekata$>$
+							\item Korisnik odabire opciju "Create project"
+							\item Aplikacija prikazuje formu za stvaranje novog projekta
+							\item Korisnik popuni podatke za stvaranje novog projekta
+							\item Korisnik sprema promjene
+							\item Baza podataka se ažurira
+							\item Aplikacija ažurira popis projekata
 						\end{packed_enum}
 
 						\item \textbf{Opis mogućih odstupanja:}
 
 						\item[] \begin{packed_item}
 
-							\item[7.b] $<$Korisnik unese nevaljane podatke o projektu i odabere opciju "Save"$>$
+							\item[7.b] Korisnik unese nevaljane podatke o projektu i odabere opciju "Save"
 							\item[] \begin{packed_enum}
 
-								\item $<$Aplikacija obavještava korisnika o neuspjelom upisu$>$
-								\item $<$Korisnik mijenja potrebne podatke te uspješno završava unos ili
-								odustaje od dodavanja suradnje$>$
+								\item Aplikacija obavještava korisnika o neuspjelom upisu
+								\item Korisnik mijenja potrebne podatke te uspješno završava unos ili
+								odustaje od dodavanja suradnje
 
 							\end{packed_enum}
 
 						\end{packed_item}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$16$>$ -$<$Brisanje projekta$>$}}
+					\noindent \underbar{\textbf{UC16 - Brisanje projekta}}
 					\begin{packed_item}
 					
-						\item \textbf{Glavni sudionik:} $<$Osoba zadužena za stvaranje projekata$>$
-						\item \textbf{Cilj:} $<$Izbrisati projekt$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen, Korisnik ima ovlasti administrator$>$
+						\item \textbf{Glavni sudionik:} Osoba odgovorna za odnose s tvrtkama
+						\item \textbf{Cilj:} Izbrisati projekt
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen, Korisnik ima ovlasti administrator
 						\item \textbf{Opis osnovnog tijeka:}
 					
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Projects"$>$
-							\item $<$Korisnik odabire neki od projekata$>$
-							\item $<$Aplikacija prikazuje detalje o tom projektu$>$
-							\item $<$Korisnik odabire opciju za brisanje projekta$>$
-							\item $<$Aplikacija prikaže modal koji pita korisnika je li siguran$>$
-							\item $<$Korisnik odabere opciju da je siguran$>$
-							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija ažurira popis projekata$>$
+							\item Korisnik odabire opciju "Projects"
+							\item Korisnik odabire neki od projekata
+							\item Aplikacija prikazuje detalje o tom projektu
+							\item Korisnik odabire opciju za brisanje projekta
+							\item Aplikacija prikaže modal koji pita korisnika je li siguran
+							\item Korisnik odabere opciju da je siguran
+							\item Baza podataka se ažurira
+							\item Aplikacija ažurira popis projekata
 						\end{packed_enum}
 					
 					\end{packed_item}
 
-						\noindent \underbar{\textbf{UC$<$17$>$ -$<$Dodavanje korisnika na projekt$>$}}
+						\noindent \underbar{\textbf{UC17 - Dodavanje korisnika na projekt}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Osoba zadužena za stvaranje projekata$>$
-						\item \textbf{Cilj:} $<$Dodati člana neprofitabilne organizacije na projekt$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen, Korisnik ima ovlasti administrator$>$
+						\item \textbf{Glavni sudionik:} Osoba odgovorna za odnose s tvrtkama
+						\item \textbf{Cilj:} Dodati člana neprofitabilne organizacije na projekt
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen, Korisnik ima ovlasti administrator
 						\item \textbf{Opis osnovnog tijeka:}
 					
 						\item[] \begin{packed_enum}
 					
-							\item $<$Korisnik odabire opciju "Projects"$>$
-							\item $<$Aplikacija prikazuje popis projekata$>$
-							\item $<$Korisnik odabire neki od projekata$>$
-							\item $<$Aplikacija prikazuje detalje o tom projektu$>$
-							\item $<$Korisnik odabire opciju za dodavanje korisnika na projekt$>$
-							\item $<$Aplikacija prikaže formu$>$
-							\item $<$Korisnik upiše ime, prezime, nadimak ili email člana kojeg želi dodati$>$
-							\item $<$Korisnik odabire opciju "Add"$>$
-							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija ažurira popis korisnika na projektu$>$
+							\item Korisnik odabire opciju "Projects"
+							\item Aplikacija prikazuje popis projekata
+							\item Korisnik odabire neki od projekata
+							\item Aplikacija prikazuje detalje o tom projektu
+							\item Korisnik odabire opciju za dodavanje korisnika na projekt
+							\item Aplikacija prikaže formu
+							\item Korisnik upiše ime, prezime, nadimak ili email člana kojeg želi dodati
+							\item Korisnik odabire opciju "Add"
+							\item Baza podataka se ažurira
+							\item Aplikacija ažurira popis korisnika na projektu
 						\end{packed_enum}
 					
 						\item \textbf{Opis mogućih odstupanja:}
 					
 						\item[] \begin{packed_item}
                         
-                        	\item[7.b] $<$Korisnik unese nevaljane podatke o korisniku i odabere opciju "Save"$>$
+                        	\item[7.b] Korisnik unese nevaljane podatke o korisniku i odabere opciju "Save"
 							\item[] \begin{packed_enum}
 
-								\item $<$Aplikacija obavještava korisnika o neuspjelom upisu$>$
-								\item $<$Korisnik mijenja potrebne podatke te uspješno završava unos ili
-								odustaje od dodavanja suradnje$>$
+								\item Aplikacija obavještava korisnika o neuspjelom upisu
+								\item Korisnik mijenja potrebne podatke te uspješno završava unos ili
+								odustaje od dodavanja suradnje
 
 							\end{packed_enum}
 					
 						\end{packed_item}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$18$>$ -$<$Micanje korisnika sa projekta$>$}}
+					\noindent \underbar{\textbf{UC18 - Micanje korisnika sa projekta}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Osoba zadužena za stvaranje projekata$>$
-						\item \textbf{Cilj:} $<$Maknuti člana neprofitabilne organizacije sa projekt$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen, Korisnik ima ovlasti administratora$>$
+						\item \textbf{Glavni sudionik:} Osoba odgovorna za odnose s tvrtkama
+						\item \textbf{Cilj:} Maknuti člana neprofitabilne organizacije sa projekt
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen, Korisnik ima ovlasti administratora
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Projects"$>$
-							\item $<$Aplikacija prikazuje popis projekata$>$
-							\item $<$Korisnik odabire neki od projekata$>$
-							\item $<$Aplikacija prikazuje detalje o tom projektu$>$
-							\item $<$Korisnik odabire opciju za micanje korisnika sa projekta$>$
-							\item $<$Aplikacija prikaže modal koji pita korisnika je li siguran$>$
-							\item $<$Korisnik odabere opciju da je siguran$>$
-							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija ažurira popis korisnika na projektu$>$
+							\item Korisnik odabire opciju "Projects"
+							\item Aplikacija prikazuje popis projekata
+							\item Korisnik odabire neki od projekata
+							\item Aplikacija prikazuje detalje o tom projektu
+							\item Korisnik odabire opciju za micanje korisnika sa projekta
+							\item Aplikacija prikaže modal koji pita korisnika je li siguran
+							\item Korisnik odabere opciju da je siguran
+							\item Baza podataka se ažurira
+							\item Aplikacija ažurira popis korisnika na projektu
 						\end{packed_enum}
 
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$19$>$ -$<$Pregled korisnika$>$}}
+					\noindent \underbar{\textbf{UC19 - Pregled korisnika}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Administrator$>$
-						\item \textbf{Cilj:} $<$Pregledati korisnike$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
+						\item \textbf{Glavni sudionik:} Intern
+						\item \textbf{Cilj:} Pregledati korisnike
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Users"$>$
-							\item $<$Aplikacija prikazuje popis korisnika$>$
+							\item Korisnik odabire opciju "Users"
+							\item Aplikacija prikazuje popis korisnika
                             
 						\end{packed_enum}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$20$>$ -$<$Promjena razine ovlasti korisnika$>$}}
+					\noindent \underbar{\textbf{UC20 - Promjena razine ovlasti korisnika}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Administrator$>$
-						\item \textbf{Cilj:} $<$Promijeniti rolu korisnika$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen, Korisnik je administrator$>$
+						\item \textbf{Glavni sudionik:} Administrator
+						\item \textbf{Cilj:} Promijeniti rolu korisnika
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen, Korisnik je administrator
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Users"$>$
-							\item $<$Aplikacija prikazuje popis korisnika$>$
-							\item $<$Korisnik odabere opciju za izmjenu podataka o korisniku$>$
-							\item $<$Aplikacija prikaže formu za izmjenu podataka o korisniku$>$
-							\item $<$Korisnik odabire jednu od razina ovlasti$>$
-							\item $<$Korisnik odabire opciju spremi$>$
-							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija ažurira popis korisnika$>$
+							\item Korisnik odabire opciju "Users"
+							\item Aplikacija prikazuje popis korisnika
+							\item Korisnik odabere opciju za izmjenu podataka o korisniku
+							\item Aplikacija prikaže formu za izmjenu podataka o korisniku
+							\item Korisnik odabire jednu od razina ovlasti
+							\item Korisnik odabire opciju spremi
+							\item Baza podataka se ažurira
+							\item Aplikacija ažurira popis korisnika
 
 						\end{packed_enum}
 
@@ -704,36 +709,36 @@
 
 						\item[] \begin{packed_item}
 
-							\item[3.a] $<$Korisnik kojem se mijenja rola je administrator i ne postoji nijedan
-							drugi administrator$>$
+							\item[3.a] Korisnik kojem se mijenja rola je administrator i ne postoji nijedan
+							drugi administrator
 							\item[] \begin{packed_enum}
 
-								\item $<$Sustav obavještava korisnika da mora postojati
-								barem jedan administrator, pa je ova akcija zabranjena$>$
+								\item Sustav obavještava korisnika da mora postojati
+								barem jedan administrator, pa je ova akcija zabranjena
 
 							\end{packed_enum}
 
 						\end{packed_item}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$21$>$ -$<$Brisanje korisnika iz sustava$>$}}
+					\noindent \underbar{\textbf{UC21 - Brisanje korisnika iz sustava}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Administrator$>$
-						\item \textbf{Cilj:} $<$Maknuti korisnika iz sustava$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
+						\item \textbf{Glavni sudionik:} Administrator
+						\item \textbf{Cilj:} Maknuti korisnika iz sustava
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Users"$>$
-							\item $<$Aplikacija prikazuje popis korisnika$>$
-							\item $<$Korisnik odabere opciju brisanja željenog korisnika$>$
-							\item $<$Aplikacija pita korisnika je li siguran da želi provesti ovu akciju$>$
-							\item $<$Korisnik odabire opciju da je siguran$>$
-							\item $<$Baza podataka se ažurira$>$
-							\item $<$Aplikacija ažurira popis korisnika$>$
+							\item Korisnik odabire opciju "Users"
+							\item Aplikacija prikazuje popis korisnika
+							\item Korisnik odabere opciju brisanja željenog korisnika
+							\item Aplikacija pita korisnika je li siguran da želi provesti ovu akciju
+							\item Korisnik odabire opciju da je siguran
+							\item Baza podataka se ažurira
+							\item Aplikacija ažurira popis korisnika
 
 						\end{packed_enum}
 
@@ -741,33 +746,33 @@
 
 						\item[] \begin{packed_item}
 
-							\item[3.a] $<$Korisnik kojem se miče iz sustava je administrator i ne postoji nijedan
-							drugi administrator$>$
+							\item[3.a] Korisnik kojem se miče iz sustava je administrator i ne postoji nijedan
+							drugi administrator
 							\item[] \begin{packed_enum}
 
-								\item $<$Sustav obavještava korisnika da mora postojati
-								barem jedan administrator, pa je ova akcija zabranjena$>$
+								\item Sustav obavještava korisnika da mora postojati
+								barem jedan administrator, pa je ova akcija zabranjena
 
 							\end{packed_enum}
 
 						\end{packed_item}
 					\end{packed_item}
 
-					\noindent \underbar{\textbf{UC$<$27$>$ -$<$Filtriranje korisnika$>$}}
+					\noindent \underbar{\textbf{UC27 - Filtriranje korisnika}}
 					\begin{packed_item}
 
-						\item \textbf{Glavni sudionik:} $<$Administrator$>$
-						\item \textbf{Cilj:} $<$Filtrirati korisnike$>$
-						\item \textbf{Sudionici:} $<$Baza podataka$>$
-						\item \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
+						\item \textbf{Glavni sudionik:} Administrator
+						\item \textbf{Cilj:} Filtrirati korisnike
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
-							\item $<$Korisnik odabire opciju "Users"$>$
-							\item $<$Aplikacija prikazuje popis korisnika$>$
-							\item $<$Korisnik upiše tekst u polje za pretragu$>$
-							\item $<$Aplikacija ažurira popis korisnika tako da prikazuje samo korisnike koji imaju taj tekst u imenu, prezimenu, nadimku ili emailu$>$
+							\item Korisnik odabire opciju "Users"
+							\item Aplikacija prikazuje popis korisnika
+							\item Korisnik upiše tekst u polje za pretragu
+							\item Aplikacija ažurira popis korisnika tako da prikazuje samo korisnike koji imaju taj tekst u imenu, prezimenu, nadimku ili emailu
 						\end{packed_enum}
 					\end{packed_item}
 					
@@ -797,7 +802,7 @@
 				\item \textit{Izvršavanje dijela programa u kojem se pristupa bazi podataka ne smije trajati
 				duže od nekoliko sekundi}
 				\item \textit{Sustav treba biti implementiran kao web aplikacija koristeći
-				objektno-orijentirane jezike}
+				objektno- orijentirane jezike}
 				\item \textit{Neispravno korištenje korisničkog sučelja ne smije narušiti funkcionalnost i
 				rad sustava}
 				\item \textit{Sustav treba biti jednostavan za korištenje, korisnici se moraju znati koristiti
