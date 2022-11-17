@@ -506,7 +506,7 @@
 							\item Korisnik odabire opciju "Projects"
 							\item Aplikacija prikazuje popis projekata
 							\item Korisnik klikne na ime projekta u kojem želi stvoriti suradnju
-							\item Aplikacija prikazuje popis suradnji vezanih uz taj projekt sa osnovnim podacima (naziv kompanije, odgovoru osobu, status, kategoriju, kontakt, dio komentara, akcije)
+							\item Aplikacija prikazuje popis suradnji vezanih uz taj projekt sa osnovnim podacima (naziv kompanije, odgovoru osobu, status, kategoriju, kontakt, komentar, akcije)
 							\item Korisnik odabere opciju "New collaboration"
 							\item Aplikacija prikaže formu za stvaranje nove suradnje
 							\item Korisnik popunjava podatke o suradnji
@@ -852,7 +852,7 @@
 						\end{packed_enum}
 
 					\end{packed_item}
-					
+
 				\subsubsection{Dijagrami obrazaca uporabe}
 
 					\begin{figure}[H]
@@ -891,13 +891,90 @@
 					\end{figure}
 
 				\eject
-				
+
 			\subsection{Sekvencijski dijagrami}
-				
+
 				\textbf{\textit{dio 1. revizije}}\\
-				
+
 				\textit{Nacrtati sekvencijske dijagrame koji modeliraju najvažnije dijelove sustava (max. 4 dijagrama). Ukoliko postoji nedoumica oko odabira, razjasniti s asistentom. Uz svaki dijagram napisati detaljni opis dijagrama.}
-				\eject
+
+				\textbf{Obrazac uporabe UC3 - Registracija korisnika}
+
+				\textit{Korisnik (administrator) šalje zahtjev za prikaz korisnika kako bi mogao stvoriti novog.
+				Aplikacija dohvaća trenutne korisnike i prikazuje ih.
+				Korisnik šalje zahtjev za formu za stvaranje novog korisnika.
+				Aplikacija prikaže formu za tvaranje novog korisnika.
+				Da bi upješno stvorio novog korinika trenutni korisnik šalje zahtjev za stvaranje novog korinika koji sadrži ime, prezime, email i razinu ovlasti.
+				Aplikacija provjerava je su li svi poslani podatci točni.
+				Ako su ime ili prezime prazni aplikacija zacrveni ta polja.
+				Ako već postoji korisnik s tim emailom, aplikacija to javlja trenutnom korisniku.
+				Ako uopće ne postoji upisani email, aplikacija to javlja trenutniom korisniku.
+				U slučaju uspješne provjere baza podataka se ažurira s novim korisnikom, a korisnik se vraća na stranicu s trenutnim korisnicima.}
+
+				\begin{figure}[H]
+					\includegraphics[scale=0.4]{slike/Sekvencijski dijagrami/UC3 - Registracija korisnika}
+					\centering
+					\caption{Slika 3.6: Sekvencijski dijagram za UC3}
+					\label{fig:UC3}
+				\end{figure}
+
+				\textbf{Obrazac uporabe UC13 - Stvaranje suradnje za dodijeljen projekt}
+
+				\textit{Korisnik šalje zahtjev za prikaz projekata kako bi mogao stvoriti novu suradnju.
+				Aplikacija dohvaća trenutne projekte i prikazuje ih.
+				Korisnik šalje zahtjev za prikaz detalja projekta koji uključuju i suradnje na tom projektu.
+				Aplikacija prikazuje popis suradnji vezanih uz taj projekt sa osnovnim podacima (naziv kompanije, odgovoru osobu, status, kategoriju, kontakt, komentar, akcije).
+				Korisnik šalje zahtjev za formu za novu suradnju.
+				Aplikacija prikaže formu za stvaranje nove suradnje.
+				Da bi upješno stvorio novu suradnju korisnik šalje zahtjev za stvaranje nove suradnje koji sadrži naziv, odgovornu osobu, status, kategoriju i komentar.
+				Aplikacija provjerava je su li svi poslani podatci točni.
+				Ako su neki podatci krivi aplikacija zacrveni ta polja.
+				U slučaju uspješne provjere baza podataka se ažurira s novom suradnjum u tom projektu, a korisnik se vraća na stranicu sa suradnjama na projektu.}
+
+				\begin{figure}[H]
+					\includegraphics[scale=0.4]{slike/Sekvencijski dijagrami/UC13 - Stvaranje suradnje za dodijeljen projekt}
+					\centering
+					\caption{Slika 3.7: Sekvencijski dijagram za UC13}
+					\label{fig:UC13}
+				\end{figure}
+
+				\textbf{Obrazac uporabe UC15 - Stvaranje projekta}
+
+				\textit{Korisnik šalje zahtjev za prikaz projekata kako bi mogao stvoriti novi.
+				Aplikacija dohvaća trenutne projekte i prikazuje ih.
+				Korisnik šalje zahtjev za formu za stvaranje novog projekta.
+				Aplikacija prikaže formu za stvaranje nove suradnje.
+				Da bi upješno stvorio novu suradnju korisnik šalje zahtjev za stvaranje novog projekta koji sadrži naziv, kategoriju, tip, timestamp početka i novčani cilj projekta.
+				Aplikacija provjerava je su li svi poslani podatci točni.
+				Ako su neki podatci krivi aplikacija zacrveni ta polja.
+				U slučaju uspješne provjere baza podataka se ažurira s novim projektom, a korisnik se vraća na stranicu s projektima.}
+
+				\begin{figure}[H]
+					\includegraphics[scale=0.4]{slike/Sekvencijski dijagrami/UC23 - Stvaranje kompanije}
+					\centering
+					\caption{Slika 3.8: Sekvencijski dijagram za UC15}
+					\label{fig:UC15}
+				\end{figure}
+
+				\textbf{Obrazac uporabe UC23 - Stvaranje kompanije}
+
+				\textit{Korisnik šalje zahtjev za prikaz kompaija kako bi mogao stvoriti novu.
+				Aplikacija dohvaća trenutne kompanije i prikazuje ih.
+				Korisnik šalje zahtjev za formu za stvaranje nove kompanije.
+				Aplikacija prikaže formu za stvaranje nove kompanije.
+				Da bi upješno stvorio novu kompaniju korisnik šalje zahtjev za stvaranje nove kompanije koji sadrži naziv, kategoriju, područje kojim se bavi, državu i poštanski broj, grad, adresu i boolean kontaktirati.
+				Aplikacija provjerava je su li svi poslani podatci točni.
+				Ako su neki podatci krivi aplikacija zacrveni ta polja.
+				U slučaju uspješne provjere baza podataka se ažurira s novim projektom, a korisnik se vraća na stranicu s kompanijama.}
+
+				\begin{figure}[H]
+					\includegraphics[scale=0.4]{slike/Sekvencijski dijagrami/UC23 - Stvaranje kompanije}
+					\centering
+					\caption{Slika 3.9: Sekvencijski dijagram za UC23}
+					\label{fig:UC23}
+				\end{figure}
+
+			\eject
 	
 		\section{Ostali zahtjevi}
 		
