@@ -1,3 +1,4 @@
+\usepackage{graphicx}
 \chapter{Specifikacija programske potpore}
 		
 	\section{Funkcionalni zahtjevi}
@@ -171,8 +172,25 @@
 
 							\item Korisnik dolazi na stranicu koja ga preusmjerava na formu za registraciju prvog korisnika
 							\item Korisnik ispunjava formu emailom prvog administratora
-							\item Stranica preusmjerava korisnika na stranicu za prijavu
+							\item Stranica preusmjerava korisnika na osnovnu stranicu
+
 						\end{packed_enum}
+
+						\item \textbf{Opis mogućih odstupanja:}
+
+						\item[] \begin{packed_item}
+
+							\item[2.a] Upis već postojećeg emaila ili upis korisničkih
+							podatka u nedozvoljenom formatu
+							\item[] \begin{packed_enum}
+
+								\item Aplikacija obavještava korisnika o neuspjelom upisu
+								\item Administrator mijenja potrebne podatke te uspješno završava unos ili
+								odustaje od dodavanja novog korisnika
+
+							\end{packed_enum}
+
+						\end{packed_item}
 					\end{packed_item}
 
 					\noindent \underbar{\textbf{UC2 - Prijava u aplikaciju}}
@@ -777,9 +795,23 @@
 					\end{packed_item}
 					
 				\subsubsection{Dijagrami obrazaca uporabe}
-					
-					\textit{Prikazati odnos aktora i obrazaca uporabe odgovarajućim UML dijagramom. Nije nužno nacrtati sve na jednom dijagramu. Modelirati po razinama apstrakcije i skupovima srodnih funkcionalnosti.}
-				\eject		
+
+					\includegraphics[width=1.25\textwidth]{./slike/UC dijagrami/UseCase observer}
+					\textit{Slika 3.1: Dijagram obrasca uporabe, funkcionalnosti interna i korisnika}
+
+					\includegraphics[width=1.25\textwidth]{./slike/UC dijagrami/UseCase FR team member}
+					\textit{Slika 3.2: Dijagram obrasca uporabe, funkcionalnosti člana tima za odnose s tvrtkama}
+
+					\includegraphics[width=1.25\textwidth]{./slike/UC dijagrami/UseCase FR responsible}
+					\textit{Slika 3.3: Dijagram obrasca uporabe, funkcionalnosti osobe odgovorne za odnose s tvrtkama na projektu}
+
+					\includegraphics[width=1.25\textwidth]{./slike/UC dijagrami/UseCase moderator}
+					\textit{Slika 3.4: Dijagram obrasca uporabe, funkcionalnosti osobe odgovorne za odnose s tvrtkama}
+
+					\includegraphics[width=1.25\textwidth]{./slike/UC dijagrami/UseCase administrator}
+					\textit{Slika 3.5: Dijagram obrasca uporabe, funkcionalnosti administratora}
+
+				\eject
 				
 			\subsection{Sekvencijski dijagrami}
 				
