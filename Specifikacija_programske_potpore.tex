@@ -4,12 +4,12 @@
 	\section{Funkcionalni zahtjevi}
 			
 			\textbf{\textit{dio 1. revizije}}\\
-			
+
 			\textit{Navesti \textbf{dionike} koji imaju \textbf{interes u ovom sustavu} ili \textbf{su nositelji odgovornosti}. To su prije svega korisnici, ali i administratori sustava, naručitelji, razvojni tim.}\\
-				
+
 			\textit{Navesti \textbf{aktore} koji izravno \textbf{koriste} ili \textbf{komuniciraju sa sustavom}. Oni mogu imati inicijatorsku ulogu, tj. započinju određene procese u sustavu ili samo sudioničku ulogu, tj. obavljaju određeni posao. Za svakog aktora navesti funkcionalne zahtjeve koji se na njega odnose.}\\
-			
-			
+
+
 			\noindent \textbf{Dionici:}
 			
 			\begin{packed_enum}
@@ -81,6 +81,7 @@
 					\item Promijeniti podatke o suradnji (kategorija, status, sažetak, vrijednost)
 					\item Pregledavati i promijeniti sve podatke za dodijeljenu kompaniju
 					\item Strvoriti i obrisati suradnju
+					\item Stvoriti i obrisati vlastito stvorene kompanije
 					\item Pregledati korisnike
 					\item Pregledati podatke o korisniku
 
@@ -97,7 +98,7 @@
 					\item Promijeniti podatke o suradnji (kategorija, status, sažetak, vrijednost)
 					\item Pregledavati i promijeniti sve podatke za dodijeljenu kompaniju
 					\item Strvoriti i obrisati suradnju
-					\item Stvoriti i obrisati kategoriju projekata
+					\item Stvoriti i obrisati kompanije
 					\item Stvoriti i obrisati vlastito stvorene projekte
 					\item Dodijeliti i maknuti nekom korisniku mogućnosti organizatora projekta na projektu koji je stvorio
 					\item Staviti i maknuti nekog korisnika s rolom člana neprofitabilne kompanije na projekt koji je stvorio
@@ -117,8 +118,8 @@
 					\item Promijeniti podatke o suradnji (kategorija, status, sažetak, vrijednost)
 					\item Pregledavati i promijeniti sve podatke za dodijeljenu kompaniju
 					\item Strvoriti i obrisati suradnju
-					\item Stvoriti i obrisati kategoriju projekata
 					\item Stvoriti i obrisati projekte
+					\item Stvoriti i obrisati kompanije
 					\item Dodijeliti nekom korisniku mogućnosti organizatora projekta na projektu koji je stvorio
 					\item Staviti nekog korisnika s rolom člana neprofitabilne kompanije na projekt koji je stvorio
 					\item Pregledati korisnike
@@ -199,7 +200,7 @@
 						\item \textbf{Glavni sudionik:} Neprijavljeni korisnik
 						\item \textbf{Cilj:} Dati korisniku pristup aplikaciji
 						\item \textbf{Sudionici:} Baza podataka
-						\item \textbf{Preduvjet:} Registracija
+						\item \textbf{Preduvjet:} Korisnik je registriran
 						\item \textbf{Opis osnovnog tijeka:}
 						
 						\item[] \begin{packed_enum}
@@ -214,15 +215,7 @@
 
 						\item[] \begin{packed_item}
 
-							\item[2.a] Prijavom s ne- google računom
-							\item[] \begin{packed_enum}
-
-								\item Aplikacija obavještava korisnika o neuspjeloj prijavi
-								\item Korisnik se ponovo prijavljuje s drugim računom ili odustaje od prijave
-
-							\end{packed_enum}
-
-							\item[2.b] Prijavom s računom koji nije u bazi
+							\item[2.a] Prijavom s računom koji nije u bazi
 							\item[] \begin{packed_enum}
 
 								\item Aplikacija obavještava korisnika o neuspjeloj prijavi
@@ -240,7 +233,7 @@
 						\item \textbf{Glavni sudionik:} Administrator
 						\item \textbf{Cilj:} Stvoriti korisnički račun za pristup aplikaciji
 						\item \textbf{Sudionici:} Baza podataka
-						\item \textbf{Preduvjet:} - 
+						\item \textbf{Preduvjet:} Korisnik je prijavljen
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
@@ -317,7 +310,7 @@
 						\item[] \begin{packed_enum}
 
 							\item Korisnik odabire opciju "Projects"
-							\item Aplikacija prikazuje popis naziva projekata
+							\item Aplikacija prikazuje popis projekata
 							\item Korisnik klikne na naziv projekta o kojem želi informacije
 							\item Prikažu se detalji projekta
 						\end{packed_enum}
@@ -392,7 +385,7 @@
 						\item[] \begin{packed_enum}
 
 							\item Korisnik odabire opciju "Projects"
-							\item Aplikacija prikazuje popis naziva projekata
+							\item Aplikacija prikazuje popis projekata
 							\item Korisnik klikne na ime projekta u kojem se nalazi suradnja koja ga zanima
 							\item Aplikacija prikazuje popis suradnji vezanih uz taj projekt sa osnovnim podacima (naziv kompanije, odgovoru osobu, status, kategoriju, kontakt, dio komentara, akcije)
 						\end{packed_enum}
@@ -411,7 +404,7 @@
 						\item[] \begin{packed_enum}
 
 							\item Korisnik odabire opciju "Projects"
-							\item Aplikacija prikazuje popis naziva projekata
+							\item Aplikacija prikazuje popis projekata
 							\item Korisnik klikne na ime projekta u kojem se nalazi suradnja koja ga zanima
 							\item Aplikacija prikazuje popis suradnji vezanih uz taj projekt sa osnovnim podacima (naziv kompanije, odgovoru osobu, status, kategoriju, kontakt, dio komentara, akcije)
 							\item Korisnik odabire opciju "Edit"
@@ -427,7 +420,7 @@
 
 						\item[] \begin{packed_item}
 
-							\item[1.9.b, 2.7.b] Korisnik promijeni podatke o suradnji na nevažeće vrijednosti
+							\item[7.a] Korisnik promijeni podatke o suradnji na nevažeće vrijednosti
 							i odabere opciju "Save"
 							
 							\item[] \begin{packed_enum}
@@ -512,8 +505,8 @@
 						\item[] \begin{packed_enum}
 
 							\item Korisnik odabire opciju "Projects"
-							\item Aplikacija prikazuje popis naziva projekata
-							\item Korisnik klikne na ime projekta u kojem se nalazi suradnja koja ga zanima
+							\item Aplikacija prikazuje popis projekata
+							\item Korisnik klikne na ime projekta u kojem želi stvoriti suradnju
 							\item Aplikacija prikazuje popis suradnji vezanih uz taj projekt sa osnovnim podacima (naziv kompanije, odgovoru osobu, status, kategoriju, kontakt, dio komentara, akcije)
 							\item Korisnik odabere opciju "New collaboration"
 							\item Aplikacija prikaže formu za stvaranje nove suradnje
@@ -552,6 +545,7 @@
 						\item[] \begin{packed_enum}
 
 							\item Korisnik odabire opciju "Projects"
+							\item Aplikacija prikazuje popis projekata
 							\item Korisnik klikne na ime projekta u kojem se nalazi suradnja koja ga zanima
 							\item Aplikacija prikazuje popis suradnji vezanih uz taj projekt sa osnovnim podacima (naziv kompanije, odgovoru osobu, status, kategoriju, kontakt, dio komentara, akcije)
                             \item Korisnik odabere opciju za brisanje suradnje
@@ -569,11 +563,13 @@
 						\item \textbf{Glavni sudionik:} Osoba odgovorna za odnose s tvrtkama
 						\item \textbf{Cilj:} Stvoriti projekt
 						\item \textbf{Sudionici:} Baza podataka
-						\item \textbf{Preduvjet:} Korisnik je prijavljen, Korisnik ima ovlasti moderator
+						\item \textbf{Preduvjet:} Korisnik je prijavljen
 						\item \textbf{Opis osnovnog tijeka:}
 
 						\item[] \begin{packed_enum}
 
+							\item Korisnik odabire opciju "Projects"
+							\item Aplikacija prikazuje popis projekata
 							\item Korisnik odabire opciju "Create project"
 							\item Aplikacija prikazuje formu za stvaranje novog projekta
 							\item Korisnik popuni podatke za stvaranje novog projekta
@@ -591,7 +587,7 @@
 
 								\item Aplikacija obavještava korisnika o neuspjelom upisu
 								\item Korisnik mijenja potrebne podatke te uspješno završava unos ili
-								odustaje od dodavanja suradnje
+								odustaje od dodavanja projekta
 
 							\end{packed_enum}
 
@@ -604,12 +600,13 @@
 						\item \textbf{Glavni sudionik:} Osoba odgovorna za odnose s tvrtkama
 						\item \textbf{Cilj:} Izbrisati projekt
 						\item \textbf{Sudionici:} Baza podataka
-						\item \textbf{Preduvjet:} Korisnik je prijavljen, Korisnik ima ovlasti administrator
+						\item \textbf{Preduvjet:} Korisnik je prijavljen
 						\item \textbf{Opis osnovnog tijeka:}
 					
 						\item[] \begin{packed_enum}
 
 							\item Korisnik odabire opciju "Projects"
+							\item Aplikacija prikazuje popis projekata
 							\item Korisnik odabire neki od projekata
 							\item Aplikacija prikazuje detalje o tom projektu
 							\item Korisnik odabire opciju za brisanje projekta
@@ -621,13 +618,13 @@
 					
 					\end{packed_item}
 
-						\noindent \underbar{\textbf{UC17 - Dodavanje korisnika na projekt}}
+					\noindent \underbar{\textbf{UC17 - Dodavanje korisnika na projekt}}
 					\begin{packed_item}
 
 						\item \textbf{Glavni sudionik:} Osoba odgovorna za odnose s tvrtkama
 						\item \textbf{Cilj:} Dodati člana neprofitabilne organizacije na projekt
 						\item \textbf{Sudionici:} Baza podataka
-						\item \textbf{Preduvjet:} Korisnik je prijavljen, Korisnik ima ovlasti administrator
+						\item \textbf{Preduvjet:} Korisnik je prijavljen
 						\item \textbf{Opis osnovnog tijeka:}
 					
 						\item[] \begin{packed_enum}
@@ -648,12 +645,12 @@
 					
 						\item[] \begin{packed_item}
                         
-                        	\item[7.b] Korisnik unese nevaljane podatke o korisniku i odabere opciju "Save"
+                        	\item[7.b] Korisnik unese nevaljane podatke o korisniku i odabere opciju "Add"
 							\item[] \begin{packed_enum}
 
 								\item Aplikacija obavještava korisnika o neuspjelom upisu
 								\item Korisnik mijenja potrebne podatke te uspješno završava unos ili
-								odustaje od dodavanja suradnje
+								odustaje od dodavanja korisnika na projekt
 
 							\end{packed_enum}
 					
@@ -793,6 +790,69 @@
 							\item Aplikacija ažurira popis korisnika tako da prikazuje samo korisnike koji imaju taj tekst u imenu, prezimenu, nadimku ili emailu
 						\end{packed_enum}
 					\end{packed_item}
+
+					\noindent \underbar{\textbf{UC23 - Stvaranje kompanije}}
+					\begin{packed_item}
+
+						\item \textbf{Glavni sudionik:} Osoba odgovorna za odnose s tvrtkama na projektu
+						\item \textbf{Cilj:} Stvoriti kompaniju
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen
+						\item \textbf{Opis osnovnog tijeka:}
+
+						\item[] \begin{packed_enum}
+
+							\item Korisnik odabire opciju "Companies"
+							\item Aplikacija prikazuje popis kompanija
+							\item Korisnik odabire opciju "Create company"
+							\item Aplikacija prikazuje formu za stvaranje nove kompanije
+							\item Korisnik popuni podatke za stvaranje nove kompanije
+							\item Korisnik sprema promjene
+							\item Baza podataka se ažurira
+							\item Aplikacija ažurira popis kompanija
+
+						\end{packed_enum}
+
+						\item \textbf{Opis mogućih odstupanja:}
+
+						\item[] \begin{packed_item}
+
+							\item[7.b] Korisnik unese nevaljane podatke o kompaniji i odabere opciju "Save"
+							\item[] \begin{packed_enum}
+
+								\item Aplikacija obavještava korisnika o neuspjelom upisu
+								\item Korisnik mijenja potrebne podatke te uspješno završava unos ili
+								odustaje od dodavanja kompanije
+
+							\end{packed_enum}
+
+						\end{packed_item}
+					\end{packed_item}
+
+					\noindent \underbar{\textbf{UC24 - Brisanje kompanije}}
+					\begin{packed_item}
+
+						\item \textbf{Glavni sudionik:} Osoba odgovorna za odnose s tvrtkama na projektu
+						\item \textbf{Cilj:} Izbrisati kompaniju
+						\item \textbf{Sudionici:} Baza podataka
+						\item \textbf{Preduvjet:} Korisnik je prijavljen
+						\item \textbf{Opis osnovnog tijeka:}
+
+						\item[] \begin{packed_enum}
+
+							\item Korisnik odabire opciju "Companies"
+							\item Aplikacija prikazuje popis kompanija
+							\item Korisnik odabire gumb za detalje pored neke od kompanija
+							\item Aplikacija prikazuje detalje o toj kompaniji
+							\item Korisnik odabire opciju za brisanje kompanije
+							\item Aplikacija prikaže modal koji pita korisnika je li siguran
+							\item Korisnik odabere opciju da je siguran
+							\item Baza podataka se ažurira
+							\item Aplikacija ažurira popis projekata
+
+						\end{packed_enum}
+
+					\end{packed_item}
 					
 				\subsubsection{Dijagrami obrazaca uporabe}
 
@@ -825,8 +885,8 @@
 		\section{Ostali zahtjevi}
 		
 			\textbf{\textit{dio 1. revizije}}\\
-		 
-			 \textit{Nefunkcionalni zahtjevi i zahtjevi domene primjene dopunjuju funkcionalne zahtjeve. Oni opisuju \textbf{kako se sustav treba ponašati} i koja \textbf{ograničenja} treba poštivati (performanse, korisničko iskustvo, pouzdanost, standardi kvalitete, sigurnost...). Primjeri takvih zahtjeva u Vašem projektu mogu biti: podržani jezici korisničkog sučelja, vrijeme odziva, najveći mogući podržani broj korisnika, podržane web/mobilne platforme, razina zaštite (protokoli komunikacije, kriptiranje...)... Svaki takav zahtjev potrebno je navesti u jednoj ili dvije rečenice.}
+
+			 \textit{Nefunkcionalni zahtjevi i zahtjevi domene primjene dopunjuju funkcionalne zahtjeve. Oni opisuju \textbf{kako se sustav treba ponašati} i koja \textbf{ograničenja} treba poštivati (performanse, korisničko iskustvo, pouzdanost, standardi kvalitete, sigurnost...). Primjeri takvih zahtjeva u Vašem projektu mogu biti: podržani jezici korisničkog sučelja, vrijeme odziva, najveći mogući podržani broj korisnika, podržane web/mobilne platforme, razina zaštite (protokoli komunikacije, kriptiranje...)... Svaki takav zahtjev potrebno je navesti u jednoj ili dvije rečenice.}\\
 
 			\begin{packed_item}
 
