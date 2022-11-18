@@ -8,14 +8,6 @@
 			\item {Baza podataka}\vspace{0.1cm}
 		\end{packed_item}
 
-		\begin{figure}[H]
-		\includegraphics[scale=1]{slike/ArhitekturaSustava.png}
-		\centering
-		\caption{Arhitektura sustava}
-		\label{fig:ArhitekturaSustava}
-		\end{figure}
-
-	
 		{\underbar{Web preglednik} (\textit{Internetski preglednik, Web browser, Internet browser})  je program koji korisniku omogućuje pregled web-stranica i multimedijalnih sadržaja vezanih uz njih. Svaki internetski preglednik je \underbar{interpreter} (program koji u realnom vremenu izvršava izvorni kod napisan u nekom programskom jeziku, umjesto da ga, prije izvršavanja cijelog prevede u strojni jezik, što inače radi jezični prevoditelj). Dakle, stranica je pisana u kodu koji preglednik interpretira u čitljiv sadržaj. Korisnici putem web preglednika šalju zahtjeve poslužitelju.}\vspace{0.3cm}
 
 		{\underbar{Web poslužitelj} je temelj svake Web aplikacije jer on služi za komunikaciju klijenta s aplikacijom. Takva vrsta komunikacije odvija se uz pomoć HTTP (\textit{Hyper Text Transfer Protocol}) protokola koji predstavlja glavnu i najčešću metodu prijenosa informacija na Webu. Osnovna namjena ovog protokola je omogućavanje objavljivanja i prezentacije HTML dokumenata, tj. Web stranica. Poslužitelj nam dakle služi za prosljeđivanje zahtjeva Web aplikaciji te je zadužen za njezino pokretanje.}\vspace{0.3cm}
@@ -23,6 +15,13 @@
 		{Od ostalih protokola koji služe za komunikaciju i prijenos informacija i podataka između klijenta i poslužitelja treba napomenuti: IP (\textit{Internet Protocol}) koji služi za prijenos podataka u blokovima (paketi, datagrami), komunikacijski protokol ARP (\textit{Address Resolution Protocol}) te ICMP (\textit{Internet Control Message Protocol}) koji je ugrađen u svaki IP modul kako bi omogućio računalima slanje kontrolnih poruka o greškama. ICMP prijavljuje greške, ali nije zadužen za njihovo ispravljanje.}\vspace{0.3cm}
 
 		{Klijent koristi korisničko sučelje, tj. Web aplikaciju, prikazanu u pregledniku, te preko nje šalje zahtjeve poslužitelju. Nakon obrade podataka, poslužitelj vraća odgovor aplikaciji koja ga potom prikazuje korisniku.}\vspace{0.3cm}
+		
+		\begin{figure}[H]
+		\includegraphics[scale=1]{slike/ArhitekturaSustava.png}
+		\centering
+		\caption{Prikaz arhitekture sustava}
+		\label{fig:ArhitekturaSustava}
+		\end{figure}
 
 		{Programski i korisnički jezici koje smo koristili su: HTML, CSS i JavaScript za Frontend te Java za Backend. Radni okviri koje smo odabrali su React (Frontend) i Spring Boot (Backend). Od razvojnih okruženja koristili smo IntelliJ u okviru izrade Backenda te Visual Studio Code za izradu Frontenda.}\vspace{0.3cm}
 
@@ -52,17 +51,18 @@
 					entry=none
 					]{
 						width = \textwidth,
-						colspec={|X[14,l]|X[8, l]|X[20, l]|}, 
+						colspec={|X[14,l]|X[10, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 						\hline \multicolumn{3}{|c|}{\textbf{Korisnik}}	 \\ \hline[3pt]
-						\SetCell{LightGreen}IDKorisnik & INT & ID kosisnika  	\\ \hline
-						Ime	& VARCHAR & Ime korisnika \\ \hline 
-						Prezime & VARCHAR & Prezime korisnika \\ \hline 
-						Nadimak & VARCHAR	& Nadimak korisnika \\ \hline 
-		        				LoginEmail & VARCHAR	& Email adresa pomoću kojeg se user logira \\ \hline 
-		        				NotificationEmail & VARCHAR	& Email adresa na koju korisnik prima obavijesti \\ \hline 
-						MaxRazinaOvlasti & VARCHAR & Maksimalna razina ovlasti na projektima \\ \hline
+						\SetCell{LightGreen}IDKorisnik & INT & ID korisnika  	\\ \hline
+						Ime	& VARCHAR(40) & Ime korisnika \\ \hline 
+						Prezime & VARCHAR(40) & Prezime korisnika \\ \hline 
+						Nadimak & VARCHAR(40) & Nadimak korisnika \\ \hline 
+        				LoginEmail & VARCHAR(60) & Email adresa pomoću kojeg se korisnik logira \\ \hline 
+        				NotificationEmail & VARCHAR(60) & Email adresa na koju korisnik prima obavijesti \\ \hline 
+						MaxRazinaOvlasti & INT & Maksimalna razina ovlasti koju korisnik posjeduje (ENUM) \\ \hline
+        				Opis & VARCHAR(480) & Opis korisnika \\ \hline 
 				\end{longtblr}
 
 				\begin{longtblr}[
@@ -70,12 +70,12 @@
 					entry=none
 					]{
 						width = \textwidth,
-						colspec={|X[14,l]|X[8, l]|X[20, l]|}, 
+						colspec={|X[14,l]|X[10, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 					\hline \multicolumn{3}{|c|}{\textbf{Mjesto}}	 \\ \hline[3pt]
-					\SetCell{LightGreen} PostanskiBrojGrad & VARCHAR & Poštanski broj grada \\ \hline
-					NazivGrad & VARCHAR & Naziv grada \\ \hline
+					\SetCell{LightGreen} PBr & INT & Poštanski broj mjesta \\ \hline
+					Naziv & VARCHAR(120) & Naziv mjesta \\ \hline
 				\end{longtblr}
 
 				\begin{longtblr}[
@@ -83,20 +83,20 @@
 					entry=none
 					]{
 						width = \textwidth,
-						colspec={|X[14,l]|X[8, l]|X[20, l]|}, 
+						colspec={|X[14,l]|X[10, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 						\hline \multicolumn{3}{|c|}{\textbf{Tvrtka}}	 \\ \hline[3pt]
-						\SetCell{LightGreen} IdTvrtka & INT	&  Id tvrtke	\\ \hline
-						Naziv & VARCHAR & Naziv tvrtke \\ \hline 
-						Podrucje & VARCHAR &  Područje kojim se tvrtka bavi \\ \hline 
-						ABCKategorija & CHAR & Kategorija tvrtke (A B ili C) \\ \hline 
-				                     MjesecPlaniranjaBudzeta & INT & Mjesec u kojem tvrtka planira budžet \\ \hline
-				                     Drzava & VARCHAR & Država u kojoj tvrtka posluje \\ \hline
-				                     \SetCell{LightBlue} PBr & VARCHAR & Poštanski broj mjesta tvrtke \\ \hline
-						Adresa & VARCHAR & Adresa tvrtke \\ \hline
-				                 	WebStranica & VARCHAR & Adresa web stranice tvrtke \\ \hline
-					           Kontaktirati & BOOLEAN & Treba li ubuduće tu tvrtku treba kontaktirati \\ \hline
+						\SetCell{LightGreen} IDTvrtka & INT	&  Id tvrtke	\\ \hline
+						Naziv & VARCHAR(60) & Naziv tvrtke \\ \hline 
+						Podrucje & VARCHAR(40) &  Područje kojim se tvrtka bavi \\ \hline 
+						ABCKategorija & CHAR(1) & Kategorija tvrtke (ENUM: A, B ili C) \\ \hline 
+                        MjesecPlaniranjaBudzeta & INT & Mjesec u kojem tvrtka planira budžet \\ \hline
+                        Drzava & VARCHAR(60) & Država u kojoj tvrtka posluje \\ \hline
+                        \SetCell{LightBlue} PBr & INT & Poštanski broj mjesta tvrtke \\ \hline
+                        Adresa & VARCHAR(120) & Adresa tvrtke \\ \hline
+                        WebStranica & VARCHAR(60) & Adresa web stranice tvrtke \\ \hline
+                        Kontaktirati & BOOLEAN & Treba li ubuduće tu tvrtku kontaktirati \\ \hline
 				\end{longtblr}
 
 				\begin{longtblr}[
@@ -104,18 +104,18 @@
 					entry=none
 					]{
 						width = \textwidth,
-						colspec={|X[14,l]|X[8, l]|X[20, l]|}, 
+						colspec={|X[14,l]|X[10, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 					\hline \multicolumn{3}{|c|}{\textbf{Zaposlenik}}	 \\ \hline[3pt]
 						\SetCell{LightGreen} IDZaposlenik & INT	& Id zaposlenika \\ \hline
 						\SetCell{LightBlue} IDTvrtke & INT & Id tvrtke za koju zaposlenik radi\\ \hline 
-						Ime & VARCHAR & Ime zaposlenika \\ \hline 
-						Prezime & VARCHAR	& Prezime zaposlenika \\ \hline 
-				                    Email & VARCHAR	& Email adresa zaposlenika \\ \hline 
-				                    BrojTelefona & VARCHAR	& Broj telefona zaposlenika \\ \hline 
-				                    Uloga & VARCHAR	& Pozicija zaposlenika u tvrtci (npr. PR) \\ \hline 
-				                    Opis & VARCHAR	& Opis zaposlenika (npr. glavni kontakt) \\ \hline 
+						Ime & VARCHAR(40) & Ime zaposlenika \\ \hline 
+						Prezime & VARCHAR(40) & Prezime zaposlenika \\ \hline
+						Email & VARCHAR(60)	& Email adresa zaposlenika \\ \hline
+						BrojTelefona & VARCHAR(20) & Broj telefona zaposlenika \\ \hline
+						Uloga & VARCHAR(40)	& Pozicija zaposlenika u tvrtci (npr. PR) \\ \hline
+						Opis & VARCHAR(60) & Opis zaposlenika (npr. glavni kontakt) \\ \hline 
 				\end{longtblr}
 
 				\begin{longtblr}[
@@ -123,20 +123,20 @@
 					entry=none
 					]{
 						width = \textwidth,
-						colspec={|X[14,l]|X[8, l]|X[20, l]|}, 
+						colspec={|X[14,l]|X[10, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 					\hline \multicolumn{3}{|c|}{\textbf{Projekt}}	 \\ \hline[3pt]
-					\SetCell{LightGreen}IDProjekt & INT	& Id projekta \\ \hline
-					Naziv & VARCHAR & Naziv projekta \\ \hline 
+					\SetCell{LightGreen}IDProjekt & INT	& ID projekta \\ \hline
+					Naziv & VARCHAR(40) & Naziv projekta \\ \hline 
 					KategorijaProjekta & INT & Kategorija u koju spada projekt \\ \hline 
 					TipProjekta & INT & Eksterni ili interni projekt \\ \hline 
 					DatumPočetka & TIMESTAMP & Datum početka projekta \\ \hline 
-				                DatumZavršetka & TIMESTAMP & Datum završetka projekta \\ \hline 
-				                \SetCell{LightBlue} FRResponsibleUserId & INT & Id korisnika odgovornog za odnose s tvrtkama projekta \\ \hline
-				                FRCilj & INT & Količina novca koja se želi prikupiti za projekt \\ \hline
-				                FirstPing & TIMESTAMP & Datum prvog "ping"-a \\ \hline
-				                SecondPing & TIMESTAMP & Datum drugog "ping"-a \\ \hline
+					DatumZavršetka & TIMESTAMP & Datum završetka projekta \\ \hline
+					\SetCell{LightBlue} IDFRResp & INT & ID korisnika odgovornog za odnose s tvrtkama projekta \\ \hline
+					FRCilj & INT & Količina novca koja se želi prikupiti za projekt \\ \hline
+					PrviPingDatum & TIMESTAMP & Datum prvog "ping"-a \\ \hline
+					DrugiPingDatum & TIMESTAMP & Datum drugog "ping"-a \\ \hline
 				\end{longtblr}
 
 				\begin{longtblr}[
@@ -144,10 +144,10 @@
 					entry=none
 					]{
 						width = \textwidth,
-						colspec={|X[14,l]|X[8, l]|X[20, l]|}, 
+						colspec={|X[14,l]|X[10, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \multicolumn{3}{|c|}{\textbf{ProjectFRTeamMembers}}	 \\ \hline[3pt]
+					\hline \multicolumn{3}{|c|}{\textbf{ProjectFRMembers}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}IDKorisnik & INT & Id korisnika koji je FR team member projekta \\ \hline
 					\SetCell{LightGreen}IDProjekt & INT & Id projekta \\ \hline
 				\end{longtblr}
@@ -157,18 +157,18 @@
 					entry=none
 					]{
 						width = \textwidth,
-						colspec={|X[14,l]|X[8, l]|X[20, l]|}, 
+						colspec={|X[14,l]|X[10, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 					\hline \multicolumn{3}{|c|}{\textbf{Suradnja}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}IDProjekt & INT	& Id projekta \\ \hline
-			                \SetCell{LightGreen}IdTvrtke & INT	& Id tvrtke \\ \hline
-					\SetCell{LightBlue}IdOdgovoran & INT & Id korisnika odgovornog za suradnju s tvrtkom \\ \hline 
-					\SetCell{LightBlue}IdKontakt & INT & Id kontakt osobe u tvrtci \\ \hline 
-					KategorijaSuradnje & VARCHAR & Kategorija suradnje (Financijska, materijalna ili akademska) \\ \hline
-		                    Status & VARCHAR & Kontaktirano, ping, dopis, sastanak, uspješno ili neuspješno \\ \hline
-		                    Komentar & VARCHAR & Komentar na suradnju \\ \hline
-		                    VrijednostSuradnje & FLOAT & Novčana vrijednost suradnje \\ \hline
+			                \SetCell{LightGreen}IDTvrtka & INT	& Id tvrtke \\ \hline
+					\SetCell{LightBlue}IDOdgovoran & INT & Id korisnika odgovornog za suradnju s tvrtkom \\ \hline 
+					\SetCell{LightBlue}IDKontakt & INT & Id kontakt osobe u tvrtci \\ \hline 
+					KategorijaSuradnje & VARCHAR(20) & Kategorija suradnje (Financijska, materijalna ili akademska) \\ \hline
+					Status & VARCHAR(20) & Kontaktirano, ping, dopis, sastanak, uspješno ili neuspješno \\ \hline
+					Komentar & VARCHAR(480) & Komentar na suradnju \\ \hline
+					VrijednostSuradnje & FLOAT & Novčana vrijednost suradnje \\ \hline
 				\end{longtblr}
 				
 			
@@ -176,7 +176,7 @@
 				\begin{figure}[H]
 					\includegraphics[scale=0.6]{DBDiagram}
 					\centering
-					\caption{Database Diagram}
+					\caption{Dijagram baze podataka}
 					\label{fig:dbdiagram}
 				\end{figure}
 			\eject
@@ -184,24 +184,24 @@
 			
 		\section{Dijagram razreda}
 		
-			Na sljedećim slikama prikazani su UML dijagrami razreda koji se koriste u aplikaciji. Podijeljeni su u 3 dijela. Prvi dijagram prikazuje klase kojima smo modelirali entitete aplikacije, drugi prikazuje DTO-ove \textit{(Data transfer object)}, a treći prikazuje Controllere. Može se uočiti da postoje veze između klasa iz različitih dijagrama(npr. UserDto sadrži UserSystemAuthority), ali su one izostavljene radi preglednosti.
+			Na sljedećim slikama prikazani su UML dijagrami razreda koji se koriste u aplikaciji. Podijeljeni su u 3 dijela. Prvi dijagram prikazuje klase kojima smo modelirali entitete aplikacije, drugi prikazuje DTO-ove \textit{(Data transfer object)}, a treći prikazuje kontrolere. Može se uočiti da postoje veze između klasa iz različitih dijagrama (npr. UserDto sadrži UserSystemAuthority), ali su one izostavljene radi preglednosti.
 			
 			\begin{figure}[H]
-				\includegraphics[scale=0.5]{ModelUml} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\includegraphics[scale=0.5]{ModelUML} %veličina slike u odnosu na originalnu datoteku i pozicija slike
 				\centering
-				\caption{Models UML}
+				\caption{UML dijagram razreda}
 				\label{fig:modelUml}
 			\end{figure}
 			\begin{figure}[H]
 				\includegraphics[scale=0.5]{DtoUml} %veličina slike u odnosu na originalnu datoteku i pozicija slike
 				\centering
-				\caption{DtoUml}
+				\caption{UML dijagram Data Transfer Object-a}
 				\label{fig:dtouml}
 			\end{figure}
 			\begin{figure}[H]
 				\includegraphics[scale=0.5]{ControllerServiceUml} %veličina slike u odnosu na originalnu datoteku i pozicija slike
 				\centering
-				\caption{Controllers and services UML}
+				\caption{UML dijagram kontrolera i servisa}
 				\label{fig:controllersServicesUml}
 		\end{figure}
 		
