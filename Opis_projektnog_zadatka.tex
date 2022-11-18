@@ -1,6 +1,8 @@
 \chapter{Opis projektnog zadatka}
 
-\textit{Na osnovi projektnog zadatka detaljno opisati korisničke zahtjeve. Što jasnije opisati cilj projektnog zadatka, razraditi problematiku zadatka, dodati nove aspekte problema i potencijalnih rješenja. Očekuje se minimalno 3, a poželjno 4-5 stranica opisa.	Teme koje treba dodatno razraditi u ovom poglavlju su:}
+\iffalse % block comment (zavrsava sa fi)
+
+        \textit{Na osnovi projektnog zadatka detaljno opisati korisničke zahtjeve. Što jasnije opisati cilj projektnog zadatka, razraditi problematiku zadatka, dodati nove aspekte problema i potencijalnih rješenja. Očekuje se minimalno 3, a poželjno 4-5 stranica opisa.	Teme koje treba dodatno razraditi u ovom poglavlju su:}
 		\begin{packed_item}
 			\item \textit{potencijalna korist ovog projekta}
 			\item \textit{postojeća slična rješenja (istražiti i ukratko opisati razlike u odnosu na zadani zadatak). Dodajte slike koja predočavaju slična rješenja.}
@@ -12,13 +14,28 @@
 		
 		\textit{Za pomoć pogledati reference navedene u poglavlju „Popis literature“, a po potrebi konzultirati sadržaj na internetu koji nudi dobre smjernice u tom pogledu.}\vspace{0.5cm}
 		
-		{Porastom broja neprofitnih organizacija iz godine u godinu, raste i potreba za kvalitetnim aplikacijama koje bi takvim organizacijama omogućile nesmetan rad i funkcioniranje. Kako takve organizacije nisu u mogućnosti samostalno postići zadovoljavajuću razinu prihoda, to im postaje najveći problem te primorane su na suradnju s kompanijama sponzorima.}
+\fi % block comment (pocinje sa iffalse)
+		
+		\section{Opis problematike}
+		
+		{Porastom broja neprofitnih organizacija iz godine u godinu, raste i potreba za kvalitetnim aplikacijama koje bi takvim organizacijama omogućile nesmetan rad i funkcioniranje. Kako takve organizacije nisu u mogućnosti samostalno postići zadovoljavajuću razinu prihoda, to im postaje najveći problem te primorane su na suradnju s kompanijama sponzorima.}\vspace{0.3cm}
 
 		{Odaziv sponzora je često vrlo malen te je stoga potrebno kontaktirati velik broj kompanija. Praćenje statusa suradnji (uspješne / neuspješne) i osoba zaduženih za kontaktiranje sponzora vrlo brzo postaje kompleksno i neefikasno, a također dolazi i do mogućnosti curenja informacija. Raste potreba za aplikacijom koja će omogućiti evidenciju navedenih stavki te korisnicima dodijeliti razinu ovlasti kako bi umanjili mogućnost curenja informacija.}
+		
+		\section{Postojeća rješenja}
+		
+		{Najraširenije rješenje koje danas koriste gotovi svi jesu tablice. Bilo to u MS Excelu za jednokorisnički ili Google sheets \ref{fig:GoogleSheets} za višekorisnički rad, tablice su jedan od najboljih načina prikaza velikog broja podataka. Nažalost, ova rješenja imaju gore navedene probleme te stoga nisu pogodna za upotrebu na razini veće organizacije.}
+		
+		\begin{figure}[H]
+			\includegraphics[width=\textwidth]{slike/GoogleSheets.png} %veličina u odnosu na širinu linije
+			\caption{Prikaz alata Google sheets}
+			\label{fig:GoogleSheets} %label mora biti drugaciji za svaku sliku
+		\end{figure}
+		
+		\section{Opseg projektnog zadatka}
 
 		{Cilj ovog projekta je razviti programsku podršku za stvaranje web aplikacije \textit{”Company Database“} koja će služiti za evidenciju statusa suradnje kompanija na projektima i jednostavan uvid od strane \underbar{ovlaštenih} korisnika.}\vspace{0.2cm}
 		
-
 		{Korisnici će se u web aplikaciju prijavljivati koristeći Google račun koji mora biti registriran od strane drugih korisnika putem web aplikacije. Svaki je korisnik definiran sljedećim parametrima:}
 		\begin{packed_item}
 			\item {ime}
@@ -54,6 +71,31 @@
 		{\underbar{Suradnja} predstavlja poveznicu između projekta i kompanije, a obilježena je odgovornom osobom (koja je za nju zadužena), kontaktiranom osobom u kompaniji, kategorijom (financijska, materijalna ili akademska suradnja), vlastitim statusom (kontaktirano, ping, dopis, sastanak, uspješno ili neuspješno), komentarom (tj. sažetkom suradnje) te vrijednošću suradnje (koje se sumiraju i popunjavaju FR cilj projekta).}\vspace{0.3cm}
 
 		{Aplikacija, sa svim navedenim funkcionalnostima i specifičnostima, bit će izvedena kao web aplikacija kojoj korisnici pristupaju pomoću Google autentifikatora. Bit će jednostavna za korištenje zahvaljujući preglednom i intuitivnom sučelju. Sustav će podržavati rad više korisnika u stvarnom vremenu, frontend će biti ostvaren u React-u, a backend će koristiti relacijsku bazu podataka i Spring boot.}
+		
+		
+		\section{Mogućnost prilagodbe rješenja}
+		
+		{Kako bi što više ljudi moglo znati za projekt, organizatori nerijetko kontaktiraju razne medije kako zainteresirani ne bi propustili priliku. Slična aplikacija bi se također mogla koristiti za komunikaciju s medijima. Entitet Tvrtka bi bilo bi potrebno izmijeniti u Medij zajedno s odgovarajućim atributima, dok bi u entitetu Suradnja bilo potrebno izmijeniti samo atribute.}\vspace{0.1cm}
+		
+		{Ovakva bi aplikacija bila od koristi ne samo neprofitnim organizacijama, već i svima koji organiziraju nešto što treba publicitet.}
+		
+		\section{Mogućnost nadogradnje rješenja}
+		
+		{Aplikacija bi se dodatno mogla nadograditi proširenjem komentara suradnje, primarno u svrhu prenošenja znanja od iskusniji osoba. Te bi osobe kroz komentar na suradnju mogli dati svoj input vezano uz neku temu. Tada bi i korisnik koji je odgovoran za suradnju dobio te obavijesti na naslovnicu.}\vspace{0.1cm}
+		
+		{Nadalje, aplikacija bi mogla, osim tabličnog, podržavati više načina prikaza podataka o korisnicima, projektima, tvrtkama i suradnjama. Možda bi ih se moglo grupirati temeljem nekih postojećih ili novih atributa te onda to iskoristiti.}\vspace{0.1cm}
+		
+		{Također bi bilo korisno uvesti dodatne mogućnosti filtriranja svih tablica i drugih načina prikaza podataka.}\vspace{0.1cm}
+		
+		{Ako se projekti neke organizacije ponavljaju iz godine u godinu, bilo bi korisno uvesti neki način kopiranja podataka iz tablice prošlogodišnjeg projekta. Korisno bi bilo dodati i mogućnost izvoza i uvoz podataka iz i u tablice u JSON i CSV formatima.}\vspace{0.1cm}
+		
+		{Kako bi se još više smanjila mogućnost curenja informacija, mogao bi se uvesti tzv. soft lock korisnika koji bi očuvao podatke o korisniku, ali mu onemogućio da se ulogira (npr. ako korisnik više nije dio organizacije).}\vspace{0.1cm}
+		
+		{Aplikaciju bi također bilo moguće spojiti s nekakvim internim sustavom za upravljanjem članovima organizacije.}\vspace{0.1cm}
+		
+		{Što se tiče UX-a, tu uvijek ima mjesta za napredak. Dodavanje animacija tokom prijelaza od jedne stranice na drugu ili važnije tokom dohvata podataka iz baze kako bi korisnik znao da se njegov zahtjev procesuira. Moglo bi se uvesti neki način prikaza uspješnosti odrade nekog zadatka (npr. dodavanje podatka u bazu).}
+		
+		{Mogao poboljšati i sam UI da aplikacija izgleda profesionalnije i bude ugodnija za korištenje, ali i kako bi aplikaciju mogle koristiti osobe s posebnim potrebama.}\vspace{0.1cm}
 
 		\eject
 
