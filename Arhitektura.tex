@@ -90,12 +90,12 @@
 						\SetCell{LightGreen} IDTvrtka & INT	&  Id tvrtke	\\ \hline
 						Naziv & VARCHAR(60) & Naziv tvrtke \\ \hline 
 						Podrucje & VARCHAR(40) &  Područje kojim se tvrtka bavi \\ \hline 
-						ABCKategorija & CHAR(1) & Kategorija tvrtke (ENUM: A, B ili C) \\ \hline 
+						ABCKategorizacija & CHAR & Kategorija tvrtke (ENUM: A, B ili C) \\ \hline 
                         MjesecPlaniranjaBudzeta & INT & Mjesec u kojem tvrtka planira budžet \\ \hline
                         Drzava & VARCHAR(60) & Država u kojoj tvrtka posluje \\ \hline
                         \SetCell{LightBlue} PBr & INT & Poštanski broj mjesta tvrtke \\ \hline
                         Adresa & VARCHAR(120) & Adresa tvrtke \\ \hline
-                        WebStranica & VARCHAR(60) & Adresa web stranice tvrtke \\ \hline
+                        WebURL & VARCHAR(60) & Adresa web stranice tvrtke \\ \hline
                         Kontaktirati & BOOLEAN & Treba li ubuduće tu tvrtku kontaktirati \\ \hline
 				\end{longtblr}
 
@@ -109,12 +109,12 @@
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 					\hline \multicolumn{3}{|c|}{\textbf{Zaposlenik}}	 \\ \hline[3pt]
 						\SetCell{LightGreen} IDZaposlenik & INT	& Id zaposlenika \\ \hline
-						\SetCell{LightBlue} IDTvrtke & INT & Id tvrtke za koju zaposlenik radi\\ \hline 
+						\SetCell{LightBlue} IDTvrtka & INT & Id tvrtke za koju zaposlenik radi\\ \hline 
 						Ime & VARCHAR(40) & Ime zaposlenika \\ \hline 
 						Prezime & VARCHAR(40) & Prezime zaposlenika \\ \hline
 						Email & VARCHAR(60)	& Email adresa zaposlenika \\ \hline
-						BrojTelefona & VARCHAR(20) & Broj telefona zaposlenika \\ \hline
-						Uloga & VARCHAR(40)	& Pozicija zaposlenika u tvrtci (npr. PR) \\ \hline
+						Tel & VARCHAR(20) & Broj telefona zaposlenika \\ \hline
+						Uloga & VARCHAR(40)	& Pozicija zaposlenika u tvrtki (npr. PR) \\ \hline
 						Opis & VARCHAR(60) & Opis zaposlenika (npr. glavni kontakt) \\ \hline 
 				\end{longtblr}
 
@@ -129,14 +129,14 @@
 					\hline \multicolumn{3}{|c|}{\textbf{Projekt}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}IDProjekt & INT	& ID projekta \\ \hline
 					Naziv & VARCHAR(40) & Naziv projekta \\ \hline 
-					KategorijaProjekta & INT & Kategorija u koju spada projekt \\ \hline 
-					TipProjekta & INT & Eksterni ili interni projekt \\ \hline 
-					DatumPočetka & TIMESTAMP & Datum početka projekta \\ \hline 
-					DatumZavršetka & TIMESTAMP & Datum završetka projekta \\ \hline
+					Kategorija & INT & Kategorija u koju spada projekt \\ \hline 
+					Tip & INT & Tip projekta (ENUM: eksterni ili interni) \\ \hline 
+					ProjektPocetak & TIMESTAMP & Datum početka projekta \\ \hline 
+					ProjektZavrsetak & TIMESTAMP & Datum završetka projekta \\ \hline
 					\SetCell{LightBlue} IDFRResp & INT & ID korisnika odgovornog za odnose s tvrtkama projekta \\ \hline
 					FRCilj & INT & Količina novca koja se želi prikupiti za projekt \\ \hline
-					PrviPingDatum & TIMESTAMP & Datum prvog "ping"-a \\ \hline
-					DrugiPingDatum & TIMESTAMP & Datum drugog "ping"-a \\ \hline
+					PrviFRPing & TIMESTAMP & Datum prvog "ping"-a \\ \hline
+					DrugiFRPing & TIMESTAMP & Datum drugog "ping"-a \\ \hline
 				\end{longtblr}
 
 				\begin{longtblr}[
@@ -165,10 +165,10 @@
 			                \SetCell{LightGreen}IDTvrtka & INT	& Id tvrtke \\ \hline
 					\SetCell{LightBlue}IDOdgovoran & INT & Id korisnika odgovornog za suradnju s tvrtkom \\ \hline 
 					\SetCell{LightBlue}IDKontakt & INT & Id kontakt osobe u tvrtci \\ \hline 
-					KategorijaSuradnje & VARCHAR(20) & Kategorija suradnje (Financijska, materijalna ili akademska) \\ \hline
+					Kategorija & VARCHAR(20) & Kategorija suradnje (ENUM: financijska, materijalna ili akademska) \\ \hline
 					Status & VARCHAR(20) & Kontaktirano, ping, dopis, sastanak, uspješno ili neuspješno \\ \hline
 					Komentar & VARCHAR(480) & Komentar na suradnju \\ \hline
-					VrijednostSuradnje & FLOAT & Novčana vrijednost suradnje \\ \hline
+					Vrijednost & INT & Ostvarena novčana vrijednost suradnje \\ \hline
 				\end{longtblr}
 				
 			
