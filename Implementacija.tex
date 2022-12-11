@@ -52,5 +52,70 @@
 			
 			
 			 \textit{Dovršenu aplikaciju potrebno je pokrenuti na javno dostupnom poslužitelju. Studentima se preporuča korištenje neke od sljedećih besplatnih usluga: \href{https://aws.amazon.com/}{Amazon AWS}, \href{https://azure.microsoft.com/en-us/}{Microsoft Azure} ili \href{https://www.heroku.com/}{Heroku}. Mobilne aplikacije trebaju biti objavljene na F-Droid, Google Play ili Amazon App trgovini.}
+
+            {Kako se aplikacija sastoji od dva distinktivna dijela, backend-a i frontend-a, svaki dio funkcionira samo za sebe te se zasebno pušta u pogon.}
+
+			\subsection{Backend}
+
+                {Backend se sastoji od koda u obliku gradle projekta u rađenom u Spring boot okruženju. Kako Spring boot samostalno radi tablice i ažurira relacije u bazi podataka, potrebno je samo na poslužitelju na kojem će se nalaziti kompajliran pokrenut kod stvoriti bazu podataka s nazivom \textit{cdb}.}
+                
+                {Za početak je potrebno otvoriti virtualni stroj s ubuntu serverom na poslužitelju po izboru nakon čega je potrebno unesti sljedeće naredbe koristeći command prompt kako bi se ulogirali i postavili server:}
+
+                \begin{packed_item}
+        			\item {ssh root@ipv4AdresaServera}
+        			\item {sudo apt update}
+        			\item {sudo apt upgrade}
+        			\item {sudo apt install fail2ban}
+        			\item {sudo systemctl restart fail2ban.service}
+        		\end{packed_item}
+
+                {Sada kada je server postavljen, potrebno je instalirati postgresql i podignuti bazu naziva cdb:}
+
+                \begin{packed_item}
+        			\item {sudo apt-get install postgresql postgresql-contrib}
+        			\item {sudo systemctl start postgresql.service}
+        			\item {sudo systemctl enable postgresql.service}
+        			\item {sudo -u postgres psql}
+        			\item {\textbackslash password postgres}
+        			\item {CREATE DATABASE cdb}
+        			\item {\textbackslash c cdb}
+        			\item {\textbackslash q}
+        		\end{packed_item}
+
+                {Nakon što je baza podataka na serveru stvorena, potrebno je kompajlirati kod za backend aplikacije te ga tako kompajliranog prebaciti na server. Sljedeće naredbe potrebno je izvršiti u matičnog folderu koda preuzetnog na vlastito računalo:}
+
+                \begin{packed_item}
+        			\item {cd Backend}
+        			\item {gradle bootJar}
+        			\item {scp build/libs/backend-0.0.1-SNAPSHOT.jar root@ipv4AdresaServera:/var/www}
+        		\end{packed_item}
+
+                {Nakon što je kompajlirani kod na serveru, potrebno je instalirati javu kako bi ga mogli pokrenuti:}
+
+                \begin{packed_item}
+        			\item {sudo apt install openjdk-17-jdk}
+        		\end{packed_item}
+
+                {Kako bi osigurali da aplikacija radi i kada na serveru ne postoji ulogirani korisnik, potrebno je kompajliran kod pokrenuti kao servis:}
+
+                \begin{packed_item}
+        			\item {cd /usr/lib/systemd/system}
+        			\item {nano runSpringServer.service}
+        			\item \textit{Sljedeći kod upiši u novootvoreni text editor:}
+        			\item {[Unit]}
+                    \item {Description=webserver Daemon}
+                    \item {[Service]}
+                    \item {ExecStart=/usr/bin/java -jar /var/www/backend-0.0.1-SNAPSHOT.jar}
+                    \item {User=root}
+                    \item {[Install]}
+                    \item {WantedBy=multi-user.target}
+        			\item \textit{Zatvori text editor koristeći kombinacije tipki CTRL+S pa CTRL+X.}
+        			\item {sudo systemctl start runSpringServer.service}
+        			\item {sudo systemctl enable runSpringServer.service}
+        		\end{packed_item}
+
+            \subsection{Frontend}
+
+                {}
 			
 			\eject 
