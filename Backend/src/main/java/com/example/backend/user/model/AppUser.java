@@ -1,6 +1,7 @@
-package com.example.backend.model;
+package com.example.backend.user.model;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @SuppressWarnings("ALL")
 @Entity
@@ -13,7 +14,7 @@ public class AppUser {
     private String loginEmailString;
 
     @Column(nullable = false)
-    private String authority;
+    private AUTHORITY authority;
 
     @Column(name = "firstname", nullable = false, length = 40)
     private String firstName;
@@ -34,7 +35,7 @@ public class AppUser {
     }
 
     public AppUser(String loginEmailString,
-                   String authority,
+                   AUTHORITY authority,
                    String firstName,
                    String lastName,
                    String notificationEmailString,
@@ -65,11 +66,11 @@ public class AppUser {
         this.loginEmailString = loginEmailString;
     }
 
-    public String getAuthority() {
+    public AUTHORITY getAuthority() {
         return authority;
     }
 
-    public void setAuthority(String authority) {
+    public void setAuthority(AUTHORITY authority) {
         this.authority = authority;
     }
 

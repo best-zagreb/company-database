@@ -1,10 +1,11 @@
-package com.example.backend.controller.dto;
+package com.example.backend.user.controller.dto;
 
-import com.example.backend.model.AppUser;
+import com.example.backend.user.model.AUTHORITY;
+import com.example.backend.user.model.AppUser;
 
 public class UserDTO {
     private String loginEmailString;
-    private String authority;
+    private AUTHORITY authority;
     private String firstName;
     private String lastName;
     private String notificationEmailString;
@@ -12,7 +13,7 @@ public class UserDTO {
     private String nickname;
 
     public UserDTO(String loginEmailString,
-                   String authority,
+                   AUTHORITY authority,
                    String firstName,
                    String lastName,
                    String notificationEmailString,
@@ -35,11 +36,11 @@ public class UserDTO {
         this.loginEmailString = loginEmailString;
     }
 
-    public String getAuthority() {
+    public AUTHORITY getAuthority() {
         return authority;
     }
 
-    public void setAuthority(String authority) {
+    public void setAuthority(AUTHORITY authority) {
         this.authority = authority;
     }
 

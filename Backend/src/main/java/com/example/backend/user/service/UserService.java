@@ -1,13 +1,14 @@
-package com.example.backend.service;
+package com.example.backend.user.service;
 
 
-import com.example.backend.controller.dto.UserDTO;
-import com.example.backend.model.AppUser;
-import com.example.backend.repo.UserRepository;
+import com.example.backend.user.controller.dto.UserDTO;
+import com.example.backend.user.model.AppUser;
+import com.example.backend.user.repo.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service @Transactional
 public class UserService {
@@ -18,16 +19,16 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<AppUser> findByEmail(String email){
-        return userRepository.findByLoginEmailString(email);
+    public AppUser findByEmail(String email){
+        return userRepository.findByLoginEmailString(email).get(0);
     }
 
     public AppUser addUser(UserDTO userDTO){
         return userRepository.save(userDTO.toUser());
     }
 
-    public Long deleteUser(String email){
-        return userRepository.deleteByLoginEmailString(email);
+    public void deleteUser(Long id){
+        userRepository.deleteById(id);
     }
 
     public List<AppUser> findAll(){
@@ -37,6 +38,10 @@ public class UserService {
     public boolean existsAny() {
         long i = userRepository.count();
         return i > 0;
+    }
+
+    public Optional<AppUser> findById(Long id){
+        return userRepository.findById(id);
     }
 
     public AppUser updateUser(UserDTO userDTO, Long id){
