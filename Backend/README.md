@@ -1,128 +1,110 @@
+# Deploy aplikacije na web (Digital ocean VM)
 
+## Stvaranje VM
 
-# Company Database
+1. Odi na digitalocean.com i stvori račun (moraš dodati karticu iako dobiješ 200$ kredita na 60 dana)
+2. Odaberi Virtual Machine
+3. Regiju postavi na Frankfurt
+4. Postavi ime servera
 
-## Description
-Glavni cilj ove web aplikacije je evidencija statusa suradnja kompanija na projektima i jednostavan uvid od strane ovlaštenih korisnika.
+## Postavljanje servera i postgresql baze
 
-Aplikacija treba biti izvedena kao web aplikacija kojoj će korisnici pristupati uz pomoć google autentifikatora.  
-Sustav treba podržavati radi više korisnika u stvarnom vremenu.
-Aplikacija, osim računalima (desktop, laptop), treba biti prilagođena (engl. responsive) i mobilnom uređaju te tabletu.  
-Aplikacija treba biti jednostavna za korištenje, a sučelje pregledno i intuitivno.  
-Frontend treba biti rađen u React-u, dok Backend treba koristiti postgresql relacijsku bazu podataka i Spring boot.
+### Server
+1. Ažuriraj server
+`sudo apt upgrade`
 
-## Visuals
-*Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.*
-
-## Authors and acknowledgment
-Ivor Baričević  
-Petar Hajduk  
-Matej Balog  
-Marko Čengić  
-Nikola Capan  
-Jakov Jakovac  
-Lovro Čunović  
-
-## License
-*For open source projects, say how it is licensed.*
-
-## Project status
-*If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.*
-
-## Dodatne upute za rad s git
-
-### Postupak za rad na kodu i dokumentaciji.
-
-#### Ažuriranje lokalnog repozitorija
-
-Prebaci se na granu develop ili devdoc:
-
-1. `git checkout develop/devdoc`
-
-Povuci promjene s udaljenog repozitorija na svoj lokalni repozitorij:
-
-2. `git pull`
-
-#### Rad na promjenama
-
-U lokalnom repozitoriju stvori novu vlastitu granu za rad:
-
-3. `git checkout -b develop/devdoc-feature/bugfix-nazivFeaturea/nazivBugFixa`
-
-*Unesi izmjene...*  
-Dodaj sve izmjenjene datoteke u međupodručje:
-
-4. `git add .`
-
-Potvrdi sve promjene u međupodručju s opisnom porukom:
-
-5. `git commit -m "Opisna poruka sto se promijenilo."`
-
-#### Ponovno ažuriranje lokalnog repozitorija
-
-Prebaci se na granu develop ili devdoc:
-
-6. `git checkout develop/devdoc`
-
-Povuci promjene s remote repozitorija na svoj lokalni repozitorij:
-
-7. `git pull`
-
-#### Spajanje promjena na vlastitoj grani
-
-Prebaci se na vlastitu granu za rad:
-
-8. `git checkout develop/devdoc-feature/bugfix-nazivFeaturea/nazivBugFixa`
-
-Spoji promjene iz glavne grane (develop ili devdoc) na vlastitu granu:
-
-9. `git merge develop/devdoc`
-
-*Popravi konfilkte (ako postoje) i provjeri radi li sve...*
-* *Više informacija o konfliktima na [linku](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging) pod naslovom Basic Merge Conflicts.*
-
-#### Spajanje promjena na glavnoj grani
-
-Prebaci se na granu develop ili devdoc:
-
-10.  `git checkout develop/devdoc`
-
-Spoji promjene iz vlastite grane na glavnu granu (develop ili devdoc):
-
-11.  `git merge develop/devdoc-feature/bugfix-nazivFeaturea/nazivBugFixa`
-
-Izbriši vlastitu granu:
-
-12.  `git branch -d develop/devdoc-feature/bugfix-nazivFeaturea/nazivBugFixa`
-
-#### Ažuriranje udaljenog repozitorija
-
-Spremi promjene na udaljeni repozitorij:
-
-13.  `git push`
-
-### Dodatne korisne naredbe
-
-Prikaz svih grana na lokalnom repozitoriju:
-
-`git branch -a`
-
-Ažuriranje popisa grana lokalnog repozitorija s popisom grana udaljenog repozitorija:
-
-`git remote update origin --prune`
-
-ili
-
+2. Postavi dodatnu zaštitu od botova
 ```
-git branch -r | grep -v '\->' | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | while read remote; do git branch --track "${remote#origin/}" "$remote"; done
-git fetch --all
-git pull --all
+sudo apt install fail2ban
+systemctl restart fail2ban.service
+systemctl status fail2ban.service
 ```
 
-* *Više informacija na linkovima: [1](https://stackoverflow.com/questions/36358265/when-does-git-refresh-the-list-of-remote-branches), [2](https://stackoverflow.com/questions/10312521/how-do-i-fetch-all-git-branches) i [3](https://stackoverflow.com/questions/17712468/what-is-the-difference-between-git-remote-update-git-fetch-and-git-pull).*
+### Postgresql baza podataka
+1. Instaliraj postgresql i pokreni ga kao servis
+```
+sudo apt-get install postgresql postgresql-contrib
+sudo systemctl start postgresql.service
+sudo systemctl enable postgresql.service
+sudo systemctl status postgresql.service
+```
 
-Brisanje grane na udaljenom repozitoriju:
+2. Ulogiraj se u psql CLI
+`sudo -u postgres psql`
 
-`git push -d origin nazivGraneZaBrisanje`
+3. Postavi korisnika i lozinku (ovo se koristi u application.properties u Springu)
+`\password postgres`
+*upiši lozinku*
 
-* *Više informacija o brisanju grana na [linku](https://stackoverflow.com/questions/2003505/how-do-i-delete-a-git-branch-locally-and-remotely) prvi odgovor.*
+4. Stvori bazu *cdb* (pazi na kapitalizaciju)
+`CREATE DATABASE cdb`
+
+5. Spoji se na bazu
+`\c cdb`
+
+6. Izađi iz psql CLI
+`\q`
+
+## Deploy Spring (gradle) backenda
+
+### Lokalno
+
+1. Pozicioniraj se u Backend folder
+`cd Backend`
+
+2. Stvori .jar datoteku (stvoriti će se u build/libs)
+`gradle bootJar`
+
+3. Prebaci .jar datoteku na server
+`scp build/libs/backend-0.0.1-SNAPSHOT.jar root@159.65.127.217:/var/www`
+*upiši lozinku*
+
+### Server
+Spoji se na server kao root
+`ssh root@IPv4_adresa_servera`
+
+1. Instaliraj javu
+`apt install openjdk-17-jdk`
+
+#### Da radi dok si logiran:
+2. Pozicioniraj se u /var/www folder
+`cd /var/www`
+
+3. Pokreni .jar datoteku
+`java -jar backend-0.0.1-SNAPSHOT.jar`
+
+#### Da radi kontinuirano:
+2. Pozicioniraj se u folder sa servisima
+`cd /usr/lib/systemd/system`
+
+3. Napravi novu datoteku (servis) naziva runSpringServer.service (ili nešto slično)
+`nano runSpringServer.service`
+
+4. Zalijepi sljedeći kod u datoteku
+```
+[Unit]
+Description=webserver Daemon
+
+[Service]
+ExecStart=/usr/bin/java -jar /var/www/backend-0.0.1-SNAPSHOT.jar
+User=root
+
+[Install]
+WantedBy=multi-user.target
+```
+
+5. Naredbe za upravljanje servisom (kao sudo)
+```
+systemctl start runSpringServer.service # starts the service
+systemctl enable runSpringServer.service # auto starts the service
+systemctl disable runSpringServer.service # stops autostart
+systemctl stop runSpringServer.service # stops the service
+systemctl restart runSpringServer.service # restarts the service
+systemctl status runSpringServer.service # shows current service status (output)
+```
+
+Odspoji se sa servera
+`logout`
+
+### Browser
+U URL browsera upiši IPv4_adresa_servera:8080

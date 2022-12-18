@@ -12,7 +12,7 @@ import {
 import Button from "@mui/material/Button";
 import Users from "../pages/Users";
 
-function Post({ user, editHandler, handleDelete }) {
+function UserPost({ user, editHandler, handleDelete }) {
   return (
     <TableRow key={user.id} className={user.lastName}>
       <TableCell>{user.firstName}</TableCell>
@@ -41,4 +41,25 @@ function Post({ user, editHandler, handleDelete }) {
   );
 }
 
-export default Post;
+function CompanyPost({ company, handleDelete }) {
+  return (
+    <TableRow key={company.id} className={company.companyName}>
+      <TableCell>{company.companyName}</TableCell>
+      <TableCell>{company.industry}</TableCell>
+      <TableCell>{company.ABC }</TableCell>
+      <TableCell>{company.budgetPlanning}</TableCell>
+      <TableCell>{company.website}</TableCell>
+      <TableCell>
+        <Button
+          variant="outlined"
+          size="large"
+          onClick={(e) => handleDelete(e, company.companyName)}
+        >
+          Delete
+        </Button>
+      </TableCell>
+    </TableRow>
+  );
+}
+
+export {UserPost,CompanyPost}

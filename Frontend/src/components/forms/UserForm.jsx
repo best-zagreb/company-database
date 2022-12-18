@@ -336,7 +336,7 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
                 inputProps={{ maxLength: 475 }}
                 error={!descriptionIsValid}
                 helperText={
-                  !descriptionIsValid && "Nickname must be under 475 characters"
+                  !descriptionIsValid && "Description must be under 475 characters"
                 }
                 onChange={handleDescriptionChange}
               />

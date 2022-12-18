@@ -13,6 +13,8 @@ import Login from "./components/pages/Login";
 import NotFound from "./components/pages/NotFound";
 import Home from "./components/pages/Home";
 import Users from "./components/pages/Users";
+import Projects from "./components/pages/Projects";
+import Companies from "./components/pages/Companies";
 
 import Header from "./components/Header";
 
@@ -43,6 +45,14 @@ export default function App() {
 
           <Route path="users">
             <Route index element={<Users />} />
+          </Route>
+
+          <Route path="projects">
+            <Route index element={<Projects />} />
+          </Route>
+
+          <Route path="companies">
+            <Route index element={<Companies />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

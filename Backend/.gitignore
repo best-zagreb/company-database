@@ -1,25 +1,30 @@
-#### Frontend ####
-
-Backend/HELP.md
-Backend/target/
-!Backend/*.mvn/wrapper/maven-wrapper.jar
-!Backend/*/src/main/*/target/
-!Backend/*/src/test/*/target/
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
 
 ### STS ###
-Backend/.apt_generated
-Backend/.classpath
-Backend/.factorypath
-Backend/.project
-Backend/.settings
-Backend/.springBeans
-Backend/.sts4-cache
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-Backend/.idea
-Backend/*.iws
-Backend/*.iml
-Backend/*.ipr
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
 ### NetBeans ###
 /nbproject/private/
@@ -27,34 +32,6 @@ Backend/*.ipr
 /dist/
 /nbdist/
 /.nb-gradle/
-Backend/build/
-Backend/!**/src/main/**/build/
-Backend/!**/src/test/**/build/
 
 ### VS Code ###
-Backend/.vscode/
-
-#### Frontend ####
-# dependencies
-Frontend/node_modules
-Frontend/build
-Frontend/.pnp
-Frontend/.pnp.js
-
-# testing
-Frontend/coverage
-
-# production
-Frontend/build
-
-# misc
-Frontend/.DS_Store
-Frontend/.env.local
-Frontend/.env.development.local
-Frontend/.env.test.local
-Frontend/.env.production.local
-Frontend/.vscode/
-
-Frontend/npm-debug.log*
-Frontend/yarn-debug.log*
-Frontend/yarn-error.log*
+.vscode/

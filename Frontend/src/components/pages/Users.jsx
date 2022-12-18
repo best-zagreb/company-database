@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-
 import UserForm from "../forms/UserForm";
 import EditUserForm from "../forms/EditUserForm";
-
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Button from "@mui/material/Button";
 import {
@@ -17,8 +15,10 @@ import {
   Table,
 } from "@mui/material";
 
-import SearchBar from "../search_bar/SearchBar";
-import ListPage from "../search_bar/ListPage";
+import {UserSearchBar, CompanySearchBar} from "../search_bar/SearchBar";
+import {UserListPage} from "../search_bar/ListPage";
+
+
 export default function Users() {
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
   const [openEditFormModal, setEditFormModal] = useState(false);
@@ -94,7 +94,7 @@ export default function Users() {
         bestuser={bestUser}
       />
 
-      <SearchBar
+      <UserSearchBar
         posts={posts}
         setSearchResults={setSearchResults}
         id="trazilica"
@@ -113,7 +113,7 @@ export default function Users() {
             </TableRow>
           </TableHead>
           <TableBody>
-            <ListPage
+            <UserListPage
               searchResults={searchResults}
               editHandler={editHandler}
               handleDelete={handleDelete}
