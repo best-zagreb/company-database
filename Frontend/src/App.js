@@ -15,6 +15,7 @@ import Home from "./components/pages/Home";
 import Users from "./components/pages/Users";
 import Projects from "./components/pages/Projects";
 import Companies from "./components/pages/Companies";
+import Company from "./components/pages/Company";
 
 import Header from "./components/Header";
 
@@ -53,6 +54,10 @@ export default function App() {
 
           <Route path="companies">
             <Route index element={<Companies />} />
+          </Route>
+
+          <Route path="companies/:id">
+              <Route index element={<Company/>} />
           </Route>
 
           <Route path="*" element={<NotFound />} />
