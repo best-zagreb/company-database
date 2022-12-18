@@ -1,0 +1,29 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding-block: min(2vw, 1rem);
+  padding-inline: min(6vw, 3rem);
+
+  background-color: whitesmoke;
+}
+
+.header > nav > ul {
+  display: inline;
+
+  padding: 0;
+}
+
+.header > nav > ul > li {
+  display: inline;
+  padding-inline: min(4vw, 2rem);
+
+  list-style-type: none;
+}
+
+.header > .menu {
+  display: flex;
+  align-items: center;
+  gap: min(2vw, 1rem);
+}
