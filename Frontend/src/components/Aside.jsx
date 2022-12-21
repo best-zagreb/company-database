@@ -11,10 +11,6 @@ export default function Aside() {
           <li>
             <Link to="/companies/my">My companies</Link>
           </li>
-
-          <li>
-            <Link to="/users">Users</Link>
-          </li>
         </ul>
       </nav>
     </aside>

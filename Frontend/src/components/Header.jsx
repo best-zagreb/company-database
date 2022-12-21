@@ -24,12 +24,16 @@ export default function Header({ setIsLoggedIn, userData }) {
             <li>
               <Link to="/companies">Companies</Link>
             </li>
+
+            <li>
+              <Link to="/users">Users</Link>
+            </li>
           </ul>
 
-          <Button variant="contained">
+          {/* <Button variant="contained">
             <AddCircleIcon />
             Create project
-          </Button>
+          </Button> */}
         </nav>
 
         <div className="menu">
