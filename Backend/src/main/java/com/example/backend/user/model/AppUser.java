@@ -1,10 +1,18 @@
 package com.example.backend.user.model;
 
+import com.example.backend.project.model.Project;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
-import java.util.UUID;
+import java.util.Set;
 
 @SuppressWarnings("ALL")
 @Entity
+@NoArgsConstructor
+@Getter @Setter
 public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,8 +39,8 @@ public class AppUser {
     @Column(length = 40, unique = true)
     private String nickname;
 
-    public AppUser() {
-    }
+    @ManyToMany(mappedBy = "frteammembers")
+    private Set<Project> projects;
 
     public AppUser(String loginEmailString,
                    AUTHORITY authority,
@@ -40,7 +48,8 @@ public class AppUser {
                    String lastName,
                    String notificationEmailString,
                    String description,
-                   String nickname) {
+                   String nickname,
+                   Set<Project> projects) {
         this.loginEmailString = loginEmailString;
         this.authority = authority;
         this.firstName = firstName;
@@ -48,69 +57,6 @@ public class AppUser {
         this.notificationEmailString = notificationEmailString;
         this.description = description;
         this.nickname = nickname;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getLoginEmailString() {
-        return loginEmailString;
-    }
-
-    public void setLoginEmailString(String loginEmailString) {
-        this.loginEmailString = loginEmailString;
-    }
-
-    public AUTHORITY getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(AUTHORITY authority) {
-        this.authority = authority;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getNotificationEmailString() {
-        return notificationEmailString;
-    }
-
-    public void setNotificationEmailString(String notificationEmailString) {
-        this.notificationEmailString = notificationEmailString;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+        this.projects = projects;
     }
 }

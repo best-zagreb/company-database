@@ -7,6 +7,7 @@ import com.example.backend.user.repo.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +25,17 @@ public class UserService {
     }
 
     public AppUser addUser(UserDTO userDTO){
-        return userRepository.save(userDTO.toUser());
+        AppUser appUser = new AppUser(
+                userDTO.getLoginEmailString(),
+                userDTO.getAuthority(),
+                userDTO.getFirstName(),
+                userDTO.getLastName(),
+                userDTO.getNotificationEmailString(),
+                userDTO.getDescription(),
+                userDTO.getNickname(),
+                new HashSet<>()
+        );
+        return userRepository.save(appUser);
     }
 
     public void deleteUser(Long id){
