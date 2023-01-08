@@ -16,8 +16,8 @@ import Users from "./components/pages/Users";
 import Projects from "./components/pages/Projects";
 import Companies from "./components/pages/Companies";
 import Company from "./components/pages/Company";
+
 import Header from "./components/Header";
-//import Project from "./components/pages/Project";
 
 export default function App() {
   const [appIsSetup, setAppIsSetup] = useState(true);
@@ -56,11 +56,9 @@ export default function App() {
             <Route index element={<Companies />} />
           </Route>
 
-          <Route path="companies/:companyName">
-            <Route index element={<Company />} />
+          <Route path="companies/:id">
+              <Route index element={<Company/>} />
           </Route>
-
-         
 
           <Route path="*" element={<NotFound />} />
         </Route>

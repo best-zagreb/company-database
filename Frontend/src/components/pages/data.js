@@ -9,7 +9,7 @@ const data =  [
     },
 
     {
-        companyName: "Bobo smrad",
+        companyName: "Bobinator",
         industry: "IT",
         ABC: "C",
         budgetPlanning: "May",
@@ -44,11 +44,11 @@ const data =  [
     },
 
     {
-        companyName: "Tesla",
+        companyName: "Muskic doo",
         industry: "IT",
         ABC: "A",
         budgetPlanning: "October",
-        website: "tesla.hr",
+        website: "muskici.hr",
 
     }
 

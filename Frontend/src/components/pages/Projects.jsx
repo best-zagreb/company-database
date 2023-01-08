@@ -2,19 +2,9 @@ import { useState, useEffect } from "react";
 import "./pages.css"
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import Button from "@mui/material/Button";
-import {
-  Box,
-  TextField,
-  TableCell,
-  TableHead,
-  Paper,
-  TableContainer,
-  TableRow,
-  TableBody,
-  Table
-} from "@mui/material";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -25,9 +15,13 @@ import InboxIcon from '@mui/icons-material/Inbox';
 import DraftsIcon from '@mui/icons-material/Drafts';
 
 
-
 export default function Projects() {
   const [projects, setProjects] = useState([]);
+  //const [firstPass, setFirstPass] = useState(false);
+
+  // useEffect(() => {
+  //   console.log("First pass now is: " + firstPass);
+  // }, [firstPass]);
 
   function fetchProjects() {
     //Odkomentirati kad se napise backend
@@ -58,51 +52,75 @@ export default function Projects() {
     {value: "BEST DESIGN DAYS"},
     {value: "OTHERS"},
   ];
-
-
+  
+  let botun = ""
   const handleClick = (e) => {
+  
     var gumb = document.getElementById(e.target.id)
-    console.log(gumb.innerText)
-    setSelectedButton(gumb.innerText)
+    if(gumb.innerText === botun) {
+      return
+    }
     setButtons(prevArray => {
-      let indeks = null;
+      let indeksGumba = null;
+      let indeksMinusa = null;
+      let tekstMinusa = null;
       for(let i = 0 ;  i < prevArray.length ; i++) {
         if(prevArray[i].props.id === gumb.innerText) {
-          indeks = i;
-          console.log(indeks)
+          indeksGumba = i;
+        }
+        if(prevArray[i].props.ikona === "minus"){
+          indeksMinusa = i;
+          tekstMinusa = prevArray[i].props.id;
         }
       }
-      const newArray = prevArray.filter(function (button) {
-        return button.props.id !== gumb.innerText;
-    });
+      const niArray = prevArray.filter(function (button) {
+        return (button.props.id !== gumb.innerText)
+       });
+
+       const newArray = niArray.filter(function (button) {
+        return (button.props.ikona !== "minus")
+       });
+
       const noviGumb = 
         <Button
-            variant="contained"
+            variant="outlined"
             id = {gumb.innerText}
-            size="small"
-            startIcon={<AddCircleIcon />}
+            ikona = "minus"
+            size="large"
+            startIcon={<RemoveCircleOutlineIcon />}
             onClick = {handleClick}
           > 
           {gumb.innerText} 
       </Button>
-      newArray.splice(indeks, 0, noviGumb)
-      setSelectedButton(noviGumb.props.id)
+
+      const stariGumb = 
+      <Button
+          variant="contained"
+          id = {tekstMinusa}
+          ikona = "plus"
+          size="large"
+          startIcon={<AddCircleIcon />}
+          onClick = {handleClick}
+        > 
+        {tekstMinusa} 
+      </Button>
+
+      if(stariGumb.props.id){
+        newArray.splice(indeksMinusa, 0, stariGumb)
+      }
+      newArray.splice(indeksGumba, 0, noviGumb)
+      botun = gumb.innerText
+      setSelectedButton(botun)
       return newArray
     })
   }
-
-  function renderList(){
-    console.log("renderali smo")
-    setRenderLista(true)
-    console.log(renderLista)
- }
-
 
   const results = buttonNames.map((post) => (
     <Button
       variant="contained"
       id = {post.value}
       size="large"
+      ikona = "plus"
       startIcon={<AddCircleIcon />}
       onClick = {handleClick}
     > {post.value} </Button>
@@ -117,53 +135,23 @@ export default function Projects() {
   }, []);
 
   useEffect(() => {
-    renderList();
-  }, [selectedButton]);
+    setRenderLista(true);
+  }, []);
 
- 
   return (
     <>
     <div className="gumbi">
       {buttons}
     </div>
-
     {renderLista && 
-      <h2>{selectedButton}</h2> 
+      <div>
+          <h2 className="project-topic">{selectedButton}</h2> 
+          <ul>
+              <li key = "1">Projekt 1</li>
+              <li key = "2">Projekt 2</li>
+          </ul>
+      </div>
     }
-
-    {renderLista &&
-        <List>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemText primary="Projekt 1" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemText primary="Projekt 2" />
-            </ListItemButton>
-          </ListItem>
-        </List>
-  
-    }
-
-      {/* <TableContainer component={Paper}>
-        <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Surname</TableCell>
-              <TableCell>Nickname</TableCell>
-              <TableCell>E-mail</TableCell>
-              <TableCell>Max authorization level</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            
-          </TableBody>
-        </Table>
-      </TableContainer> */}
     </>
   );
 }

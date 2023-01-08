@@ -7,7 +7,6 @@ import data from "./data";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Button from "@mui/material/Button";
 import {
-  Box,
   TextField,
   TableCell,
   TableHead,
@@ -85,7 +84,7 @@ export default function Companies() {
     //       setSearchResults(json);
     //     }
     //   });
-    console.log("Fetchali smo usere, ps samo su importani iz data.js za probu");
+    //console.log("Fetchali smo usere, ps samo su importani iz data.js za probu");
     let newData = data.sort((a,b) => (a.companyName.localeCompare(b.companyName)))
     setPosts(newData);
     setSearchResults(newData);
