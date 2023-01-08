@@ -1,5 +1,8 @@
 package com.example.backend.model;
 
+import com.example.backend.controller.dto.CompanyDto;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -37,8 +40,7 @@ public class Company
     @Column(name = "contactInFuture", nullable = false)
     private boolean contactInFuture;
 
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
     private Set<Contact> contacts;
 
 
@@ -151,5 +153,20 @@ public class Company
     public void setContactInFuture(boolean contactInFuture)
     {
         this.contactInFuture = contactInFuture;
+    }
+    public Set<Contact> getContacts(){
+        return this.contacts;
+    }
+
+    public void updateWith(CompanyDto companyDto){
+        name = companyDto.getName();
+        address = companyDto.getAddress();
+        domain = companyDto.getDomain();
+        country = companyDto.getCountry();
+        abcCategory = companyDto.getAbcCategory();
+        budgetPlanningMonth = companyDto.getBudgetPlanningMonth();
+        zipCode = companyDto.getZipCode();
+        webUrl = companyDto.getWebUrl();
+        contactInFuture = companyDto.isContactInFuture();
     }
 }

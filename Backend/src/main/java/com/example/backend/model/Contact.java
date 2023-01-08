@@ -1,5 +1,8 @@
 package com.example.backend.model;
 
+import com.example.backend.controller.dto.ContactDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -29,6 +32,7 @@ public class Contact
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "companyId", nullable = false)
+    @JsonIgnore
     private Company company;
 
     public Contact(Long id, String firstName, String lastName, String email, String tel, String role, String description, Company company)
@@ -45,6 +49,16 @@ public class Contact
 
     public Contact()
     {
+    }
+
+    public Contact(String firstName, String lastName, String email, String tel, String role, String description)
+    {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.tel = tel;
+        this.role = role;
+        this.description = description;
     }
 
     public Long getId()
@@ -120,5 +134,15 @@ public class Contact
     public void setCompany(Company company)
     {
         this.company = company;
+    }
+
+    public void updateWith(ContactDto contactDto)
+    {
+        firstName = contactDto.getFirstName();
+        lastName = contactDto.getLastName();
+        email = contactDto.getEmail();
+        tel = contactDto.getTel();
+        role = contactDto.getRole();
+        description = contactDto.getDescription();
     }
 }
