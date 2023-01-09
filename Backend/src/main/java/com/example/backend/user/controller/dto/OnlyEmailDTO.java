@@ -1,4 +1,4 @@
-package com.example.backend.controller.dto;
+package com.example.backend.user.controller.dto;
 
 public class OnlyEmailDTO {
     String email;
