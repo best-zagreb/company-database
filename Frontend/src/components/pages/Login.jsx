@@ -3,32 +3,27 @@ import jwt_decode from "jwt-decode";
 
 import "./Login.css";
 
-export default function Login({ setIsLoggedIn }) {
+export default function Login({ setIsLoggedIn, checkIfUserInDatabase }) {
   function handleCallbackResponse(response) {
     // console.log("Encoded JWT ID token: " + response.credential);
     const userObject = jwt_decode(response.credential);
     // console.log(userObject);
 
-    fetch(
-      "http://159.65.127.217:8080/users/get-user?email=" + userObject.email,
-      {
-        method: "GET",
-        headers: {
-          Authorization: "Basic " + window.btoa("admin:pass"),
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((json) => {
-        // console.log(json);
-        if (json.length > 0) {
-          setIsLoggedIn(true);
-        } else {
-          console.error(
-            "You do not have access to Company Database. If you believe this is a mistake, contact your administrator at email@example.com."
-          );
-        }
-      });
+    if (checkIfUserInDatabase(userObject)) {
+      setIsLoggedIn(true);
+
+      const loginInfo = {
+        user: userObject,
+        lastLogin: new Date(),
+        persistentLoginDaysDuration: 7, // change later to be pulled for user settings from database
+      };
+
+      localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+    } else {
+      console.error(
+        "You do not have access to Company Database. If you believe this is a mistake, contact your administrator at email@example.com."
+      );
+    }
   }
 
   useEffect(() => {
