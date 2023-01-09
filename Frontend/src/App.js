@@ -1,5 +1,6 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import jwt_decode from "jwt-decode";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -30,11 +31,40 @@ export default function App() {
     //   navigate("/setup");
     // } else
     if (!isLoggedIn) {
-      navigate("/login");
+      const userFromJWT = localStorage.getItem("userFromJWT");
+      if (
+        userFromJWT !== null &&
+        checkIfUserInDatabase(JSON.parse(userFromJWT))
+      ) {
+        // if JWT of user exists in local storage and that user is in database
+        setIsLoggedIn(true);
+      } else {
+        navigate("/login");
+      }
     } else {
       navigate("/");
     }
   }, [appIsSetup, isLoggedIn]);
+
+  async function checkIfUserInDatabase(userObject) {
+    await fetch(
+      "http://159.65.127.217:8080/users/get-user?email=" + userObject.email,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Basic " + window.btoa("admin:pass"),
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.length > 0) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+  }
 
   return (
     <>
@@ -57,13 +87,21 @@ export default function App() {
           </Route>
 
           <Route path="companies/:id">
-              <Route index element={<Company/>} />
+            <Route index element={<Company />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />
         </Route>
 
-        <Route path="login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+        <Route
+          path="login"
+          element={
+            <Login
+              setIsLoggedIn={setIsLoggedIn}
+              checkIfUserInDatabase={checkIfUserInDatabase}
+            />
+          }
+        />
         {/* <Route path="setup" element={<Setup setAppIsSetup={setAppIsSetup} />} /> */}
       </Routes>
     </>

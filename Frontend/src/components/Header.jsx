@@ -2,11 +2,12 @@ import "./Header.css";
 import { Link, Outlet } from "react-router-dom";
 
 import Button from "@mui/material/Button";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 export default function Header({ setIsLoggedIn, userData }) {
   function onClick() {
+    localStorage.removeItem("userFromJWT");
+
     setIsLoggedIn(false);
   }
 
