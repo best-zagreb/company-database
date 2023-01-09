@@ -6,8 +6,11 @@ import com.example.backend.companies.model.Company;
 import com.example.backend.companies.model.Contact;
 import com.example.backend.companies.repo.CompanyRepository;
 import com.example.backend.companies.repo.ContactRepository;
+import com.example.backend.user.model.AUTHORITY;
+import com.example.backend.user.model.AppUser;
 import org.springframework.stereotype.Service;
 
+import javax.naming.AuthenticationException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -25,11 +28,18 @@ public class CompanyService
         this.contactRepository = contactRepository;
     }
 
-    public List<Company> getAllCompanies(){
+    public List<Company> getAllCompanies(AppUser user) throws AuthenticationException
+    {
+        if (user == null) throw new AuthenticationException();
         return companyRepository.findAll();
     }
 
-    public Company getCompany(Long id){
+    public Company getCompany(AppUser user, Long id) throws AuthenticationException
+    {
+        if (user == null) throw new AuthenticationException();
+        if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
+            throw new AuthenticationException();
+        }
         Optional<Company> company = companyRepository.findById(id);
         if (!company.isPresent()){
             throw new EntityNotFoundException();
@@ -37,11 +47,21 @@ public class CompanyService
         return company.get();
     }
 
-    public Company createCompany(CompanyDto companyDto){
+    public Company createCompany(AppUser user, CompanyDto companyDto) throws AuthenticationException
+    {
+        if (user == null) throw new AuthenticationException();
+        if (List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
+            throw new AuthenticationException();
+        }
         return companyRepository.save(companyDto.toCompany());
     }
 
-    public Company editCompany(Long companyId, CompanyDto companyDto){
+    public Company editCompany(AppUser user, Long companyId, CompanyDto companyDto) throws AuthenticationException
+    {
+        if (user == null) throw new AuthenticationException();
+        if (List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
+            throw new AuthenticationException();
+        }
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         if (optionalCompany.isEmpty()){
             throw new EntityNotFoundException();
@@ -52,7 +72,12 @@ public class CompanyService
         return company;
     }
 
-    public void deleteCompany(Long companyId){
+    public void deleteCompany(AppUser user, Long companyId) throws AuthenticationException
+    {
+        if (user == null) throw new AuthenticationException();
+        if (List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
+            throw new AuthenticationException();
+        }
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         if (optionalCompany.isEmpty()){
             throw new EntityNotFoundException();
@@ -60,7 +85,12 @@ public class CompanyService
         companyRepository.deleteCompanyById(companyId);
     }
 
-    public Contact addContactToCompany(Long companyId, ContactDto contactDto){
+    public Contact addContactToCompany(AppUser user, Long companyId, ContactDto contactDto) throws AuthenticationException
+    {
+        if (user == null) throw new AuthenticationException();
+        if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
+            throw new AuthenticationException();
+        }
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         if (optionalCompany.isEmpty()){
             throw new EntityNotFoundException();
@@ -71,7 +101,12 @@ public class CompanyService
         return contactRepository.save(contact);
     }
 
-    public Contact editContact(Long companyId, Long contactId, ContactDto contactDto){
+    public Contact editContact(AppUser user, Long companyId, Long contactId, ContactDto contactDto) throws AuthenticationException
+    {
+        if (user == null) throw new AuthenticationException();
+        if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
+            throw new AuthenticationException();
+        }
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         if (optionalCompany.isEmpty()){
             throw new EntityNotFoundException();
@@ -88,7 +123,12 @@ public class CompanyService
         return contactRepository.save(contact);
     }
 
-    public void deleteContact(Long companyId, Long contactId){
+    public void deleteContact(AppUser user, Long companyId, Long contactId) throws AuthenticationException
+    {
+        if (user == null) throw new AuthenticationException();
+        if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
+            throw new AuthenticationException();
+        }
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         if (optionalCompany.isEmpty()){
             throw new EntityNotFoundException();
