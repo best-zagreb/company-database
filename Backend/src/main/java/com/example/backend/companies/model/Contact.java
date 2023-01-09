@@ -1,6 +1,6 @@
-package com.example.backend.model;
+package com.example.backend.companies.model;
 
-import com.example.backend.controller.dto.ContactDto;
+import com.example.backend.companies.controller.dto.ContactDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;

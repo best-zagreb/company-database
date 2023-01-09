@@ -1,11 +1,11 @@
-package com.example.backend.controller;
+package com.example.backend.companies.controller;
 
-import com.example.backend.controller.dto.CompanyDto;
-import com.example.backend.controller.dto.ContactDto;
-import com.example.backend.model.AppUser;
-import com.example.backend.model.Company;
-import com.example.backend.model.Contact;
-import com.example.backend.service.CompanyService;
+import com.example.backend.companies.controller.dto.CompanyDto;
+import com.example.backend.companies.controller.dto.ContactDto;
+import com.example.backend.companies.model.Company;
+import com.example.backend.companies.model.Contact;
+import com.example.backend.companies.service.CompanyService;
+import com.example.backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +18,12 @@ import java.util.List;
 public class CompanyController
 {
     private final CompanyService companyService;
+    private final UserService userService;
 
-    public CompanyController(CompanyService companyService)
+    public CompanyController(CompanyService companyService, UserService userService)
     {
         this.companyService = companyService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -73,4 +75,6 @@ public class CompanyController
         companyService.deleteContact(companyId, contactId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    private boolean authenticate(List<AUTHORITY>)
 }

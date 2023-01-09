@@ -1,11 +1,6 @@
-package com.example.backend.controller.dto;
+package com.example.backend.companies.controller.dto;
 
-import com.example.backend.model.Company;
-
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.example.backend.companies.model.Company;
 
 public class CompanyDto
 {

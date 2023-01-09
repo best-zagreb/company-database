@@ -1,12 +1,11 @@
-package com.example.backend.service;
+package com.example.backend.companies.service;
 
-import com.example.backend.controller.dto.CompanyDto;
-import com.example.backend.controller.dto.ContactDto;
-import com.example.backend.model.Company;
-import com.example.backend.model.Contact;
-import com.example.backend.repo.CompanyRepository;
-import com.example.backend.repo.ContactRepository;
-import org.hibernate.ObjectNotFoundException;
+import com.example.backend.companies.controller.dto.CompanyDto;
+import com.example.backend.companies.controller.dto.ContactDto;
+import com.example.backend.companies.model.Company;
+import com.example.backend.companies.model.Contact;
+import com.example.backend.companies.repo.CompanyRepository;
+import com.example.backend.companies.repo.ContactRepository;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;

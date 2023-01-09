@@ -1,6 +1,6 @@
-package com.example.backend.controller.dto;
+package com.example.backend.companies.controller.dto;
 
-import com.example.backend.model.Contact;
+import com.example.backend.companies.model.Contact;
 
 public class ContactDto
 {
