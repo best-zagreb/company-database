@@ -6,7 +6,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 export default function Header({ setIsLoggedIn, userData }) {
   function onClick() {
-    localStorage.removeItem("userFromJWT");
+    localStorage.removeItem("loginInfo");
 
     setIsLoggedIn(false);
   }

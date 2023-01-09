@@ -12,7 +12,13 @@ export default function Login({ setIsLoggedIn, checkIfUserInDatabase }) {
     if (checkIfUserInDatabase(userObject)) {
       setIsLoggedIn(true);
 
-      localStorage.setItem("userFromJWT", JSON.stringify(userObject));
+      const loginInfo = {
+        user: userObject,
+        lastLogin: new Date(),
+        persistentLoginDaysDuration: 7, // change later to be pulled for user settings from database
+      };
+
+      localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
     } else {
       console.error(
         "You do not have access to Company Database. If you believe this is a mistake, contact your administrator at email@example.com."

@@ -31,12 +31,16 @@ export default function App() {
     //   navigate("/setup");
     // } else
     if (!isLoggedIn) {
-      const userFromJWT = localStorage.getItem("userFromJWT");
+      const loginInfo = JSON.parse(localStorage.getItem("loginInfo"));
+
       if (
-        userFromJWT !== null &&
-        checkIfUserInDatabase(JSON.parse(userFromJWT))
+        loginInfo !== null &&
+        (new Date() - Date.parse(Date(loginInfo.lastLogin))) /
+          (1000 * 3600 * 24) <
+          loginInfo.persistentLoginDaysDuration &&
+        checkIfUserInDatabase(loginInfo.user)
       ) {
-        // if JWT of user exists in local storage and that user is in database
+        // if JWT of user exists in local storage, user has logged in the last X days and that user is in database
         setIsLoggedIn(true);
       } else {
         navigate("/login");
@@ -47,6 +51,7 @@ export default function App() {
   }, [appIsSetup, isLoggedIn]);
 
   async function checkIfUserInDatabase(userObject) {
+    return false;
     await fetch(
       "http://159.65.127.217:8080/users/get-user?email=" + userObject.email,
       {
