@@ -22,7 +22,7 @@ import Header from "./components/Header";
 
 export default function App() {
   const [appIsSetup, setAppIsSetup] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
 
   const navigate = useNavigate();
 
@@ -30,53 +30,53 @@ export default function App() {
     // if (!appIsSetup) {
     //   navigate("/setup");
     // } else
-    if (!isLoggedIn) {
+    if (!userIsLoggedIn) {
       const loginInfo = JSON.parse(localStorage.getItem("loginInfo"));
 
       if (
         loginInfo !== null &&
         (new Date() - Date.parse(Date(loginInfo.lastLogin))) /
           (1000 * 3600 * 24) <
-          loginInfo.persistentLoginDaysDuration &&
-        checkIfUserInDatabase(loginInfo.user)
+          loginInfo.persistentLoginDaysDuration
       ) {
-        // if JWT of user exists in local storage, user has logged in the last X days and that user is in database
-        setIsLoggedIn(true);
+        // if JWT of user exists in local storage and user has logged in the last X days
+
+        const userObject = jwt_decode(loginInfo.JWT.credential);
+        fetch(
+          "http://159.65.127.217:8080/users/get-user?email=" + userObject.email,
+          {
+            method: "GET",
+            headers: {
+              Authorization: "Basic " + window.btoa("admin:pass"),
+            },
+          }
+        )
+          .then((response) => response.json())
+          .then((json) => {
+            if (json.length > 0) {
+              // if that user is in database
+              setUserIsLoggedIn(true);
+            } else {
+              navigate("/login");
+            }
+          });
       } else {
         navigate("/login");
       }
     } else {
       navigate("/");
     }
-  }, [appIsSetup, isLoggedIn]);
-
-  async function checkIfUserInDatabase(userObject) {
-    return false;
-    await fetch(
-      "http://159.65.127.217:8080/users/get-user?email=" + userObject.email,
-      {
-        method: "GET",
-        headers: {
-          Authorization: "Basic " + window.btoa("admin:pass"),
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((json) => {
-        if (json.length > 0) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-  }
+  }, [appIsSetup, userIsLoggedIn]);
 
   return (
     <>
       <CssBaseline enableColorScheme />
 
       <Routes>
-        <Route path="/" element={<Header setIsLoggedIn={setIsLoggedIn} />}>
+        <Route
+          path="/"
+          element={<Header setUserIsLoggedIn={setUserIsLoggedIn} />}
+        >
           <Route index element={<Home />} />
 
           <Route path="users">
@@ -100,12 +100,7 @@ export default function App() {
 
         <Route
           path="login"
-          element={
-            <Login
-              setIsLoggedIn={setIsLoggedIn}
-              checkIfUserInDatabase={checkIfUserInDatabase}
-            />
-          }
+          element={<Login setUserIsLoggedIn={setUserIsLoggedIn} />}
         />
         {/* <Route path="setup" element={<Setup setAppIsSetup={setAppIsSetup} />} /> */}
       </Routes>

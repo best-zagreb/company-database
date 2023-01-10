@@ -6,3 +6,8 @@
   justify-content: center;
   align-items: center;
 }
+
+.Login h1,
+.Login h2 {
+  text-align: center;
+}

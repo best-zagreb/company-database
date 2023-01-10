@@ -4,11 +4,11 @@ import { Link, Outlet } from "react-router-dom";
 import Button from "@mui/material/Button";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-export default function Header({ setIsLoggedIn, userData }) {
+export default function Header({ setUserIsLoggedIn, userData }) {
   function onClick() {
     localStorage.removeItem("loginInfo");
 
-    setIsLoggedIn(false);
+    setUserIsLoggedIn(false);
   }
 
   return (

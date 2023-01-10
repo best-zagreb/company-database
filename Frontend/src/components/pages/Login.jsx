@@ -1,29 +1,81 @@
-import { useEffect } from "react";
+import { useEffect, useState, forwardRef } from "react";
 import jwt_decode from "jwt-decode";
+
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 import "./Login.css";
 
-export default function Login({ setIsLoggedIn, checkIfUserInDatabase }) {
+const Alert = forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+export default function Login({ setUserIsLoggedIn }) {
+  const [msgModalOpen, setMsgModalOpen] = useState(false);
+  const [message, setMessage] = useState();
+
   function handleCallbackResponse(response) {
     // console.log("Encoded JWT ID token: " + response.credential);
     const userObject = jwt_decode(response.credential);
     // console.log(userObject);
 
-    if (checkIfUserInDatabase(userObject)) {
-      setIsLoggedIn(true);
+    fetch(
+      "http://159.65.127.217:8080/users/get-user?email=" + userObject.email,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Basic " + window.btoa("admin:pass"),
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.length > 0) {
+          // needs to be pulled out of login component so it can be user throughout the app
+          setMessage({
+            type: "success",
+            info: "Login successful.",
+            autoHideDuration: 2000,
+          });
+          handleOpenMsgModal();
 
-      const loginInfo = {
-        user: userObject,
-        lastLogin: new Date(),
-        persistentLoginDaysDuration: 7, // change later to be pulled for user settings from database
-      };
+          const loginInfo = {
+            JWT: response,
+            lastLogin: new Date(),
+            persistentLoginDaysDuration: 7, // change later to be pulled for user settings from database
+          };
 
-      localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+          localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+
+          setUserIsLoggedIn(true);
+        } else {
+          setMessage({
+            type: "error",
+            info: "You do not have access to Company Database. If you believe this is a mistake, contact your administrator at email@example.com.",
+            autoHideDuration: 5000,
+          });
+          handleOpenMsgModal();
+        }
+      });
+  }
+
+  function handleOpenMsgModal() {
+    if (msgModalOpen) {
+      setMsgModalOpen(false);
+
+      setTimeout(() => {
+        setMsgModalOpen(true);
+      }, 500);
     } else {
-      console.error(
-        "You do not have access to Company Database. If you believe this is a mistake, contact your administrator at email@example.com."
-      );
+      setMsgModalOpen(true);
     }
+  }
+
+  function handleCloseMsgModal(event, reason) {
+    if (reason === "clickaway") {
+      return;
+    }
+    setMsgModalOpen(false);
   }
 
   useEffect(() => {
@@ -38,7 +90,7 @@ export default function Login({ setIsLoggedIn, checkIfUserInDatabase }) {
       theme: "outline",
       size: "large",
     });
-  }, []);
+  }, [msgModalOpen, message]);
 
   return (
     <div className="Login">
@@ -47,6 +99,18 @@ export default function Login({ setIsLoggedIn, checkIfUserInDatabase }) {
       <br />
 
       <div id="signInDiv"></div>
+
+      {message && (
+        <Snackbar
+          open={msgModalOpen}
+          autoHideDuration={message.autoHideDuration}
+          onClose={handleCloseMsgModal}
+        >
+          <Alert onClose={handleCloseMsgModal} severity={message.type}>
+            {message.info}
+          </Alert>
+        </Snackbar>
+      )}
     </div>
   );
 }
