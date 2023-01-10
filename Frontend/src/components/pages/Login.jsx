@@ -34,8 +34,6 @@ export default function Login({ setUserIsLoggedIn }) {
       .then((response) => response.json())
       .then((json) => {
         if (json.length > 0) {
-          setUser(json[0]);
-
           // needs to be pulled out of login component so it can be user throughout the app
           setMessage({
             type: "success",
@@ -49,9 +47,9 @@ export default function Login({ setUserIsLoggedIn }) {
             lastLogin: new Date(),
             persistentLoginDaysDuration: 7, // change later to be pulled for user settings from database
           };
-
           localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
 
+          setUser(json[0]);
           setUserIsLoggedIn(true);
         } else {
           setMessage({
