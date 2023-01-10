@@ -1,5 +1,5 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import jwt_decode from "jwt-decode";
 
 import "@fontsource/roboto/300.css";
@@ -20,9 +20,13 @@ import Company from "./components/pages/Company";
 
 import Header from "./components/Header";
 
+import UserContext from "./context/UserContext";
+
 export default function App() {
   const [appIsSetup, setAppIsSetup] = useState(true);
   const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
+
+  const { setUser } = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -55,6 +59,7 @@ export default function App() {
           .then((json) => {
             if (json.length > 0) {
               // if that user is in database
+              setUser(json[0]);
               setUserIsLoggedIn(true);
             } else {
               navigate("/login");

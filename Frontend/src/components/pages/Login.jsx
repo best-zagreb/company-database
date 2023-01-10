@@ -1,10 +1,12 @@
-import { useEffect, useState, forwardRef } from "react";
+import { useEffect, useState, useContext, forwardRef } from "react";
 import jwt_decode from "jwt-decode";
 
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
 import "./Login.css";
+
+import UserContext from "../../context/UserContext";
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -14,10 +16,11 @@ export default function Login({ setUserIsLoggedIn }) {
   const [msgModalOpen, setMsgModalOpen] = useState(false);
   const [message, setMessage] = useState();
 
+  const { setUser } = useContext(UserContext);
+
   function handleCallbackResponse(response) {
     // console.log("Encoded JWT ID token: " + response.credential);
     const userObject = jwt_decode(response.credential);
-    // console.log(userObject);
 
     fetch(
       "http://159.65.127.217:8080/users/get-user?email=" + userObject.email,
@@ -31,6 +34,8 @@ export default function Login({ setUserIsLoggedIn }) {
       .then((response) => response.json())
       .then((json) => {
         if (json.length > 0) {
+          setUser(json[0]);
+
           // needs to be pulled out of login component so it can be user throughout the app
           setMessage({
             type: "success",

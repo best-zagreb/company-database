@@ -1,11 +1,17 @@
 import "./Header.css";
+
 import { Link, Outlet } from "react-router-dom";
+import { useContext } from "react";
 
 import Button from "@mui/material/Button";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-export default function Header({ setUserIsLoggedIn, userData }) {
-  function onClick() {
+import UserContext from "../context/UserContext";
+
+export default function Header({ setUserIsLoggedIn }) {
+  const { user } = useContext(UserContext);
+
+  function logoutUser() {
     localStorage.removeItem("loginInfo");
 
     setUserIsLoggedIn(false);
@@ -38,12 +44,15 @@ export default function Header({ setUserIsLoggedIn, userData }) {
         </nav>
 
         <div className="menu">
-          {/* replace ime prezime with nickname if exists, otherwise with firstName and lastName from database */}
           <p className="username">
-            {userData ? userData.nickname : "Unknown user"}
+            {!user
+              ? "Unknown user"
+              : user.nickname
+              ? user.nickname
+              : user.firstName + " " + user.lastName}
           </p>
 
-          <Button variant="outlined" size="large" onClick={onClick}>
+          <Button variant="outlined" size="large" onClick={logoutUser}>
             <LogoutIcon />
           </Button>
         </div>
