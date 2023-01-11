@@ -38,7 +38,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getProjectById(@RequestHeader String googleTokenEncoded, @RequestParam Long id){
+    public ResponseEntity getProjectById(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
             return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
@@ -89,7 +89,7 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateProject(@RequestHeader String googleTokenEncoded, @RequestBody ProjectDTO projectDTO, @RequestParam Long id){
+    public ResponseEntity updateProject(@RequestHeader String googleTokenEncoded, @RequestBody ProjectDTO projectDTO, @PathVariable Long id){
         List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMIN);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
@@ -103,7 +103,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteProjects(@RequestHeader String googleTokenEncoded, @RequestParam Long id){
+    public ResponseEntity deleteProjects(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
         List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMIN);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)

@@ -26,7 +26,7 @@ public class UserController {
 
     @PostMapping()
     @ResponseBody
-    public ResponseEntity addUser(@RequestHeader("googleToken") String googleTokenEncoded, @RequestBody UserDTO userDTO) {
+    public ResponseEntity addUser(@RequestHeader String googleTokenEncoded, @RequestBody UserDTO userDTO) {
         List<AUTHORITY> a = List.of(AUTHORITY.ADMIN, AUTHORITY.MODERATOR, AUTHORITY.FR_RESPONSIBLE);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
@@ -41,7 +41,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity findUser(@RequestHeader("googleToken") String googleTokenEncoded, @RequestParam Long id){
+    public ResponseEntity findUser(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
             return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
@@ -53,7 +53,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public ResponseEntity deleteUser(@RequestHeader("googleToken") String googleTokenEncoded, @PathVariable Long id){
+    public ResponseEntity deleteUser(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
         List<AUTHORITY> a = List.of(AUTHORITY.ADMIN, AUTHORITY.MODERATOR, AUTHORITY.FR_RESPONSIBLE);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
@@ -69,7 +69,13 @@ public class UserController {
 
     @GetMapping()
     @ResponseBody
-    public ResponseEntity<AppUser> findAll(){
+    public ResponseEntity<AppUser> findAll(@RequestHeader String googleTokenEncoded){
+        String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
+        if (email == null)
+            return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
+        if (userService.findByEmail(email) == null)
+            return new ResponseEntity("You don't have access to CDB", HttpStatus.UNAUTHORIZED);
+
         return new ResponseEntity(userService.findAll(), HttpStatus.OK);
     }
 
@@ -79,7 +85,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateUser(@RequestHeader("googleToken") String googleTokenEncoded, @RequestBody UserDTO userDTO, @PathVariable Long id){
+    public ResponseEntity updateUser(@RequestHeader String googleTokenEncoded, @RequestBody UserDTO userDTO, @PathVariable Long id){
         List<AUTHORITY> a = new LinkedList<>(List.of(AUTHORITY.ADMIN));
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)

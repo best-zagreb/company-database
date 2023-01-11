@@ -1,9 +1,12 @@
 package com.example.backend.companies.controller;
+import com.example.backend.collaborations.repo.CollaborationsRepository;
+import com.example.backend.collaborations.service.CollaborationsService;
 import com.example.backend.companies.controller.dto.CompanyDto;
 import com.example.backend.companies.controller.dto.ContactDto;
 import com.example.backend.companies.model.Company;
 import com.example.backend.companies.model.Contact;
 import com.example.backend.companies.service.CompanyService;
+import com.example.backend.user.model.AUTHORITY;
 import com.example.backend.user.model.AppUser;
 import com.example.backend.user.service.UserService;
 import com.example.backend.util.JwtVerifier;
@@ -20,11 +23,14 @@ public class CompanyController
 {
     private final CompanyService companyService;
     private final UserService userService;
+    private final CollaborationsService collaborationsService;
 
-    public CompanyController(CompanyService companyService, UserService userService)
-    {
+    public CompanyController(CompanyService companyService,
+                             UserService userService,
+                             CollaborationsService collaborationsService) {
         this.companyService = companyService;
         this.userService = userService;
+        this.collaborationsService = collaborationsService;
     }
 
     @GetMapping
@@ -139,5 +145,20 @@ public class CompanyController
         if (email == null)
             return null;
         return userService.findByEmail(email);
+    }
+
+    @GetMapping("/{id}/collaborations")
+    @ResponseBody
+    public ResponseEntity getCollaborationsForCompany(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
+        List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMIN, AUTHORITY.FR_RESPONSIBLE);
+        String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
+        if (email == null)
+            return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
+        if (userService.findByEmail(email) == null)
+            return new ResponseEntity("You don't have access to CDB", HttpStatus.UNAUTHORIZED);
+        if (!a.contains(userService.findByEmail(email).getAuthority()))
+            return new ResponseEntity("You don't have premission to this resource", HttpStatus.UNAUTHORIZED);
+
+        return new ResponseEntity(collaborationsService.getCollaborationsForCompany(id), HttpStatus.OK);
     }
 }

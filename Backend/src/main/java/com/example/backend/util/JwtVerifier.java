@@ -11,6 +11,7 @@ public class JwtVerifier {
             if (token == null) return null;
 
             String[] chunks = token.split("\\.");
+            if (chunks.length != 3) return null;
             String bodyString = new String(decoder.decode(chunks[1]));
             JSONObject body = new JSONObject(bodyString);
 

@@ -21,7 +21,8 @@ public class UserService {
     }
 
     public AppUser findByEmail(String email){
-        return userRepository.findByLoginEmailString(email).get(0);
+        if (userRepository.findByLoginEmailString(email).isEmpty()) return null;
+        else return userRepository.findByLoginEmailString(email).get(0);
     }
 
     public AppUser addUser(UserDTO userDTO){
@@ -32,8 +33,7 @@ public class UserService {
                 userDTO.getLastName(),
                 userDTO.getNotificationEmailString(),
                 userDTO.getDescription(),
-                userDTO.getNickname(),
-                new HashSet<>()
+                userDTO.getNickname()
         );
         return userRepository.save(appUser);
     }

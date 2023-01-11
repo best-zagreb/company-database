@@ -1,12 +1,13 @@
 package com.example.backend.user.model;
 
 import com.example.backend.project.model.Project;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @SuppressWarnings("ALL")
@@ -40,6 +41,7 @@ public class AppUser {
     private String nickname;
 
     @ManyToMany(mappedBy = "frteammembers")
+    @JsonIgnore
     private Set<Project> projects;
 
     public AppUser(String loginEmailString,
@@ -48,8 +50,7 @@ public class AppUser {
                    String lastName,
                    String notificationEmailString,
                    String description,
-                   String nickname,
-                   Set<Project> projects) {
+                   String nickname) {
         this.loginEmailString = loginEmailString;
         this.authority = authority;
         this.firstName = firstName;
@@ -57,6 +58,6 @@ public class AppUser {
         this.notificationEmailString = notificationEmailString;
         this.description = description;
         this.nickname = nickname;
-        this.projects = projects;
+        this.projects = new HashSet<>();
     }
 }
