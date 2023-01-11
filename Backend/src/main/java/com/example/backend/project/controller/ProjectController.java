@@ -198,14 +198,14 @@ public class ProjectController {
     }
 
     @PutMapping("/{projectId}/frteammembers/{memberId}")
-    public ResponseEntity addFrTeamMember(@RequestHeader String googleTokenEncoded, @PathVariable Long projectid, @PathVariable Long memberId){
-        projectService.addFrTeamMember(projectid, memberId);
+    public ResponseEntity addFrTeamMember(@RequestHeader String googleTokenEncoded, @PathVariable Long projectId, @PathVariable Long memberId){
+        projectService.addFrTeamMember(projectId, memberId);
         return new ResponseEntity("FR member added successfully", HttpStatus.OK);
     }
 
     @DeleteMapping("/{projectId}/frteammembers/{memberId}")
-    public ResponseEntity deleteFrTeamMember(@RequestHeader String googleTokenEncoded, @PathVariable Long projectid, @PathVariable Long memberId){
-        projectService.deleteFrTeamMember(projectid, memberId);
+    public ResponseEntity deleteFrTeamMember(@RequestHeader String googleTokenEncoded, @PathVariable Long projectId, @PathVariable Long memberId){
+        projectService.deleteFrTeamMember(projectId, memberId);
         return new ResponseEntity("FR member added successfully", HttpStatus.OK);
     }
 }

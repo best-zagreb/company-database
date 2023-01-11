@@ -69,14 +69,14 @@ public class ProjectService {
         return collaborationsRepository.findAllByCollaborationId_Project(id);
     }
 
-    public void addFrTeamMember(Long teamMemberId, Long projectId){
+    public void addFrTeamMember(Long projectId, Long teamMemberId){
         Project project = projectRepository.findById(projectId).get();
         AppUser user = userRepository.findById(teamMemberId).get();
         project.addFrTeamMember(user);
         projectRepository.save(project);
     }
 
-    public void deleteFrTeamMember(Long teamMemberId, Long projectId){
+    public void deleteFrTeamMember(Long projectId, Long teamMemberId){
         Project project = projectRepository.findById(projectId).get();
         AppUser user = userRepository.findById(teamMemberId).get();
         project.removeFrTeamMember(user);

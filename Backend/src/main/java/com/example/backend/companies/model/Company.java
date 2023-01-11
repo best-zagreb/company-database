@@ -59,6 +59,20 @@ public class Company
         this.contactInFuture = contactInFuture;
     }
 
+    public Company(Long id, String name, String domain, char abcCategory, int budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture)
+    {
+        this.id = id;
+        this.name = name;
+        this.domain = domain;
+        this.abcCategory = abcCategory;
+        this.budgetPlanningMonth = budgetPlanningMonth;
+        this.country = country;
+        this.zipCode = zipCode;
+        this.address = address;
+        this.webUrl = webUrl;
+        this.contactInFuture = contactInFuture;
+    }
+
     public Long getId()
     {
         return id;

@@ -140,13 +140,6 @@ public class CompanyController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private AppUser getUser(String googleTokenEncoded){
-        String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
-        if (email == null)
-            return null;
-        return userService.findByEmail(email);
-    }
-
     @GetMapping("/{id}/collaborations")
     @ResponseBody
     public ResponseEntity getCollaborationsForCompany(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
@@ -160,5 +153,12 @@ public class CompanyController
             return new ResponseEntity("You don't have premission to this resource", HttpStatus.UNAUTHORIZED);
 
         return new ResponseEntity(collaborationsService.getCollaborationsForCompany(id), HttpStatus.OK);
+    }
+
+    private AppUser getUser(String googleTokenEncoded){
+        String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
+        if (email == null)
+            return null;
+        return userService.findByEmail(email);
     }
 }

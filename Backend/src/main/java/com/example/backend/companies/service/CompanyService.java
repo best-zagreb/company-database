@@ -47,16 +47,7 @@ public class CompanyService
             throw new AuthenticationException();
         }
         if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
-            boolean isTeamMemberOrResponsible = false;
-            List<Collaboration> collaborations = collaborationsService.getCollaborationsForCompany(id);
-            for(Collaboration collaboration : collaborations){
-                Project project = collaboration.getCollaborationId().getProject();
-                Set<AppUser> frTeamMembers = project.getFrteammembers();
-                if (frTeamMembers.contains(user) || project.getFRResp().getId() == user.getId()){
-                    isTeamMemberOrResponsible = true;
-                }
-            }
-            if (!isTeamMemberOrResponsible){
+            if (!isFrTeamMemberOrResponsibleOnCompany(user, id)){
                 throw new AuthenticationException();
             }
         }
@@ -111,6 +102,12 @@ public class CompanyService
         if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
             throw new AuthenticationException();
         }
+        if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
+            if (!isFrTeamMemberOrResponsibleOnCompany(user, companyId)){
+                throw new AuthenticationException();
+            }
+        }
+
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         if (optionalCompany.isEmpty()){
             throw new EntityNotFoundException();
@@ -126,6 +123,11 @@ public class CompanyService
         if (user == null) throw new AuthenticationException();
         if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
             throw new AuthenticationException();
+        }
+        if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
+            if (!isFrTeamMemberOrResponsibleOnCompany(user, companyId)){
+                throw new AuthenticationException();
+            }
         }
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         if (optionalCompany.isEmpty()){
@@ -149,6 +151,12 @@ public class CompanyService
         if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
             throw new AuthenticationException();
         }
+        if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
+            if (!isFrTeamMemberOrResponsibleOnCompany(user, companyId)){
+                throw new AuthenticationException();
+            }
+        }
+
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         if (optionalCompany.isEmpty()){
             throw new EntityNotFoundException();
@@ -164,4 +172,15 @@ public class CompanyService
         contactRepository.deleteContactById(contactId);
     }
 
+    private boolean isFrTeamMemberOrResponsibleOnCompany(AppUser user, Long companyId){
+        List<Collaboration> collaborations = collaborationsService.getCollaborationsForCompany(companyId);
+        for(Collaboration collaboration : collaborations){
+            Project project = collaboration.getCollaborationId().getProject();
+            Set<AppUser> frTeamMembers = project.getFrteammembers();
+            if (frTeamMembers.contains(user) || project.getFRResp().getId() == user.getId()){
+                return true;
+            }
+        }
+        return false;
+    }
 }
