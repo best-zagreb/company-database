@@ -5,6 +5,7 @@ import com.example.backend.collaborations.repo.CollaborationsRepository;
 import com.example.backend.project.controller.dto.ProjectDTO;
 import com.example.backend.project.model.Project;
 import com.example.backend.project.repo.ProjectRepository;
+import com.example.backend.user.model.AppUser;
 import com.example.backend.user.repo.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -66,5 +67,19 @@ public class ProjectService {
 
     public List<Collaboration> getCollaborations(Long id) {
         return collaborationsRepository.findAllByCollaborationId_Project(id);
+    }
+
+    public void addFrTeamMember(Long teamMemberId, Long projectId){
+        Project project = projectRepository.findById(projectId).get();
+        AppUser user = userRepository.findById(teamMemberId).get();
+        project.addFrTeamMember(user);
+        projectRepository.save(project);
+    }
+
+    public void deleteFrTeamMember(Long teamMemberId, Long projectId){
+        Project project = projectRepository.findById(projectId).get();
+        AppUser user = userRepository.findById(teamMemberId).get();
+        project.removeFrTeamMember(user);
+        projectRepository.save(project);
     }
 }

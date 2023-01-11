@@ -196,4 +196,16 @@ public class ProjectController {
         collaborationsService.deleteCollaboration(projectid, companyid);
         return new ResponseEntity("Collaboration deleted successfully", HttpStatus.OK);
     }
+
+    @PutMapping("/{projectId}/frteammembers/{memberId}")
+    public ResponseEntity addFrTeamMember(@RequestHeader String googleTokenEncoded, @PathVariable Long projectid, @PathVariable Long memberId){
+        projectService.addFrTeamMember(projectid, memberId);
+        return new ResponseEntity("FR member added successfully", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{projectId}/frteammembers/{memberId}")
+    public ResponseEntity deleteFrTeamMember(@RequestHeader String googleTokenEncoded, @PathVariable Long projectid, @PathVariable Long memberId){
+        projectService.deleteFrTeamMember(projectid, memberId);
+        return new ResponseEntity("FR member added successfully", HttpStatus.OK);
+    }
 }
