@@ -157,7 +157,7 @@ public class ProjectController {
         return new ResponseEntity(collaborationsService.addCollaboration(projectid, collaborationDTO), HttpStatus.OK);
     }
 
-    @PutMapping("/{projectid}/collaborations/{companyid")
+    @PutMapping("/{projectid}/collaborations/{companyid}")
     public ResponseEntity addCollaboration(@RequestHeader String googleTokenEncoded, @PathVariable Long projectid,
                                            @PathVariable Long companyid, @RequestBody CollaborationDTO collaborationDTO) {
         List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMIN);
@@ -177,7 +177,7 @@ public class ProjectController {
         return new ResponseEntity(collaborationsService.updateCollaboration(projectid, companyid, collaborationDTO), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{projectid}/collaborations/{companyid")
+    @DeleteMapping("/{projectid}/collaborations/{companyid}")
     public ResponseEntity deleteCollaboration(@RequestHeader String googleTokenEncoded, @PathVariable Long projectid,
                                            @PathVariable Long companyid, @RequestBody CollaborationDTO collaborationDTO) {
         List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMIN);
