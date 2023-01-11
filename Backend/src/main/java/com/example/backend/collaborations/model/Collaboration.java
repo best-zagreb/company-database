@@ -4,11 +4,17 @@ import com.example.backend.collaborations.model.enums.Category;
 import com.example.backend.collaborations.model.enums.Status;
 import com.example.backend.companies.model.Contact;
 import com.example.backend.user.model.AppUser;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
+@NoArgsConstructor
+@Getter @Setter
+@AllArgsConstructor
 public class Collaboration {
     @EmbeddedId
     private CollaborationId collaborationId;

@@ -1,5 +1,7 @@
 package com.example.backend.project.service;
 
+import com.example.backend.collaborations.model.Collaboration;
+import com.example.backend.collaborations.repo.CollaborationsRepository;
 import com.example.backend.project.controller.dto.ProjectDTO;
 import com.example.backend.project.model.Project;
 import com.example.backend.project.repo.ProjectRepository;
@@ -18,13 +20,14 @@ import java.util.Optional;
 public class ProjectService {
     private ProjectRepository projectRepository;
     private UserRepository userRepository;
+    private CollaborationsRepository collaborationsRepository;
 
     public List<Project> findAll() {
         return projectRepository.findAll();
     }
 
-    public Optional<Project> findById(Long id) {
-        return projectRepository.findById(id);
+    public Project findById(Long id) {
+        return projectRepository.findById(id).get();
     }
 
     public Project addProject(ProjectDTO projectDTO) {
@@ -59,5 +62,9 @@ public class ProjectService {
         project.setSecondPingDate(projectDTO.getSecondPingDate());
 
         return projectRepository.save(project);
+    }
+
+    public List<Collaboration> getCollaborations(Long id) {
+        return collaborationsRepository.findAllByCollaborationId_Project(id);
     }
 }
