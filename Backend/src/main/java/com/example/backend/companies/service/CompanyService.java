@@ -183,4 +183,8 @@ public class CompanyService
         }
         return false;
     }
+
+    public boolean existsById(Long companyid) {
+        return companyRepository.existsById(companyid);
+    }
 }

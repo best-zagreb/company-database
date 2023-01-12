@@ -128,7 +128,7 @@ public class CompanyController
 
     @DeleteMapping("{companyId}/contacts/{contactId}")
     @ResponseBody
-    public ResponseEntity deleteContact(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId, @PathVariable Long contactId, @RequestBody ContactDto contactDto){
+    public ResponseEntity deleteContact(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId, @PathVariable Long contactId){
         AppUser user = getUser(googleTokenEncoded);
         try
         {

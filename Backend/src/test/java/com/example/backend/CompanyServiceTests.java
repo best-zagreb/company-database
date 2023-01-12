@@ -46,9 +46,9 @@ public class CompanyServiceTests
     public void getAllCompanies_ReturnsCompanies() throws AuthenticationException
     {
         List<Company> companies = List.of(
-                new Company(Long.valueOf(1), "name", "domain", 'a', 3, "Croatia", 10000, "Address", "example.com", false),
-                new Company(Long.valueOf(2), "name", "domain", 'a', 3, "Croatia", 10000, "Address", "example.com", false),
-                new Company(Long.valueOf(3), "name", "domain", 'a', 3, "Croatia", 10000, "Address", "example.com", false));
+                new Company(Long.valueOf(1), "name", "domain", 'a', "March", "Croatia", 10000, "Address", "example.com", false),
+                new Company(Long.valueOf(2), "name", "domain", 'a', "March", "Croatia", 10000, "Address", "example.com", false),
+                new Company(Long.valueOf(3), "name", "domain", 'a', "March", "Croatia", 10000, "Address", "example.com", false));
         Mockito.when(companyRepository.findAll()).thenReturn(companies);
 
         List<Company> result = companyService.getAllCompanies(mockUser(AUTHORITY.ADMIN));
@@ -66,7 +66,7 @@ public class CompanyServiceTests
     @Test
     public void getCompany_IfUserIsAdmin_ReturnsCompany() throws AuthenticationException
     {
-        Company company = new Company(Long.valueOf(1), "name", "domain", 'a', 3, "Croatia", 10000, "Address", "example.com", false);
+        Company company = new Company(Long.valueOf(1), "name", "domain", 'a', "March", "Croatia", 10000, "Address", "example.com", false);
         Mockito.when(companyRepository.findById(Mockito.any())).thenReturn(Optional.of(company));
         Company result = companyService.getCompany(mockUser(AUTHORITY.ADMIN), Long.valueOf(1));
         assertThat(result).isSameAs(company);
@@ -79,7 +79,7 @@ public class CompanyServiceTests
                 "name",
                 "domain",
                 'a',
-                2,
+                "February",
                 "Croatia",
                 10000,
                 "Address",
@@ -89,7 +89,7 @@ public class CompanyServiceTests
                 "name",
                 "domain",
                 'a',
-                2,
+                "February",
                 "Croatia",
                 10000,
                 "Address",

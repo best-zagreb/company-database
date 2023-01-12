@@ -27,14 +27,16 @@ public class UserController {
     @PostMapping()
     @ResponseBody
     public ResponseEntity addUser(@RequestHeader String googleTokenEncoded, @RequestBody UserDTO userDTO) {
-        List<AUTHORITY> a = List.of(AUTHORITY.ADMIN, AUTHORITY.MODERATOR, AUTHORITY.FR_RESPONSIBLE);
-        String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
-        if (email == null)
-            return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
-        if (userService.findByEmail(email) == null)
-            return new ResponseEntity("You don't have access to CDB", HttpStatus.UNAUTHORIZED);
-        if (!a.contains(userService.findByEmail(email).getAuthority()))
-            return new ResponseEntity("You don't have premission to this resource", HttpStatus.UNAUTHORIZED);
+        if (userService.existsAny()) {
+            List<AUTHORITY> a = List.of(AUTHORITY.ADMIN);
+            String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
+            if (email == null)
+                return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
+            if (userService.findByEmail(email) == null)
+                return new ResponseEntity("You don't have access to CDB", HttpStatus.UNAUTHORIZED);
+            if (!a.contains(userService.findByEmail(email).getAuthority()))
+                return new ResponseEntity("You don't have premission to this resource", HttpStatus.UNAUTHORIZED);
+        }
 
         return new ResponseEntity(userService.addUser(userDTO), HttpStatus.OK);
     }
@@ -48,13 +50,14 @@ public class UserController {
         if (userService.findByEmail(email) == null)
             return new ResponseEntity("You don't have access to CDB", HttpStatus.UNAUTHORIZED);
 
+        if (!userService.existsById(id)) return new ResponseEntity("User not found", HttpStatus.NOT_FOUND);
         return new ResponseEntity(userService.findById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     @ResponseBody
     public ResponseEntity deleteUser(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
-        List<AUTHORITY> a = List.of(AUTHORITY.ADMIN, AUTHORITY.MODERATOR, AUTHORITY.FR_RESPONSIBLE);
+        List<AUTHORITY> a = List.of(AUTHORITY.ADMIN);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
             return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
@@ -63,6 +66,7 @@ public class UserController {
         if (!a.contains(userService.findByEmail(email).getAuthority()))
             return new ResponseEntity("You don't have premission to this resource", HttpStatus.UNAUTHORIZED);
 
+        if (!userService.existsById(id)) return new ResponseEntity("User not found", HttpStatus.NOT_FOUND);
         userService.deleteUser(id);
         return new ResponseEntity("User under id: " + id + " successfully deleted.", HttpStatus.OK);
     }
@@ -95,6 +99,7 @@ public class UserController {
         if (!a.contains(userService.findByEmail(email).getAuthority()))
             return new ResponseEntity("You don't have premission to this resource", HttpStatus.UNAUTHORIZED);
 
+        if (!userService.existsById(id)) return new ResponseEntity("User not found", HttpStatus.NOT_FOUND);
         return new ResponseEntity(userService.updateUser(userDTO, id), HttpStatus.OK);
     }
 }
