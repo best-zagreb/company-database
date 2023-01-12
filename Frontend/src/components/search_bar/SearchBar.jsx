@@ -1,17 +1,14 @@
+import { Autocomplete, TextField } from "@mui/material";
+
 const UserSearchBar = ({ posts, setSearchResults }) => {
-  const handleSubmit = (e) => e.preventDefault();
+  const handleSearchChange = (value) => {
+    value = value.toLowerCase();
 
-  const handleSearchChange = (e) => {
-    if (!e.target.value) {
-      return setSearchResults(posts); //ako nema nista u search baru renderaj samo sve sto je i bilo prije
-    }
-
-    const resultsArray = posts.filter((post) => {
+    const resultsArray = posts.filter((user) => {
       return (
-        post.firstName.includes(e.target.value) ||
-        post.lastName.includes(e.target.value) ||
-        post.nickname?.includes(e.target.value) ||
-        post.loginEmailString.includes(e.target.value)
+        (user.firstName + " " + user.lastName).toLowerCase().includes(value) ||
+        user.nickname?.toLowerCase().includes(value) ||
+        user.loginEmailString.toLowerCase().includes(value)
       );
     });
 
@@ -19,51 +16,68 @@ const UserSearchBar = ({ posts, setSearchResults }) => {
   };
 
   return (
-    <header>
-      <form className="search" onSubmit={handleSubmit}>
-        <input
-          className="search__input"
-          type="text"
-          id="search__bar"
-          onChange={handleSearchChange}
-        />
-      </form>
-    </header>
+    <>
+      <Autocomplete
+        freeSolo
+        size="small"
+        disableClearable
+        onInputChange={(e, inputValue) => {
+          handleSearchChange(inputValue);
+        }}
+        // throws error because it takes string "firstName lastName" as key, needs to be changed to take id as key
+        options={posts.map((post) => post.firstName + " " + post.lastName)}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Search users"
+            InputProps={{
+              ...params.InputProps,
+              type: "search",
+            }}
+          />
+        )}
+        sx={{ width: "50%", maxWidth: "15rem" }}
+      />
+    </>
   );
 };
 
 const CompanySearchBar = ({ posts, setSearchResults }) => {
-  const handleSubmit = (e) => e.preventDefault();
-
-  const handleSearchChange = (e) => {
-    if (!e.target.value) {
-      return setSearchResults(posts); //ako nema nista u search baru renderaj samo sve sto je i bilo prije
-    }
-
-    e.target.value = e.target.value.toLowerCase();
+  const handleSearchChange = (value) => {
+    value = value.toLowerCase();
 
     const resultsArray = posts.filter((company) => {
-      return (
-        company.companyName.toLowerCase().includes(e.target.value)
-         && !(e.target.value === " ")
-      );
+      return company.companyName.toLowerCase().includes(value);
     });
 
     setSearchResults(resultsArray);
   };
 
   return (
-    <header>
-      <form className="search" onSubmit={handleSubmit}>
-        <input
-          className="search__input"
-          type="text"
-          id="search__bar"
-          onChange={handleSearchChange}
-        />
-      </form>
-    </header>
+    <>
+      <Autocomplete
+        freeSolo
+        size="small"
+        disableClearable
+        onInputChange={(e, inputValue) => {
+          handleSearchChange(inputValue);
+        }}
+        // throws error because it takes string "firstName lastName" as key, needs to be changed to take id as key
+        options={posts.map((post) => post.companyName)}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Search companies"
+            InputProps={{
+              ...params.InputProps,
+              type: "search",
+            }}
+          />
+        )}
+        sx={{ width: "50%", maxWidth: "15rem" }}
+      />
+    </>
   );
 };
 
-export {UserSearchBar, CompanySearchBar};
+export { UserSearchBar, CompanySearchBar };

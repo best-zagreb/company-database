@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
+
 import UserForm from "../forms/UserForm";
 import EditUserForm from "../forms/EditUserForm";
+
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Button from "@mui/material/Button";
 import {
-  Box,
-  TextField,
   TableCell,
   TableHead,
   Paper,
@@ -13,11 +13,11 @@ import {
   TableRow,
   TableBody,
   Table,
+  Container,
 } from "@mui/material";
 
-import {UserSearchBar, CompanySearchBar} from "../search_bar/SearchBar";
-import {UserListPage} from "../search_bar/ListPage";
-
+import { UserSearchBar, CompanySearchBar } from "../search_bar/SearchBar";
+import { UserListPage } from "../search_bar/ListPage";
 
 export default function Users() {
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
@@ -74,15 +74,6 @@ export default function Users() {
 
   return (
     <>
-      <Button
-        variant="contained"
-        size="large"
-        startIcon={<AddCircleIcon />}
-        onClick={() => setOpenUserFormModal(true)}
-      >
-        Add user
-      </Button>
-
       <UserForm
         openModal={openUserFormModal}
         setOpenModal={setOpenUserFormModal}
@@ -94,33 +85,68 @@ export default function Users() {
         bestuser={bestUser}
       />
 
-      <UserSearchBar
-        posts={posts}
-        setSearchResults={setSearchResults}
-        id="trazilica"
-      />
+      <Container
+        maxWidth="false"
+        sx={{
+          paddingBlock: 1.5,
 
-      <TableContainer component={Paper}>
-        <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Surname</TableCell>
-              <TableCell>Nickname</TableCell>
-              <TableCell>E-mail</TableCell>
-              <TableCell>Max authorization level</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <UserListPage
-              searchResults={searchResults}
-              editHandler={editHandler}
-              handleDelete={handleDelete}
-            />
-          </TableBody>
-        </Table>
-      </TableContainer>
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 1,
+        }}
+      >
+        <UserSearchBar posts={posts} setSearchResults={setSearchResults} />
+
+        <Button
+          variant="contained"
+          size="medium"
+          startIcon={<AddCircleIcon />}
+          onClick={() => setOpenUserFormModal(true)}
+        >
+          Add user
+        </Button>
+      </Container>
+
+      <Container maxWidth="false">
+        <TableContainer component={Paper}>
+          <Table size="small" aria-label="users table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Surname</TableCell>
+                <TableCell
+                  sx={{
+                    display: { xs: "none", sm: "table-cell" },
+                  }}
+                >
+                  Nickname
+                </TableCell>
+                <TableCell>E-mail</TableCell>
+                <TableCell
+                  sx={{
+                    display: { xs: "none", md: "table-cell" },
+                  }}
+                >
+                  Max authorization level
+                </TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {searchResults ? (
+                <UserListPage
+                  searchResults={searchResults}
+                  editHandler={editHandler}
+                  handleDelete={handleDelete}
+                />
+              ) : (
+                "No users in database"
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
     </>
   );
 }
