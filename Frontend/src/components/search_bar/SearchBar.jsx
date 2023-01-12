@@ -1,17 +1,14 @@
 import { Autocomplete, TextField } from "@mui/material";
 
 const UserSearchBar = ({ posts, setSearchResults }) => {
-  const handleSearchChange = (e) => {
-    if (!e.target.value) {
-      return setSearchResults(posts); //ako nema nista u search baru renderaj samo sve sto je i bilo prije
-    }
+  const handleSearchChange = (value) => {
+    value = value.toLowerCase();
 
-    const resultsArray = posts.filter((post) => {
+    const resultsArray = posts.filter((user) => {
       return (
-        post.firstName.includes(e.target.value) ||
-        post.lastName.includes(e.target.value) ||
-        post.nickname?.includes(e.target.value) ||
-        post.loginEmailString.includes(e.target.value)
+        (user.firstName + " " + user.lastName).toLowerCase().includes(value) ||
+        user.nickname?.toLowerCase().includes(value) ||
+        user.loginEmailString.toLowerCase().includes(value)
       );
     });
 
@@ -24,7 +21,9 @@ const UserSearchBar = ({ posts, setSearchResults }) => {
         freeSolo
         size="small"
         disableClearable
-        onInputChange={handleSearchChange}
+        onInputChange={(e, inputValue) => {
+          handleSearchChange(inputValue);
+        }}
         options={posts.map((post) => post.firstName + " " + post.lastName)}
         renderInput={(params) => (
           <TextField
@@ -43,18 +42,11 @@ const UserSearchBar = ({ posts, setSearchResults }) => {
 };
 
 const CompanySearchBar = ({ posts, setSearchResults }) => {
-  const handleSearchChange = (e) => {
-    if (!e.target.value) {
-      return setSearchResults(posts); //ako nema nista u search baru renderaj samo sve sto je i bilo prije
-    }
-
-    e.target.value = e.target.value.toLowerCase();
+  const handleSearchChange = (value) => {
+    value = value.toLowerCase();
 
     const resultsArray = posts.filter((company) => {
-      return (
-        company.companyName.toLowerCase().includes(e.target.value) &&
-        !(e.target.value === " ")
-      );
+      return company.companyName.toLowerCase().includes(value);
     });
 
     setSearchResults(resultsArray);
@@ -66,7 +58,9 @@ const CompanySearchBar = ({ posts, setSearchResults }) => {
         freeSolo
         size="small"
         disableClearable
-        onInputChange={handleSearchChange}
+        onInputChange={(e, inputValue) => {
+          handleSearchChange(inputValue);
+        }}
         options={posts.map((post) => post.companyName)}
         renderInput={(params) => (
           <TextField
