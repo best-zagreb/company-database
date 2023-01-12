@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 
 import CompanyForm from "../forms/CompanyForm";
 import data from "./data";
-
-
+import TableSortLabel from '@mui/material/TableSortLabel';
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Button from "@mui/material/Button";
 import {
@@ -85,70 +84,75 @@ export default function Companies() {
     //     }
     //   });
     //console.log("Fetchali smo usere, ps samo su importani iz data.js za probu");
-    let newData = data.sort((a,b) => (a.companyName.localeCompare(b.companyName)))
+    let newData = data.sort((a,b) => (a.name.localeCompare(b.name)))
     setPosts(newData);
     setSearchResults(newData);
   }
 
 
   const [filterBy, setFilterBy] = useState("Company name");
-  const [filterDirection, setFilterDirection] = useState("a-z");
+  const [filterDirection, setFilterDirection] = useState("asc");
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
 
-  const handleFilterResults = (e) => {
-    const input = e.target.value;
-    setFilterBy(input)
-    filterFunction(input)
-  }
+  const handleFilterResults = (property) => (event) => {
+    let filterByCategory = property
+    if(filterByCategory === filterBy) {
+      reverseFunction()
+    }
+    else{
+      setFilterBy(filterByCategory)
+      filterFunction(filterByCategory)
+      setFilterDirection('asc')
+    }
+    
+  };
 
-  const handleAZChange = (e) => {
-    const input = e.target.value;
-    setFilterDirection(input)
-    reverseFunction()
-  }
 
   function reverseFunction() {
-    console.log("reversamo ju")
-    let obrnuta = searchResults.reverse()
-    setSearchResults(obrnuta)
+    let reversana = searchResults.reverse()
+
+    setFilterDirection(oldFilterDirection => {
+      if(oldFilterDirection === 'asc') return 'desc'
+      else return 'asc'
+    })
+    setSearchResults(reversana)
   }
 
   function filterFunction (filterBy){
-    console.log("u funkciji filtriranja smo")
+    
     if(filterBy === "Company name"){
         console.log("Filtriramo po company")
-        let filtrirana = searchResults.sort((a,b) => (a.companyName.localeCompare(b.companyName)))
+        let filtrirana = searchResults.sort((a,b) => (a.name.localeCompare(b.name)))
         console.log(filtrirana)
         setSearchResults(filtrirana)
         
     }
     else if(filterBy === "Industry"){
         console.log("Filtriramo po industry")
-        let filtrirana = searchResults.sort((a,b) => (a.industry.localeCompare(b.industry)))
+        let filtrirana = searchResults.sort((a,b) => (a.domain.localeCompare(b.domain)))
         setSearchResults(filtrirana)
     }
     else if(filterBy === "ABC categorization"){
         console.log("Filtriramo po ABC")
-        let filtrirana = searchResults.sort((a,b) => (a.ABC.localeCompare(b.ABC)))
+        let filtrirana = searchResults.sort((a,b) => (a.abcCategory.localeCompare(b.abcCategory)))
         console.log(filtrirana)
         setSearchResults(filtrirana)
     }
     else if(filterBy === "Budget planning month"){
         console.log("Filtriramo po budget monthu")
-        let filtrirana = searchResults.sort((a,b) => (a.budgetPlanning.localeCompare(b.budgetPlanning)))
+        let filtrirana = searchResults.sort((a,b) => (a.budgetPlanningMonth.localeCompare(b.budgetPlanningMonth)))
         setSearchResults(filtrirana)
     }
     else if(filterBy === "Webpage URL"){
         console.log("Filtriramo po urlu")
-        let filtrirana = searchResults.sort((a,b) => (a.website.localeCompare(b.website)))
+        let filtrirana = searchResults.sort((a,b) => (a.webUrl.localeCompare(b.webUrl)))
         setSearchResults(filtrirana)
     }
   }
-
 
 
   return (
@@ -174,7 +178,7 @@ export default function Companies() {
         id="trazilica"
       />
 
-    <TextField
+    {/* <TextField
        
         select
         label="Filter by"
@@ -189,10 +193,10 @@ export default function Companies() {
                     {option.value}
                   </MenuItem>
         ))}
-    </TextField>
+    </TextField> */}
 
     
-    <RadioGroup
+    {/* <RadioGroup
             row
             aria-labelledby="demo-row-radio-buttons-group-label"
             name="row-radio-buttons-group"
@@ -203,17 +207,26 @@ export default function Companies() {
             <FormControlLabel value="z-a" control={<Radio />} label="Z-A" />
             
     </RadioGroup>
-    
+     */}
 
       <TableContainer component={Paper}>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Company name</TableCell>
-              <TableCell>Industry</TableCell>
-              <TableCell>ABC</TableCell>
-              <TableCell>Budget planning</TableCell>
-              <TableCell>Website</TableCell>
+            {filterTypes.map((cellName) => (
+              <TableCell
+                key={cellName.value}
+              >
+                {cellName.value}
+                <TableSortLabel
+                  active={filterBy === cellName.value}
+                  direction={filterBy === cellName.value ? filterDirection : "asc"}
+                  onClick={handleFilterResults(cellName.value)}
+                >
+                </TableSortLabel>
+              </TableCell>
+            ))}
+            <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

@@ -1,4 +1,4 @@
-import {UserPost, CompanyPost} from "./Post.jsx";
+import {UserPost, CompanyPost, ProjectPost} from "./Post.jsx";
 
 const UserListPage = ({ searchResults, editHandler, handleDelete }) => {
   const results = searchResults.map((post) => (
@@ -27,6 +27,20 @@ const CompanyListPage = ({ searchResults, handleDelete }) => {
 };
 
 
+const ProjectListPage = ({ searchResults, handleDelete }) => {
+  
+  const results = searchResults.map((post) => (
+    <ProjectPost
+      key={post.id}
+      project={post}
+      handleDelete={handleDelete}
+    />
+  ));
 
-export  {UserListPage, CompanyListPage};
+  return <>{results?.length > 0 ? results : "No Matching Posts"}</>;
+};
+
+
+
+export  {UserListPage, CompanyListPage, ProjectListPage};
 

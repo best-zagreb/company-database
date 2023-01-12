@@ -40,12 +40,10 @@ const CompanySearchBar = ({ posts, setSearchResults }) => {
       return setSearchResults(posts); //ako nema nista u search baru renderaj samo sve sto je i bilo prije
     }
 
-    e.target.value = e.target.value.toLowerCase();
-
-    const resultsArray = posts.filter((company) => {
+    const resultsArray = posts.filter((post) => {
       return (
-        company.companyName.toLowerCase().includes(e.target.value)
-         && !(e.target.value === " ")
+        post.name.includes(e.target.value) ||
+        post.webUrl.includes(e.target.value) 
       );
     });
 
@@ -66,4 +64,36 @@ const CompanySearchBar = ({ posts, setSearchResults }) => {
   );
 };
 
-export {UserSearchBar, CompanySearchBar};
+const ProjectSearchBar = ({ posts, setSearchResults }) => {
+  const handleSubmit = (e) => e.preventDefault();
+
+  const handleSearchChange = (e) => {
+    if (!e.target.value) {
+      return setSearchResults(posts); //ako nema nista u search baru renderaj samo sve sto je i bilo prije
+    }
+
+    const resultsArray = posts.filter((post) => {
+      return (
+        post.name.includes(e.target.value) ||
+        post.category.includes(e.target.value) 
+      );
+    });
+
+    setSearchResults(resultsArray);
+  };
+
+  return (
+    <header>
+      <form className="search" onSubmit={handleSubmit}>
+        <input
+          className="search__input"
+          type="text"
+          id="search__bar"
+          onChange={handleSearchChange}
+        />
+      </form>
+    </header>
+  );
+};
+
+export {UserSearchBar, CompanySearchBar, ProjectSearchBar};
