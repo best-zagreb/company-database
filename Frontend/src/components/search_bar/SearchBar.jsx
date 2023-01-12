@@ -43,8 +43,6 @@ const UserSearchBar = ({ posts, setSearchResults }) => {
 };
 
 const CompanySearchBar = ({ posts, setSearchResults }) => {
-  const handleSubmit = (e) => e.preventDefault();
-
   const handleSearchChange = (e) => {
     if (!e.target.value) {
       return setSearchResults(posts); //ako nema nista u search baru renderaj samo sve sto je i bilo prije
@@ -63,16 +61,26 @@ const CompanySearchBar = ({ posts, setSearchResults }) => {
   };
 
   return (
-    <header>
-      <form className="search" onSubmit={handleSubmit}>
-        <input
-          className="search__input"
-          type="text"
-          id="search__bar"
-          onChange={handleSearchChange}
-        />
-      </form>
-    </header>
+    <>
+      <Autocomplete
+        freeSolo
+        size="small"
+        disableClearable
+        onInputChange={handleSearchChange}
+        options={posts.map((post) => post.companyName)}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Search companies"
+            InputProps={{
+              ...params.InputProps,
+              type: "search",
+            }}
+          />
+        )}
+        sx={{ width: "50%", maxWidth: "15rem" }}
+      />
+    </>
   );
 };
 
