@@ -102,4 +102,13 @@ public class UserController {
         if (!userService.existsById(id)) return new ResponseEntity("User not found", HttpStatus.NOT_FOUND);
         return new ResponseEntity(userService.updateUser(userDTO, id), HttpStatus.OK);
     }
+
+    @GetMapping("/login")
+    @ResponseBody
+    public ResponseEntity getByEmail(@RequestHeader String googleTokenEncoded){
+        String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
+        if (!userService.existsByEmail(email)) return new ResponseEntity(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity(userService.findByEmail(email), HttpStatus.OK);
+    }
 }

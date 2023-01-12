@@ -72,4 +72,8 @@ public class UserService {
     public boolean existsById(Long id) {
         return userRepository.existsById(id);
     }
+
+    public boolean existsByEmail(String email) {
+        return !userRepository.findByLoginEmailString(email).isEmpty();
+    }
 }
