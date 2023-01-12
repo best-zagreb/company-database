@@ -1,6 +1,6 @@
-const UserSearchBar = ({ posts, setSearchResults }) => {
-  const handleSubmit = (e) => e.preventDefault();
+import { Autocomplete, TextField } from "@mui/material";
 
+const UserSearchBar = ({ posts, setSearchResults }) => {
   const handleSearchChange = (e) => {
     if (!e.target.value) {
       return setSearchResults(posts); //ako nema nista u search baru renderaj samo sve sto je i bilo prije
@@ -19,16 +19,26 @@ const UserSearchBar = ({ posts, setSearchResults }) => {
   };
 
   return (
-    <header>
-      <form className="search" onSubmit={handleSubmit}>
-        <input
-          className="search__input"
-          type="text"
-          id="search__bar"
-          onChange={handleSearchChange}
-        />
-      </form>
-    </header>
+    <>
+      <Autocomplete
+        freeSolo
+        size="small"
+        disableClearable
+        onInputChange={handleSearchChange}
+        options={posts.map((post) => post.firstName + " " + post.lastName)}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Search users"
+            InputProps={{
+              ...params.InputProps,
+              type: "search",
+            }}
+          />
+        )}
+        sx={{ width: "50%", maxWidth: "15rem" }}
+      />
+    </>
   );
 };
 
@@ -44,8 +54,8 @@ const CompanySearchBar = ({ posts, setSearchResults }) => {
 
     const resultsArray = posts.filter((company) => {
       return (
-        company.companyName.toLowerCase().includes(e.target.value)
-         && !(e.target.value === " ")
+        company.companyName.toLowerCase().includes(e.target.value) &&
+        !(e.target.value === " ")
       );
     });
 
@@ -66,4 +76,4 @@ const CompanySearchBar = ({ posts, setSearchResults }) => {
   );
 };
 
-export {UserSearchBar, CompanySearchBar};
+export { UserSearchBar, CompanySearchBar };

@@ -5,25 +5,19 @@ import { useContext, useState } from "react";
 
 import UserContext from "../context/UserContext";
 
-import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
-import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 
-// import CloudIcon from "@mui/icons-material/Storage";
-import CloudIcon from "@mui/icons-material/Cloud";
 import MenuIcon from "@mui/icons-material/Menu";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SettingsIcon from "@mui/icons-material/Settings";
-
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function Header({ setUserIsLoggedIn }) {
   const { user } = useContext(UserContext);
@@ -54,121 +48,108 @@ export default function Header({ setUserIsLoggedIn }) {
   return (
     <>
       <AppBar position="static">
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
-            <Box sx={{ flexGrow: 1, display: { xs: "flex", sm: "none" } }}>
-              <Tooltip title="Open app menu">
-                <IconButton
-                  size="large"
-                  aria-label="menu"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleOpenNavMenu}
-                  color="inherit"
-                >
-                  <MenuIcon />
-                </IconButton>
-              </Tooltip>
-
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-                sx={{
-                  display: { xs: "block", sm: "none" },
-                }}
+        <Toolbar>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", sm: "none" } }}>
+            <Tooltip title="Open app menu">
+              <IconButton
+                size="large"
+                aria-label="menu"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
               >
-                <MenuItem
-                  className="nav-menu-item"
-                  onClick={handleCloseNavMenu}
-                >
-                  <Link to="/">CDB</Link>
-                </MenuItem>
-                <MenuItem
-                  className="nav-menu-item"
-                  onClick={handleCloseNavMenu}
-                >
-                  <Link to="/projects">Projects</Link>
-                </MenuItem>
-                <MenuItem
-                  className="nav-menu-item"
-                  onClick={handleCloseNavMenu}
-                >
-                  <Link to="/companies">Companies</Link>
-                </MenuItem>
-                <MenuItem
-                  className="nav-menu-item"
-                  onClick={handleCloseNavMenu}
-                >
-                  <Link to="/users">Users</Link>
-                </MenuItem>
-              </Menu>
-            </Box>
+                <MenuIcon />
+              </IconButton>
+            </Tooltip>
 
-            <Box
-              className="nav"
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
               sx={{
-                flexGrow: 1,
-                display: { xs: "none", sm: "flex" },
+                display: { xs: "block", sm: "none" },
               }}
             >
-              <Link to="/" underline="hover">
-                CDB
-              </Link>
-              <Link to="/projects" underline="hover">
-                Projects
-              </Link>
-              <Link to="/companies" underline="hover">
-                Companies
-              </Link>
-              <Link to="/users" underline="hover">
-                Users
-              </Link>
-            </Box>
+              <MenuItem className="nav-menu-item" onClick={handleCloseNavMenu}>
+                <Link to="/">CDB</Link>
+              </MenuItem>
+              <MenuItem className="nav-menu-item" onClick={handleCloseNavMenu}>
+                <Link to="/projects">Projects</Link>
+              </MenuItem>
+              <MenuItem className="nav-menu-item" onClick={handleCloseNavMenu}>
+                <Link to="/companies">Companies</Link>
+              </MenuItem>
+              <MenuItem className="nav-menu-item" onClick={handleCloseNavMenu}>
+                <Link to="/users">Users</Link>
+              </MenuItem>
+            </Menu>
+          </Box>
 
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open account menu">
-                <Button
-                  variant="text"
-                  onClick={handleOpenUserMenu}
-                  endIcon={<ExpandMoreIcon />}
-                  sx={{ color: "#fff" }}
-                >
-                  {!user
-                    ? "Unknown user"
-                    : user.nickname
-                    ? user.nickname
-                    : user.firstName + " " + user.lastName}
-                </Button>
-              </Tooltip>
+          <Box
+            className="nav"
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", sm: "flex" },
+            }}
+          >
+            <Link to="/" underline="hover">
+              CDB
+            </Link>
+            <Link to="/projects" underline="hover">
+              Projects
+            </Link>
+            <Link to="/companies" underline="hover">
+              Companies
+            </Link>
+            <Link to="/users" underline="hover">
+              Users
+            </Link>
+          </Box>
 
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open account menu">
+              <Button
+                variant="text"
+                onClick={handleOpenUserMenu}
+                endIcon={<ExpandMoreIcon />}
+                sx={{ color: "#fff" }}
               >
-                {/* TODO:
+                {!user
+                  ? "Unknown user"
+                  : user.nickname
+                  ? user.nickname
+                  : user.firstName + " " + user.lastName}
+              </Button>
+            </Tooltip>
+
+            <Menu
+              sx={{ mt: "45px" }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {/* TODO:
                  <MenuItem onClick={handleCloseUserMenu}>
                   <Button
                     variant="text"
@@ -178,19 +159,18 @@ export default function Header({ setUserIsLoggedIn }) {
                     Settings
                   </Button>
                 </MenuItem> */}
-                <MenuItem onClick={(handleCloseUserMenu, logoutUser)}>
-                  <Button
-                    variant="text"
-                    startIcon={<LogoutIcon />}
-                    sx={{ color: "#333" }}
-                  >
-                    Logout
-                  </Button>
-                </MenuItem>
-              </Menu>
-            </Box>
-          </Toolbar>
-        </Container>
+              <MenuItem onClick={(handleCloseUserMenu, logoutUser)}>
+                <Button
+                  variant="text"
+                  startIcon={<LogoutIcon />}
+                  sx={{ color: "#333" }}
+                >
+                  Logout
+                </Button>
+              </MenuItem>
+            </Menu>
+          </Box>
+        </Toolbar>
       </AppBar>
 
       <Outlet />
