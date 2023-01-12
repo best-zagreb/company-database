@@ -51,6 +51,7 @@ public class ProjectService {
                 projectDTO.getFirstPingDate(),
                 projectDTO.getSecondPingDate()
         );
+        project.addFrTeamMember(user);
         return projectRepository.save(project);
     }
 
