@@ -24,6 +24,7 @@ const UserSearchBar = ({ posts, setSearchResults }) => {
         onInputChange={(e, inputValue) => {
           handleSearchChange(inputValue);
         }}
+        // throws error because it takes string "firstName lastName" as key, needs to be changed to take id as key
         options={posts.map((post) => post.firstName + " " + post.lastName)}
         renderInput={(params) => (
           <TextField
@@ -61,6 +62,7 @@ const CompanySearchBar = ({ posts, setSearchResults }) => {
         onInputChange={(e, inputValue) => {
           handleSearchChange(inputValue);
         }}
+        // throws error because it takes string "firstName lastName" as key, needs to be changed to take id as key
         options={posts.map((post) => post.companyName)}
         renderInput={(params) => (
           <TextField

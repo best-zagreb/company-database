@@ -1,4 +1,4 @@
-import {UserPost, CompanyPost} from "./Post.jsx";
+import { UserPost, CompanyPost } from "./Post.jsx";
 
 const UserListPage = ({ searchResults, editHandler, handleDelete }) => {
   const results = searchResults.map((post) => (
@@ -10,23 +10,15 @@ const UserListPage = ({ searchResults, editHandler, handleDelete }) => {
     />
   ));
 
-  return <>{results?.length > 0 ? results : "No Matching Posts"}</>;
+  return <>{results?.length > 0 && results}</>;
 };
 
 const CompanyListPage = ({ searchResults, handleDelete }) => {
-  
   const results = searchResults.map((post) => (
-    <CompanyPost
-      key={post.id}
-      company={post}
-      handleDelete={handleDelete}
-    />
+    <CompanyPost key={post.id} company={post} handleDelete={handleDelete} />
   ));
 
-  return <>{results?.length > 0 ? results : "No Matching Posts"}</>;
+  return <>{results?.length > 0 && results}</>;
 };
 
-
-
-export  {UserListPage, CompanyListPage};
-
+export { UserListPage, CompanyListPage };

@@ -13,11 +13,11 @@ import {
   TableRow,
   TableBody,
   Table,
+  Container,
 } from "@mui/material";
 
 import { UserSearchBar, CompanySearchBar } from "../search_bar/SearchBar";
 import { UserListPage } from "../search_bar/ListPage";
-import { Container, display } from "@mui/system";
 
 export default function Users() {
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
@@ -134,11 +134,15 @@ export default function Users() {
               </TableRow>
             </TableHead>
             <TableBody>
-              <UserListPage
-                searchResults={searchResults}
-                editHandler={editHandler}
-                handleDelete={handleDelete}
-              />
+              {searchResults ? (
+                <UserListPage
+                  searchResults={searchResults}
+                  editHandler={editHandler}
+                  handleDelete={handleDelete}
+                />
+              ) : (
+                "No users in database"
+              )}
             </TableBody>
           </Table>
         </TableContainer>

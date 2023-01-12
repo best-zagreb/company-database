@@ -5,7 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 function UserPost({ user, editHandler, handleDelete }) {
   return (
-    <TableRow key={user.id} className={user.lastName}>
+    <TableRow key={user.id}>
       <TableCell>{user.firstName}</TableCell>
       <TableCell>{user.lastName}</TableCell>
       <TableCell
@@ -60,7 +60,7 @@ function UserPost({ user, editHandler, handleDelete }) {
 
 function CompanyPost({ company, handleDelete }) {
   return (
-    <TableRow key={company.id} className={company.companyName}>
+    <TableRow key={company.id}>
       <TableCell>{company.companyName}</TableCell>
       <TableCell>{company.industry}</TableCell>
       <TableCell>{company.ABC}</TableCell>
