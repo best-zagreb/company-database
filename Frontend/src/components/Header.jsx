@@ -1,29 +1,28 @@
-import "./Header.css";
-
 import { Link, Outlet } from "react-router-dom";
 import { useContext, useState } from "react";
 
+import "./Header.css";
+
 import UserContext from "../context/UserContext";
 
-import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Menu,
+  MenuItem,
+  Container,
+  Button,
+  Tooltip,
+} from "@mui/material";
 
-// import CloudIcon from "@mui/icons-material/Storage";
-import CloudIcon from "@mui/icons-material/Cloud";
-import MenuIcon from "@mui/icons-material/Menu";
-import LogoutIcon from "@mui/icons-material/Logout";
-import SettingsIcon from "@mui/icons-material/Settings";
-
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {
+  Menu as MenuIcon,
+  Logout as LogoutIcon,
+  Settings as SettingsIcon,
+  ExpandMore as ExpandMoreIcon,
+} from "@mui/icons-material/";
 
 export default function Header({ setUserIsLoggedIn }) {
   const { user } = useContext(UserContext);
@@ -120,6 +119,7 @@ export default function Header({ setUserIsLoggedIn }) {
               sx={{
                 flexGrow: 1,
                 display: { xs: "none", sm: "flex" },
+                gap: "min(2%, 1rem)",
               }}
             >
               <Link to="/" underline="hover">
