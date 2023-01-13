@@ -24,10 +24,32 @@ export default function Users() {
   const [openEditFormModal, setEditFormModal] = useState(false);
   const [bestUser, setUser] = useState([]);
 
+  const [posts, setPosts] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+
+  function fetchUsers() {
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+    fetch("http://159.65.127.217:8080/users/", {
+      method: "GET",
+      headers: { googleTokenEncoded: JWToken.credential },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.status === 401) {
+          console.log(json);
+          // display error
+        } else {
+          setPosts(json);
+          setSearchResults(json);
+        }
+      });
+  }
+
   const handleDelete = (e, email) => {
     e.preventDefault();
 
-    fetch("http://159.65.127.217:8080/users/delete-user/", {
+    // TODO: sad se salje id u endpointu, ne email u tijelu
+    fetch("http://159.65.127.217:8080/users/" + id, {
       method: "DELETE",
       headers: {
         Authorization: "Basic " + window.btoa("admin:pass"),
@@ -46,26 +68,6 @@ export default function Users() {
     e.preventDefault();
     setEditFormModal(true);
     setUser(user);
-  }
-
-  const [posts, setPosts] = useState([]);
-  const [searchResults, setSearchResults] = useState([]);
-
-  function fetchUsers() {
-    fetch("http://159.65.127.217:8080/users/get-users", {
-      method: "GET",
-      headers: { Authorization: "Basic " + window.btoa("admin:pass") },
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        if (json.status === 401) {
-          console.log(json);
-          // display error
-        } else {
-          setPosts(json);
-          setSearchResults(json);
-        }
-      });
   }
 
   useEffect(() => {

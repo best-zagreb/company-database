@@ -22,15 +22,12 @@ export default function Login({ setUserIsLoggedIn }) {
     // console.log("Encoded JWT ID token: " + response.credential);
     const userObject = jwt_decode(response.credential);
 
-    fetch(
-      "http://159.65.127.217:8080/users/get-user?email=" + userObject.email,
-      {
-        method: "GET",
-        headers: {
-          Authorization: "Basic " + window.btoa("admin:pass"),
-        },
-      }
-    )
+    fetch("http://159.65.127.217:8080/users/", {
+      method: "GET",
+      headers: {
+        googleTokenEncoded: response.credential,
+      },
+    })
       .then((response) => response.json())
       .then((json) => {
         if (json.length > 0) {
