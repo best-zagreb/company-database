@@ -1,11 +1,13 @@
 package com.example.backend.companies.model;
 
 import com.example.backend.companies.controller.dto.CompanyDto;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@NoArgsConstructor
 public class Company
 {
     @Id
@@ -39,28 +41,13 @@ public class Company
     @Column(name = "contactInFuture", nullable = false)
     private boolean contactInFuture;
 
+    @Column
+    private String description;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
     private Set<Contact> contacts;
 
-
-    public Company(){
-    }
-
-    public Company(String name, String domain, char abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture)
-    {
-        this.name = name;
-        this.domain = domain;
-        this.abcCategory = abcCategory;
-        this.budgetPlanningMonth = budgetPlanningMonth;
-        this.country = country;
-        this.zipCode = zipCode;
-        this.address = address;
-        this.webUrl = webUrl;
-        this.contactInFuture = contactInFuture;
-    }
-
-    public Company(Long id, String name, String domain, char abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture)
-    {
+    public Company(Long id, String name, String domain, char abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture, String description) {
         this.id = id;
         this.name = name;
         this.domain = domain;
@@ -71,6 +58,20 @@ public class Company
         this.address = address;
         this.webUrl = webUrl;
         this.contactInFuture = contactInFuture;
+        this.description = description;
+    }
+
+    public Company(String name, String domain, char abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture, String description) {
+        this.name = name;
+        this.domain = domain;
+        this.abcCategory = abcCategory;
+        this.budgetPlanningMonth = budgetPlanningMonth;
+        this.country = country;
+        this.zipCode = zipCode;
+        this.address = address;
+        this.webUrl = webUrl;
+        this.contactInFuture = contactInFuture;
+        this.description = description;
     }
 
     public Long getId()
@@ -181,5 +182,6 @@ public class Company
         zipCode = companyDto.getZipCode();
         webUrl = companyDto.getWebUrl();
         contactInFuture = companyDto.isContactInFuture();
+        description = companyDto.getDescription();
     }
 }

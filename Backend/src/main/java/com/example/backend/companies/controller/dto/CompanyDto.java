@@ -1,7 +1,10 @@
 package com.example.backend.companies.controller.dto;
 
 import com.example.backend.companies.model.Company;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter @Setter
 public class CompanyDto
 {
     private String name;
@@ -22,8 +25,9 @@ public class CompanyDto
 
     private boolean contactInFuture;
 
-    public CompanyDto(String name, String domain, char abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture)
-    {
+    private String description;
+
+    public CompanyDto(String name, String domain, char abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture, String description) {
         this.name = name;
         this.domain = domain;
         this.abcCategory = abcCategory;
@@ -33,6 +37,7 @@ public class CompanyDto
         this.address = address;
         this.webUrl = webUrl;
         this.contactInFuture = contactInFuture;
+        this.description = description;
     }
 
     public Company toCompany(){
@@ -45,7 +50,8 @@ public class CompanyDto
                 zipCode,
                 address,
                 webUrl,
-                contactInFuture
+                contactInFuture,
+                description
         );
     }
 

@@ -27,11 +27,11 @@ public class UserService {
 
     public AppUser addUser(UserDTO userDTO){
         AppUser appUser = new AppUser(
-                userDTO.getLoginEmailString(),
+                userDTO.getLoginEmail(),
                 userDTO.getAuthority(),
                 userDTO.getFirstName(),
                 userDTO.getLastName(),
-                userDTO.getNotificationEmailString(),
+                userDTO.getNotificationEmail(),
                 userDTO.getDescription(),
                 userDTO.getNickname()
         );
@@ -58,11 +58,11 @@ public class UserService {
     public AppUser updateUser(UserDTO userDTO, Long id){
         AppUser appUser = userRepository.findById(id).get();
 
-        appUser.setLoginEmailString(userDTO.getLoginEmailString());
+        appUser.setLoginEmail(userDTO.getLoginEmail());
         appUser.setAuthority(userDTO.getAuthority());
         appUser.setFirstName(userDTO.getFirstName());
         appUser.setLastName(userDTO.getLastName());
-        appUser.setNotificationEmailString(userDTO.getNotificationEmailString());
+        appUser.setNotificationEmail(userDTO.getNotificationEmail());
         appUser.setDescription(userDTO.getDescription());
         appUser.setNickname(userDTO.getNickname());
 

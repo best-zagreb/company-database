@@ -8,11 +8,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter @Setter
 public class UserDTO {
-    private String loginEmailString;
+    private String loginEmail;
     private AUTHORITY authority;
     private String firstName;
     private String lastName;
-    private String notificationEmailString;
+    private String notificationEmail;
     private String description;
     private String nickname;
 }
