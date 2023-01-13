@@ -1,5 +1,3 @@
-import UserContext from "../../context/UserContext";
-import {useContext} from "react";
 import { useState, useEffect } from "react";
 
 import UserForm from "../forms/UserForm";
@@ -67,25 +65,21 @@ export default function Users() {
     },
   ];
 
-  const handleDelete = (e, email, id) => {
-    e.preventDefault();
-    let token = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-    console.log(token);
-    console.log(email);
+  const handleDelete = (e, id) => {
+    let JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     fetch("http://159.65.127.217:8080/users/" + id, {
       method: "DELETE",
       headers: {
-        googleTokenEncoded: token.credential,
+        googleTokenEncoded: JWToken.credential,
       },
     }).then((response) => fetchUsers());
   };
 
-  function editHandler(e, user, id) {
-    e.preventDefault();
+  function handleEdit(e, user) {
     setEditFormModal(true);
     setUser(user);
-    setId(id);
+    setId(user.id);
   }
 
   const [filterBy, setFilterBy] = useState("Name");
@@ -150,7 +144,6 @@ export default function Users() {
 
   useEffect(() => {
     fetchUsers();
-    
   }, []);
 
   return (
@@ -164,7 +157,7 @@ export default function Users() {
         openModal={openEditFormModal}
         setOpenModal={setEditFormModal}
         bestuser={bestUser}
-        id = {id}
+        id={id}
         fetchUsers={fetchUsers}
       />
 
@@ -226,7 +219,7 @@ export default function Users() {
             <TableBody>
               <UserListPage
                 searchResults={searchResults}
-                editHandler={editHandler}
+                editHandler={handleEdit}
                 handleDelete={handleDelete}
               />
             </TableBody>

@@ -60,8 +60,8 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
       user.firstName = name;
       user.lastName = surname;
       user.nickname = nickname;
-      user.loginEmailString = loginEmail;
-      user.notificationEmailString = notificationEmail;
+      user.loginEmail = loginEmail;
+      user.notificationEmail = notificationEmail;
       user.authority = authLevel.toUpperCase();
       user.description = description;
       // console.log(user);

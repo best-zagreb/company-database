@@ -22,7 +22,7 @@ function UserPost({ user, editHandler, handleDelete }) {
           display: { xs: "none", sm: "table-cell" },
         }}
       >
-        {user.loginEmailString}
+        {user.loginEmail}
       </TableCell>
       <TableCell
         sx={{
@@ -50,7 +50,7 @@ function UserPost({ user, editHandler, handleDelete }) {
         <IconButton
           size="small"
           aria-label="delete user"
-          onClick={(e) => handleDelete(e, user.loginEmailString)}
+          onClick={(e) => handleDelete(e, user.id)}
           sx={{
             margin: 0.25,
 
@@ -74,7 +74,7 @@ function CompanyPost({ company }) {
       <TableCell>{company.abcCategory}</TableCell>
       <TableCell>{company.budgetPlanningMonth}</TableCell>
       <TableCell>
-        <Link href={"http://" + company.webUrl }>{company.webUrl}</Link>
+        <Link href={"http://" + company.webUrl}>{company.webUrl}</Link>
       </TableCell>
     </TableRow>
   );

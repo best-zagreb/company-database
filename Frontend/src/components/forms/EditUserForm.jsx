@@ -14,8 +14,8 @@ const user = {
   firstName: null,
   lastName: null,
   nickname: null,
-  loginEmailString: null,
-  notificationEmailString: null,
+  loginEmail: null,
+  notificationEmail: null,
   authority: null,
   description: null,
 };
@@ -53,7 +53,6 @@ export default function UserForm({
 }) {
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("van");
 
     if (
       nameIsValid &&
@@ -64,18 +63,16 @@ export default function UserForm({
       authLevelIsValid &&
       descriptionIsValid
     ) {
-      console.log("unutra");
       user.firstName = name;
       user.lastName = surname;
       user.nickname = nickname;
-      user.loginEmailString = loginEmail;
-      user.notificationEmailString = notificationEmail;
+      user.loginEmail = loginEmail;
+      user.notificationEmail = notificationEmail;
       user.authority = authLevel.toUpperCase();
       user.description = description;
       console.log(user);
 
       const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-      console.log(id)
 
       fetch("http://159.65.127.217:8080/users/" + id, {
         method: "PUT",
@@ -101,13 +98,15 @@ export default function UserForm({
     setOpenModal(false);
   };
 
-  const [name, setName] = useState();
-  const [surname, setSurname] = useState();
-  const [nickname, setNickname] = useState();
-  const [loginEmail, setLoginEmail] = useState();
-  const [notificationEmail, setNotificationEmail] = useState();
-  const [authLevel, setAuthLevel] = useState("Observer");
-  const [description, setDescription] = useState();
+  const [name, setName] = useState(bestuser.name);
+  const [surname, setSurname] = useState(bestuser.surname);
+  const [nickname, setNickname] = useState(bestuser.nickname);
+  const [loginEmail, setLoginEmail] = useState(bestuser.loginEmail);
+  const [notificationEmail, setNotificationEmail] = useState(
+    bestuser.notificationEmail
+  );
+  const [authLevel, setAuthLevel] = useState(bestuser.authLevel);
+  const [description, setDescription] = useState(bestuser.description);
 
   const [nameIsValid, setNameIsValid] = useState(true);
   const [nameDirty, setNameDirty] = useState(false);
@@ -173,11 +172,7 @@ export default function UserForm({
   const [authLevelDirty, setAuthLevelDirty] = useState(false);
   const handleAuthLevelChange = (e) => {
     const input = e.target.value;
-    if (
-      input === "Observer" ||
-      input === "Moderator" ||
-      input === "Admin"
-    ) {
+    if (input === "Observer" || input === "Moderator" || input === "Admin") {
       setAuthLevelIsValid(true);
     } else {
       setAuthLevelIsValid(false);
@@ -218,7 +213,7 @@ export default function UserForm({
             <form onSubmit={onSubmit}>
               <TextField
                 id="outlined"
-                defaultValue={bestuser.name}
+                defaultValue={bestuser.firstName}
                 label="Name"
                 type="text"
                 required
@@ -239,7 +234,7 @@ export default function UserForm({
               />
               <TextField
                 id="outlined"
-                defaultValue={bestuser.surname}
+                defaultValue={bestuser.lastName}
                 label="Surname"
                 type="text"
                 required

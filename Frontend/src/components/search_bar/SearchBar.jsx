@@ -8,7 +8,7 @@ const UserSearchBar = ({ posts, setSearchResults }) => {
       return (
         (user.firstName + " " + user.lastName).toLowerCase().includes(value) ||
         user.nickname?.toLowerCase().includes(value) ||
-        user.loginEmailString.toLowerCase().includes(value)
+        user.loginEmail.toLowerCase().includes(value)
       );
     });
 
