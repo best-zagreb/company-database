@@ -2,10 +2,17 @@
 		
 		\section{Korištene tehnologije i alati}
 		
-			\textbf{\textit{dio 2. revizije}}
+			% \textbf{\textit{dio 2. revizije}}
 			
-			 \textit{Detaljno navesti sve tehnologije i alate koji su primijenjeni pri izradi dokumentacije i aplikacije. Ukratko ih opisati, te navesti njihovo značenje i mjesto primjene. Za svaki navedeni alat i tehnologiju je potrebno \textbf{navesti internet poveznicu} gdje se mogu preuzeti ili više saznati o njima}.
-			
+			%  \textit{Detaljno navesti sve tehnologije i alate koji su primijenjeni pri izradi dokumentacije i aplikacije. Ukratko ih opisati, te navesti njihovo značenje i mjesto primjene. Za svaki navedeni alat i tehnologiju je potrebno \textbf{navesti internet poveznicu} gdje se mogu preuzeti ili više saznati o njima}.
+
+            {Većinski dio komunikacije održan je putem WhatsApp\footnotemark{}\footnotetext{https://www.whatsapp.com/} komunikacijskog kanala, dok je drugi dio održan ili uživo ili preko platforme Discord\footnotemark{}\footnotetext{https://discord.com/}. Prilikom izrade dijagrama korišten je alat Astah\footnotemark{}\footnotetext{https://astah.net/}, dok je za pisanje dokumentacije korišten online editor Overleaf\footnotemark{}\footnotetext{https://www.overleaf.com/}.}\vspace{0.3cm}
+
+            {U svrhu verzioniranja koda od strane svih članova grupe korišten je alat Git\footnotemark{}\footnotetext{https://git-scm.com/}, dok je kao udaljeni repozitorij korištena platforma GitLab\footnotemark{}\footnotetext{https://gitlab.com/}.}\vspace{0.2cm}
+            
+            {Za razvoj Backend dijela aplikacije korišten je Java JDK\footnotemark{}\footnotetext{https://www.oracle.com/java/technologies/downloads/}, gradle\footnotemark{}\footnotetext{https://gradle.org/} i Intellij Idea\footnotemark{}\footnotetext{https://www.jetbrains.com/idea/} razvojno okruženje za razvoj Spring boot\footnotemark{}\footnotetext{https://spring.io/projects/spring-boot} aplikacije. Za Frontend dio aplikacije korišten je Node.js\footnotemark{}\footnotetext{https://nodejs.org/en/} kao program za pokretanje i React\footnotemark{}\footnotetext{https://reactjs.org/}, također poznat kao React.js ili ReactJS, kao Javascript\footnotemark{}\footnotetext{https://www.javascript.com/} bibiloteka za izradu sučelja. Kao razvojno okruženje za React korišten je VS Code\footnotemark{}\footnotetext{https://code.visualstudio.com/} IDE.}\vspace{0.3cm}
+            
+            {Za upravljanje bazom podataka korišten je PostgreSQL\footnotemark{}\footnotetext{https://www.postgresql.org/} instaliran na Ubuntu serveru\footnotemark{}\footnotetext{https://ubuntu.com/download/server} verzije 20.04.}
 			
 			\eject 
 		
@@ -19,13 +26,13 @@
 			{U UserServiceTests testnoj klasi ispitali smo funkcionalnost dodavanja novog korisnika u bazu podataka.\\
 			Naredbom \textit{Mockito.when(userRepository.save(Mockito.any())).thenReturn(test);} smo rekli mockanom userRepository-ju kako da se ponaša prilikom poziva save metode.}
 			\begin{figure}[H]
-				\includegraphics[scale=0.6]{UnitTests/addUserTest}
+				\includegraphics[width=\textwidth]{UnitTests/addUserTest}
 				\centering
 				\caption{Add user test}
 				\label{fig:addUserTest}
 			\end{figure}
 			\begin{figure}[H]
-				\includegraphics[scale=0.5]{UnitTests/addUserTestResult}
+				\includegraphics[width=\textwidth]{UnitTests/addUserTestResult}
 				\centering
 				\caption{Add user test result}
 				\label{fig:addUserTestResult}
@@ -34,26 +41,26 @@
 			\textbf{2. ProjectServiceTests\\}
 			{U ProjectServiceTests klasi smo ispitali funkcionalnosti dohvata projekta iz baze podataka te dodavanje FR team membera na projekt.}
 			\begin{figure}[H]
-				\includegraphics[scale=0.6]{UnitTests/projectFindById}
+				\includegraphics[width=\textwidth]{UnitTests/projectFindById}
 				\centering
 				\caption{Find project by Id test}
 				\label{fig:projectFindByIdTest}
 			\end{figure}
 			\begin{figure}[H]
-				\includegraphics[scale=0.6]{UnitTests/projectFindByIdResult}
+				\includegraphics[width=\textwidth]{UnitTests/projectFindByIdResult}
 				\centering
 				\caption{Find project by Id test result}
 				\label{fig:projectFindByIdResult}
 			\end{figure}
 
 			\begin{figure}[H]
-				\includegraphics[scale=0.5]{UnitTests/projectAddFrTeamMember}
+				\includegraphics[width=\textwidth]{UnitTests/projectAddFrTeamMember}
 				\centering
 				\caption{Add FR team member to project test}
 				\label{fig:addFrTeamMemberTest}
 			\end{figure}
 			\begin{figure}[H]
-				\includegraphics[scale=0.4]{UnitTests/projectAddFrTeamMemberResult}
+				\includegraphics[width=\textwidth]{UnitTests/projectAddFrTeamMemberResult}
 				\centering
 				\caption{Add FR team member result}
 				\label{fig:addFrTeamMemberResult}
@@ -62,57 +69,57 @@
 			\textbf{3. CompanyServiceTests\\}
 			{U CompanyServiceTests klasi smo ispitali sljedeće funkcionalnosti:\\
 				Kreiranje nove kompanije\\
-				Dohvaćanje svih kompanij\\
+				Dohvaćanje svih kompanije\\
 				Bacanje EntityNotFoundException-a prilikom pokušaja brisanja nepostojeće kompanije\\
 				Bacanje AuthenticationException-a prilikom pokušaja dohvata podataka od kompanije od strane Usera koji je samo Observer}
 			
 			\begin{figure}[H]
-				\includegraphics[scale=0.5]{UnitTests/createCompany}
+				\includegraphics[width=\textwidth]{UnitTests/createCompany}
 				\centering
 				\caption{Create company test}
 				\label{fig:createCompanyTest}
 			\end{figure}
 			\begin{figure}[H]
-				\includegraphics[scale=0.4]{UnitTests/createCompanyResult}
+				\includegraphics[width=\textwidth]{UnitTests/createCompanyResult}
 				\centering
 				\caption{Create company test result}
 				\label{fig:createCompanyResult}
 			\end{figure}
 
 			\begin{figure}[H]
-				\includegraphics[scale=0.3]{UnitTests/getAllCompanies}
+				\includegraphics[width=\textwidth]{UnitTests/getAllCompanies}
 				\centering
 				\caption{Get all companies test}
 				\label{fig:getAllCompaniesTest}
 			\end{figure}
 			\begin{figure}[H]
-				\includegraphics[scale=0.4]{UnitTests/getAllCompaniesResult}
+				\includegraphics[width=\textwidth]{UnitTests/getAllCompaniesResult}
 				\centering
 				\caption{Get all companies test result}
 				\label{fig:getAllCompaniesResult}
 			\end{figure}
 
 			\begin{figure}[H]
-				\includegraphics[scale=0.5]{UnitTests/deleteCompanDoesntExist}
+				\includegraphics[width=\textwidth]{UnitTests/deleteCompanDoesntExist}
 				\centering
 				\caption{Delete company which does not exist test}
 				\label{fig:deleteCompanyTest}
 			\end{figure}
 			\begin{figure}[H]
-				\includegraphics[scale=0.4]{UnitTests/deleteCompanDoesntExistResult}
+				\includegraphics[width=\textwidth]{UnitTests/deleteCompanDoesntExistResult}
 				\centering
 				\caption{Delete company which does not exist tes result}
 				\label{fig:deleteCompanyResult}
 			\end{figure}
 
 			\begin{figure}[H]
-				\includegraphics[scale=0.5]{UnitTests/getCompanyObserver}
+				\includegraphics[width=\textwidth]{UnitTests/getCompanyObserver}
 				\centering
 				\caption{Get company info by observer test}
 				\label{fig:getCompanyObserver}
 			\end{figure}
 			\begin{figure}[H]
-				\includegraphics[scale=0.4]{UnitTests/getCompanyObserverResult}
+				\includegraphics[width=\textwidth]{UnitTests/getCompanyObserverResult}
 				\centering
 				\caption{Get company info by observer test result}
 				\label{fig:getCompanyObserverResult}
@@ -122,49 +129,49 @@
 			{U CollaborationServiceTests testnoj klasi smo ispitali funkcionalnost dodavanja suradnje u bazu podataka.}
 
 			\begin{figure}[H]
-				\includegraphics[scale=0.5]{UnitTests/addCollaboration}
+				\includegraphics[width=\textwidth]{UnitTests/addCollaboration}
 				\centering
 				\caption{Add collaboration test}
 				\label{fig:addCollaboration}
 			\end{figure}
 			\begin{figure}[H]
-				\includegraphics[scale=0.4]{UnitTests/addCollaborationResult}
+				\includegraphics[width=\textwidth]{UnitTests/addCollaborationResult}
 				\centering
 				\caption{Add collaboration test result}
 				\label{fig:addCollaborationResult}
 			\end{figure}
 
-			\subsection{Ispitivanje sustava}
+			% \subsection{Ispitivanje sustava}
 			
-			 \textit{Potrebno je provesti i opisati ispitivanje sustava koristeći radni okvir Selenium\footnote{\url{https://www.seleniumhq.org/}}. Razraditi \textbf{minimalno 4 ispitna slučaja} u kojima će se ispitati redovni slučajevi, rubni uvjeti te poziv funkcionalnosti koja nije implementirana/izaziva pogrešku kako bi se vidjelo na koji način sustav reagira kada nešto nije u potpunosti ostvareno. Ispitni slučaj se treba sastojati od ulaza (npr. korisničko ime i lozinka), očekivanog izlaza ili rezultata, koraka ispitivanja i dobivenog izlaza ili rezultata.\\ }
+			%  \textit{Potrebno je provesti i opisati ispitivanje sustava koristeći radni okvir Selenium\footnote{\url{https://www.seleniumhq.org/}}. Razraditi \textbf{minimalno 4 ispitna slučaja} u kojima će se ispitati redovni slučajevi, rubni uvjeti te poziv funkcionalnosti koja nije implementirana/izaziva pogrešku kako bi se vidjelo na koji način sustav reagira kada nešto nije u potpunosti ostvareno. Ispitni slučaj se treba sastojati od ulaza (npr. korisničko ime i lozinka), očekivanog izlaza ili rezultata, koraka ispitivanja i dobivenog izlaza ili rezultata.\\ }
 			 
-			 \textit{Izradu ispitnih slučajeva pomoću radnog okvira Selenium moguće je provesti pomoću jednog od sljedeća dva alata:}
-			 \begin{itemize}
-			 	\item \textit{dodatak za preglednik \textbf{Selenium IDE} - snimanje korisnikovih akcija radi automatskog ponavljanja ispita	}
-			 	\item \textit{\textbf{Selenium WebDriver} - podrška za pisanje ispita u jezicima Java, C\#, PHP koristeći posebno programsko sučelje.}
-			 \end{itemize}
-		 	\textit{Detalji o korištenju alata Selenium bit će prikazani na posebnom predavanju tijekom semestra.}
+			%  \textit{Izradu ispitnih slučajeva pomoću radnog okvira Selenium moguće je provesti pomoću jednog od sljedeća dva alata:}
+			%  \begin{itemize}
+			%  	\item \textit{dodatak za preglednik \textbf{Selenium IDE} - snimanje korisnikovih akcija radi automatskog ponavljanja ispita	}
+			%  	\item \textit{\textbf{Selenium WebDriver} - podrška za pisanje ispita u jezicima Java, C\#, PHP koristeći posebno programsko sučelje.}
+			%  \end{itemize}
+		 % 	\textit{Detalji o korištenju alata Selenium bit će prikazani na posebnom predavanju tijekom semestra.}
 			
 			\eject 
 		
 		
 		\section{Dijagram razmještaja}
 			
-			\textbf{\textit{dio 2. revizije}}
-			
-			 \textit{Potrebno je umetnuti \textbf{specifikacijski} dijagram razmještaja i opisati ga. Moguće je umjesto specifikacijskog dijagrama razmještaja umetnuti dijagram razmještaja instanci, pod uvjetom da taj dijagram bolje opisuje neki važniji dio sustava.}
-			
+			{ Na poslužiteljskom računalu se nalaze web poslužitelj i poslužitelj baze podataka. Klijenti koriste web
+			preglednik kako bi pristupili web aplikaciji. Sustav je baziran na arhitekturi ”klijent – poslužitelj”, a
+			komunikacija između računala korisnika (klijent, zaposlenik, vlasnik, administrator) i poslužitelja odvija se preko HTTP veze. }
+
+			\begin{figure}[H]
+				\includegraphics[width=\textwidth]{slike/Dijagram razmjestaja}
+				\centering
+				\caption{Dijagram razmještaja}
+				\label{fig:razmijestaja}
+			\end{figure}
+
 			\eject 
 		
 		\section{Upute za puštanje u pogon}
 		
-			\textbf{\textit{dio 2. revizije}}\\
-		
-			 \textit{U ovom poglavlju potrebno je dati upute za puštanje u pogon (engl. deployment) ostvarene aplikacije. Na primjer, za web aplikacije, opisati postupak kojim se od izvornog kôda dolazi do potpuno postavljene baze podataka i poslužitelja koji odgovara na upite korisnika. Za mobilnu aplikaciju, postupak kojim se aplikacija izgradi, te postavi na neku od trgovina. Za stolnu (engl. desktop) aplikaciju, postupak kojim se aplikacija instalira na računalo. Ukoliko mobilne i stolne aplikacije komuniciraju s poslužiteljem i/ili bazom podataka, opisati i postupak njihovog postavljanja. Pri izradi uputa preporučuje se \textbf{naglasiti korake instalacije uporabom natuknica} te koristiti što je više moguće \textbf{slike ekrana} (engl. screenshots) kako bi upute bile jasne i jednostavne za slijediti.}
-			
-			
-			 \textit{Dovršenu aplikaciju potrebno je pokrenuti na javno dostupnom poslužitelju. Studentima se preporuča korištenje neke od sljedećih besplatnih usluga: \href{https://aws.amazon.com/}{Amazon AWS}, \href{https://azure.microsoft.com/en-us/}{Microsoft Azure} ili \href{https://www.heroku.com/}{Heroku}. Mobilne aplikacije trebaju biti objavljene na F-Droid, Google Play ili Amazon App trgovini.}
-
             {Kako se aplikacija sastoji od dva distinktivna dijela, backend-a i frontend-a, svaki dio funkcionira samo za sebe te se zasebno pušta u pogon.}
 
 			\subsection{Backend}
@@ -228,6 +235,19 @@
 
             \subsection{Frontend}
 
-                {}
-			
+                {Frontend je aplikacija rađena u React frameworku za čije je pokretanje i izgradnju potreban \textit{Node.js} koji je moguće preuzeti s adrese \textit{https://nodejs.org/en/download/}. Nakon instalacije \textit{Node.js}-a na vlastito računalo, u matičnom folderu koda preuzetog na vlastito računalo potrebno je izvršiti sljedeće naredbe kako bi kompajlirali frontend dio aplikacije:}
+
+                \begin{packed_item}
+        			\item {cd Frontend}
+        			\item {npm install}
+        			\item {npm run build}
+        		\end{packed_item}
+
+              {Nakon izvršenja ovih naredbi, u mapi Frontend će se stvoriti nova mapa naziva \textit{Build}. Ovu mapa sadrži kompajlirani kod Frontend aplikacije koji će biti potrebno prenesti na poslužitelj.}\vspace{0.3cm}
+
+              {Kako bi korisnici kroz preglednik mogli pristupiti našoj aplikaciji potrebno ju je servirati na poslužitelju. Poslužitelj s kojeg će biti servirana naša aplikacija zove se \textit{Netlify}. Prvo je potrebno otići na adresu \textit{https://app.netlify.com/} i ulogirati se s već postojećim Github računom. Nakon toga potrebno je odabrati opciju \textit{Add new site} pa \textit{Deploy manually}. Prateći ove upute biti će ponuđen ekran na koji je potrebno ispustiti \textit{Build} mapu napravljenu u prethodnom koraku.}
+
+              {Nakon nekoliko minuta Frontend aplikacija će se poslužiti te će nam Netlify dati IP adresu preko koje možemo pristupiti svojoj aplikaciji \textit{(npr. https://darling-lokum-558ee5.netlify.app)}.}\vspace{0.3cm}
+              
+              {Po želji, preteći Netlify dokumentaciju moguće je promijeniti IP adresu aplikacije kao i mnoge druge postavke koje Netlify nudi, no koji nisu potrebne za funkcioniranje aplikacije.}
 			\eject 

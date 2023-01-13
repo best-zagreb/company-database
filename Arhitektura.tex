@@ -216,24 +216,64 @@
 	
 		\section{Dijagram stanja}
 			
-			\textbf{\textit{dio 2. revizije}}\\
+			%\textbf{\textit{dio 2. revizije}}\\
 			
-			\textit{Potrebno je priložiti dijagram stanja i opisati ga. Dovoljan je jedan dijagram stanja koji prikazuje \textbf{značajan dio funkcionalnosti} sustava. Na primjer, stanja korisničkog sučelja i tijek korištenja neke ključne funkcionalnosti jesu značajan dio sustava, a registracija i prijava nisu. }
-			
+			%\textit{Potrebno je priložiti dijagram stanja i opisati ga. Dovoljan je jedan dijagram stanja koji prikazuje \textbf{značajan dio funkcionalnosti} sustava. Na primjer, stanja korisničkog sučelja i tijek korištenja neke ključne funkcionalnosti jesu značajan dio sustava, a registracija i prijava nisu. }
+
+			{ Na slici 4.6 prikazan je dijagram stanja oko pravljanja korisnika za administratora.
+			Nakon prijave, klijentu se prikazuje početna stranica iz koje dalje prolazi kroz aplikaciju.
+			Korisnik na izborniku može odabrati nekoliko mogućnost. Jedna od njih je pregled korinika po kojemu može filtrirati.
+			Od tamo može nadoodati korisnika i promijeniti osobne podatke o korisniku. Također može i izbrisati
+			korisnika i promijeniti rolu tog korisnika, ako taj korisnik nije zadnji administrator. Administrator s
+			početne stranice može i otići na projekte, pa postaviti ili maknuti korisnika sa nekog od projekata}
+
+			\begin{figure}[H]
+				\includegraphics[scale=0.3]{slike/Dijagram stanja}
+				\centering
+				\caption{Dijagram stanja}
+				\label{fig:stanja}
+			\end{figure}
+
 			\eject 
 		
 		\section{Dijagram aktivnosti}
 			
-			\textbf{\textit{dio 2. revizije}}\\
+			%\textbf{\textit{dio 2. revizije}}\\
 			
-			 \textit{Potrebno je priložiti dijagram aktivnosti s pripadajućim opisom. Dijagram aktivnosti treba prikazivati značajan dio sustava.}
-			
+			 %\textit{Potrebno je priložiti dijagram aktivnosti s pripadajućim opisom. Dijagram aktivnosti treba prikazivati značajan dio sustava.}
+			{ Na dijagramu 4.7 prikazan je proces promjene role korisnika. Korisnik se prijavi u sustav,
+		  	ode na pregled korisnika i izabere korisnika kojemu želi promijeniti rolu. Tamo može promijeniti sve
+			podatke o korisniku, uključujući i rolu. Kada je korisnik zadovoljan promjenama spremi ih.}
+
+			\begin{figure}[H]
+				\includegraphics[scale=0.3]{slike/Dijagram aktivnosti}
+				\centering
+				\caption{Dijagram aktivnosti}
+				\label{fig:aktivnosti}
+			\end{figure}
+
 			\eject
 			
 		\section{Dijagram komponenti}
 		
-			\textbf{\textit{dio 2. revizije}}\\
+			%\textbf{\textit{dio 2. revizije}}\\
 		
-			 \textit{Potrebno je priložiti dijagram komponenti s pripadajućim opisom. Dijagram komponenti treba prikazivati strukturu cijele aplikacije.}
+			 %\textit{Potrebno je priložiti dijagram komponenti s pripadajućim opisom. Dijagram komponenti treba prikazivati strukturu cijele aplikacije.}
+			{ Sustavu se pristupa preko dva različita sučelja. Preko sučelja za dohvat HTML, CSS i JS datoteka poslužuju se
+			datoteke koje pripadaju frontend dijelu aplikacije. Router je komponenta koja na
+			upit s url određuje koja datoteka ce se poslužiti na sučelje. Sve JavaScript datoteke ovise o React biblioteci iz
+			koje dohvaćaju gotove komponente kao što su gumbi, forme i slično. Preko sučelja
+			za dohvat JSON podataka pristupa se REST API komponenti. REST API posluzuje
+			podatke koji pripadaju backend dijelu aplikacije. EntityFrameworkCore je zadužen
+			za dohvaćanje tablica iz baze podataka pomoću SQL upita. Podaci koji su pristigli
+			iz baze se šalju dalje MVC arhitekturi u obliku DTO. Reactview komponenta preko dostupnih sučelja komunicira sa aplikacijom
+			te ovisno o korisnikovim akcijama osvjezava prikaz i dohvača nove podatke ili datoteke }
+
+			\begin{figure}[H]
+				\includegraphics[scale=0.3]{slike/Dijagram komponenti}
+				\centering
+				\caption{Dijagram komponenti}
+				\label{fig:komponente}
+			\end{figure}
 			 
 	\fi % block comment (pocinje sa iffalse)
