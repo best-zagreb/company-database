@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
+
 import UserForm from "../forms/UserForm";
 import EditUserForm from "../forms/EditUserForm";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import Button from "@mui/material/Button";
-import TableSortLabel from "@mui/material/TableSortLabel";
+
 import {
-  Box,
-  TextField,
+  Button,
   TableCell,
   TableHead,
   Paper,
@@ -14,8 +12,11 @@ import {
   TableRow,
   TableBody,
   Table,
+  TableSortLabel,
   Container,
 } from "@mui/material";
+
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import { UserSearchBar, CompanySearchBar } from "../search_bar/SearchBar";
 import { UserListPage } from "../search_bar/ListPage";

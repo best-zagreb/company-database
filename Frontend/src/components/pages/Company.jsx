@@ -1,5 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import ContactForm from "../forms/ContactForm";
 
 import {
   Accordion,
@@ -73,6 +75,12 @@ const companyContacts = [
   },
 ];
 
+function fetchContacts(e, id) {
+  // TODO: make a PUT request na /companies/{id}/contacts/{id} and then update contacts list
+  console.log("Fetching contacts is not yet implemented!");
+  // setEditFormModal(true);
+}
+
 function handleEdit(e, id) {
   // TODO: make a PUT request na /companies/{id}/contacts/{id} and then update contacts list
   console.log("Editing a contact is not yet implemented!");
@@ -87,6 +95,8 @@ function handleDelete(e, id) {
 export default function Company() {
   const navigate = useNavigate();
 
+  const [openContactFormModal, setOpenContactFormModal] = useState(false);
+
   useEffect(() => {
     // TODO: fetch contacts sa GET /companies/{id}
     // TODO: fetch collabs sa GET /companies/{id}/collaborations
@@ -94,6 +104,12 @@ export default function Company() {
 
   return (
     <>
+      <ContactForm
+        openModal={openContactFormModal}
+        setOpenModal={setOpenContactFormModal}
+        fetchContacts={fetchContacts}
+      />
+
       <Box
         sx={{
           display: "flex",
