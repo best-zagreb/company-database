@@ -149,7 +149,6 @@ public class ProjectController {
 
     @PostMapping("/{projectid}/collaborations")
     public ResponseEntity addCollaboration(@RequestHeader String googleTokenEncoded, @PathVariable Long projectid, @RequestBody CollaborationDTO collaborationDTO){
-        List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMIN);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
             return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
@@ -158,7 +157,7 @@ public class ProjectController {
         if (!projectService.existsById(projectid)) return new ResponseEntity("Project not found", HttpStatus.NOT_FOUND);
         AppUser user = userService.findByEmail(email);
         Project project = projectService.findById(projectid);
-        if (user.getAuthority() == AUTHORITY.OBSERVER ||
+        if (user.getAuthority() == AUTHORITY.OBSERVER || user.getAuthority() == AUTHORITY.FR_TEAM_MEMBER ||
                 (user.getAuthority() == AUTHORITY.FR_RESPONSIBLE && project.getFRResp().getId() != user.getId())) {
             return new ResponseEntity("You don't have premission to this resource", HttpStatus.UNAUTHORIZED);
         }
