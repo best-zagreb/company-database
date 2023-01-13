@@ -54,7 +54,7 @@ export default function Header({ setUserIsLoggedIn }) {
   return (
     <>
       <AppBar position="static">
-        <Container maxWidth="xl">
+        <Container maxWidth="false">
           <Toolbar disableGutters>
             <Box sx={{ flexGrow: 1, display: { xs: "flex", sm: "none" } }}>
               <Tooltip title="Open app menu">
