@@ -1,19 +1,15 @@
-import { useState } from "react";
-import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Radio from "@mui/material/Radio";
+import { useState, useContext } from "react";
+import {
+  Backdrop,
+  Box,
+  Modal,
+  Fade,
+  Button,
+  TextField,
+  MenuItem,
+} from "@mui/material";
 
 import UserContext from "../../context/UserContext";
-import {useContext} from "react";
 
 import "./Form.css";
 
@@ -21,28 +17,27 @@ const project = {
   idCreator: null, //int
   name: null,
   category: null,
-  type: null,  //toUpper
+  type: null, //toUpper
   startDate: null, //date
   endDate: null, //date
-  IdFRResp: null, //int
-  FRgoal: null,  //int
+  idFRResp: null, //int
+  frgoal: null, //int
   firstPingDate: null, //date
   secondPingDate: null, //date
 };
 
 const typeConst = [
   {
-    value: "intern",
+    value: "Internal",
   },
   {
-    value: "extern",
+    value: "External",
   },
 ];
 
 export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
   const onSubmit = (e) => {
     e.preventDefault();
-    
 
     if (
       nameIsValid //&&
@@ -59,11 +54,11 @@ export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
       project.type = type.toUpperCase();
       project.startDate = startDate;
       project.endDate = endDate;
-      project.IdFRResp = parseInt(idFRResp);
-      project.FRgoal = parseInt(FRgoal);
+      project.idFRResp = idFRResp;
+      project.frgoal = FRgoal;
       project.firstPingDate = firstPingDate;
       project.secondPingDate = secondPingDate;
-      console.log(project);
+      // console.log(project);
 
       const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
       fetch("http://159.65.127.217:8080/projects/", {
@@ -76,7 +71,6 @@ export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
       })
         .then((response) => response.json())
         .then((json) => {
-          console.log("fejlll")
           // if error display error toast
           console.log(json);
 
@@ -87,11 +81,12 @@ export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
     }
   };
 
-  const {user} = useContext(UserContext);
+  const { user } = useContext(UserContext);
+
   const [IDCreator, setIDCreator] = useState(user.id); //ovdje dodati id trenutnog korisnika
   const [name, setName] = useState();
   const [category, setCategory] = useState();
-  const [type, setType] = useState();
+  const [type, setType] = useState("External");
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [idFRResp, setidFRResp] = useState();
@@ -209,6 +204,7 @@ export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
                 label="Project type"
                 fullWidth
                 margin="dense"
+                value={type}
                 onChange={handleTypeChange}
               >
                 {typeConst.map((option) => (
@@ -273,7 +269,7 @@ export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
                 type="text"
                 fullWidth
                 margin="dense"
-                placeholder="Date in format XXXX-YY-ZZ"
+                placeholder="Date in format YYYY-MM-DD"
                 inputProps={{ minLength: 10, maxLength: 10 }}
                 onChange={handleFirstPingChange}
               />
@@ -285,7 +281,7 @@ export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
                 type="text"
                 fullWidth
                 margin="dense"
-                placeholder="Date in format XXXX-YY-ZZ"
+                placeholder="Date in format YYYY-MM-DD"
                 inputProps={{ minLength: 10, maxLength: 10 }}
                 onChange={handleSecondPingChange}
               />
