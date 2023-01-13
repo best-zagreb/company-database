@@ -21,8 +21,8 @@ public class UserService {
     }
 
     public AppUser findByEmail(String email){
-        if (userRepository.findByLoginEmailString(email).isEmpty()) return null;
-        else return userRepository.findByLoginEmailString(email).get(0);
+        if (userRepository.findByLoginEmail(email).isEmpty()) return null;
+        else return userRepository.findByLoginEmail(email).get(0);
     }
 
     public AppUser addUser(UserDTO userDTO){
@@ -74,6 +74,6 @@ public class UserService {
     }
 
     public boolean existsByEmail(String email) {
-        return !userRepository.findByLoginEmailString(email).isEmpty();
+        return !userRepository.findByLoginEmail(email).isEmpty();
     }
 }
