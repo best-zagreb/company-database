@@ -66,7 +66,7 @@ const CompanySearchBar = ({ posts, setSearchResults }) => {
           handleSearchChange(inputValue);
         }}
         // throws error because it takes string "firstName lastName" as key, needs to be changed to take id as key
-        options={posts.map((company) => company.companyName)}
+        options={posts.map((company) => company.name)}
         renderInput={(params) => (
           <TextField
             {...params}

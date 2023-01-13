@@ -12,19 +12,22 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 
-import "./UserForm.css";
+import UserContext from "../../context/UserContext";
+import {useContext} from "react";
+
+import "./Form.css";
 
 const project = {
-  idCreator: null,
+  idCreator: null, //int
   name: null,
   category: null,
-  type: null,
-  startDate: null,
-  endDate: null,
-  IdFRResp: null,
-  FRgoal: null,
-  firstPingDate: null,
-  secondPingDate: null,
+  type: null,  //toUpper
+  startDate: null, //date
+  endDate: null, //date
+  IdFRResp: null, //int
+  FRgoal: null,  //int
+  firstPingDate: null, //date
+  secondPingDate: null, //date
 };
 
 const typeConst = [
@@ -36,18 +39,19 @@ const typeConst = [
   },
 ];
 
-export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
+export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
   const onSubmit = (e) => {
     e.preventDefault();
+    
 
     if (
-      nameIsValid &&
-      categoryIsValid &&
-      startDateIsValid &&
-      endDateIsValid &&
-      FRgoalIsValid &&
-      firstPingDateIsValid &&
-      secondPingDateIsValid
+      nameIsValid //&&
+      // categoryIsValid &&
+      // startDateIsValid &&
+      // endDateIsValid &&
+      // FRgoalIsValid &&
+      // firstPingDateIsValid &&
+      // secondPingDateIsValid
     ) {
       project.idCreator = IDCreator;
       project.name = name;
@@ -61,30 +65,30 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
       project.secondPingDate = secondPingDate;
       console.log(project);
 
-      //Uncomment this when the backend is done
+      const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+      fetch("http://159.65.127.217:8080/projects/", {
+        method: "POST",
+        headers: {
+          googleTokenEncoded: JWToken.credential,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(project),
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          console.log("fejlll")
+          // if error display error toast
+          console.log(json);
 
-      // fetch("http://159.65.127.217:8080/users/add-user/", {
-      //   method: "POST",
-      //   headers: {
-      //     Authorization: "Basic " + window.btoa("admin:pass"),
-
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(project),
-      // })
-      //   .then((response) => response.json())
-      //   .then((json) => {
-      //     // if error display error toast
-      //     console.log(json);
-
-      //     // if success display success toast, close modal and update users list
-      //     setOpenModal(false);
-      //     fetchUsers();
-      //   });
+          // if success display success toast, close modal and update users list
+          setOpenModal(false);
+          fetchProjects();
+        });
     }
   };
 
-  const [IDCreator, setIDCreator] = useState(); //ovdje dodati id trenutnog korisnika
+  const {user} = useContext(UserContext);
+  const [IDCreator, setIDCreator] = useState(user.id); //ovdje dodati id trenutnog korisnika
   const [name, setName] = useState();
   const [category, setCategory] = useState();
   const [type, setType] = useState();

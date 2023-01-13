@@ -18,12 +18,12 @@ import {
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-import CompanyForm from "../forms/CompanyForm";
+import ProjectForm from "../forms/ProjectForm";
 import { ProjectListPage } from "../search_bar/ListPage";
 import { ProjectSearchBar } from "../search_bar/SearchBar";
 
 export default function Projects() {
-  const [openCompanyFormModal, setOpenCompanyFormModal] = useState(false);
+  const [openProjectFormModal, setOpenProjectFormModal] = useState(false);
 
   const filterTypes = [
     {
@@ -50,7 +50,7 @@ export default function Projects() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
     fetch("http://159.65.127.217:8080/projects/", {
       method: "GET",
-      googleTokenEncoded: JWToken.credential,
+      headers: { googleTokenEncoded: JWToken.credential },
     })
       .then((response) => response.json())
       .then((json) => {
@@ -59,14 +59,11 @@ export default function Projects() {
           console.log(json);
           // display error
         } else {
-          let newData = json.sort((a, b) => a.name.localeCompare(b.name));
-          setPosts(newData);
-          setSearchResults(newData);
+          //let newData = json.sort((a, b) => a.name.localeCompare(b.name));
+          setPosts(json);
+          setSearchResults(json);
         }
       });
-    // let newData = data.sort((a,b) => (a.name.localeCompare(b.name)))
-    // setPosts(newData);
-    // setSearchResults(newData);
   }
 
   const [filterBy, setFilterBy] = useState("Project name");
@@ -137,9 +134,10 @@ export default function Projects() {
 
   return (
     <>
-      <CompanyForm
-        openModal={openCompanyFormModal}
-        setOpenModal={setOpenCompanyFormModal}
+      <ProjectForm
+        openModal={openProjectFormModal}
+        setOpenModal={setOpenProjectFormModal}
+        fetchProjects = {fetchProjects}
       />
 
       <Container
@@ -159,7 +157,7 @@ export default function Projects() {
           variant="contained"
           size="medium"
           startIcon={<AddCircleIcon />}
-          onClick={() => setOpenCompanyFormModal(true)}
+          onClick={() => setOpenProjectFormModal(true)}
         >
           Add project
         </Button>

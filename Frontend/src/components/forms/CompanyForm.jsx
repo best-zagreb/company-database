@@ -15,18 +15,15 @@ import Radio from "@mui/material/Radio";
 import "./Form.css";
 
 const company = {
-  companyName: null,
-  industry: null,
-  abcCategorization: null,
+  name: null,
+  domain: null,
+  abcCategory: null, //char
   budgetPlanningMonth: null,
   country: null,
-  town: null,
-  zipCode: null,
-  adress: null,
-  websiteUrl: null,
-  description: null,
-  doContact: null,
-  employees: null,
+  zipCode: null, //int
+  address: null,
+  webUrl: null,
+  contactInFuture: null, //bool
 };
 
 const ABC = [
@@ -74,7 +71,7 @@ function validateURL(website) {
   else return false;
 }
 
-export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
+export default function UserForm({ openModal, setOpenModal, fetchCompanies }) {
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -90,28 +87,25 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
       adressIsValid &&
       doContactIsValid
     ) {
-      company.companyName = name;
-      company.industry = industry;
-      company.abcCategorization = abcCategorization;
+      company.name = name;
+      company.domain = industry;
+      company.abcCategory = abcCategorization.toLowerCase().charAt(0);
       company.budgetPlanningMonth = budgetMonth;
       company.country = country;
-      company.town = town;
-      company.zipCode = zipCode;
-      company.adress = address;
-      company.websiteUrl = url;
-      company.description = description;
-      company.doContact = doContact;
-      company.employees = employees;
-      console.log(company);
+      company.zipCode = parseInt(zipCode);
+      company.address = address;
+      company.webUrl = url;
+      company.contactInFuture = doContact;
+  
+      //console.log(company);
 
-      //Uncomment this when the backend is done
-
-      fetch("http://localhost:8080/companies", {
+      
+      const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+      fetch("http://159.65.127.217:8080/companies/", {
         method: "POST",
         headers: {
-          Authorization: "Basic " + window.btoa("admin:pass"),
+          googleTokenEncoded: JWToken.credential,
           "Content-Type": "application/json",
-          googleTokenEncoded: token,
         },
         body: JSON.stringify(company),
       })
@@ -122,7 +116,7 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
 
           // if success display success toast, close modal and update users list
           setOpenModal(false);
-          fetchCompanys();
+          fetchCompanies();
         });
     }
   };
@@ -132,11 +126,11 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
   const [abcCategorization, setabcCategorization] = useState();
   const [budgetMonth, setBudgetMonth] = useState();
   const [country, setCountry] = useState();
-  const [town, setTown] = useState();
+  //const [town, setTown] = useState();
   const [zipCode, setZipCode] = useState();
   const [address, setAdress] = useState();
   const [url, setUrl] = useState();
-  const [description, setDescription] = useState();
+  //const [description, setDescription] = useState();
   const [doContact, setDoContact] = useState();
 
   const [nameIsValid, setNameIsValid] = useState(false);
@@ -183,14 +177,14 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
     setZipCode(input);
   };
 
-  const [townIsValid, setTownlIsValid] = useState(false);
-  const handleTownChange = (e) => {
-    const input = e.target.value;
-    if (input.length >= 2 && input.length <= 56) {
-      setTownlIsValid(true);
-      setTown(input);
-    }
-  };
+  // const [townIsValid, setTownlIsValid] = useState(false);
+  // const handleTownChange = (e) => {
+  //   const input = e.target.value;
+  //   if (input.length >= 2 && input.length <= 56) {
+  //     setTownlIsValid(true);
+  //     setTown(input);
+  //   }
+  // };
 
   const [adressIsValid, setAdresslIsValid] = useState(false);
   const handleAdressChange = (e) => {
@@ -211,17 +205,17 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
     }
   };
 
-  const [descriptionIsValid, setDescriptionIsValid] = useState(false);
-  const handleDescriptionChange = (e) => {
-    const input = e.target.value;
-    if (input.length <= 475) {
-      setDescriptionIsValid(true);
-    } else {
-      setDescriptionIsValid(false);
-    }
+  // const [descriptionIsValid, setDescriptionIsValid] = useState(false);
+  // const handleDescriptionChange = (e) => {
+  //   const input = e.target.value;
+  //   if (input.length <= 475) {
+  //     setDescriptionIsValid(true);
+  //   } else {
+  //     setDescriptionIsValid(false);
+  //   }
 
-    setDescription(input);
-  };
+  //   setDescription(input);
+  // };
 
   const [doContactIsValid, setDoContactIsValid] = useState(true);
   const handleDoContactChange = (e) => {
@@ -332,7 +326,7 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
                 onChange={handleZipCodeChange}
               />
 
-              <TextField
+              {/* <TextField
                 id="outlined"
                 label="Town"
                 type="text"
@@ -341,7 +335,7 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
                 placeholder="Zagreb"
                 inputProps={{ minLength: 2, maxLength: 56 }}
                 onChange={handleTownChange}
-              />
+              /> */}
 
               <TextField
                 id="outlined"
@@ -364,7 +358,7 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
                 onChange={handleUrlChange}
               />
 
-              <TextField
+              {/* <TextField
                 id="outlined-multiline-static"
                 label="Description"
                 fullWidth
@@ -374,7 +368,7 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
                 margin="dense"
                 inputProps={{ maxLength: 475 }}
                 onChange={handleDescriptionChange}
-              />
+              /> */}
 
               <FormLabel id="demo-radio-buttons-group-label">
                 Contact in future

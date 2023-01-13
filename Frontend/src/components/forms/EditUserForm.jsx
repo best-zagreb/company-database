@@ -11,13 +11,13 @@ import MenuItem from "@mui/material/MenuItem";
 import "./Form.css";
 
 const user = {
-  name: "",
-  surname: "",
-  nickname: "",
-  loginEmail: "",
-  notificationEmail: "",
-  authLevel: "",
-  description: "",
+  firstName: null,
+  lastName: null,
+  nickname: null,
+  loginEmailString: null,
+  notificationEmailString: null,
+  authority: null,
+  description: null,
 };
 
 const authLevels = [
@@ -30,8 +30,8 @@ const authLevels = [
     label: "Moderator",
   },
   {
-    value: "Administrator",
-    label: "Administrator",
+    value: "Admin",
+    label: "Admin",
   },
 ];
 
@@ -65,22 +65,22 @@ export default function UserForm({
       descriptionIsValid
     ) {
       console.log("unutra");
-      user.name = name;
-      user.surname = surname;
+      user.firstName = name;
+      user.lastName = surname;
       user.nickname = nickname;
-      user.loginEmail = loginEmail;
-      user.notificationEmail = notificationEmail;
-      user.authLevel = authLevel;
+      user.loginEmailString = loginEmail;
+      user.notificationEmailString = notificationEmail;
+      user.authority = authLevel.toUpperCase();
       user.description = description;
       console.log(user);
 
       const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+      console.log(id)
 
       fetch("http://159.65.127.217:8080/users/" + id, {
         method: "PUT",
         headers: {
           googleTokenEncoded: JWToken.credential,
-
           "Content-Type": "application/json",
         },
         body: JSON.stringify(user),
@@ -176,7 +176,7 @@ export default function UserForm({
     if (
       input === "Observer" ||
       input === "Moderator" ||
-      input === "Administrator"
+      input === "Admin"
     ) {
       setAuthLevelIsValid(true);
     } else {

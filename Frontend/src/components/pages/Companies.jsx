@@ -57,14 +57,16 @@ export default function Companies() {
           console.log(json);
           // display error
         } else {
+          console.log(json)
           setPosts(json);
           setSearchResults(json);
+          //let newData = data.sort((a, b) => a.name.localeCompare(b.name))
         }
       });
     //console.log("Fetchali smo usere, ps samo su importani iz data.js za probu");
-    // let newData = data.sort((a, b) => a.name.localeCompare(b.name));
-    setPosts(newData);
-    setSearchResults(newData);
+    //  let newData = data.sort((a, b) => a.name.localeCompare(b.name));
+    // setPosts(newData);
+    // setSearchResults(newData);
   }
 
   const [filterBy, setFilterBy] = useState("Company name");
@@ -128,7 +130,7 @@ export default function Companies() {
   }
 
   useEffect(() => {
-    // fetchCompanies();
+     fetchCompanies();
   }, []);
 
   return (

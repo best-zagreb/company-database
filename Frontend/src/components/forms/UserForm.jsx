@@ -71,7 +71,6 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
         method: "POST",
         headers: {
           googleTokenEncoded: JWToken.credential,
-
           "Content-Type": "application/json",
         },
         body: JSON.stringify(user),
