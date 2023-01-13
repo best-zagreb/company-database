@@ -72,10 +72,6 @@ export default function Projects() {
   const [filterBy, setFilterBy] = useState("Project name");
   const [filterDirection, setFilterDirection] = useState("asc");
 
-  useEffect(() => {
-    fetchProjects();
-  }, []);
-
   const handleFilterResults = (property) => (event) => {
     let filterByCategory = property;
     if (filterByCategory === filterBy) {
@@ -135,6 +131,10 @@ export default function Projects() {
     }
   }
 
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
   return (
     <>
       <CompanyForm
@@ -171,7 +171,19 @@ export default function Projects() {
             <TableHead>
               <TableRow>
                 {filterTypes.map((cellName) => (
-                  <TableCell key={cellName.value}>
+                  <TableCell
+                    key={cellName.value}
+                    sx={
+                      cellName.value === "Project end date" ||
+                      cellName.value === "Category"
+                        ? { display: { xs: "none", sm: "table-cell" } }
+                        : cellName.value === "FR goal"
+                        ? {
+                            display: { xs: "none", md: "table-cell" },
+                          }
+                        : { undefined }
+                    }
+                  >
                     {cellName.value}
                     <TableSortLabel
                       active={filterBy === cellName.value}
@@ -182,7 +194,6 @@ export default function Projects() {
                     ></TableSortLabel>
                   </TableCell>
                 ))}
-                <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

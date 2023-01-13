@@ -72,10 +72,7 @@ export default function Users() {
       method: "DELETE",
       headers: {
         googleTokenEncoded: JWToken.credential,
-
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email: email }),
     })
       .then((response) => response.json())
       .then((json) => {
@@ -91,10 +88,6 @@ export default function Users() {
 
   const [filterBy, setFilterBy] = useState("Name");
   const [filterDirection, setFilterDirection] = useState("asc");
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
 
   const handleFilterResults = (property) => (event) => {
     let filterByCategory = property;
@@ -153,6 +146,10 @@ export default function Users() {
     }
   }
 
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   return (
     <>
       <UserForm
@@ -189,53 +186,24 @@ export default function Users() {
         </Button>
       </Container>
 
-      {/* <Container maxWidth="false">
-        <TableContainer component={Paper}>
-          <Table size="small" aria-label="users table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Surname</TableCell>
-                <TableCell
-                  sx={{
-                    display: { xs: "none", sm: "table-cell" },
-                  }}
-                >
-                  Nickname
-                </TableCell>
-                <TableCell>E-mail</TableCell>
-                <TableCell
-                  sx={{
-                    display: { xs: "none", md: "table-cell" },
-                  }}
-                >
-                  Max authorization level
-                </TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {searchResults ? (
-                <UserListPage
-                  searchResults={searchResults}
-                  editHandler={editHandler}
-                  handleDelete={handleDelete}
-                />
-              ) : (
-                "No users in database"
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Container> */}
-
       <Container maxWidth="false">
         <TableContainer component={Paper}>
           <Table size="small" aria-label="users table">
             <TableHead>
               <TableRow>
                 {filterTypes.map((cellName) => (
-                  <TableCell key={cellName.value}>
+                  <TableCell
+                    key={cellName.value}
+                    sx={
+                      cellName.value === "Nickname"
+                        ? { display: { xs: "none", sm: "table-cell" } }
+                        : cellName.value === "Max authorization level"
+                        ? {
+                            display: { xs: "none", md: "table-cell" },
+                          }
+                        : { undefined }
+                    }
+                  >
                     {cellName.value}
                     <TableSortLabel
                       active={filterBy === cellName.value}
