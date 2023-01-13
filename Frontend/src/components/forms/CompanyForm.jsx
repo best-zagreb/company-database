@@ -96,10 +96,9 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanies }) {
       company.address = address;
       company.webUrl = url;
       company.contactInFuture = doContact;
-  
+
       //console.log(company);
 
-      
       const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
       fetch("http://159.65.127.217:8080/companies/", {
         method: "POST",
@@ -354,7 +353,7 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanies }) {
                 type="text"
                 fullWidth
                 margin="dense"
-                placeholder="best.hr"
+                placeholder="https://best.hr"
                 onChange={handleUrlChange}
               />
 

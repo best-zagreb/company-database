@@ -70,11 +70,29 @@ function CompanyPost({ company }) {
   return (
     <TableRow key={company.id} className={company.name}>
       <TableCell>{company.name}</TableCell>
-      <TableCell>{company.domain}</TableCell>
-      <TableCell>{company.abcCategory}</TableCell>
-      <TableCell>{company.budgetPlanningMonth}</TableCell>
+      <TableCell
+        sx={{
+          display: { xs: "none", sm: "table-cell" },
+        }}
+      >
+        {company.domain}
+      </TableCell>
+      <TableCell
+        sx={{
+          display: { xs: "none", sm: "table-cell" },
+        }}
+      >
+        {company.abcCategory}
+      </TableCell>
+      <TableCell
+        sx={{
+          display: { xs: "none", md: "table-cell" },
+        }}
+      >
+        {company.budgetPlanningMonth}
+      </TableCell>
       <TableCell>
-        <Link href={"http://" + company.webUrl}>{company.webUrl}</Link>
+        <Link href={company.webUrl}>{company.webUrl}</Link>
       </TableCell>
     </TableRow>
   );
@@ -84,10 +102,28 @@ function ProjectPost({ project }) {
   return (
     <TableRow key={project.id} className={project.name}>
       <TableCell>{project.name}</TableCell>
-      <TableCell>{project.category}</TableCell>
+      <TableCell
+        sx={{
+          display: { xs: "none", sm: "table-cell" },
+        }}
+      >
+        {project.category}
+      </TableCell>
       <TableCell>{project.IdFRResp}</TableCell>
-      <TableCell>{project.endDate}</TableCell>
-      <TableCell>{project.FRgoal}</TableCell>
+      <TableCell
+        sx={{
+          display: { xs: "none", sm: "table-cell" },
+        }}
+      >
+        {project.endDate}
+      </TableCell>
+      <TableCell
+        sx={{
+          display: { xs: "none", md: "table-cell" },
+        }}
+      >
+        {project.FRgoal}
+      </TableCell>
     </TableRow>
   );
 }
