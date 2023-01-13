@@ -1,3 +1,5 @@
+import UserContext from "../../context/UserContext";
+import {useContext} from "react";
 import { useState, useEffect } from "react";
 import UserForm from "../forms/UserForm";
 import EditUserForm from "../forms/EditUserForm";
@@ -147,6 +149,7 @@ export default function Users() {
 
   useEffect(() => {
     fetchUsers();
+    
   }, []);
 
   return (
@@ -160,6 +163,8 @@ export default function Users() {
         openModal={openEditFormModal}
         setOpenModal={setEditFormModal}
         bestuser={bestUser}
+        id = {id}
+        fetchUsers={fetchUsers}
       />
 
       <Container

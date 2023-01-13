@@ -10,12 +10,8 @@ import java.util.List;
 @SuppressWarnings("ALL")
 @Repository
 public interface UserRepository extends JpaRepository<AppUser, Long> {
-    List<AppUser> findByLoginEmailString(String email);
+    List<AppUser> findByLoginEmail(String email);
 
-//    @Transactional
-//    @Modifying
-//    @Query("delete from Email e where e.emailString=:email")
-    Long deleteByLoginEmailString(@Param("email") String emailString);
 
     List<AppUser> findAll();
 }

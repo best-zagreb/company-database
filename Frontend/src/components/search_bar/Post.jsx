@@ -35,7 +35,7 @@ function UserPost({ user, editHandler, handleDelete }) {
         <IconButton
           size="small"
           aria-label="edit user"
-          onClick={(e) => editHandler(e, user)}
+          onClick={(e) => editHandler(e, user, user.id)}
           sx={{
             margin: 0.25,
 
@@ -74,7 +74,7 @@ function CompanyPost({ company }) {
       <TableCell>{company.abcCategory}</TableCell>
       <TableCell>{company.budgetPlanningMonth}</TableCell>
       <TableCell>
-        <Link href={company.webUrl}>{company.webUrl}</Link>
+        <Link href={"http://" + company.webUrl }>{company.webUrl}</Link>
       </TableCell>
     </TableRow>
   );

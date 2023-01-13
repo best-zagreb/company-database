@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.naming.AuthenticationException;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @CrossOrigin
@@ -69,6 +70,9 @@ public class CompanyController
         } catch (AuthenticationException e)
         {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e)
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -82,6 +86,9 @@ public class CompanyController
         } catch (AuthenticationException e)
         {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e)
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -95,6 +102,9 @@ public class CompanyController
         } catch (AuthenticationException e)
         {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e)
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -109,6 +119,9 @@ public class CompanyController
         } catch (AuthenticationException e)
         {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e)
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -123,6 +136,9 @@ public class CompanyController
         } catch (AuthenticationException e)
         {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e)
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -136,7 +152,11 @@ public class CompanyController
         } catch (AuthenticationException e)
         {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e)
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -152,7 +172,13 @@ public class CompanyController
         if (!a.contains(userService.findByEmail(email).getAuthority()))
             return new ResponseEntity("You don't have premission to this resource", HttpStatus.UNAUTHORIZED);
 
-        return new ResponseEntity(collaborationsService.getCollaborationsForCompany(id), HttpStatus.OK);
+        try
+        {
+            return new ResponseEntity(collaborationsService.getCollaborationsForCompany(id), HttpStatus.OK);
+        } catch (EntityNotFoundException e)
+        {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 
     private AppUser getUser(String googleTokenEncoded){

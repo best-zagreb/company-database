@@ -1,114 +1,398 @@
-import { useParams } from "react-router-dom";
-import { Accordion,AccordionSummary,AccordionDetails, Typography } from '@mui/material';
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
-import "./Company.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-//prikazni primjer 
-const companyInfo={"podrucje":"IT","ABC":"A","mjesec":"4.","drzava":"Hrvatska"
-                    ,"postBr":"10000","grad":"Zagreb","link":"https://firma.com"}
-const companyContacts=[{"name":"Javor","surname":"Javorčević","mail":"javor.javorcevic@gmail.com","phone":"098776224","position":"HR specialist"},
-                        {"name":"Javora","surname":"Javorčević","mail":"javora.javorcevic@gmail.com","phone":"098772452" ,"position":"CEO"},
-                        {"name":"Javora","surname":"Javorčević","mail":"javora.javorcevic@gmail.com","phone":"098772452" ,"position":"CEO"},
-                        {"name":"Javora","surname":"Javorčević","mail":"javora.javorcevic@gmail.com","phone":"098772452" ,"position":"CEO"},
-                        {"name":"Javora","surname":"Javorčević","mail":"javora.javorcevic@gmail.com","phone":"098772452" ,"position":"CEO"}]
-                        const Collabs = [{"naziv":"Projekt 1", "kategorija":"Hackhaton","tip":"interni","datumPoc":"2.12.2021","datumKraj":"8.1.2022","FrResponsible":"MladiGljivor","FrCilj":"10000kn","FrTeam":["marko","ana","ivan"],"prviping":"6.12.2022","drugiping":"3.1.2023","ostaleKompanije":["Microsoft","Apple"]},
-                        {"naziv":"Projekt 2", "kategorija":"Hackhaton","tip":"interni","datumPoc":"2.12.2021","datumKraj":"8.1.2022","FrResponsible":"MladiGljivor","FrCilj":"10000kn","FrTeam":["marko","ana","ivan"],"prviping":"6.12.2022","drugiping":"3.1.2023","ostaleKompanije":["Microsoft","Apple"]}    ]
+import ContactForm from "../forms/ContactForm";
+
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  Container,
+  Button,
+  Link,
+  Box,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  IconButton,
+} from "@mui/material";
+import {
+  KeyboardArrowLeft as KeyboardArrowLeftIcon,
+  ExpandMore as ExpandMoreIcon,
+  Email as EmailIcon,
+  Phone as PhoneIcon,
+  Work as WorkIcon,
+  Description as DescriptionIcon,
+  AddCircle as AddCircleIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+} from "@mui/icons-material/";
+
+//prikazni primjer
+const companyInfo = {
+  name: "Oracle d.o.o.",
+  domain: "IT",
+  abcCategory: "A",
+  budgetPlanningMonth: "January",
+  country: "Hrvatska",
+  zipCode: "10000",
+  townName: "Zagreb",
+  address: "Jarunska ulica 2",
+  webURL: "https://firma.com",
+  description:
+    " bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim",
+  contactInFuture: false,
+};
+const companyContacts = [
+  {
+    id: 0,
+    firstName: "Javor",
+    lastName: "Javorčević",
+    email: "javor.javorcevic@gmail.com",
+    tel: "098776224",
+    position: "HR specialist",
+    description: "Main contact",
+  },
+  {
+    id: 1,
+    firstName: "Javor",
+    lastName: "Javorčević",
+    email: "javor.javorcevic@gmail.com",
+    tel: "098776224",
+    position: "HR specialist",
+    description: "Main contact",
+  },
+  {
+    id: 2,
+    firstName: "Javor",
+    lastName: "Javorčević",
+    email: "javor.javorcevic@gmail.com",
+    tel: "098776224",
+    position: "HR specialist",
+    description: "Main contact",
+  },
+];
+
+function fetchContacts(e, id) {
+  // TODO: make a PUT request na /companies/{id}/contacts/{id} and then update contacts list
+  console.log("Fetching contacts is not yet implemented!");
+  // setEditFormModal(true);
+}
+
+function handleEdit(e, id) {
+  // TODO: make a PUT request na /companies/{id}/contacts/{id} and then update contacts list
+  console.log("Editing a contact is not yet implemented!");
+  // setEditFormModal(true);
+}
+
+function handleDelete(e, id) {
+  // TODO: make a DELETE request na /companies/{id}/contacts/{id} and then update contacts list
+  console.log("Deleting a contact is not yet implemented!");
+}
+
 export default function Company() {
-    const params = useParams()
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        console.log(params.companyName)
-        //TODO kada se napravi api za companies
-        //pozvati get req za company info gdje je company name ==params.companyName primjer:fetch("localhost:8080/getCompany/params.companyName") vraca companyinfo i company Contacts
-        //pozvati req za sve collabove u kojima je company name sudjelovao
-        // rezultate pohraniti u state 
-        
-      }, []);
+  const [openContactFormModal, setOpenContactFormModal] = useState(false);
+
+  useEffect(() => {
+    // TODO: fetch contacts sa GET /companies/{id}
+    // TODO: fetch collabs sa GET /companies/{id}/collaborations
+  }, []);
+
   return (
     <>
-    <div className="companyAll">
-        <div className="left">
-            <p className="name bigger"> {params.companyName}</p>
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                                <Typography>Info</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Typography><div className="info">
-                                    <div> Podrucje: {companyInfo.podrucje}</div>
-                                    <div> ABC: {companyInfo.ABC}</div>
-                                    <div>  Mjesec: {companyInfo.mjesec}</div>
-                                    <div>  Drzava: {companyInfo.drzava}</div>
-                                    <div>  PostBr: {companyInfo.postBr}</div>
-                                    <div>  Grad: {companyInfo.grad}</div>
-                                    <div>  Web stranica: {companyInfo.link}</div>
-                                </div>
-                    </Typography>
-                </AccordionDetails>
+      <ContactForm
+        openModal={openContactFormModal}
+        setOpenModal={setOpenContactFormModal}
+        fetchContacts={fetchContacts}
+      />
+
+      <Box
+        sx={{
+          display: "flex",
+          height: "90vh",
+        }}
+      >
+        <Box
+          className="details"
+          sx={{
+            flexBasis: "30%",
+            minWidth: "175px",
+
+            overflowY: "auto",
+
+            paddingBlock: 2,
+          }}
+        >
+          <Button
+            variant="contained"
+            startIcon={<KeyboardArrowLeftIcon />}
+            onClick={() => {
+              navigate("/companies");
+            }}
+            sx={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+          >
+            Companies
+          </Button>
+
+          <Container
+            sx={{
+              marginBlock: 2,
+            }}
+          >
+            <Typography
+              variant="h4"
+              gutterBottom
+              sx={{
+                fontWeight: 500,
+                textAlign: "center",
+                textTransform: "uppercase",
+              }}
+            >
+              Oracle d.o.o.
+            </Typography>
+
+            <Accordion defaultExpanded sx={{ marginBlock: 2 }}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography
+                  sx={{
+                    textTransform: "uppercase",
+                  }}
+                >
+                  COMPANY INFO
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <List dense>
+                  <ListItem disablePadding>
+                    <ListItemText primary={"Domain: " + companyInfo.domain} />
+                  </ListItem>
+
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={"ABC Category: " + companyInfo.abcCategory}
+                    />
+                  </ListItem>
+
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={
+                        "Budget planning month: " +
+                        companyInfo.budgetPlanningMonth
+                      }
+                    />
+                  </ListItem>
+
+                  <ListItem disablePadding>
+                    <ListItemText primary={"Country: " + companyInfo.country} />
+                  </ListItem>
+
+                  <ListItem disablePadding>
+                    <ListItemText primary={"Town: " + companyInfo.townName} />
+                  </ListItem>
+
+                  <ListItem disablePadding>
+                    <ListItemText primary={"Address: " + companyInfo.address} />
+                  </ListItem>
+
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={
+                        <Typography sx={{ fontSize: 10.5 }}>
+                          Web:{" "}
+                          <Link
+                            href={companyInfo.webURL}
+                            underline="hover"
+                            target="_blank"
+                            rel="noopener"
+                          >
+                            {companyInfo.webURL}
+                          </Link>
+                        </Typography>
+                      }
+                    />
+                  </ListItem>
+
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={"Description: " + companyInfo.description}
+                      sx={{ maxHeight: 60, overflowY: "auto" }}
+                    />
+                  </ListItem>
+                </List>
+
+                {companyInfo.contactInFuture === false && (
+                  <Typography
+                    sx={{
+                      marginTop: 1,
+
+                      fontWeight: 700,
+                      fontSize: "1.375rem",
+                      textAlign: "center",
+                      color: "red",
+                    }}
+                  >
+                    DO NOT CONTACT
+                  </Typography>
+                )}
+              </AccordionDetails>
             </Accordion>
-        
 
-        
-            
-            <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                                <Typography>Company Contacts</Typography>
-                </AccordionSummary>
-                <AccordionDetails className="scale">
-                    <Typography><div className="grid">
-                                    
-                                    {companyContacts.map((contact)=>(<div className="info" key={contact.mail}>
-                                                                            <div> Name: {contact.name}</div>
-                                                                            <div> Surname: {contact.surname}</div>
-                                                                            <div>  Mail: {contact.mail}</div>
-                                                                            <div>  Phone: {contact.phone}</div>
-                                                                            <div>  Position: {contact.position}</div>
-                                                                           
-                                                                    </div>))}
+            <Accordion
+              sx={{
+                marginBlock: 2,
+              }}
+            >
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography
+                  sx={{
+                    textTransform: "uppercase",
+                  }}
+                >
+                  CONTACTS
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails className="scale">
+                {companyContacts.map((contact) => (
+                  <Box key={contact.id} sx={{ marginBlock: 2 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography>
+                        {contact.firstName + " " + contact.lastName}
+                      </Typography>
+                      <Box>
+                        <IconButton
+                          aria-label="edit contact"
+                          onClick={(e) => handleEdit(e, contact.id)}
+                          sx={{
+                            width: 20,
+                            height: 20,
 
-                                </div>
-                    </Typography>
-                                
-                </AccordionDetails>
+                            margin: 0.125,
+
+                            color: "white",
+                            backgroundColor: "#1976d2",
+                            borderRadius: 1,
+                          }}
+                        >
+                          <EditIcon
+                            sx={{
+                              width: 15,
+                              height: 15,
+                            }}
+                          />
+                        </IconButton>
+
+                        <IconButton
+                          aria-label="delete contact"
+                          onClick={(e) => handleDelete(e, contact.id)}
+                          sx={{
+                            width: 20,
+                            height: 20,
+
+                            margin: 0.125,
+
+                            color: "white",
+                            backgroundColor: "#1976d2",
+                            borderRadius: 1,
+                          }}
+                        >
+                          <DeleteIcon
+                            sx={{
+                              width: 15,
+                              height: 15,
+                            }}
+                          />
+                        </IconButton>
+                      </Box>
+                    </Box>
+
+                    <List dense>
+                      <ListItem disablePadding>
+                        <ListItemIcon sx={{ minWidth: 25 }}>
+                          <EmailIcon />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={contact.email}
+                          sx={{
+                            overflow: "hidden",
+                          }}
+                        />
+                      </ListItem>
+
+                      <ListItem disablePadding>
+                        <ListItemIcon sx={{ minWidth: 25 }}>
+                          <PhoneIcon />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={contact.tel}
+                          sx={{ overflow: "hidden" }}
+                        />
+                      </ListItem>
+
+                      <ListItem disablePadding>
+                        <ListItemIcon sx={{ minWidth: 25 }}>
+                          <WorkIcon />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={contact.position}
+                          sx={{ overflow: "hidden" }}
+                        />
+                      </ListItem>
+
+                      <ListItem disablePadding>
+                        <ListItemIcon sx={{ minWidth: 25 }}>
+                          <DescriptionIcon />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={contact.description}
+                          sx={{ overflow: "hidden" }}
+                        />
+                      </ListItem>
+                    </List>
+                  </Box>
+                ))}
+
+                <Box sx={{ display: "grid", placeItems: "center" }}>
+                  <Button
+                    variant="contained"
+                    startIcon={<AddCircleIcon />}
+                    onClick={() => setOpenContactFormModal(true)}
+                  >
+                    Add contact
+                  </Button>
+                </Box>
+              </AccordionDetails>
             </Accordion>
-        </div>
+          </Container>
+        </Box>
 
-        <div className="right">
-            <p className="name ">Collaborations</p>
-            
-        
+        <Box
+          className="collaborations"
+          sx={{
+            overflow: "auto",
 
-        
-            {Collabs.map((collab)=>(
-                 <Accordion>
-                 <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                                 <Typography>{collab.naziv}</Typography>
-                 </AccordionSummary>
-                 <AccordionDetails>
-                     <Typography>
-                     <div className="info" key={collab.naziv}>
-                                                                            <div> Kategorija: {collab.kategorija}</div>
-                                                                            <div> Tip: {collab.tip}</div>
-                                                                            <div>  Datum Pocetka: {collab.datumPoc}</div>
-                                                                            <div>  Datum Kraja: {collab.datumKraj}</div>
-                                                                            <div>  Fr Responsible: {collab.FrResponsible}</div>
-                                                                            <div>  Fr Team: {collab.FrTeam.map((member)=>(<div key={member}>-{member} </div>))}</div>
-                                                                            <div>  Fr cilj: {collab.FrCilj}</div>
-                                                                            <div>  Prvi ping: {collab.prviping}</div>
-                                                                            <div>  Drugi ping: {collab.drugiping}</div>
-                                                                            <div>  Ostale firme na projektu: {collab.ostaleKompanije.map((kompanija)=>(<div key={kompanija}>-{kompanija} </div>))}</div>
-                                                                           
-                                                                    </div>
-                     </Typography>
-                 </AccordionDetails>
-             </Accordion>
-            ))}
-           
-        </div>
-        
-      
-    </div>
+            flex: 1,
+            height: "100%",
+            background: "linear-gradient(#e66465, #9198e5)",
+          }}
+        >
+          {/* TODO: search, add collaboration button i tablica */}
+          {/* <div>TEXT</div>
+          <div>TEXT</div>
+          <div>TEXT</div>
+          <div>TEXT</div>
+          <div>TEXT</div> */}
+        </Box>
+      </Box>
     </>
   );
 }

@@ -1,11 +1,13 @@
-.nav {
-  gap: min(2%, 1rem);
-}
-
 .nav > *,
 .nav-menu-item > * {
   font-weight: 700;
 
-  color: white;
   text-decoration: none;
+}
+
+.nav > * {
+  color: white;
+}
+.nav-menu-item > * {
+  color: #333;
 }
