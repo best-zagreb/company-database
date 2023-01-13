@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
-import "./UserForm.css";
+import "./Form.css";
 
 const user = {
   name: "",
@@ -44,10 +44,16 @@ function ValidateEmail(inputEmail) {
   }
 }
 
-export default function UserForm({ openModal, setOpenModal ,bestuser}) {
+export default function UserForm({
+  openModal,
+  setOpenModal,
+  fetchUsers,
+  bestuser,
+  id,
+}) {
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("van")
+    console.log("van");
 
     if (
       nameIsValid &&
@@ -58,7 +64,7 @@ export default function UserForm({ openModal, setOpenModal ,bestuser}) {
       authLevelIsValid &&
       descriptionIsValid
     ) {
-        console.log("unutra")
+      console.log("unutra");
       user.name = name;
       user.surname = surname;
       user.nickname = nickname;
@@ -66,28 +72,28 @@ export default function UserForm({ openModal, setOpenModal ,bestuser}) {
       user.notificationEmail = notificationEmail;
       user.authLevel = authLevel;
       user.description = description;
-      // console.log(user);
-        
-      // TODO: post user to correct URL
-      //   const namePost = async () => {
-      //     await fetch("http://localhost:8080/users/edit-user", {
-      //       method: "PUT",
-      //       headers: {
-      //         Accept: "application/json",
-      //         "Content-Type": "application/json",
-      //       },
-      //       body: JSON.stringify({ TODO }),
-      //     });
-      //   };
+      console.log(user);
 
-      handleClose();
-      
-      setTimeout(function(){
-        alert('Congrats,you just edited a user! Woop,woop!');
-        
-    }, 1000);
-      
-     
+      const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+
+      fetch("http://159.65.127.217:8080/users/" + id, {
+        method: "PUT",
+        headers: {
+          googleTokenEncoded: JWToken.credential,
+
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          // if error display error toast
+          console.log(json);
+
+          // if success display success toast, close modal and update users list
+          setOpenModal(false);
+          fetchUsers();
+        });
     }
   };
 
@@ -194,7 +200,7 @@ export default function UserForm({ openModal, setOpenModal ,bestuser}) {
   return (
     <div>
       <Modal
-        className="UserFormModal"
+        className="FormModal"
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={openModal}

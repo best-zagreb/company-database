@@ -226,6 +226,7 @@ public class ProjectController {
 
         AppUser endpointCaller = userService.findByEmail(email);
         Project project = projectService.findById(projectId);
+
         if (!a.contains(userService.findByEmail(email).getAuthority()) || (endpointCaller.getAuthority() == AUTHORITY.FR_RESPONSIBLE && project.getFRResp().getId() != endpointCaller.getId()))
             return new ResponseEntity("You don't have premission to this resource", HttpStatus.UNAUTHORIZED);
 
@@ -248,6 +249,7 @@ public class ProjectController {
 
         AppUser endpointCaller = userService.findByEmail(email);
         Project project = projectService.findById(projectId);
+
         if (!a.contains(userService.findByEmail(email).getAuthority()) || (endpointCaller.getAuthority() == AUTHORITY.FR_RESPONSIBLE && project.getFRResp().getId() != endpointCaller.getId()))
             return new ResponseEntity("You don't have premission to this resource", HttpStatus.UNAUTHORIZED);
 

@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-
 import UserForm from "../forms/UserForm";
 import EditUserForm from "../forms/EditUserForm";
-
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Button from "@mui/material/Button";
+import TableSortLabel from "@mui/material/TableSortLabel";
 import {
+  Box,
+  TextField,
   TableCell,
   TableHead,
   Paper,
@@ -23,38 +24,16 @@ export default function Users() {
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
   const [openEditFormModal, setEditFormModal] = useState(false);
   const [bestUser, setUser] = useState([]);
-
-  const handleDelete = (e, email) => {
-    e.preventDefault();
-
-    fetch("http://159.65.127.217:8080/users/delete-user/", {
-      method: "DELETE",
-      headers: {
-        Authorization: "Basic " + window.btoa("admin:pass"),
-
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: email }),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        fetchUsers();
-      });
-  };
-
-  function editHandler(e, user) {
-    e.preventDefault();
-    setEditFormModal(true);
-    setUser(user);
-  }
+  const [id, setId] = useState();
 
   const [posts, setPosts] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
   function fetchUsers() {
-    fetch("http://159.65.127.217:8080/users/get-users", {
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+    fetch("http://159.65.127.217:8080/users/", {
       method: "GET",
-      headers: { Authorization: "Basic " + window.btoa("admin:pass") },
+      headers: { googleTokenEncoded: JWToken.credential },
     })
       .then((response) => response.json())
       .then((json) => {
@@ -66,6 +45,104 @@ export default function Users() {
           setSearchResults(json);
         }
       });
+  }
+  const filterTypes = [
+    {
+      value: "Name",
+    },
+    {
+      value: "Surname",
+    },
+    {
+      value: "Nickname",
+    },
+    {
+      value: "E-mail",
+    },
+    {
+      value: "Max authorization level",
+    },
+  ];
+
+  const handleDelete = (e, email, id) => {
+    e.preventDefault();
+    let token = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+    console.log(token);
+    console.log(email);
+
+    fetch("http://159.65.127.217:8080/users/" + id, {
+      method: "DELETE",
+      headers: {
+        googleTokenEncoded: token.credential,
+      },
+    }).then((response) => fetchUsers());
+  };
+
+  function editHandler(e, user, id) {
+    e.preventDefault();
+    setEditFormModal(true);
+    setUser(user);
+    setId(id);
+  }
+
+  const [filterBy, setFilterBy] = useState("Name");
+  const [filterDirection, setFilterDirection] = useState("asc");
+
+  const handleFilterResults = (property) => (event) => {
+    let filterByCategory = property;
+    if (filterByCategory === filterBy) {
+      reverseFunction();
+    } else {
+      setFilterBy(filterByCategory);
+      filterFunction(filterByCategory);
+      setFilterDirection("asc");
+    }
+  };
+
+  function reverseFunction() {
+    let reversana = searchResults.reverse();
+
+    setFilterDirection((oldFilterDirection) => {
+      if (oldFilterDirection === "asc") return "desc";
+      else return "asc";
+    });
+    setSearchResults(reversana);
+  }
+
+  function filterFunction(filterBy) {
+    if (filterBy === "Name") {
+      console.log("Filtriramo po name");
+      let filtrirana = searchResults.sort((a, b) =>
+        a.firstName.localeCompare(b.firstName)
+      );
+      console.log(filtrirana);
+      setSearchResults(filtrirana);
+    } else if (filterBy === "Surname") {
+      console.log("Filtriramo po surname");
+      let filtrirana = searchResults.sort((a, b) =>
+        a.lastName.localeCompare(b.lastName)
+      );
+      setSearchResults(filtrirana);
+    } else if (filterBy === "Nickname") {
+      console.log("Filtriramo po nickname");
+      let filtrirana = searchResults.sort((a, b) =>
+        a.nickname.localeCompare(b.nickname)
+      );
+      console.log(filtrirana);
+      setSearchResults(filtrirana);
+    } else if (filterBy === "E-mail") {
+      console.log("Filtriramo po mailu");
+      let filtrirana = searchResults.sort((a, b) =>
+        a.loginEmailString.localeCompare(b.loginEmailString)
+      );
+      setSearchResults(filtrirana);
+    } else if (filterBy === "Max authorization level") {
+      console.log("Filtriramo po auth levelu");
+      let filtrirana = searchResults.sort((a, b) =>
+        a.authority.localeCompare(b.authority)
+      );
+      setSearchResults(filtrirana);
+    }
   }
 
   useEffect(() => {
@@ -113,36 +190,39 @@ export default function Users() {
           <Table size="small" aria-label="users table">
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Surname</TableCell>
-                <TableCell
-                  sx={{
-                    display: { xs: "none", sm: "table-cell" },
-                  }}
-                >
-                  Nickname
-                </TableCell>
-                <TableCell>E-mail</TableCell>
-                <TableCell
-                  sx={{
-                    display: { xs: "none", md: "table-cell" },
-                  }}
-                >
-                  Max authorization level
-                </TableCell>
+                {filterTypes.map((cellName) => (
+                  <TableCell
+                    key={cellName.value}
+                    sx={
+                      cellName.value === "Nickname" ||
+                      cellName.value === "E-mail"
+                        ? { display: { xs: "none", sm: "table-cell" } }
+                        : cellName.value === "Max authorization level"
+                        ? {
+                            display: { xs: "none", md: "table-cell" },
+                          }
+                        : { undefined }
+                    }
+                  >
+                    {cellName.value}
+                    <TableSortLabel
+                      active={filterBy === cellName.value}
+                      direction={
+                        filterBy === cellName.value ? filterDirection : "asc"
+                      }
+                      onClick={handleFilterResults(cellName.value)}
+                    ></TableSortLabel>
+                  </TableCell>
+                ))}
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {searchResults ? (
-                <UserListPage
-                  searchResults={searchResults}
-                  editHandler={editHandler}
-                  handleDelete={handleDelete}
-                />
-              ) : (
-                "No users in database"
-              )}
+              <UserListPage
+                searchResults={searchResults}
+                editHandler={editHandler}
+                handleDelete={handleDelete}
+              />
             </TableBody>
           </Table>
         </TableContainer>

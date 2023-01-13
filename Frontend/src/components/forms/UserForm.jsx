@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
-import "./UserForm.css";
+import "./Form.css";
 
 const user = {
   firstName: null,
@@ -30,8 +30,8 @@ const authLevels = [
     label: "Moderator",
   },
   {
-    value: "Administrator",
-    label: "Administrator",
+    value: "Admin",
+    label: "Admin",
   },
 ];
 
@@ -62,14 +62,15 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
       user.nickname = nickname;
       user.loginEmailString = loginEmail;
       user.notificationEmailString = notificationEmail;
-      user.authority = authLevel;
+      user.authority = authLevel.toUpperCase();
       user.description = description;
       // console.log(user);
 
-      fetch("http://159.65.127.217:8080/users/add-user/", {
+      const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+      fetch("http://159.65.127.217:8080/users/", {
         method: "POST",
         headers: {
-          Authorization: "Basic " + window.btoa("admin:pass"),
+          googleTokenEncoded: JWToken.credential,
 
           "Content-Type": "application/json",
         },
@@ -159,11 +160,7 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
   const [authLevelDirty, setAuthLevelDirty] = useState(false);
   const handleAuthLevelChange = (e) => {
     const input = e.target.value;
-    if (
-      input === "Observer" ||
-      input === "Moderator" ||
-      input === "Administrator"
-    ) {
+    if (input === "Observer" || input === "Moderator" || input === "Admin") {
       setAuthLevelIsValid(true);
     } else {
       setAuthLevelIsValid(false);
@@ -186,7 +183,7 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
   return (
     <div>
       <Modal
-        className="UserFormModal"
+        className="FormModal"
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={openModal}
@@ -336,7 +333,8 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
                 inputProps={{ maxLength: 475 }}
                 error={!descriptionIsValid}
                 helperText={
-                  !descriptionIsValid && "Description must be under 475 characters"
+                  !descriptionIsValid &&
+                  "Description must be under 475 characters"
                 }
                 onChange={handleDescriptionChange}
               />

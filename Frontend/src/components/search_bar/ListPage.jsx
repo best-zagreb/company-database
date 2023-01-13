@@ -1,10 +1,10 @@
-import { UserPost, CompanyPost } from "./Post.jsx";
+import { UserPost, CompanyPost, ProjectPost } from "./Post.jsx";
 
 const UserListPage = ({ searchResults, editHandler, handleDelete }) => {
-  const results = searchResults.map((post) => (
+  const results = searchResults.map((user) => (
     <UserPost
-      key={post.id}
-      user={post}
+      key={user.id}
+      user={user}
       editHandler={editHandler}
       handleDelete={handleDelete}
     />
@@ -13,12 +13,20 @@ const UserListPage = ({ searchResults, editHandler, handleDelete }) => {
   return <>{results?.length > 0 && results}</>;
 };
 
-const CompanyListPage = ({ searchResults, handleDelete }) => {
-  const results = searchResults.map((post) => (
-    <CompanyPost key={post.id} company={post} handleDelete={handleDelete} />
+const CompanyListPage = ({ searchResults }) => {
+  const results = searchResults.map((company) => (
+    <CompanyPost key={company.id} company={company} />
   ));
 
   return <>{results?.length > 0 && results}</>;
 };
 
-export { UserListPage, CompanyListPage };
+const ProjectListPage = ({ searchResults }) => {
+  const results = searchResults.map((project) => (
+    <ProjectPost key={project.id} project={project} />
+  ));
+
+  return <>{results?.length > 0 && results}</>;
+};
+
+export { UserListPage, CompanyListPage, ProjectListPage };
