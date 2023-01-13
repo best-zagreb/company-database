@@ -21,17 +21,17 @@ public class UserService {
     }
 
     public AppUser findByEmail(String email){
-        if (userRepository.findByLoginEmailString(email).isEmpty()) return null;
-        else return userRepository.findByLoginEmailString(email).get(0);
+        if (userRepository.findByLoginEmail(email).isEmpty()) return null;
+        else return userRepository.findByLoginEmail(email).get(0);
     }
 
     public AppUser addUser(UserDTO userDTO){
         AppUser appUser = new AppUser(
-                userDTO.getLoginEmailString(),
+                userDTO.getLoginEmail(),
                 userDTO.getAuthority(),
                 userDTO.getFirstName(),
                 userDTO.getLastName(),
-                userDTO.getNotificationEmailString(),
+                userDTO.getNotificationEmail(),
                 userDTO.getDescription(),
                 userDTO.getNickname()
         );
@@ -58,11 +58,11 @@ public class UserService {
     public AppUser updateUser(UserDTO userDTO, Long id){
         AppUser appUser = userRepository.findById(id).get();
 
-        appUser.setLoginEmailString(userDTO.getLoginEmailString());
+        appUser.setLoginEmail(userDTO.getLoginEmail());
         appUser.setAuthority(userDTO.getAuthority());
         appUser.setFirstName(userDTO.getFirstName());
         appUser.setLastName(userDTO.getLastName());
-        appUser.setNotificationEmailString(userDTO.getNotificationEmailString());
+        appUser.setNotificationEmail(userDTO.getNotificationEmail());
         appUser.setDescription(userDTO.getDescription());
         appUser.setNickname(userDTO.getNickname());
 
@@ -74,6 +74,6 @@ public class UserService {
     }
 
     public boolean existsByEmail(String email) {
-        return !userRepository.findByLoginEmailString(email).isEmpty();
+        return !userRepository.findByLoginEmail(email).isEmpty();
     }
 }

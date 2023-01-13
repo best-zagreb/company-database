@@ -15,7 +15,9 @@ import com.example.backend.user.repo.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -28,6 +30,7 @@ public class CollaborationsService {
 
 
     public List<Collaboration> getCollaborationsForCompany(Long id) {
+        if (companyRepository.findById(id).isEmpty()) throw new EntityNotFoundException();
         return collaborationsRepository.findAllByCollaborationId_Company(companyRepository.findById(id).get());
     }
 

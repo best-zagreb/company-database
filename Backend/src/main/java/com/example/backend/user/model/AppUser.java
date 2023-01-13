@@ -19,8 +19,8 @@ public class AppUser {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "loginmailstring", unique = true, nullable = false, length = 60)
-    private String loginEmailString;
+    @Column(name = "loginmail", unique = true, nullable = false, length = 60)
+    private String loginEmail;
 
     @Column(nullable = false)
     private AUTHORITY authority;
@@ -31,8 +31,8 @@ public class AppUser {
     @Column(name = "lastname", nullable = false, length = 40)
     private String lastName;
 
-    @Column(name = "notificationemailstring", nullable = false, length = 60)
-    private String notificationEmailString;
+    @Column(name = "notificationemail", nullable = false, length = 60)
+    private String notificationEmail;
 
     @Column(length = 480)
     private String description;
@@ -44,18 +44,18 @@ public class AppUser {
     @JsonIgnore
     private Set<Project> projects;
 
-    public AppUser(String loginEmailString,
+    public AppUser(String loginEmail,
                    AUTHORITY authority,
                    String firstName,
                    String lastName,
-                   String notificationEmailString,
+                   String notificationEmail,
                    String description,
                    String nickname) {
-        this.loginEmailString = loginEmailString;
+        this.loginEmail = loginEmail;
         this.authority = authority;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.notificationEmailString = notificationEmailString;
+        this.notificationEmail = notificationEmail;
         this.description = description;
         this.nickname = nickname;
         this.projects = new HashSet<>();

@@ -24,8 +24,8 @@ public class Contact
     @Column(name = "tel", length = 20)
     private String tel;
 
-    @Column(name = "role", length = 40)
-    private String role;
+    @Column(name = "position", length = 40)
+    private String position;
 
     @Column(name = "description", length = 60)
     private String description;
@@ -35,14 +35,14 @@ public class Contact
     @JsonIgnore
     private Company company;
 
-    public Contact(Long id, String firstName, String lastName, String email, String tel, String role, String description, Company company)
+    public Contact(Long id, String firstName, String lastName, String email, String tel, String position, String description, Company company)
     {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.tel = tel;
-        this.role = role;
+        this.position = position;
         this.description = description;
         this.company = company;
     }
@@ -51,13 +51,13 @@ public class Contact
     {
     }
 
-    public Contact(String firstName, String lastName, String email, String tel, String role, String description)
+    public Contact(String firstName, String lastName, String email, String tel, String position, String description)
     {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.tel = tel;
-        this.role = role;
+        this.position = position;
         this.description = description;
     }
 
@@ -106,14 +106,12 @@ public class Contact
         this.tel = tel;
     }
 
-    public String getRole()
-    {
-        return role;
+    public String getPosition() {
+        return position;
     }
 
-    public void setRole(String role)
-    {
-        this.role = role;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public String getDescription()
@@ -142,7 +140,7 @@ public class Contact
         lastName = contactDto.getLastName();
         email = contactDto.getEmail();
         tel = contactDto.getTel();
-        role = contactDto.getRole();
+        description = contactDto.getPosition();
         description = contactDto.getDescription();
     }
 }

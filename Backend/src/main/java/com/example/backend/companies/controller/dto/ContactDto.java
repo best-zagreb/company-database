@@ -8,16 +8,16 @@ public class ContactDto
     private String lastName;
     private String email;
     private String tel;
-    private String role;
+    private String position;
     private String description;
 
-    public ContactDto(String firstName, String lastName, String email, String tel, String role, String description)
+    public ContactDto(String firstName, String lastName, String email, String tel, String position, String description)
     {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.tel = tel;
-        this.role = role;
+        this.position = position;
         this.description = description;
     }
 
@@ -61,14 +61,12 @@ public class ContactDto
         this.tel = tel;
     }
 
-    public String getRole()
-    {
-        return role;
+    public String getPosition() {
+        return position;
     }
 
-    public void setRole(String role)
-    {
-        this.role = role;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public String getDescription()
@@ -82,6 +80,6 @@ public class ContactDto
     }
 
     public Contact toContact(){
-        return new Contact(firstName, lastName, email, tel, role, description);
+        return new Contact(firstName, lastName, email, tel, position, description);
     }
 }
