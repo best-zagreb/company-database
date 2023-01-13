@@ -68,4 +68,12 @@ public class UserService {
 
         return userRepository.save(appUser);
     }
+
+    public boolean existsById(Long id) {
+        return userRepository.existsById(id);
+    }
+
+    public boolean existsByEmail(String email) {
+        return !userRepository.findByLoginEmailString(email).isEmpty();
+    }
 }

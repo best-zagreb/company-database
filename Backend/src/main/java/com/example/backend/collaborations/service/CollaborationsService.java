@@ -51,15 +51,10 @@ public class CollaborationsService {
         return collaborationsRepository.save(collaboration);
     }
 
-    public AppUser getContactRespByCollaboratonId(Long projectid, Long companyid) {
-        CollaborationId collaborationId = new CollaborationId(projectRepository.findById(projectid).get(), companyRepository.findById(companyid).get());
-
-        return collaborationsRepository.findById(collaborationId).get().getContactResponsible();
-    }
-
     public Collaboration updateCollaboration(Long projectId, Long companyId, CollaborationDTO collaborationDTO) {
         CollaborationId collaborationId = new CollaborationId(projectRepository.findById(projectId).get(), companyRepository.findById(companyId).get());
 
+        if (!collaborationsRepository.existsById(collaborationId)) return null;
         Collaboration collaboration = collaborationsRepository.findById(collaborationId).get();
 
         collaboration.setContactResponsible(userRepository.findById(collaborationDTO.getContactResponsibleId()).get());
@@ -76,5 +71,9 @@ public class CollaborationsService {
     public void deleteCollaboration(Long projectId, Long companyId) {
         CollaborationId collaborationId = new CollaborationId(projectRepository.findById(projectId).get(), companyRepository.findById(companyId).get());
         collaborationsRepository.deleteById(collaborationId);
+    }
+
+    public Collaboration getCollaborationByCollaborationId(Long projectid, Long companyid) {
+        return collaborationsRepository.findById(new CollaborationId(projectRepository.findById(projectid).get(), companyRepository.findById(companyid).get())).get();
     }
 }

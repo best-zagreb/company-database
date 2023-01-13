@@ -5,6 +5,8 @@ import com.example.backend.collaborations.repo.CollaborationsRepository;
 import com.example.backend.project.controller.dto.ProjectDTO;
 import com.example.backend.project.model.Project;
 import com.example.backend.project.repo.ProjectRepository;
+import com.example.backend.user.model.AUTHORITY;
+import com.example.backend.user.model.AppUser;
 import com.example.backend.user.repo.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,11 @@ public class ProjectService {
     }
 
     public Project addProject(ProjectDTO projectDTO) {
+        AppUser user = userRepository.findById(projectDTO.getIdFRResp()).get();
+        if (user.getAuthority() == AUTHORITY.OBSERVER || user.getAuthority() == AUTHORITY.FR_TEAM_MEMBER){
+            user.setAuthority(AUTHORITY.FR_RESPONSIBLE);
+            userRepository.save(user);
+        }
         Project project = new Project(
                 projectDTO.getIdCreator(),
                 projectDTO.getName(),
@@ -38,12 +45,13 @@ public class ProjectService {
                 projectDTO.getType(),
                 projectDTO.getStartDate(),
                 projectDTO.getEndDate(),
-                userRepository.findById(projectDTO.getIdFRResp()).get(),
+                user,
                 new HashSet<>(),
                 projectDTO.getFRgoal(),
                 projectDTO.getFirstPingDate(),
                 projectDTO.getSecondPingDate()
         );
+        project.addFrTeamMember(user);
         return projectRepository.save(project);
     }
 
@@ -65,6 +73,37 @@ public class ProjectService {
     }
 
     public List<Collaboration> getCollaborations(Long id) {
-        return collaborationsRepository.findAllByCollaborationId_Project(id);
+        Project project = projectRepository.findById(id).get();
+        return collaborationsRepository.findAllByCollaborationId_Project(project);
+    }
+
+    public void addFrTeamMember(Long projectId, Long teamMemberId){
+        Project project = projectRepository.findById(projectId).get();
+        AppUser user = userRepository.findById(teamMemberId).get();
+        if (user.getAuthority() == AUTHORITY.OBSERVER) {
+            user.setAuthority(AUTHORITY.FR_TEAM_MEMBER);
+            userRepository.save(user);
+        }
+        project.addFrTeamMember(user);
+        projectRepository.save(project);
+    }
+
+    public void deleteFrTeamMember(Long projectId, Long teamMemberId){
+        Project project = projectRepository.findById(projectId).get();
+        AppUser user = userRepository.findById(teamMemberId).get();
+        project.removeFrTeamMember(user);
+        if (user.getProjects().isEmpty() && user.getAuthority() == AUTHORITY.FR_TEAM_MEMBER){
+            user.setAuthority(AUTHORITY.OBSERVER);
+            userRepository.save(user);
+        }
+        projectRepository.save(project);
+    }
+
+    public void deleteProject(Long id) {
+        projectRepository.deleteById(id);
+    }
+
+    public boolean existsById(Long id) {
+        return projectRepository.existsById(id);
     }
 }

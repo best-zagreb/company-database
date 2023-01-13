@@ -10,7 +10,7 @@ public class CompanyDto
 
     private char abcCategory;
 
-    private int budgetPlanningMonth;
+    private String budgetPlanningMonth;
 
     private String country;
 
@@ -22,7 +22,7 @@ public class CompanyDto
 
     private boolean contactInFuture;
 
-    public CompanyDto(String name, String domain, char abcCategory, int budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture)
+    public CompanyDto(String name, String domain, char abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture)
     {
         this.name = name;
         this.domain = domain;
@@ -79,12 +79,12 @@ public class CompanyDto
         this.abcCategory = abcCategory;
     }
 
-    public int getBudgetPlanningMonth()
+    public String getBudgetPlanningMonth()
     {
         return budgetPlanningMonth;
     }
 
-    public void setBudgetPlanningMonth(int budgetPlanningMonth)
+    public void setBudgetPlanningMonth(String budgetPlanningMonth)
     {
         this.budgetPlanningMonth = budgetPlanningMonth;
     }

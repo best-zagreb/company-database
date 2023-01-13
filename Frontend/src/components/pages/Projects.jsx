@@ -30,12 +30,12 @@ import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import InboxIcon from "@mui/icons-material/Inbox";
 import DraftsIcon from "@mui/icons-material/Drafts";
-import CompanyForm from "../forms/CompanyForm";
+import ProjectForm from "../forms/ProjectForm";
 
 export default function Projects() {
 
-  const [openCompanyFormModal, setOpenCompanyFormModal] = useState(false);
-  const handleDelete = (e, companyName) => {
+  const [openProjectFormModal, setOpenProjectFormModal] = useState(false);
+  const handleDelete = (e, projectName) => {
     e.preventDefault();
     // OVO ODKOMENTIRAT KAD SE NAMJESTI BACKEND!
     // fetch("http://159.65.127.217:8080/companies/delete-company/", {
@@ -51,7 +51,7 @@ export default function Projects() {
     //   .then((json) => {
     //     fetchUsers();
     //   });
-    console.log("We have deleted company named : " + companyName);
+    console.log("We have deleted project named : " + projectName);
   };
 
 
@@ -78,25 +78,25 @@ export default function Projects() {
   const [searchResults, setSearchResults] = useState([]);
 
   function fetchProjects() {
-    fetch("http://159.65.127.217:8080/projects/get-projects", {
-      method: "GET",
-      headers: { Authorization: "Basic " + window.btoa("admin:pass") },
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json)
-        if (json.status === 401) {
-          console.log(json);
-          // display error
-        } else {
-          let newData = json.sort((a,b) => (a.name.localeCompare(b.name)))
-          setPosts(newData);
-          setSearchResults(newData);
-        }
-      });
-    // let newData = data.sort((a,b) => (a.name.localeCompare(b.name)))
-    // setPosts(newData);
-    // setSearchResults(newData);
+    // fetch("http://159.65.127.217:8080/projects/get-projects", {
+    //   method: "GET",
+    //   headers: { Authorization: "Basic " + window.btoa("admin:pass") },
+    // })
+    //   .then((response) => response.json())
+    //   .then((json) => {
+    //     console.log(json)
+    //     if (json.status === 401) {
+    //       console.log(json);
+    //       // display error
+    //     } else {
+    //       let newData = json.sort((a,b) => (a.name.localeCompare(b.name)))
+    //       setPosts(newData);
+    //       setSearchResults(newData);
+    //     }
+    //   });
+    let newData = data.sort((a,b) => (a.name.localeCompare(b.name)))
+    setPosts(newData);
+    setSearchResults(newData);
   }
 
   const [filterBy, setFilterBy] = useState("Project name");
@@ -177,14 +177,14 @@ export default function Projects() {
         variant="contained"
         size="large"
         startIcon={<AddCircleIcon />}
-        onClick={() => setOpenCompanyFormModal(true)}
+        onClick={() => setOpenProjectFormModal(true)}
       >
         Add project
       </Button>
 
-      <CompanyForm
-        openModal={openCompanyFormModal}
-        setOpenModal={setOpenCompanyFormModal}
+      <ProjectForm
+        openModal={openProjectFormModal}
+        setOpenModal={setOpenProjectFormModal}
 
       />
 

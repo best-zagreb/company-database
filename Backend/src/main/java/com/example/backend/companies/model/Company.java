@@ -22,7 +22,7 @@ public class Company
     private char abcCategory;
 
     @Column(name = "budgetPlanningMonth")
-    private int budgetPlanningMonth;
+    private String budgetPlanningMonth;
 
     @Column(length = 60, name = "country", nullable = false)
     private String country;
@@ -46,8 +46,22 @@ public class Company
     public Company(){
     }
 
-    public Company(String name, String domain, char abcCategory, int budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture)
+    public Company(String name, String domain, char abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture)
     {
+        this.name = name;
+        this.domain = domain;
+        this.abcCategory = abcCategory;
+        this.budgetPlanningMonth = budgetPlanningMonth;
+        this.country = country;
+        this.zipCode = zipCode;
+        this.address = address;
+        this.webUrl = webUrl;
+        this.contactInFuture = contactInFuture;
+    }
+
+    public Company(Long id, String name, String domain, char abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture)
+    {
+        this.id = id;
         this.name = name;
         this.domain = domain;
         this.abcCategory = abcCategory;
@@ -94,12 +108,12 @@ public class Company
         this.abcCategory = abcCategory;
     }
 
-    public int getBudgetPlanningMonth()
+    public String getBudgetPlanningMonth()
     {
         return budgetPlanningMonth;
     }
 
-    public void setBudgetPlanningMonth(int budgetPlanningMonth)
+    public void setBudgetPlanningMonth(String budgetPlanningMonth)
     {
         this.budgetPlanningMonth = budgetPlanningMonth;
     }

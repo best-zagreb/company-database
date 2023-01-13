@@ -128,7 +128,7 @@ public class CompanyController
 
     @DeleteMapping("{companyId}/contacts/{contactId}")
     @ResponseBody
-    public ResponseEntity deleteContact(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId, @PathVariable Long contactId, @RequestBody ContactDto contactDto){
+    public ResponseEntity deleteContact(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId, @PathVariable Long contactId){
         AppUser user = getUser(googleTokenEncoded);
         try
         {
@@ -138,13 +138,6 @@ public class CompanyController
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    private AppUser getUser(String googleTokenEncoded){
-        String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
-        if (email == null)
-            return null;
-        return userService.findByEmail(email);
     }
 
     @GetMapping("/{id}/collaborations")
@@ -160,5 +153,12 @@ public class CompanyController
             return new ResponseEntity("You don't have premission to this resource", HttpStatus.UNAUTHORIZED);
 
         return new ResponseEntity(collaborationsService.getCollaborationsForCompany(id), HttpStatus.OK);
+    }
+
+    private AppUser getUser(String googleTokenEncoded){
+        String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
+        if (email == null)
+            return null;
+        return userService.findByEmail(email);
     }
 }

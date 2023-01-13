@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -65,9 +64,11 @@ function validateURL(website){
   else return false;
 }
 
-export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
+export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
   const onSubmit = (e) => {
     e.preventDefault();
+
+    let token = JSON.stringify(JSON.parse(localStorage.getItem("loginInfo")).JWT)
 
     if (
       nameIsValid &&
@@ -94,24 +95,25 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
       //Uncomment this when the backend is done
 
 
-      // fetch("http://159.65.127.217:8080/users/add-user/", {
-      //   method: "POST",
-      //   headers: {
-      //     Authorization: "Basic " + window.btoa("admin:pass"),
+      fetch("http://localhost:8080/companies", {
+        method: "POST",
+        headers: {
+          Authorization: "Basic " + window.btoa("admin:pass"),
+          "Content-Type": "application/json",
+          googleTokenEncoded: token
 
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(company),
-      // })
-      //   .then((response) => response.json())
-      //   .then((json) => {
-      //     // if error display error toast
-      //     console.log(json);
+        },
+        body: JSON.stringify(company),
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          // if error display error toast
+          console.log(json);
 
-      //     // if success display success toast, close modal and update users list
-      //     setOpenModal(false);
-      //     fetchUsers();
-      //   });
+          // if success display success toast, close modal and update users list
+          setOpenModal(false);
+          fetchCompanys();
+        });
     }
   };
 

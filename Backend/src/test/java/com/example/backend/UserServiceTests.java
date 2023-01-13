@@ -5,15 +5,16 @@ import com.example.backend.user.model.AUTHORITY;
 import com.example.backend.user.model.AppUser;
 import com.example.backend.user.repo.UserRepository;
 import com.example.backend.user.service.UserService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
     @Mock
     UserRepository userRepository;
@@ -41,6 +42,8 @@ public class UserServiceTests {
                 "opis",
                 "perica"
         );
+
+        Mockito.when(userRepository.save(Mockito.any())).thenReturn(test);
 
         AppUser user = userService.addUser(userDTO);
 

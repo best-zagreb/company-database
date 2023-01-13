@@ -24,6 +24,7 @@ export default function Users() {
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
   const [openEditFormModal, setEditFormModal] = useState(false);
   const [bestUser, setUser] = useState([]);
+  const [id,setId] = useState();
 
   const filterTypes = [
     {
@@ -44,37 +45,38 @@ export default function Users() {
       
   ];
 
-  const handleDelete = (e, email) => {
+  const handleDelete = (e, email, id) => {
     e.preventDefault();
+    let token = JSON.parse(localStorage.getItem("loginInfo")).JWT
+    console.log(token)
+    console.log(email)
 
-    fetch("http://159.65.127.217:8080/users/delete-user/", {
+    fetch("http://159.65.127.217:8080/users/" + id, {
       method: "DELETE",
       headers: {
-        Authorization: "Basic " + window.btoa("admin:pass"),
-
-        "Content-Type": "application/json",
+        googleTokenEncoded: token.credential,
       },
-      body: JSON.stringify({ email: email }),
     })
-      .then((response) => response.json())
-      .then((json) => {
-        fetchUsers();
-      });
+      .then((response) => fetchUsers())
   };
 
-  function editHandler(e, user) {
+  function editHandler(e, user, id) {
     e.preventDefault();
     setEditFormModal(true);
     setUser(user);
+    setId(id);
   }
 
   const [posts, setPosts] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
   function fetchUsers() {
-    fetch("http://159.65.127.217:8080/users/get-users", {
+    let token = JSON.parse(localStorage.getItem("loginInfo")).JWT
+    fetch("http://159.65.127.217:8080/users/", {
       method: "GET",
-      headers: { Authorization: "Basic " + window.btoa("admin:pass") },
+      headers: {
+          googleTokenEncoded: token.credential
+       },
     })
       .then((response) => response.json())
       .then((json) => {
@@ -83,6 +85,7 @@ export default function Users() {
           console.log(json);
           // display error
         } else {
+          console.log(json)
           setPosts(json);
           setSearchResults(json);
         }
@@ -171,7 +174,9 @@ export default function Users() {
       <EditUserForm
         openModal={openEditFormModal}
         setOpenModal={setEditFormModal}
+        fetchUsers={fetchUsers}
         bestuser={bestUser}
+        id = {id}
       />
 
       <UserSearchBar

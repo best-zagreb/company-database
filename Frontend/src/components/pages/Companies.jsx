@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-
 import CompanyForm from "../forms/CompanyForm";
 import data from "./data";
 import TableSortLabel from '@mui/material/TableSortLabel';
@@ -67,26 +66,29 @@ export default function Companies() {
   const [searchResults, setSearchResults] = useState([]);
   
 
-  function fetchUsers() {
-    // OVO ODKOMENTIRAT KAD SE NAMJESTI BACKEND!
-    // fetch("http://159.65.127.217:8080/companies/get-companies", {
-    //   method: "GET",
-    //   headers: { Authorization: "Basic " + window.btoa("admin:pass") },
-    // })
-    //   .then((response) => response.json())
-    //   .then((json) => {
-    //     if (json.status === 401) {
-    //       console.log(json);
-    //       // display error
-    //     } else {
-    //       setPosts(json);
-    //       setSearchResults(json);
-    //     }
-    //   });
+  function fetchCompanys() {
+    let token = JSON.parse(localStorage.getItem("loginInfo")).JWT
+    fetch("http://159.65.127.217:8080/companies/", {
+      method: "GET",
+      headers: { googleTokenEncoded: token.credential },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.status === 401) {
+          console.log(json);
+          // display error
+        } else {
+          console.log(json)
+          let newData = json.sort((a,b) => (a.name.localeCompare(b.name)))
+          setPosts(newData);
+          setSearchResults(newData);
+          console.log("Fetchali smo usere")
+        }
+      });
     //console.log("Fetchali smo usere, ps samo su importani iz data.js za probu");
-    let newData = data.sort((a,b) => (a.name.localeCompare(b.name)))
-    setPosts(newData);
-    setSearchResults(newData);
+    // let newData = data.sort((a,b) => (a.name.localeCompare(b.name)))
+    // setPosts(newData);
+    // setSearchResults(newData);
   }
 
 
@@ -94,7 +96,7 @@ export default function Companies() {
   const [filterDirection, setFilterDirection] = useState("asc");
 
   useEffect(() => {
-    fetchUsers();
+    fetchCompanys();
   }, []);
 
 
@@ -169,7 +171,7 @@ export default function Companies() {
       <CompanyForm
         openModal={openCompanyFormModal}
         setOpenModal={setOpenCompanyFormModal}
-        fetchUsers={fetchUsers}
+        fetchCompanys={fetchCompanys}
       />
 
       <CompanySearchBar

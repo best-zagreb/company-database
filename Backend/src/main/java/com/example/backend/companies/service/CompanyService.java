@@ -1,11 +1,14 @@
 package com.example.backend.companies.service;
 
+import com.example.backend.collaborations.model.Collaboration;
+import com.example.backend.collaborations.service.CollaborationsService;
 import com.example.backend.companies.controller.dto.CompanyDto;
 import com.example.backend.companies.controller.dto.ContactDto;
 import com.example.backend.companies.model.Company;
 import com.example.backend.companies.model.Contact;
 import com.example.backend.companies.repo.CompanyRepository;
 import com.example.backend.companies.repo.ContactRepository;
+import com.example.backend.project.model.Project;
 import com.example.backend.user.model.AUTHORITY;
 import com.example.backend.user.model.AppUser;
 import org.springframework.stereotype.Service;
@@ -15,17 +18,20 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service @Transactional
 public class CompanyService
 {
     private final CompanyRepository companyRepository;
     private final ContactRepository contactRepository;
+    private final CollaborationsService collaborationsService;
 
-    public CompanyService(CompanyRepository companyRepository, ContactRepository contactRepository)
+    public CompanyService(CompanyRepository companyRepository, ContactRepository contactRepository, CollaborationsService collaborationsService)
     {
         this.companyRepository = companyRepository;
         this.contactRepository = contactRepository;
+        this.collaborationsService = collaborationsService;
     }
 
     public List<Company> getAllCompanies(AppUser user) throws AuthenticationException
@@ -39,6 +45,11 @@ public class CompanyService
         if (user == null) throw new AuthenticationException();
         if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
             throw new AuthenticationException();
+        }
+        if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
+            if (!isFrTeamMemberOrResponsibleOnCompany(user, id)){
+                throw new AuthenticationException();
+            }
         }
         Optional<Company> company = companyRepository.findById(id);
         if (!company.isPresent()){
@@ -91,6 +102,12 @@ public class CompanyService
         if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
             throw new AuthenticationException();
         }
+        if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
+            if (!isFrTeamMemberOrResponsibleOnCompany(user, companyId)){
+                throw new AuthenticationException();
+            }
+        }
+
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         if (optionalCompany.isEmpty()){
             throw new EntityNotFoundException();
@@ -106,6 +123,11 @@ public class CompanyService
         if (user == null) throw new AuthenticationException();
         if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
             throw new AuthenticationException();
+        }
+        if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
+            if (!isFrTeamMemberOrResponsibleOnCompany(user, companyId)){
+                throw new AuthenticationException();
+            }
         }
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         if (optionalCompany.isEmpty()){
@@ -129,6 +151,12 @@ public class CompanyService
         if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
             throw new AuthenticationException();
         }
+        if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
+            if (!isFrTeamMemberOrResponsibleOnCompany(user, companyId)){
+                throw new AuthenticationException();
+            }
+        }
+
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         if (optionalCompany.isEmpty()){
             throw new EntityNotFoundException();
@@ -144,4 +172,19 @@ public class CompanyService
         contactRepository.deleteContactById(contactId);
     }
 
+    private boolean isFrTeamMemberOrResponsibleOnCompany(AppUser user, Long companyId){
+        List<Collaboration> collaborations = collaborationsService.getCollaborationsForCompany(companyId);
+        for(Collaboration collaboration : collaborations){
+            Project project = collaboration.getCollaborationId().getProject();
+            Set<AppUser> frTeamMembers = project.getFrteammembers();
+            if (frTeamMembers.contains(user) || project.getFRResp().getId() == user.getId()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean existsById(Long companyid) {
+        return companyRepository.existsById(companyid);
+    }
 }

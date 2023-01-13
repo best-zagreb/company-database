@@ -44,7 +44,7 @@ function ValidateEmail(inputEmail) {
   }
 }
 
-export default function UserForm({ openModal, setOpenModal ,bestuser}) {
+export default function UserForm({ openModal, setOpenModal ,fetchUsers, bestuser, id}) {
   const onSubmit = (e) => {
     e.preventDefault();
     console.log("van")
@@ -66,27 +66,28 @@ export default function UserForm({ openModal, setOpenModal ,bestuser}) {
       user.notificationEmail = notificationEmail;
       user.authLevel = authLevel;
       user.description = description;
-      // console.log(user);
-        
-      // TODO: post user to correct URL
-      //   const namePost = async () => {
-      //     await fetch("http://localhost:8080/users/edit-user", {
-      //       method: "PUT",
-      //       headers: {
-      //         Accept: "application/json",
-      //         "Content-Type": "application/json",
-      //       },
-      //       body: JSON.stringify({ TODO }),
-      //     });
-      //   };
+      console.log(user);
 
-      handleClose();
-      
-      setTimeout(function(){
-        alert('Congrats,you just edited a user! Woop,woop!');
-        
-    }, 1000);
-      
+      const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+
+      fetch("http://159.65.127.217:8080/users/"  + id, {
+        method: "PUT",
+        headers: {
+          googleTokenEncoded: JWToken.credential,
+
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          // if error display error toast
+          console.log(json);
+
+          // if success display success toast, close modal and update users list
+          setOpenModal(false);
+          fetchUsers();
+        });
      
     }
   };

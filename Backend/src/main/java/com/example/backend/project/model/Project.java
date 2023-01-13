@@ -82,4 +82,12 @@ public class Project {
         this.firstPingDate = firstPingDate;
         this.secondPingDate = secondPingDate;
     }
+
+    public void addFrTeamMember(AppUser user){
+        this.frteammembers.add(user);
+    }
+
+    public void removeFrTeamMember(AppUser user){
+        this.frteammembers.remove(user);
+    }
 }

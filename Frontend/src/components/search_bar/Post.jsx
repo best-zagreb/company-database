@@ -26,7 +26,7 @@ function UserPost({ user, editHandler, handleDelete }) {
         <Button
           variant="outlined"
           size="large"
-          onClick={(e) => editHandler(e, user)}
+          onClick={(e) => editHandler(e, user, user.id)}
         >
           Edit
         </Button>
@@ -34,7 +34,7 @@ function UserPost({ user, editHandler, handleDelete }) {
         <Button
           variant="outlined"
           size="large"
-          onClick={(e) => handleDelete(e, user.loginEmailString)}
+          onClick={(e) => handleDelete(e, user.loginEmailString, user.id)}
         >
           Delete
         </Button>
