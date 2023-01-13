@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
-import "./UserForm.css";
+import "./Form.css";
 
 const user = {
   firstName: null,
@@ -183,7 +183,7 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
   return (
     <div>
       <Modal
-        className="UserFormModal"
+        className="FormModal"
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={openModal}

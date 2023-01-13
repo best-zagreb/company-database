@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
-import "./UserForm.css";
+import "./Form.css";
 
 const user = {
   name: "",
@@ -44,10 +44,10 @@ function ValidateEmail(inputEmail) {
   }
 }
 
-export default function UserForm({ openModal, setOpenModal ,bestuser}) {
+export default function UserForm({ openModal, setOpenModal, bestuser }) {
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("van")
+    console.log("van");
 
     if (
       nameIsValid &&
@@ -58,7 +58,7 @@ export default function UserForm({ openModal, setOpenModal ,bestuser}) {
       authLevelIsValid &&
       descriptionIsValid
     ) {
-        console.log("unutra")
+      console.log("unutra");
       user.name = name;
       user.surname = surname;
       user.nickname = nickname;
@@ -67,7 +67,7 @@ export default function UserForm({ openModal, setOpenModal ,bestuser}) {
       user.authLevel = authLevel;
       user.description = description;
       // console.log(user);
-        
+
       // TODO: post user to correct URL
       //   const namePost = async () => {
       //     await fetch("http://localhost:8080/users/edit-user", {
@@ -81,13 +81,10 @@ export default function UserForm({ openModal, setOpenModal ,bestuser}) {
       //   };
 
       handleClose();
-      
-      setTimeout(function(){
-        alert('Congrats,you just edited a user! Woop,woop!');
-        
-    }, 1000);
-      
-     
+
+      setTimeout(function () {
+        alert("Congrats,you just edited a user! Woop,woop!");
+      }, 1000);
     }
   };
 
