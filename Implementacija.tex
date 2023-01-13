@@ -12,16 +12,128 @@
 	
 		\section{Ispitivanje programskog rješenja}
 			
-			\textbf{\textit{dio 2. revizije}}\\
-			
-			 \textit{U ovom poglavlju je potrebno opisati provedbu ispitivanja implementiranih funkcionalnosti na razini komponenti i na razini cijelog sustava s prikazom odabranih ispitnih slučajeva. Studenti trebaju ispitati temeljnu funkcionalnost i rubne uvjete.}
-	
-			
 			\subsection{Ispitivanje komponenti}
-			\textit{Potrebno je provesti ispitivanje jedinica (engl. unit testing) nad razredima koji implementiraju temeljne funkcionalnosti. Razraditi \textbf{minimalno 6 ispitnih slučajeva} u kojima će se ispitati redovni slučajevi, rubni uvjeti te izazivanje pogreške (engl. exception throwing). Poželjno je stvoriti i ispitni slučaj koji koristi funkcionalnosti koje nisu implementirane. Potrebno je priložiti izvorni kôd svih ispitnih slučajeva te prikaz rezultata izvođenja ispita u razvojnom okruženju (prolaz/pad ispita). }
+			{Svi endpointovi na backend-u su ručno testirani, a ispitivanje jedinica (engl. unit testing) proveli smo nad osnovnim funkcionalnostima servisnog sloja koristeći biblioteku junit. Prilikom testiranja pojedinog razreda, servise i repozitorije čije metode taj razred poziva smo \textit{mock-ali} koristeći biblioteku mockito, pa smo samo u svakoj test metodi zadali što će pojedina pozvana metoda vraćati.}
 			
+			\textbf{1. UserServiceTests\\}
+			{U UserServiceTests testnoj klasi ispitali smo funkcionalnost dodavanja novog korisnika u bazu podataka.\\
+			Naredbom \textit{Mockito.when(userRepository.save(Mockito.any())).thenReturn(test);} smo rekli mockanom userRepository-ju kako da se ponaša prilikom poziva save metode.}
+			\begin{figure}[H]
+				\includegraphics[scale=0.6]{UnitTests/addUserTest}
+				\centering
+				\caption{Add user test}
+				\label{fig:addUserTest}
+			\end{figure}
+			\begin{figure}[H]
+				\includegraphics[scale=0.5]{UnitTests/addUserTestResult}
+				\centering
+				\caption{Add user test result}
+				\label{fig:addUserTestResult}
+			\end{figure}
 			
+			\textbf{2. ProjectServiceTests\\}
+			{U ProjectServiceTests klasi smo ispitali funkcionalnosti dohvata projekta iz baze podataka te dodavanje FR team membera na projekt.}
+			\begin{figure}[H]
+				\includegraphics[scale=0.6]{UnitTests/projectFindById}
+				\centering
+				\caption{Find project by Id test}
+				\label{fig:projectFindByIdTest}
+			\end{figure}
+			\begin{figure}[H]
+				\includegraphics[scale=0.6]{UnitTests/projectFindByIdResult}
+				\centering
+				\caption{Find project by Id test result}
+				\label{fig:projectFindByIdResult}
+			\end{figure}
+
+			\begin{figure}[H]
+				\includegraphics[scale=0.5]{UnitTests/projectAddFrTeamMember}
+				\centering
+				\caption{Add FR team member to project test}
+				\label{fig:addFrTeamMemberTest}
+			\end{figure}
+			\begin{figure}[H]
+				\includegraphics[scale=0.4]{UnitTests/projectAddFrTeamMemberResult}
+				\centering
+				\caption{Add FR team member result}
+				\label{fig:addFrTeamMemberResult}
+			\end{figure}
+
+			\textbf{3. CompanyServiceTests\\}
+			{U CompanyServiceTests klasi smo ispitali sljedeće funkcionalnosti:\\
+				Kreiranje nove kompanije\\
+				Dohvaćanje svih kompanij\\
+				Bacanje EntityNotFoundException-a prilikom pokušaja brisanja nepostojeće kompanije\\
+				Bacanje AuthenticationException-a prilikom pokušaja dohvata podataka od kompanije od strane Usera koji je samo Observer}
 			
+			\begin{figure}[H]
+				\includegraphics[scale=0.5]{UnitTests/createCompany}
+				\centering
+				\caption{Create company test}
+				\label{fig:createCompanyTest}
+			\end{figure}
+			\begin{figure}[H]
+				\includegraphics[scale=0.4]{UnitTests/createCompanyResult}
+				\centering
+				\caption{Create company test result}
+				\label{fig:createCompanyResult}
+			\end{figure}
+
+			\begin{figure}[H]
+				\includegraphics[scale=0.3]{UnitTests/getAllCompanies}
+				\centering
+				\caption{Get all companies test}
+				\label{fig:getAllCompaniesTest}
+			\end{figure}
+			\begin{figure}[H]
+				\includegraphics[scale=0.4]{UnitTests/getAllCompaniesResult}
+				\centering
+				\caption{Get all companies test result}
+				\label{fig:getAllCompaniesResult}
+			\end{figure}
+
+			\begin{figure}[H]
+				\includegraphics[scale=0.5]{UnitTests/deleteCompanDoesntExist}
+				\centering
+				\caption{Delete company which does not exist test}
+				\label{fig:deleteCompanyTest}
+			\end{figure}
+			\begin{figure}[H]
+				\includegraphics[scale=0.4]{UnitTests/deleteCompanDoesntExistResult}
+				\centering
+				\caption{Delete company which does not exist tes result}
+				\label{fig:deleteCompanyResult}
+			\end{figure}
+
+			\begin{figure}[H]
+				\includegraphics[scale=0.5]{UnitTests/getCompanyObserver}
+				\centering
+				\caption{Get company info by observer test}
+				\label{fig:getCompanyObserver}
+			\end{figure}
+			\begin{figure}[H]
+				\includegraphics[scale=0.4]{UnitTests/getCompanyObserverResult}
+				\centering
+				\caption{Get company info by observer test result}
+				\label{fig:getCompanyObserverResult}
+			\end{figure}
+			
+			\textbf{4. CollaborationServiceTests\\}
+			{U CollaborationServiceTests testnoj klasi smo ispitali funkcionalnost dodavanja suradnje u bazu podataka.}
+
+			\begin{figure}[H]
+				\includegraphics[scale=0.5]{UnitTests/addCollaboration}
+				\centering
+				\caption{Add collaboration test}
+				\label{fig:addCollaboration}
+			\end{figure}
+			\begin{figure}[H]
+				\includegraphics[scale=0.4]{UnitTests/addCollaborationResult}
+				\centering
+				\caption{Add collaboration test result}
+				\label{fig:addCollaborationResult}
+			\end{figure}
+
 			\subsection{Ispitivanje sustava}
 			
 			 \textit{Potrebno je provesti i opisati ispitivanje sustava koristeći radni okvir Selenium\footnote{\url{https://www.seleniumhq.org/}}. Razraditi \textbf{minimalno 4 ispitna slučaja} u kojima će se ispitati redovni slučajevi, rubni uvjeti te poziv funkcionalnosti koja nije implementirana/izaziva pogrešku kako bi se vidjelo na koji način sustav reagira kada nešto nije u potpunosti ostvareno. Ispitni slučaj se treba sastojati od ulaza (npr. korisničko ime i lozinka), očekivanog izlaza ili rezultata, koraka ispitivanja i dobivenog izlaza ili rezultata.\\ }
