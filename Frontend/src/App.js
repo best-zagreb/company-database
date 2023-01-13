@@ -46,15 +46,15 @@ export default function App() {
         // if JWT of user exists in local storage and user has logged in the last X days
 
         const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-        fetch("http://159.65.127.217:8080/users", {
+        fetch("http://159.65.127.217:8080/users/login", {
           method: "GET",
           headers: { googleTokenEncoded: JWToken.credential },
         })
           .then((response) => response.json())
           .then((json) => {
-            if (json.length > 0) {
+            if (json) {
               // if that user is in database
-              setUser(json[0]);
+              setUser(json);
               setUserIsLoggedIn(true);
             } else {
               navigate("/login");

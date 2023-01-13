@@ -22,7 +22,7 @@ export default function Login({ setUserIsLoggedIn }) {
     // console.log("Encoded JWT ID token: " + response.credential);
     const userObject = jwt_decode(response.credential);
 
-    fetch("http://159.65.127.217:8080/users/", {
+    fetch("http://159.65.127.217:8080/users/login", {
       method: "GET",
       headers: {
         googleTokenEncoded: response.credential,
@@ -30,7 +30,7 @@ export default function Login({ setUserIsLoggedIn }) {
     })
       .then((response) => response.json())
       .then((json) => {
-        if (json.length > 0) {
+        if (json) {
           // needs to be pulled out of login component so it can be user throughout the app
           setMessage({
             type: "success",
@@ -46,7 +46,7 @@ export default function Login({ setUserIsLoggedIn }) {
           };
           localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
 
-          setUser(json[0]);
+          setUser(json);
           setUserIsLoggedIn(true);
         } else {
           setMessage({
