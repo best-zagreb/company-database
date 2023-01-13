@@ -200,7 +200,7 @@ export default function UserForm({
   return (
     <div>
       <Modal
-        className="UserFormModal"
+        className="FormModal"
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={openModal}

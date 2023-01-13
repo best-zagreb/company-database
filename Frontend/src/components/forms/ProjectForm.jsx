@@ -12,32 +12,29 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 
-
 import "./UserForm.css";
 
-
 const project = {
-    idCreator: null,
-    name: null,
-    category: null,
-    type: null,
-    startDate: null,
-    endDate: null,
-    IdFRResp: null,
-    FRgoal: null,
-    firstPingDate: null,
-    secondPingDate: null,
-  };
+  idCreator: null,
+  name: null,
+  category: null,
+  type: null,
+  startDate: null,
+  endDate: null,
+  IdFRResp: null,
+  FRgoal: null,
+  firstPingDate: null,
+  secondPingDate: null,
+};
 
-  const typeConst = [
-    {
-      value: "intern",
-    },
-    {
-        value: "extern",
-      },
-  ];
-
+const typeConst = [
+  {
+    value: "intern",
+  },
+  {
+    value: "extern",
+  },
+];
 
 export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
   const onSubmit = (e) => {
@@ -65,7 +62,6 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
       console.log(project);
 
       //Uncomment this when the backend is done
-
 
       // fetch("http://159.65.127.217:8080/users/add-user/", {
       //   method: "POST",
@@ -99,16 +95,14 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
   const [firstPingDate, setFirstPingDate] = useState();
   const [secondPingDate, setSecondPingDate] = useState();
 
-
-
   const [nameIsValid, setNameIsValid] = useState(false);
   const handleNameChange = (e) => {
     const input = e.target.value;
     if (input.length >= 2 && input.length <= 35) {
       setNameIsValid(true);
       setName(input);
-    };
-  }
+    }
+  };
 
   const [categoryIsValid, setCategoryIsValid] = useState(false);
   const handleCategoryChange = (e) => {
@@ -116,56 +110,54 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
     if (input.length >= 2 && input.length <= 35) {
       setCategoryIsValid(true);
       setCategory(input);
-      };
     }
+  };
 
   const handleTypeChange = (e) => {
     const input = e.target.value;
     setType(input);
-  }
+  };
 
   const [startDateIsValid, setStartDateIsValid] = useState(false);
   const handleStartDateChange = (e) => {
     const input = e.target.value;
     setStartDate(input);
-  }
-
+  };
 
   const [endDateIsValid, setEndDateIsValid] = useState(false);
   const handleEndDateChange = (e) => {
     const input = e.target.value;
     setEndDate(input);
-  }
+  };
 
   const [FRrepIDIsValid, setFRrepIDIsValid] = useState(false);
   const handleFRrepIDchange = (e) => {
     const input = e.target.value;
     setidFRResp(input);
-  }
+  };
 
   const [FRgoalIsValid, setFRgoalIsValid] = useState(false);
   const handleFRgoalChange = (e) => {
     const input = e.target.value;
     setFRgoal(input);
-  }
+  };
 
   const [firstPingDateIsValid, setFirstPingDateIsValid] = useState(false);
   const handleFirstPingChange = (e) => {
     const input = e.target.value;
     setFirstPingDate(input);
-  }
-
+  };
 
   const [secondPingDateIsValid, setSecondPingDateIsValid] = useState(false);
   const handleSecondPingChange = (e) => {
     const input = e.target.value;
     setSecondPingDate(input);
-  }
-  
+  };
+
   return (
     <div>
       <Modal
-        className="UserFormModal"
+        className="FormModal"
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={openModal}
@@ -222,7 +214,6 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
                 ))}
               </TextField>
 
-
               <TextField
                 id="outlined"
                 label="Start date"
@@ -235,7 +226,7 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
                 onChange={handleStartDateChange}
               />
 
-            <TextField
+              <TextField
                 id="outlined"
                 label="End date"
                 required
@@ -259,7 +250,7 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
                 onChange={handleFRrepIDchange}
               />
 
-               <TextField
+              <TextField
                 id="outlined"
                 label="FR goal for this project"
                 type="text"
@@ -267,11 +258,11 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
                 fullWidth
                 margin="dense"
                 placeholder="1000000"
-                inputProps={{ minLength: 1}}
+                inputProps={{ minLength: 1 }}
                 onChange={handleFRgoalChange}
               />
 
-            <TextField
+              <TextField
                 id="outlined"
                 label="First ping date"
                 required
@@ -283,7 +274,7 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
                 onChange={handleFirstPingChange}
               />
 
-            <TextField
+              <TextField
                 id="outlined"
                 label="Second ping date"
                 required
@@ -314,5 +305,5 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
         </Fade>
       </Modal>
     </div>
-  )
+  );
 }
