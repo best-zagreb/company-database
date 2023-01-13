@@ -12,55 +12,65 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 
-
-import "./UserForm.css";
-
+import "./Form.css";
 
 const company = {
-    companyName: null,
-    industry: null,
-    abcCategorization: null,
-    budgetPlanningMonth: null,
-    country: null,
-    town: null,
-    zipCode: null,
-    adress: null,
-    websiteUrl: null,
-    description: null,
-    doContact: null,
-    employees: null,
-  };
+  companyName: null,
+  industry: null,
+  abcCategorization: null,
+  budgetPlanningMonth: null,
+  country: null,
+  town: null,
+  zipCode: null,
+  adress: null,
+  websiteUrl: null,
+  description: null,
+  doContact: null,
+  employees: null,
+};
 
-  const ABC = [
-    {
-      value: "A",
-    },
-    {
-        value: "B",
-      },
-    {
-      value: "C",
-    },
-  ];
+const ABC = [
+  {
+    value: "A",
+  },
+  {
+    value: "B",
+  },
+  {
+    value: "C",
+  },
+];
 
-  const months = [
-    {value: "January"},{value: "February"},{value: "March"},{value: "April"},{value: "May"},{value: "June"},
-    {value: "July"},{value: "August"},{value: "September"},{value: "October"},{value: "November"},{value: "December"}
-  ]
+const months = [
+  { value: "January" },
+  { value: "February" },
+  { value: "March" },
+  { value: "April" },
+  { value: "May" },
+  { value: "June" },
+  { value: "July" },
+  { value: "August" },
+  { value: "September" },
+  { value: "October" },
+  { value: "November" },
+  { value: "December" },
+];
 
-  const isValidUrl = urlString=> {
-    var urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
-    '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
+const isValidUrl = (urlString) => {
+  var urlPattern = new RegExp(
+    "^(https?:\\/\\/)?" + // validate protocol
+      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // validate domain name
+      "((\\d{1,3}\\.){3}\\d{1,3}))" + // validate OR ip (v4) address
+      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // validate port and path
+      "(\\?[;&a-z\\d%_.~+=-]*)?" + // validate query string
+      "(\\#[-a-z\\d_]*)?$",
+    "i"
+  ); // validate fragment locator
   return !!urlPattern.test(urlString);
-   }
+};
 
-
-function validateURL(website){
-  if(isValidUrl(website)) return true;
+function validateURL(website) {
+  if (isValidUrl(website)) return true;
   else return false;
 }
 
@@ -68,7 +78,9 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    let token = JSON.stringify(JSON.parse(localStorage.getItem("loginInfo")).JWT)
+    let token = JSON.stringify(
+      JSON.parse(localStorage.getItem("loginInfo")).JWT
+    );
 
     if (
       nameIsValid &&
@@ -94,14 +106,12 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
 
       //Uncomment this when the backend is done
 
-
       fetch("http://localhost:8080/companies", {
         method: "POST",
         headers: {
           Authorization: "Basic " + window.btoa("admin:pass"),
           "Content-Type": "application/json",
-          googleTokenEncoded: token
-
+          googleTokenEncoded: token,
         },
         body: JSON.stringify(company),
       })
@@ -128,9 +138,6 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
   const [url, setUrl] = useState();
   const [description, setDescription] = useState();
   const [doContact, setDoContact] = useState();
-  const [employees, setEmployees] = useState([]);
-
-
 
   const [nameIsValid, setNameIsValid] = useState(false);
   const handleNameChange = (e) => {
@@ -138,8 +145,8 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
     if (input.length >= 2 && input.length <= 35) {
       setNameIsValid(true);
       setName(input);
-    };
-  }
+    }
+  };
 
   const [industryIsValid, setIndustryIsValid] = useState(false);
   const handleIndustryChange = (e) => {
@@ -147,18 +154,18 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
     if (input.length >= 2 && input.length <= 35) {
       setIndustryIsValid(true);
       setIndustry(input);
-      };
     }
+  };
 
   const handleabcChange = (e) => {
     const input = e.target.value;
     setabcCategorization(input);
-  }
+  };
 
   const handleBudgetPlanningMonth = (e) => {
     const input = e.target.value;
     setBudgetMonth(input);
-  }
+  };
 
   const [countryIsValid, setCountryIsValid] = useState(false);
   const handleCountryChange = (e) => {
@@ -166,15 +173,15 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
     if (input.length >= 2 && input.length <= 56) {
       setCountryIsValid(true);
       setCountry(input);
-      };
     }
+  };
 
   const [zipCodeIsValid, setNotificationEmailIsValid] = useState(false);
-   const handleZipCodeChange = (e) => {
+  const handleZipCodeChange = (e) => {
     const input = e.target.value;
-    if(input.length == 5 && !(isNaN(input))) setNotificationEmailIsValid(true)
-      setZipCode(input);
-    };
+    if (input.length == 5 && !isNaN(input)) setNotificationEmailIsValid(true);
+    setZipCode(input);
+  };
 
   const [townIsValid, setTownlIsValid] = useState(false);
   const handleTownChange = (e) => {
@@ -182,8 +189,8 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
     if (input.length >= 2 && input.length <= 56) {
       setTownlIsValid(true);
       setTown(input);
-    };
-  }
+    }
+  };
 
   const [adressIsValid, setAdresslIsValid] = useState(false);
   const handleAdressChange = (e) => {
@@ -191,8 +198,8 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
     if (input.length >= 2 && input.length <= 56) {
       setAdresslIsValid(true);
       setAdress(input);
-    };
-  }
+    }
+  };
 
   const [urlIsValid, setUrlIsValid] = useState(false);
   const handleUrlChange = (e) => {
@@ -200,9 +207,9 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
     if (isValidUrl(input)) {
       setUrlIsValid(true);
 
-    setUrl(input);
-    };
-  }
+      setUrl(input);
+    }
+  };
 
   const [descriptionIsValid, setDescriptionIsValid] = useState(false);
   const handleDescriptionChange = (e) => {
@@ -225,22 +232,12 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
     } else {
       setDoContact(false);
     }
-  }
-
-  const handleEmployeesChange = (e) => {
-    const input = e.target.value;
-    if(input) {
-      const employees = input.split("\n");
-      //console.log(employees);
-      setEmployees(employees);
-    }
-  }
-
+  };
 
   return (
     <div>
       <Modal
-        className="UserFormModal"
+        className="FormModal"
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={openModal}
@@ -341,6 +338,7 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
                 type="text"
                 fullWidth
                 margin="dense"
+                placeholder="Zagreb"
                 inputProps={{ minLength: 2, maxLength: 56 }}
                 onChange={handleTownChange}
               />
@@ -355,13 +353,14 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
                 inputProps={{ minLength: 2, maxLength: 56 }}
                 onChange={handleAdressChange}
               />
-              
+
               <TextField
                 id="outlined"
                 label="Webpage URL"
                 type="text"
                 fullWidth
                 margin="dense"
+                placeholder="best.hr"
                 onChange={handleUrlChange}
               />
 
@@ -377,27 +376,19 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
                 onChange={handleDescriptionChange}
               />
 
-              <FormLabel id="demo-radio-buttons-group-label">Contact later</FormLabel>
+              <FormLabel id="demo-radio-buttons-group-label">
+                Contact in future
+              </FormLabel>
               <RadioGroup
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  name="radio-buttons-group"
-                  defaultValue="yes"
-                  required
-                  onChange = {handleDoContactChange}
-                >
-                  <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
-                
+                row
+                name="radio-buttons-group"
+                defaultValue="yes"
+                required
+                onChange={handleDoContactChange}
+              >
+                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                <FormControlLabel value="no" control={<Radio />} label="No" />
               </RadioGroup>
-
-              <TextField
-                  id="outlined-multiline-static"
-                  label="Employees"
-                  multiline
-                  placeholder="Pero Peric"
-                  helperText={"Every employee in separate line"}
-                  onMouseOut = {handleEmployeesChange}             
-               />
 
               <div className="action-btns">
                 <Button
@@ -418,6 +409,5 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanys }) {
         </Fade>
       </Modal>
     </div>
-  )
+  );
 }
-    

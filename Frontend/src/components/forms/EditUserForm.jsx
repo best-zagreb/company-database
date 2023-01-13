@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
-import "./UserForm.css";
+import "./Form.css";
 
 const user = {
   name: "",
@@ -44,10 +44,16 @@ function ValidateEmail(inputEmail) {
   }
 }
 
-export default function UserForm({ openModal, setOpenModal ,fetchUsers, bestuser, id}) {
+export default function UserForm({
+  openModal,
+  setOpenModal,
+  fetchUsers,
+  bestuser,
+  id,
+}) {
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("van")
+    console.log("van");
 
     if (
       nameIsValid &&
@@ -58,7 +64,7 @@ export default function UserForm({ openModal, setOpenModal ,fetchUsers, bestuser
       authLevelIsValid &&
       descriptionIsValid
     ) {
-        console.log("unutra")
+      console.log("unutra");
       user.name = name;
       user.surname = surname;
       user.nickname = nickname;
@@ -70,7 +76,7 @@ export default function UserForm({ openModal, setOpenModal ,fetchUsers, bestuser
 
       const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
-      fetch("http://159.65.127.217:8080/users/"  + id, {
+      fetch("http://159.65.127.217:8080/users/" + id, {
         method: "PUT",
         headers: {
           googleTokenEncoded: JWToken.credential,
@@ -88,7 +94,6 @@ export default function UserForm({ openModal, setOpenModal ,fetchUsers, bestuser
           setOpenModal(false);
           fetchUsers();
         });
-     
     }
   };
 

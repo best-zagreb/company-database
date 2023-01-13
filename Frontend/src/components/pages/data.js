@@ -1,57 +1,56 @@
-const data =  [
-    {
-        name: "Ciklamus doo",
-        domain: "IT",
-        abcCategory: "B",
-        budgetPlanningMonth: "June",
-        webUrl: "google.hr",
-        
-    },
+const data = [
+  {
+    id: 1,
+    companyName: "Ciklamus doo",
+    industry: "IT",
+    ABC: "B",
+    budgetPlanning: "June",
+    website: "optimoroute.com",
+  },
 
-    {
-        name: "Bobinator",
-        domain: "IT",
-        abcCategory: "C",
-        budgetPlanningMonth: "May",
-        webUrl: "oracle.com",
-        
-    },
+  {
+    id: 2,
+    companyName: "Bobinator",
+    industry: "IT",
+    ABC: "C",
+    budgetPlanning: "May",
+    website: "oracle.com",
+  },
 
-    {
-        name: "Tesla",
-        domain: "IT",
-        abcCategory: "A",
-        budgetPlanningMonth: "October",
-        webUrl: "tesla.hr",
+  {
+    id: 3,
+    companyName: "Tesla",
+    industry: "IT",
+    ABC: "A",
+    budgetPlanning: "October",
+    website: "tesla.hr",
+  },
+  {
+    id: 4,
+    companyName: "Cikl",
+    industry: "IT",
+    ABC: "C",
+    budgetPlanning: "June",
+    website: "optimoroute.com",
+  },
 
-    },
-    {
-        name: "Cikl",
-        domain: "IT",
-        abcCategory: "C",
-        budgetPlanningMonth: "June",
-        webUrl: "optimoroute.com",
-        
-    },
+  {
+    id: 5,
+    companyName: "Bobo",
+    industry: "IT",
+    ABC: "F",
+    budgetPlanning: "May",
+    website: "oracle.com",
+  },
 
-    {
-        name: "Bobo",
-        domain: "IT",
-        abcCategory: "F",
-        budgetPlanningMonth: "May",
-        webUrl: "oracle.com",
-        
-    },
+  {
+    id: 6,
+    companyName: "Muskic doo",
+    industry: "IT",
+    ABC: "A",
+    budgetPlanning: "October",
+    website: "muskici.hr",
+  },
+];
 
-    {
-        name: "Muskic doo",
-        domain: "IT",
-        abcCategory: "A",
-        budgetPlanningMonth: "October",
-        webUrl: "muskici.hr",
-
-    }
-
-]
-
-export default data
+export default data;

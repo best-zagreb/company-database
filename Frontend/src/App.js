@@ -1,6 +1,5 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
-import jwt_decode from "jwt-decode";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -46,21 +45,16 @@ export default function App() {
       ) {
         // if JWT of user exists in local storage and user has logged in the last X days
 
-        const userObject = jwt_decode(loginInfo.JWT.credential);
-        fetch(
-          "http://159.65.127.217:8080/users/get-user?email=" + userObject.email,
-          {
-            method: "GET",
-            headers: {
-              Authorization: "Basic " + window.btoa("admin:pass"),
-            },
-          }
-        )
+        const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+        fetch("http://159.65.127.217:8080/users/login", {
+          method: "GET",
+          headers: { googleTokenEncoded: JWToken.credential },
+        })
           .then((response) => response.json())
           .then((json) => {
-            if (json.length > 0) {
+            if (json) {
               // if that user is in database
-              setUser(json[0]);
+              setUser(json);
               setUserIsLoggedIn(true);
             } else {
               navigate("/login");
@@ -93,13 +87,7 @@ export default function App() {
             <Route index element={<Projects />} />
           </Route>
 
-          {/* <Route path="pomoc">
-            <Route index element={<Pomoc />} />
-          </Route> */}
-
-          <Route path="companies">
-            <Route index element={<Companies />} />
-          </Route>
+          <Route path="companies" element={<Companies />} />
 
           <Route path="companies/:id">
             <Route index element={<Company />} />
