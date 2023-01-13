@@ -21,32 +21,32 @@ export default function ContactForm({
   const onSubmit = (e) => {
     e.preventDefault();
 
-//     contact.firstName = name;
-//     contact.lastName = surname;
-//     contact.email = nickname;
-//     contact.tel = loginEmail;
-//     contact.position = notificationEmail;
-//     contact.description = description;
-//     // console.log(user);
+    contact.firstName = name;
+    contact.lastName = surname;
+    contact.email = nickname;
+    contact.tel = loginEmail;
+    contact.position = notificationEmail;
+    contact.description = description;
+    // console.log(user);
 
-//     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-//     fetch("http://159.65.127.217:8080/companies/" + company.id + "/contacts", {
-//       method: "POST",
-//       headers: {
-//         googleTokenEncoded: JWToken.credential,
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+    fetch("http://159.65.127.217:8080/companies/" + company.id + "/contacts", {
+      method: "POST",
+      headers: {
+        googleTokenEncoded: JWToken.credential,
 
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(contact),
-//     })
-//       .then((response) => response.json())
-//       .then((json) => {
-//         // if error display error toast
-//         console.log(json);
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(contact),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        // if error display error toast
+        console.log(json);
 
-//         // if success display success toast, close modal and update contacts list
-//         setOpenModal(false);
-//       });
+        // if success display success toast, close modal and update contacts list
+        setOpenModal(false);
+      });
   };
 
   const [name, setName] = useState();
