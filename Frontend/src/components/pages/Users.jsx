@@ -5,6 +5,7 @@ import EditUserForm from "../forms/EditUserForm";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Button from "@mui/material/Button";
+import TableSortLabel from "@mui/material/TableSortLabel";
 import {
   TableCell,
   TableHead,
@@ -44,15 +45,33 @@ export default function Users() {
         }
       });
   }
+  const filterTypes = [
+    {
+      value: "Name",
+    },
+    {
+      value: "Surname",
+    },
+    {
+      value: "Nickname",
+    },
+    {
+      value: "E-mail",
+    },
+    {
+      value: "Max authorization level",
+    },
+  ];
 
   const handleDelete = (e, email) => {
     e.preventDefault();
 
     // TODO: sad se salje id u endpointu, ne email u tijelu
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
     fetch("http://159.65.127.217:8080/users/" + id, {
       method: "DELETE",
       headers: {
-        Authorization: "Basic " + window.btoa("admin:pass"),
+        googleTokenEncoded: JWToken.credential,
 
         "Content-Type": "application/json",
       },
@@ -70,9 +89,69 @@ export default function Users() {
     setUser(user);
   }
 
+  const [filterBy, setFilterBy] = useState("Name");
+  const [filterDirection, setFilterDirection] = useState("asc");
+
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  const handleFilterResults = (property) => (event) => {
+    let filterByCategory = property;
+    if (filterByCategory === filterBy) {
+      reverseFunction();
+    } else {
+      setFilterBy(filterByCategory);
+      filterFunction(filterByCategory);
+      setFilterDirection("asc");
+    }
+  };
+
+  function reverseFunction() {
+    let reversana = searchResults.reverse();
+
+    setFilterDirection((oldFilterDirection) => {
+      if (oldFilterDirection === "asc") return "desc";
+      else return "asc";
+    });
+    setSearchResults(reversana);
+  }
+
+  function filterFunction(filterBy) {
+    if (filterBy === "Name") {
+      console.log("Filtriramo po name");
+      let filtrirana = searchResults.sort((a, b) =>
+        a.firstName.localeCompare(b.firstName)
+      );
+      console.log(filtrirana);
+      setSearchResults(filtrirana);
+    } else if (filterBy === "Surname") {
+      console.log("Filtriramo po surname");
+      let filtrirana = searchResults.sort((a, b) =>
+        a.lastName.localeCompare(b.lastName)
+      );
+      setSearchResults(filtrirana);
+    } else if (filterBy === "Nickname") {
+      console.log("Filtriramo po nickname");
+      let filtrirana = searchResults.sort((a, b) =>
+        a.nickname.localeCompare(b.nickname)
+      );
+      console.log(filtrirana);
+      setSearchResults(filtrirana);
+    } else if (filterBy === "E-mail") {
+      console.log("Filtriramo po mailu");
+      let filtrirana = searchResults.sort((a, b) =>
+        a.loginEmailString.localeCompare(b.loginEmailString)
+      );
+      setSearchResults(filtrirana);
+    } else if (filterBy === "Max authorization level") {
+      console.log("Filtriramo po auth levelu");
+      let filtrirana = searchResults.sort((a, b) =>
+        a.authority.localeCompare(b.authority)
+      );
+      setSearchResults(filtrirana);
+    }
+  }
 
   return (
     <>
@@ -110,7 +189,7 @@ export default function Users() {
         </Button>
       </Container>
 
-      <Container maxWidth="false">
+      {/* <Container maxWidth="false">
         <TableContainer component={Paper}>
           <Table size="small" aria-label="users table">
             <TableHead>
@@ -145,6 +224,37 @@ export default function Users() {
               ) : (
                 "No users in database"
               )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container> */}
+
+      <Container maxWidth="false">
+        <TableContainer component={Paper}>
+          <Table size="small" aria-label="users table">
+            <TableHead>
+              <TableRow>
+                {filterTypes.map((cellName) => (
+                  <TableCell key={cellName.value}>
+                    {cellName.value}
+                    <TableSortLabel
+                      active={filterBy === cellName.value}
+                      direction={
+                        filterBy === cellName.value ? filterDirection : "asc"
+                      }
+                      onClick={handleFilterResults(cellName.value)}
+                    ></TableSortLabel>
+                  </TableCell>
+                ))}
+                <TableCell>Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <UserListPage
+                searchResults={searchResults}
+                editHandler={editHandler}
+                handleDelete={handleDelete}
+              />
             </TableBody>
           </Table>
         </TableContainer>

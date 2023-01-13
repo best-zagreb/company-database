@@ -1,7 +1,9 @@
-import { TableCell, TableRow, Button, IconButton } from "@mui/material";
+import { TableCell, TableRow, IconButton } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+
+import Link from "@mui/material/Link";
 
 function UserPost({ user, editHandler, handleDelete }) {
   return (
@@ -58,25 +60,30 @@ function UserPost({ user, editHandler, handleDelete }) {
   );
 }
 
-function CompanyPost({ company, handleDelete }) {
+function CompanyPost({ company }) {
   return (
-    <TableRow key={company.id}>
-      <TableCell>{company.companyName}</TableCell>
-      <TableCell>{company.industry}</TableCell>
-      <TableCell>{company.ABC}</TableCell>
-      <TableCell>{company.budgetPlanning}</TableCell>
-      <TableCell>{company.website}</TableCell>
+    <TableRow key={company.id} className={company.name}>
+      <TableCell>{company.name}</TableCell>
+      <TableCell>{company.domain}</TableCell>
+      <TableCell>{company.abcCategory}</TableCell>
+      <TableCell>{company.budgetPlanningMonth}</TableCell>
       <TableCell>
-        <Button
-          variant="outlined"
-          size="large"
-          onClick={(e) => handleDelete(e, company.companyName)}
-        >
-          Delete
-        </Button>
+        <Link href={company.webUrl}>{company.webUrl}</Link>
       </TableCell>
     </TableRow>
   );
 }
 
-export { UserPost, CompanyPost };
+function ProjectPost({ project }) {
+  return (
+    <TableRow key={project.id} className={project.name}>
+      <TableCell>{project.name}</TableCell>
+      <TableCell>{project.category}</TableCell>
+      <TableCell>{project.IdFRResp}</TableCell>
+      <TableCell>{project.endDate}</TableCell>
+      <TableCell>{project.FRgoal}</TableCell>
+    </TableRow>
+  );
+}
+
+export { UserPost, CompanyPost, ProjectPost };

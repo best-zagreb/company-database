@@ -17,6 +17,7 @@ import Users from "./components/pages/Users";
 import Projects from "./components/pages/Projects";
 import Companies from "./components/pages/Companies";
 import Company from "./components/pages/Company";
+// import Pomoc from "./components/pages/Pomoc";
 
 import Header from "./components/Header";
 

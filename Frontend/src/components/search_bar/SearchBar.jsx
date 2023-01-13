@@ -25,7 +25,7 @@ const UserSearchBar = ({ posts, setSearchResults }) => {
           handleSearchChange(inputValue);
         }}
         // throws error because it takes string "firstName lastName" as key, needs to be changed to take id as key
-        options={posts.map((post) => post.firstName + " " + post.lastName)}
+        options={posts.map((user) => user.firstName + " " + user.lastName)}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -47,7 +47,10 @@ const CompanySearchBar = ({ posts, setSearchResults }) => {
     value = value.toLowerCase();
 
     const resultsArray = posts.filter((company) => {
-      return company.companyName.toLowerCase().includes(value);
+      return (
+        company.name.toLowerCase().includes(value) ||
+        company.webUrl.toLowerCase().includes(value)
+      );
     });
 
     setSearchResults(resultsArray);
@@ -63,7 +66,7 @@ const CompanySearchBar = ({ posts, setSearchResults }) => {
           handleSearchChange(inputValue);
         }}
         // throws error because it takes string "firstName lastName" as key, needs to be changed to take id as key
-        options={posts.map((post) => post.companyName)}
+        options={posts.map((company) => company.companyName)}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -80,4 +83,45 @@ const CompanySearchBar = ({ posts, setSearchResults }) => {
   );
 };
 
-export { UserSearchBar, CompanySearchBar };
+const ProjectSearchBar = ({ posts, setSearchResults }) => {
+  const handleSearchChange = (value) => {
+    value = value.toLowerCase();
+
+    const resultsArray = posts.filter((project) => {
+      return (
+        project.name.toLowerCase().includes(value) ||
+        project.category.toLowerCase().includes(value)
+      );
+    });
+
+    setSearchResults(resultsArray);
+  };
+
+  return (
+    <>
+      <Autocomplete
+        freeSolo
+        size="small"
+        disableClearable
+        onInputChange={(e, inputValue) => {
+          handleSearchChange(inputValue);
+        }}
+        // throws error because it takes string "firstName lastName" as key, needs to be changed to take id as key
+        options={posts.map((project) => project.name)}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Search projects"
+            InputProps={{
+              ...params.InputProps,
+              type: "search",
+            }}
+          />
+        )}
+        sx={{ width: "50%", maxWidth: "15rem" }}
+      />
+    </>
+  );
+};
+
+export { UserSearchBar, CompanySearchBar, ProjectSearchBar };
