@@ -221,7 +221,7 @@ export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
                 type="text"
                 fullWidth
                 margin="dense"
-                placeholder="Date in format XXXX-YY-ZZ"
+                placeholder="YYYY-MM-DD"
                 inputProps={{ minLength: 10, maxLength: 10 }}
                 onChange={handleStartDateChange}
               />
@@ -233,7 +233,7 @@ export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
                 type="text"
                 fullWidth
                 margin="dense"
-                placeholder="Date in format XXXX-YY-ZZ"
+                placeholder="YYYY-MM-DD"
                 inputProps={{ minLength: 10, maxLength: 10 }}
                 onChange={handleEndDateChange}
               />
@@ -245,7 +245,6 @@ export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
                 required
                 fullWidth
                 margin="dense"
-                placeholder="5"
                 inputProps={{ minLength: 1, maxLength: 4 }}
                 onChange={handleFRrepIDchange}
               />
@@ -257,7 +256,6 @@ export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
                 required
                 fullWidth
                 margin="dense"
-                placeholder="1000000"
                 inputProps={{ minLength: 1 }}
                 onChange={handleFRgoalChange}
               />
@@ -269,7 +267,7 @@ export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
                 type="text"
                 fullWidth
                 margin="dense"
-                placeholder="Date in format YYYY-MM-DD"
+                placeholder="YYYY-MM-DD"
                 inputProps={{ minLength: 10, maxLength: 10 }}
                 onChange={handleFirstPingChange}
               />
@@ -281,7 +279,7 @@ export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
                 type="text"
                 fullWidth
                 margin="dense"
-                placeholder="Date in format YYYY-MM-DD"
+                placeholder="YYYY-MM-DD"
                 inputProps={{ minLength: 10, maxLength: 10 }}
                 onChange={handleSecondPingChange}
               />

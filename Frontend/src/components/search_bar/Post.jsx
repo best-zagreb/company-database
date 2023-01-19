@@ -82,7 +82,7 @@ function CompanyPost({ company }) {
           display: { xs: "none", sm: "table-cell" },
         }}
       >
-        {company.abcCategory}
+        {company.abcCategory.toUpperCase()}
       </TableCell>
       <TableCell
         sx={{
@@ -109,7 +109,9 @@ function ProjectPost({ project }) {
       >
         {project.category}
       </TableCell>
-      <TableCell>{project.IdFRResp}</TableCell>
+      <TableCell>
+        {project.frresp.firstName + " " + project.frresp.lastName}
+      </TableCell>
       <TableCell
         sx={{
           display: { xs: "none", sm: "table-cell" },
@@ -122,7 +124,7 @@ function ProjectPost({ project }) {
           display: { xs: "none", md: "table-cell" },
         }}
       >
-        {project.FRgoal}
+        {project.frgoal}
       </TableCell>
     </TableRow>
   );
