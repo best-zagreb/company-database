@@ -20,15 +20,15 @@ export default function Login({ setUserIsLoggedIn }) {
       headers: {
         googleTokenEncoded: response.credential,
       },
-    }).then(async (response) => {
-      if (response.status === 200) {
-        const json = await response.json();
+    }).then(async (fetchResponse) => {
+      let popupMessage;
 
-        setMessage({
+      if (fetchResponse.status === 200) {
+        popupMessage = {
           type: "success",
           info: "Login successful.",
           autoHideDuration: 1000,
-        });
+        };
 
         const loginInfo = {
           JWT: response,
@@ -37,32 +37,33 @@ export default function Login({ setUserIsLoggedIn }) {
         };
         localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
 
-        setUser(json);
+        setUser(await fetchResponse.json());
+
         setTimeout(() => {
           setUserIsLoggedIn(true);
         }, 1000);
-      } else if (response.status === 404) {
-        setMessage({
+      } else if (fetchResponse.status === 404) {
+        popupMessage = {
           type: "error",
           info: "You do not have access to Company Database. If you believe this is a mistake, contact your administrator at email@example.com.",
           autoHideDuration: 5000,
-        });
+        };
       }
 
-      handleOpenMsgModal();
-
-      return;
+      handleOpenMsgModal(popupMessage);
     });
   }
 
-  function handleOpenMsgModal() {
+  function handleOpenMsgModal(modalMessage) {
     if (msgModalOpen) {
       setMsgModalOpen(false);
 
       setTimeout(() => {
+        setMessage(modalMessage);
         setMsgModalOpen(true);
       }, 500);
     } else {
+      setMessage(modalMessage);
       setMsgModalOpen(true);
     }
   }
@@ -82,13 +83,16 @@ export default function Login({ setUserIsLoggedIn }) {
       callback: handleCallbackResponse,
     });
 
-    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
-      type: "icon",
-      theme: "outline",
-      size: "large",
-      shape: "pill",
-    });
-  }, [message]);
+    google.accounts.id.renderButton(
+      document.getElementById("signInWithGoogleButton"),
+      {
+        type: "icon",
+        theme: "outline",
+        size: "large",
+        shape: "pill",
+      }
+    );
+  }, [msgModalOpen, message]);
 
   return (
     <Box
@@ -108,7 +112,10 @@ export default function Login({ setUserIsLoggedIn }) {
         Login with your google account to proceed:
       </Typography>
 
-      <Box sx={{ transform: "scale(1.75)", margin: 2 }} id="signInDiv"></Box>
+      <Box
+        sx={{ transform: "scale(1.75)", margin: 2 }}
+        id="signInWithGoogleButton"
+      ></Box>
 
       {message && (
         <Snackbar
