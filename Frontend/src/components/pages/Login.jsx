@@ -1,10 +1,6 @@
 import { useEffect, useState, useContext, forwardRef } from "react";
-import jwt_decode from "jwt-decode";
 
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-
-import "./Login.css";
+import { Typography, Box, Snackbar, Alert as MuiAlert } from "@mui/material";
 
 import UserContext from "../../context/UserContext";
 
@@ -19,44 +15,44 @@ export default function Login({ setUserIsLoggedIn }) {
   const { setUser } = useContext(UserContext);
 
   function handleCallbackResponse(response) {
-    // console.log("Encoded JWT ID token: " + response.credential);
-    const userObject = jwt_decode(response.credential);
-
     fetch("http://159.65.127.217:8080/users/login", {
       method: "GET",
       headers: {
         googleTokenEncoded: response.credential,
       },
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        if (json) {
-          // needs to be pulled out of login component so it can be user throughout the app
-          setMessage({
-            type: "success",
-            info: "Login successful.",
-            autoHideDuration: 2000,
-          });
-          handleOpenMsgModal();
+    }).then(async (response) => {
+      if (response.status === 200) {
+        const json = await response.json();
 
-          const loginInfo = {
-            JWT: response,
-            lastLogin: new Date(),
-            persistentLoginDaysDuration: 7, // change later to be pulled for user settings from database
-          };
-          localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+        setMessage({
+          type: "success",
+          info: "Login successful.",
+          autoHideDuration: 1000,
+        });
 
-          setUser(json);
+        const loginInfo = {
+          JWT: response,
+          lastLogin: new Date(),
+          persistentLoginDaysDuration: 7, // change later to be pulled for user settings from database
+        };
+        localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+
+        setUser(json);
+        setTimeout(() => {
           setUserIsLoggedIn(true);
-        } else {
-          setMessage({
-            type: "error",
-            info: "You do not have access to Company Database. If you believe this is a mistake, contact your administrator at email@example.com.",
-            autoHideDuration: 5000,
-          });
-          handleOpenMsgModal();
-        }
-      });
+        }, 1000);
+      } else if (response.status === 404) {
+        setMessage({
+          type: "error",
+          info: "You do not have access to Company Database. If you believe this is a mistake, contact your administrator at email@example.com.",
+          autoHideDuration: 5000,
+        });
+      }
+
+      handleOpenMsgModal();
+
+      return;
+    });
   }
 
   function handleOpenMsgModal() {
@@ -87,22 +83,37 @@ export default function Login({ setUserIsLoggedIn }) {
     });
 
     google.accounts.id.renderButton(document.getElementById("signInDiv"), {
+      type: "icon",
       theme: "outline",
       size: "large",
+      shape: "pill",
     });
-  }, [msgModalOpen, message]);
+  }, [message]);
 
   return (
-    <div className="Login">
-      <h1>Company Database</h1>
-      <h2>Login with your google account to proceed:</h2>
-      <br />
+    <Box
+      sx={{
+        height: "100vh",
 
-      <div id="signInDiv"></div>
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Typography variant="h2" align="center" gutterBottom>
+        Company Database
+      </Typography>
+      <Typography variant="h4" align="center" gutterBottom>
+        Login with your google account to proceed:
+      </Typography>
+
+      <Box sx={{ transform: "scale(1.75)", margin: 2 }} id="signInDiv"></Box>
 
       {message && (
         <Snackbar
           open={msgModalOpen}
+          sx={{ maxWidth: "480px" }}
           autoHideDuration={message.autoHideDuration}
           onClose={handleCloseMsgModal}
         >
@@ -111,6 +122,6 @@ export default function Login({ setUserIsLoggedIn }) {
           </Alert>
         </Snackbar>
       )}
-    </div>
+    </Box>
   );
 }
