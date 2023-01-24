@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 
 import "@fontsource/roboto/300.css";
@@ -16,7 +16,6 @@ import Users from "./components/pages/Users";
 import Projects from "./components/pages/Projects";
 import Companies from "./components/pages/Companies";
 import Company from "./components/pages/Company";
-// import Pomoc from "./components/pages/Pomoc";
 
 import Header from "./components/Header";
 
@@ -29,6 +28,7 @@ export default function App() {
   const { setUser } = useContext(UserContext);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // if (!appIsSetup) {
@@ -64,7 +64,8 @@ export default function App() {
         navigate("/login");
       }
     } else {
-      navigate("/");
+      if (location.pathname !== "/login") navigate(location.pathname);
+      else navigate("/");
     }
   }, [appIsSetup, userIsLoggedIn]);
 
