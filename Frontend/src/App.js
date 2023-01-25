@@ -56,7 +56,7 @@ export default function App() {
 
     if (serverResponse.status === 200) {
       handleOpenMsgModal({
-        type: "success",
+        type: "info",
         info: "Login successful.",
         autoHideDuration: 1000,
       });
@@ -84,6 +84,7 @@ export default function App() {
     setMsgModalOpen(false);
     setTimeout(() => {
       setPopupMessage(message);
+      setMsgModalOpen(true);
     }, 500);
   }
 
@@ -119,10 +120,6 @@ export default function App() {
     }
   }, [userIsLoggedIn]);
 
-  useEffect(() => {
-    setMsgModalOpen(true);
-  }, [popupMessage]);
-
   return (
     <>
       <CssBaseline enableColorScheme />
@@ -130,7 +127,12 @@ export default function App() {
       <Routes>
         <Route
           path="/"
-          element={<Header setUserIsLoggedIn={setUserIsLoggedIn} />}
+          element={
+            <Header
+              setUserIsLoggedIn={setUserIsLoggedIn}
+              handleOpenMsgModal={handleOpenMsgModal}
+            />
+          }
         >
           <Route index element={<Home />} />
 

@@ -24,11 +24,17 @@ import {
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material/";
 
-export default function Header({ setUserIsLoggedIn }) {
+export default function Header({ setUserIsLoggedIn, handleOpenMsgModal }) {
   const { user } = useContext(UserContext);
 
   function logoutUser() {
     localStorage.removeItem("loginInfo");
+
+    handleOpenMsgModal({
+      type: "info",
+      info: "Logout successful.",
+      autoHideDuration: 1000,
+    });
 
     setUserIsLoggedIn(false);
   }
@@ -197,4 +203,3 @@ export default function Header({ setUserIsLoggedIn }) {
     </>
   );
 }
-
