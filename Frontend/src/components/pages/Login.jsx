@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Typography, Box } from "@mui/material";
 
 export default function Login({ loginUser }) {
-  async function handleCallbackResponse(response) {
+  function handleCallbackResponse(response) {
     loginUser(response);
   }
 
@@ -13,6 +13,9 @@ export default function Login({ loginUser }) {
       client_id:
         "56088533156-igg1fia7dcuntrlp1gn1m3qns48hbp41.apps.googleusercontent.com",
       callback: handleCallbackResponse,
+
+      // TODO: use redirect instead of popup
+      // ux_mode: "redirect",
     });
 
     google.accounts.id.renderButton(
@@ -24,6 +27,8 @@ export default function Login({ loginUser }) {
         shape: "pill",
       }
     );
+
+    google.accounts.id.prompt();
   }, []);
 
   return (
