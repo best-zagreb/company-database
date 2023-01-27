@@ -1,4 +1,3 @@
-import { useState, useContext } from "react";
 import {
   Backdrop,
   Box,
@@ -9,7 +8,10 @@ import {
   MenuItem,
 } from "@mui/material";
 
+import { useState, useContext } from "react";
+
 import UserContext from "../../context/UserContext";
+import ToastContext from "../../context/ToastContext";
 
 import "./Form.css";
 
@@ -35,8 +37,15 @@ const typeConst = [
   },
 ];
 
-export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
-  const onSubmit = (e) => {
+export default function ProjectForm({
+  openModal,
+  setOpenModal,
+  populateProjects,
+}) {
+  const { user } = useContext(UserContext);
+  const { handleOpenToast } = useContext(ToastContext);
+
+  async function onSubmit(e) {
     e.preventDefault();
 
     if (
@@ -48,7 +57,7 @@ export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
       // firstPingDateIsValid &&
       // secondPingDateIsValid
     ) {
-      project.idCreator = IDCreator;
+      project.idCreator = user.id;
       project.name = name;
       project.category = category;
       project.type = type.toUpperCase();
@@ -61,29 +70,51 @@ export default function UserForm({ openModal, setOpenModal, fetchProjects }) {
       // console.log(project);
 
       const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-      fetch("http://159.65.127.217:8080/projects/", {
-        method: "POST",
-        headers: {
-          googleTokenEncoded: JWToken.credential,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(project),
-      })
-        .then((response) => response.json())
-        .then((json) => {
-          // if error display error toast
-          console.log(json);
 
-          // if success display success toast, close modal and update users list
-          setOpenModal(false);
-          fetchProjects();
+      const serverResponse = await fetch(
+        "http://159.65.127.217:8080/projects/",
+        {
+          method: "POST",
+          headers: {
+            googleTokenEncoded: JWToken.credential,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(project),
+        }
+      );
+
+      // later to be changed to 201 Created
+      if (serverResponse.status === 200) {
+        handleOpenToast({
+          type: "success",
+          info: "Project " + project.name + " added.",
+          autoHideDuration: 1000,
         });
+
+        setOpenModal(false);
+        populateProjects();
+      } else if (serverResponse.status === 400) {
+        handleOpenToast({
+          type: "error",
+          info: "Project with those details cannot be added.",
+          autoHideDuration: 5000,
+        });
+      } else if (serverResponse.status === 403) {
+        handleOpenToast({
+          type: "error",
+          info: "Moderator privileges are needed for manipulating projects.",
+          autoHideDuration: 5000,
+        });
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "An unknown error accured whilst trying to add project.",
+          autoHideDuration: 5000,
+        });
+      }
     }
-  };
+  }
 
-  const { user } = useContext(UserContext);
-
-  const [IDCreator, setIDCreator] = useState(user.id); //ovdje dodati id trenutnog korisnika
   const [name, setName] = useState();
   const [category, setCategory] = useState();
   const [type, setType] = useState("External");

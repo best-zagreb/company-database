@@ -12,7 +12,9 @@ import {
 } from "@mui/material";
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+
+import ToastContext from "../../context/ToastContext";
 
 import { CompanySearchBar } from "./partial/SearchBar";
 import { CompanyListPage } from "./partial/ListPage";
@@ -20,6 +22,8 @@ import { CompanyListPage } from "./partial/ListPage";
 import CompanyForm from "../forms/CompanyForm";
 
 export default function Companies() {
+  const { handleOpenToast } = useContext(ToastContext);
+
   const [openCompanyFormModal, setOpenCompanyFormModal] = useState(false);
 
   const filterTypes = [
@@ -43,24 +47,30 @@ export default function Companies() {
   const [posts, setPosts] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
-  function populateCompanies() {
+  async function populateCompanies() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-    fetch("http://159.65.127.217:8080/companies/", {
-      method: "GET",
-      headers: { googleTokenEncoded: JWToken.credential },
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        if (json.status === 401) {
-          console.log(json);
-          // display error
-        } else {
-          console.log(json);
-          setPosts(json);
-          setSearchResults(json);
-          //let newData = data.sort((a, b) => a.name.localeCompare(b.name))
-        }
+
+    const serverResponse = await fetch(
+      "http://159.65.127.217:8080/companies/",
+      {
+        method: "GET",
+        headers: { googleTokenEncoded: JWToken.credential },
+      }
+    );
+
+    if (serverResponse.status === 200) {
+      const json = await serverResponse.json();
+
+      setPosts(json);
+      setSearchResults(json);
+      //let newData = data.sort((a, b) => a.name.localeCompare(b.name))
+    } else {
+      handleOpenToast({
+        type: "error",
+        info: "An unknown error accured whilst trying to get companies.",
+        autoHideDuration: 5000,
       });
+    }
   }
 
   const [filterBy, setFilterBy] = useState("Company name");

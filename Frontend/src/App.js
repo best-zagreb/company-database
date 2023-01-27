@@ -62,7 +62,8 @@ export default function App() {
       };
       localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
 
-      setUser(await serverResponse.json());
+      const json = await serverResponse.json();
+      setUser(json);
 
       setUserIsLoggedIn(true);
     } else if (serverResponse.status === 404) {

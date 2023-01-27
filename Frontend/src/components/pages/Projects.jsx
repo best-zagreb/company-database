@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-
 import {
   TableSortLabel,
   TableCell,
@@ -15,53 +13,62 @@ import {
 
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 
+import { useState, useEffect, useContext } from "react";
+
+import ToastContext from "../../context/ToastContext";
+
 import ProjectForm from "./../forms/ProjectForm";
 
 import { ProjectListPage } from "./partial/ListPage";
 import { ProjectSearchBar } from "./partial/SearchBar";
 
-export default function Projects() {
-  const [openProjectFormModal, setOpenProjectFormModal] = useState(false);
+const filterTypes = [
+  {
+    value: "Project name",
+  },
+  {
+    value: "Category",
+  },
+  {
+    value: "FR responsible",
+  },
+  {
+    value: "Project end date",
+  },
+  {
+    value: "FR goal",
+  },
+];
 
-  const filterTypes = [
-    {
-      value: "Project name",
-    },
-    {
-      value: "Category",
-    },
-    {
-      value: "FR responsible",
-    },
-    {
-      value: "Project end date",
-    },
-    {
-      value: "FR goal",
-    },
-  ];
+export default function Projects() {
+  const { handleOpenToast } = useContext(ToastContext);
+
+  const [openProjectFormModal, setOpenProjectFormModal] = useState(false);
 
   const [posts, setPosts] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
-  function fetchProjects() {
+  async function populateProjects() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-    fetch("http://159.65.127.217:8080/projects/", {
+
+    const serverResponse = await fetch("http://159.65.127.217:8080/projects/", {
       method: "GET",
       headers: { googleTokenEncoded: JWToken.credential },
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json);
-        if (json.status === 401) {
-          console.log(json);
-          // display error
-        } else {
-          //let newData = json.sort((a, b) => a.name.localeCompare(b.name));
-          setPosts(json);
-          setSearchResults(json);
-        }
+    });
+
+    if (serverResponse.status === 200) {
+      const json = await serverResponse.json();
+
+      setPosts(json);
+      setSearchResults(json);
+      //let newData = data.sort((a, b) => a.name.localeCompare(b.name))
+    } else {
+      handleOpenToast({
+        type: "error",
+        info: "An unknown error accured whilst trying to get projects.",
+        autoHideDuration: 5000,
       });
+    }
   }
 
   const [filterBy, setFilterBy] = useState("Project name");
@@ -89,45 +96,39 @@ export default function Projects() {
   }
 
   function filterFunction(filterBy) {
+    let filtrirana;
+
     if (filterBy === "Project name") {
-      console.log("Filtriramo po imenu projekta");
-      let filtrirana = searchResults.sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
-      console.log(filtrirana);
-      setSearchResults(filtrirana);
+      filtrirana = searchResults.sort((a, b) => a.name.localeCompare(b.name));
     } else if (filterBy === "Category") {
-      console.log("Filtriramo po kategoriji");
-      let filtrirana = searchResults.sort((a, b) =>
+      filtrirana = searchResults.sort((a, b) =>
         a.category.localeCompare(b.category)
       );
-      setSearchResults(filtrirana);
     } else if (filterBy === "FR responsible") {
-      console.log("Filtriramo po FR responsible");
-      let filtrirana = searchResults.sort((a, b) => {
-        if (a.IdFRResp < b.IdFRResp) return -1;
-        else if (a.IdFRResp === b.IdFRResp) return 0;
-        else return 1;
+      filtrirana = searchResults.sort((a, b) => {
+        (a.frresp.firstName + " " + a.frresp.lastName).localeCompare(
+          b.frresp.firstName + " " + b.frresp.lastName
+        );
       });
-      console.log(filtrirana);
-      setSearchResults(filtrirana);
     } else if (filterBy === "Project end date") {
-      console.log("Filtriramo po budget datumu kraja projekta");
-      let filtrirana = searchResults.sort((a, b) => a.endDate < b.endDate);
-      setSearchResults(filtrirana);
-    } else if (filterBy === "FR goal") {
-      console.log("Filtriramo po FR cilju");
-      let filtrirana = searchResults.sort((a, b) => {
-        if (a.FRgoal < b.FRgoal) return -1;
-        else if (a.FRgoal === b.FRgoal) return 0;
+      filtrirana = searchResults.sort((a, b) => {
+        if (a.endDate < b.endDate) return -1;
+        else if (a.endDate === b.endDate) return 0;
         else return 1;
       });
-      setSearchResults(filtrirana);
+    } else if (filterBy === "FR goal") {
+      filtrirana = searchResults.sort((a, b) => {
+        if (a.frgoal < b.frgoal) return -1;
+        else if (a.frgoal === b.frgoal) return 0;
+        else return 1;
+      });
     }
+
+    setSearchResults(filtrirana);
   }
 
   useEffect(() => {
-    fetchProjects();
+    populateProjects();
   }, []);
 
   return (
@@ -135,7 +136,7 @@ export default function Projects() {
       <ProjectForm
         openModal={openProjectFormModal}
         setOpenModal={setOpenProjectFormModal}
-        fetchProjects={fetchProjects}
+        populateProjects={populateProjects}
       />
 
       <Container

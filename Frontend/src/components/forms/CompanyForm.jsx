@@ -1,18 +1,22 @@
-import { useState } from "react";
-import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Radio from "@mui/material/Radio";
+import {
+  Backdrop,
+  Box,
+  Modal,
+  Fade,
+  Button,
+  TextField,
+  MenuItem,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+} from "@mui/material";
 
 import "./Form.css";
+
+import { useState, useContext } from "react";
+
+import ToastContext from "../../context/ToastContext";
 
 const company = {
   name: null,
@@ -76,12 +80,10 @@ export default function UserForm({
   setOpenModal,
   populateCompanies,
 }) {
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const { handleOpenToast } = useContext(ToastContext);
 
-    let token = JSON.stringify(
-      JSON.parse(localStorage.getItem("loginInfo")).JWT
-    );
+  async function onSubmit(e) {
+    e.preventDefault();
 
     if (
       nameIsValid &&
@@ -93,10 +95,10 @@ export default function UserForm({
     ) {
       company.name = name;
       company.domain = industry;
-      company.abcCategory = abcCategorization.toLowerCase().charAt(0);
+      company.abcCategory = abcCategorization.toLowerCase();
       company.budgetPlanningMonth = budgetMonth;
       company.country = country;
-      company.zipCode = parseInt(zipCode);
+      company.zipCode = zipCode;
       company.address = address;
       company.webUrl = url;
       company.contactInFuture = doContact;
@@ -104,25 +106,49 @@ export default function UserForm({
       //console.log(company);
 
       const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-      fetch("http://159.65.127.217:8080/companies/", {
-        method: "POST",
-        headers: {
-          googleTokenEncoded: JWToken.credential,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(company),
-      })
-        .then((response) => response.json())
-        .then((json) => {
-          // if error display error toast
-          console.log(json);
 
-          // if success display success toast, close modal and update users list
-          setOpenModal(false);
-          populateCompanies();
+      const serverResponse = await fetch(
+        "http://159.65.127.217:8080/companies/",
+        {
+          method: "POST",
+          headers: {
+            googleTokenEncoded: JWToken.credential,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(company),
+        }
+      );
+
+      if (serverResponse.status === 201) {
+        handleOpenToast({
+          type: "success",
+          info: "Company " + company.name + " added.",
+          autoHideDuration: 1000,
         });
+
+        setOpenModal(false);
+        populateCompanies();
+      } else if (serverResponse.status === 400) {
+        handleOpenToast({
+          type: "error",
+          info: "Company with those details cannot be added.",
+          autoHideDuration: 5000,
+        });
+      } else if (serverResponse.status === 403) {
+        handleOpenToast({
+          type: "error",
+          info: "FR responsible privileges are needed for manipulating companies.",
+          autoHideDuration: 5000,
+        });
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "An unknown error accured whilst trying to add company.",
+          autoHideDuration: 5000,
+        });
+      }
     }
-  };
+  }
 
   const [name, setName] = useState();
   const [industry, setIndustry] = useState();
