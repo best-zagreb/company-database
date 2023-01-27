@@ -1,4 +1,5 @@
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, TextField, InputAdornment } from "@mui/material";
+import { Search as SearchIcon } from "@mui/icons-material";
 
 const UserSearchBar = ({ posts, setSearchResults }) => {
   const handleSearchChange = (value) => {
@@ -19,7 +20,7 @@ const UserSearchBar = ({ posts, setSearchResults }) => {
         freeSolo
         size="small"
         disableClearable
-        onInputChange={(e, inputValue) => {
+        onInputChange={(inputValue) => {
           handleSearchChange(inputValue);
         }}
         // throws error because it takes string "firstName lastName" as key, needs to be changed to take id as key
@@ -31,6 +32,11 @@ const UserSearchBar = ({ posts, setSearchResults }) => {
             InputProps={{
               ...params.InputProps,
               type: "search",
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
             }}
           />
         )}
@@ -57,7 +63,7 @@ const CompanySearchBar = ({ posts, setSearchResults }) => {
         freeSolo
         size="small"
         disableClearable
-        onInputChange={(e, inputValue) => {
+        onInputChange={(inputValue) => {
           handleSearchChange(inputValue);
         }}
         // throws error because it takes string "name" as key, needs to be changed to take id as key
@@ -69,6 +75,11 @@ const CompanySearchBar = ({ posts, setSearchResults }) => {
             InputProps={{
               ...params.InputProps,
               type: "search",
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
             }}
           />
         )}
@@ -98,7 +109,7 @@ const ProjectSearchBar = ({ posts, setSearchResults }) => {
         freeSolo
         size="small"
         disableClearable
-        onInputChange={(e, inputValue) => {
+        onInputChange={(inputValue) => {
           handleSearchChange(inputValue);
         }}
         // throws error because it takes string "name" as key, needs to be changed to take id as key
@@ -110,6 +121,11 @@ const ProjectSearchBar = ({ posts, setSearchResults }) => {
             InputProps={{
               ...params.InputProps,
               type: "search",
+              startAdornment: (
+                <InputAdornment>
+                  <SearchIcon />
+                </InputAdornment>
+              ),
             }}
           />
         )}
