@@ -1,7 +1,3 @@
-import { useState, useEffect } from "react";
-
-import data from "./data";
-
 import {
   TableSortLabel,
   TableCell,
@@ -14,10 +10,12 @@ import {
   Button,
   Container,
 } from "@mui/material";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 
-import { CompanySearchBar } from "../search_bar/SearchBar";
-import { CompanyListPage } from "../search_bar/ListPage";
+import { useState, useEffect } from "react";
+
+import { CompanySearchBar } from "./partial/SearchBar";
+import { CompanyListPage } from "./partial/ListPage";
 
 import CompanyForm from "../forms/CompanyForm";
 
@@ -45,7 +43,7 @@ export default function Companies() {
   const [posts, setPosts] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
-  function fetchCompanies() {
+  function populateCompanies() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
     fetch("http://159.65.127.217:8080/companies/", {
       method: "GET",
@@ -57,16 +55,12 @@ export default function Companies() {
           console.log(json);
           // display error
         } else {
-          console.log(json)
+          console.log(json);
           setPosts(json);
           setSearchResults(json);
           //let newData = data.sort((a, b) => a.name.localeCompare(b.name))
         }
       });
-    //console.log("Fetchali smo usere, ps samo su importani iz data.js za probu");
-    //  let newData = data.sort((a, b) => a.name.localeCompare(b.name));
-    // setPosts(newData);
-    // setSearchResults(newData);
   }
 
   const [filterBy, setFilterBy] = useState("Company name");
@@ -94,43 +88,37 @@ export default function Companies() {
   }
 
   function filterFunction(filterBy) {
+    let filtrirana;
+
     if (filterBy === "Company name") {
-      console.log("Filtriramo po company");
-      let filtrirana = searchResults.sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
-      console.log(filtrirana);
+      filtrirana = searchResults.sort((a, b) => a.name.localeCompare(b.name));
       setSearchResults(filtrirana);
     } else if (filterBy === "Industry") {
-      console.log("Filtriramo po industry");
-      let filtrirana = searchResults.sort((a, b) =>
+      filtrirana = searchResults.sort((a, b) =>
         a.domain.localeCompare(b.domain)
       );
       setSearchResults(filtrirana);
     } else if (filterBy === "ABC categorization") {
-      console.log("Filtriramo po ABC");
-      let filtrirana = searchResults.sort((a, b) =>
+      filtrirana = searchResults.sort((a, b) =>
         a.abcCategory.localeCompare(b.abcCategory)
       );
-      console.log(filtrirana);
       setSearchResults(filtrirana);
     } else if (filterBy === "Budget planning month") {
-      console.log("Filtriramo po budget monthu");
-      let filtrirana = searchResults.sort((a, b) =>
+      filtrirana = searchResults.sort((a, b) =>
         a.budgetPlanningMonth.localeCompare(b.budgetPlanningMonth)
       );
       setSearchResults(filtrirana);
     } else if (filterBy === "Webpage URL") {
-      console.log("Filtriramo po urlu");
-      let filtrirana = searchResults.sort((a, b) =>
+      filtrirana = searchResults.sort((a, b) =>
         a.webUrl.localeCompare(b.webUrl)
       );
-      setSearchResults(filtrirana);
     }
+
+    setSearchResults(filtrirana);
   }
 
   useEffect(() => {
-     fetchCompanies();
+    populateCompanies();
   }, []);
 
   return (
@@ -138,7 +126,7 @@ export default function Companies() {
       <CompanyForm
         openModal={openCompanyFormModal}
         setOpenModal={setOpenCompanyFormModal}
-        fetchCompanies={fetchCompanies}
+        populateCompanies={populateCompanies}
       />
 
       <Container

@@ -5,11 +5,9 @@ const UserSearchBar = ({ posts, setSearchResults }) => {
     value = value.toLowerCase();
 
     const resultsArray = posts.filter((user) => {
-      return (
-        (user.firstName + " " + user.lastName).toLowerCase().includes(value) ||
-        user.nickname?.toLowerCase().includes(value) ||
-        user.loginEmail.toLowerCase().includes(value)
-      );
+      return (user.firstName + " " + user.lastName)
+        .toLowerCase()
+        .includes(value);
     });
 
     setSearchResults(resultsArray);
@@ -47,10 +45,7 @@ const CompanySearchBar = ({ posts, setSearchResults }) => {
     value = value.toLowerCase();
 
     const resultsArray = posts.filter((company) => {
-      return (
-        company.name.toLowerCase().includes(value) ||
-        company.webUrl.toLowerCase().includes(value)
-      );
+      return company.name.toLowerCase().includes(value);
     });
 
     setSearchResults(resultsArray);
@@ -65,7 +60,7 @@ const CompanySearchBar = ({ posts, setSearchResults }) => {
         onInputChange={(e, inputValue) => {
           handleSearchChange(inputValue);
         }}
-        // throws error because it takes string "firstName lastName" as key, needs to be changed to take id as key
+        // throws error because it takes string "name" as key, needs to be changed to take id as key
         options={posts.map((company) => company.name)}
         renderInput={(params) => (
           <TextField
@@ -106,7 +101,7 @@ const ProjectSearchBar = ({ posts, setSearchResults }) => {
         onInputChange={(e, inputValue) => {
           handleSearchChange(inputValue);
         }}
-        // throws error because it takes string "firstName lastName" as key, needs to be changed to take id as key
+        // throws error because it takes string "name" as key, needs to be changed to take id as key
         options={posts.map((project) => project.name)}
         renderInput={(params) => (
           <TextField

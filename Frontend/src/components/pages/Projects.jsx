@@ -1,7 +1,4 @@
 import { useState, useEffect } from "react";
-// import "./pages.css";
-
-import data from "./projects_data";
 
 import {
   TableSortLabel,
@@ -16,11 +13,12 @@ import {
   Button,
 } from "@mui/material";
 
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 
-import ProjectForm from "../forms/ProjectForm";
-import { ProjectListPage } from "../search_bar/ListPage";
-import { ProjectSearchBar } from "../search_bar/SearchBar";
+import ProjectForm from "./../forms/ProjectForm";
+
+import { ProjectListPage } from "./partial/ListPage";
+import { ProjectSearchBar } from "./partial/SearchBar";
 
 export default function Projects() {
   const [openProjectFormModal, setOpenProjectFormModal] = useState(false);
@@ -137,7 +135,7 @@ export default function Projects() {
       <ProjectForm
         openModal={openProjectFormModal}
         setOpenModal={setOpenProjectFormModal}
-        fetchProjects = {fetchProjects}
+        fetchProjects={fetchProjects}
       />
 
       <Container

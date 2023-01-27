@@ -20,8 +20,8 @@ import ToastContext from "../../context/ToastContext";
 import UserForm from "../forms/UserForm";
 import EditUserForm from "../forms/EditUserForm";
 
-import { UserSearchBar, CompanySearchBar } from "./parts/SearchBar";
-import { UserListPage } from "./parts/ListPage";
+import { UserSearchBar } from "./partial/SearchBar";
+import { UserListPage } from "./partial/ListPage";
 
 const filterTypes = [
   {

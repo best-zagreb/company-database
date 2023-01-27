@@ -71,7 +71,11 @@ function validateURL(website) {
   else return false;
 }
 
-export default function UserForm({ openModal, setOpenModal, fetchCompanies }) {
+export default function UserForm({
+  openModal,
+  setOpenModal,
+  populateCompanies,
+}) {
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -115,7 +119,7 @@ export default function UserForm({ openModal, setOpenModal, fetchCompanies }) {
 
           // if success display success toast, close modal and update users list
           setOpenModal(false);
-          fetchCompanies();
+          populateCompanies();
         });
     }
   };
