@@ -1,7 +1,4 @@
-import { useState, useEffect } from "react";
-
-import UserForm from "../forms/UserForm";
-import EditUserForm from "../forms/EditUserForm";
+import { useState, useEffect, useContext } from "react";
 
 import {
   Button,
@@ -18,10 +15,17 @@ import {
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
+import UserForm from "../forms/UserForm";
+import EditUserForm from "../forms/EditUserForm";
+
 import { UserSearchBar, CompanySearchBar } from "../search_bar/SearchBar";
 import { UserListPage } from "../search_bar/ListPage";
 
+import PopupContext from "./../../context/PopupContext";
+
 export default function Users() {
+  const { handleOpenMsgModal } = useContext(PopupContext);
+
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
   const [openEditFormModal, setEditFormModal] = useState(false);
   const [bestUser, setUser] = useState([]);
@@ -30,18 +34,28 @@ export default function Users() {
   const [posts, setPosts] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
-  function fetchUsers() {
+  async function populateUsers() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-    fetch("http://159.65.127.217:8080/users/", {
+
+    const serverResponse = await fetch("http://159.65.127.217:8080/users/", {
       method: "GET",
       headers: { googleTokenEncoded: JWToken.credential },
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        setPosts(json);
-        setSearchResults(json);
+    });
+
+    if (serverResponse.status === 200) {
+      const json = await serverResponse.json();
+
+      setPosts(json);
+      setSearchResults(json);
+    } else {
+      handleOpenMsgModal({
+        type: "error",
+        info: "An unknown error accured whilst trying to get users.",
+        autoHideDuration: 5000,
       });
+    }
   }
+
   const filterTypes = [
     {
       value: "Name",
@@ -60,18 +74,48 @@ export default function Users() {
     },
   ];
 
-  const handleDelete = (e, id) => {
-    let JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+  async function handleDelete(user) {
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
-    fetch("http://159.65.127.217:8080/users/" + id, {
-      method: "DELETE",
-      headers: {
-        googleTokenEncoded: JWToken.credential,
-      },
-    }).then((response) => fetchUsers());
-  };
+    const serverResponse = await fetch(
+      "http://159.65.127.217:8080/users/" + user.id,
+      {
+        method: "DELETE",
+        headers: {
+          googleTokenEncoded: JWToken.credential,
+        },
+      }
+    );
 
-  function handleEdit(e, user) {
+    if (serverResponse.status === 200) {
+      handleOpenMsgModal({
+        type: "success",
+        info: "User " + user.firstName + " " + user.lastName + " deleted.",
+        autoHideDuration: 1000,
+      });
+
+      // refresh list
+      populateUsers();
+    } else if (serverResponse.status === 404) {
+      handleOpenMsgModal({
+        type: "error",
+        info:
+          "User " + user.firstName + " " + user.lastName + " doesn't exist.",
+        autoHideDuration: 5000,
+      });
+
+      // refresh list
+      populateUsers();
+    } else {
+      handleOpenMsgModal({
+        type: "error",
+        info: "An unknown error accured.",
+        autoHideDuration: 5000,
+      });
+    }
+  }
+
+  function handleEdit(user) {
     setEditFormModal(true);
     setUser(user);
     setId(user.id);
@@ -130,7 +174,7 @@ export default function Users() {
   }
 
   useEffect(() => {
-    fetchUsers();
+    populateUsers();
   }, []);
 
   return (
@@ -138,14 +182,14 @@ export default function Users() {
       <UserForm
         openModal={openUserFormModal}
         setOpenModal={setOpenUserFormModal}
-        fetchUsers={fetchUsers}
+        fetchUsers={populateUsers}
       />
       <EditUserForm
         openModal={openEditFormModal}
         setOpenModal={setEditFormModal}
         bestuser={bestUser}
         id={id}
-        fetchUsers={fetchUsers}
+        fetchUsers={populateUsers}
       />
 
       <Container

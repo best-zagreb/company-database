@@ -35,7 +35,7 @@ function UserPost({ user, editHandler, handleDelete }) {
         <IconButton
           size="small"
           aria-label="edit user"
-          onClick={(e) => editHandler(e, user, user.id)}
+          onClick={() => editHandler(user)}
           sx={{
             margin: 0.25,
 
@@ -50,7 +50,7 @@ function UserPost({ user, editHandler, handleDelete }) {
         <IconButton
           size="small"
           aria-label="delete user"
-          onClick={(e) => handleDelete(e, user.id)}
+          onClick={() => handleDelete(user)}
           sx={{
             margin: 0.25,
 
