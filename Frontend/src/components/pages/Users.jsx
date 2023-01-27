@@ -38,13 +38,8 @@ export default function Users() {
     })
       .then((response) => response.json())
       .then((json) => {
-        if (json.status === 401) {
-          console.log(json);
-          // display error
-        } else {
-          setPosts(json);
-          setSearchResults(json);
-        }
+        setPosts(json);
+        setSearchResults(json);
       });
   }
   const filterTypes = [
@@ -107,39 +102,31 @@ export default function Users() {
   }
 
   function filterFunction(filterBy) {
+    let filtrirana;
+
     if (filterBy === "Name") {
-      console.log("Filtriramo po name");
-      let filtrirana = searchResults.sort((a, b) =>
+      filtrirana = searchResults.sort((a, b) =>
         a.firstName.localeCompare(b.firstName)
       );
-      console.log(filtrirana);
-      setSearchResults(filtrirana);
     } else if (filterBy === "Surname") {
-      console.log("Filtriramo po surname");
-      let filtrirana = searchResults.sort((a, b) =>
+      filtrirana = searchResults.sort((a, b) =>
         a.lastName.localeCompare(b.lastName)
       );
-      setSearchResults(filtrirana);
     } else if (filterBy === "Nickname") {
-      console.log("Filtriramo po nickname");
-      let filtrirana = searchResults.sort((a, b) =>
+      filtrirana = searchResults.sort((a, b) =>
         a.nickname.localeCompare(b.nickname)
       );
-      console.log(filtrirana);
-      setSearchResults(filtrirana);
     } else if (filterBy === "E-mail") {
-      console.log("Filtriramo po mailu");
-      let filtrirana = searchResults.sort((a, b) =>
-        a.loginEmailString.localeCompare(b.loginEmailString)
+      filtrirana = searchResults.sort((a, b) =>
+        a.loginEmail.localeCompare(b.loginEmail)
       );
-      setSearchResults(filtrirana);
     } else if (filterBy === "Max authorization level") {
-      console.log("Filtriramo po auth levelu");
-      let filtrirana = searchResults.sort((a, b) =>
+      filtrirana = searchResults.sort((a, b) =>
         a.authority.localeCompare(b.authority)
       );
-      setSearchResults(filtrirana);
     }
+
+    setSearchResults(filtrirana);
   }
 
   useEffect(() => {

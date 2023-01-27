@@ -30,15 +30,19 @@ import Company from "./components/pages/Company";
 import Header from "./components/Header";
 
 import UserContext from "./context/UserContext";
+import PopupContext from "./context/PopupContext";
 
 export default function App() {
   const [appIsSetup, setAppIsSetup] = useState(true);
   const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
 
-  const [msgModalOpen, setMsgModalOpen] = useState();
-  const [popupMessage, setPopupMessage] = useState();
-
   const { setUser } = useContext(UserContext);
+  const {
+    msgModalOpen,
+    popupMessage,
+    handleOpenMsgModal,
+    handleCloseMsgModal,
+  } = useContext(PopupContext);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -64,7 +68,7 @@ export default function App() {
       const loginInfo = {
         JWT: JWToken,
         lastLogin: new Date(),
-        persistentLoginDaysDuration: 7, // change later to be pulled for user settings from database or smth
+        automaticLoginDaysDuration: 7, // change later to be pulled for user settings from database or smth
       };
       localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
 
@@ -80,21 +84,6 @@ export default function App() {
     }
   }
 
-  function handleOpenMsgModal(message) {
-    setMsgModalOpen(false);
-    setTimeout(() => {
-      setPopupMessage(message);
-      setMsgModalOpen(true);
-    }, 500);
-  }
-
-  function handleCloseMsgModal(event, reason) {
-    if (reason === "clickaway") {
-      return;
-    }
-    setMsgModalOpen(false);
-  }
-
   useEffect(() => {
     // if (!appIsSetup) {
     //   navigate("/setup");
@@ -106,7 +95,7 @@ export default function App() {
         loginInfo !== null &&
         (new Date() - Date.parse(Date(loginInfo.lastLogin))) /
           (1000 * 3600 * 24) <
-          loginInfo.persistentLoginDaysDuration
+          loginInfo.automaticLoginDaysDuration
       ) {
         // if JWT of user exists in local storage and user has logged in the last X days
         const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
@@ -127,12 +116,7 @@ export default function App() {
       <Routes>
         <Route
           path="/"
-          element={
-            <Header
-              setUserIsLoggedIn={setUserIsLoggedIn}
-              handleOpenMsgModal={handleOpenMsgModal}
-            />
-          }
+          element={<Header setUserIsLoggedIn={setUserIsLoggedIn} />}
         >
           <Route index element={<Home />} />
 

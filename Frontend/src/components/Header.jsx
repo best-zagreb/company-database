@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import "./Header.css";
 
 import UserContext from "../context/UserContext";
+import PopupContext from "../context/PopupContext";
 
 import {
   AppBar,
@@ -24,8 +25,9 @@ import {
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material/";
 
-export default function Header({ setUserIsLoggedIn, handleOpenMsgModal }) {
+export default function Header({ setUserIsLoggedIn }) {
   const { user } = useContext(UserContext);
+  const { handleOpenMsgModal } = useContext(PopupContext);
 
   function logoutUser() {
     localStorage.removeItem("loginInfo");
