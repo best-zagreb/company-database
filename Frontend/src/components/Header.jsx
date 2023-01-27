@@ -1,11 +1,3 @@
-import { Link, Outlet } from "react-router-dom";
-import { useContext, useState } from "react";
-
-import "./Header.css";
-
-import UserContext from "../context/UserContext";
-import PopupContext from "../context/PopupContext";
-
 import {
   AppBar,
   Box,
@@ -25,14 +17,22 @@ import {
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material/";
 
+import { Link, Outlet } from "react-router-dom";
+import { useContext, useState } from "react";
+
+import "./Header.css";
+
+import UserContext from "../context/UserContext";
+import ToastContext from "../context/ToastContext";
+
 export default function Header({ setUserIsLoggedIn }) {
   const { user } = useContext(UserContext);
-  const { handleOpenMsgModal } = useContext(PopupContext);
+  const { handleOpenToast } = useContext(ToastContext);
 
   function logoutUser() {
     localStorage.removeItem("loginInfo");
 
-    handleOpenMsgModal({
+    handleOpenToast({
       type: "info",
       info: "Logout successful.",
       autoHideDuration: 1000,

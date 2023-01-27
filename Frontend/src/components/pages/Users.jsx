@@ -1,5 +1,3 @@
-import { useState, useEffect, useContext } from "react";
-
 import {
   Button,
   TableCell,
@@ -13,18 +11,38 @@ import {
   Container,
 } from "@mui/material";
 
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { AddCircle as AddCircleIcon } from "@mui/icons-material";
+
+import { useState, useEffect, useContext } from "react";
+
+import ToastContext from "../../context/ToastContext";
 
 import UserForm from "../forms/UserForm";
 import EditUserForm from "../forms/EditUserForm";
 
-import { UserSearchBar, CompanySearchBar } from "../search_bar/SearchBar";
-import { UserListPage } from "../search_bar/ListPage";
+import { UserSearchBar, CompanySearchBar } from "./parts/SearchBar";
+import { UserListPage } from "./parts/ListPage";
 
-import PopupContext from "./../../context/PopupContext";
+const filterTypes = [
+  {
+    value: "Name",
+  },
+  {
+    value: "Surname",
+  },
+  {
+    value: "Nickname",
+  },
+  {
+    value: "E-mail",
+  },
+  {
+    value: "Max authorization level",
+  },
+];
 
 export default function Users() {
-  const { handleOpenMsgModal } = useContext(PopupContext);
+  const { handleOpenToast } = useContext(ToastContext);
 
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
   const [openEditFormModal, setEditFormModal] = useState(false);
@@ -48,31 +66,13 @@ export default function Users() {
       setPosts(json);
       setSearchResults(json);
     } else {
-      handleOpenMsgModal({
+      handleOpenToast({
         type: "error",
         info: "An unknown error accured whilst trying to get users.",
         autoHideDuration: 5000,
       });
     }
   }
-
-  const filterTypes = [
-    {
-      value: "Name",
-    },
-    {
-      value: "Surname",
-    },
-    {
-      value: "Nickname",
-    },
-    {
-      value: "E-mail",
-    },
-    {
-      value: "Max authorization level",
-    },
-  ];
 
   async function handleDelete(user) {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
@@ -88,7 +88,7 @@ export default function Users() {
     );
 
     if (serverResponse.status === 200) {
-      handleOpenMsgModal({
+      handleOpenToast({
         type: "success",
         info: "User " + user.firstName + " " + user.lastName + " deleted.",
         autoHideDuration: 1000,
@@ -97,7 +97,7 @@ export default function Users() {
       // refresh list
       populateUsers();
     } else if (serverResponse.status === 404) {
-      handleOpenMsgModal({
+      handleOpenToast({
         type: "error",
         info:
           "User " + user.firstName + " " + user.lastName + " doesn't exist.",
@@ -107,7 +107,7 @@ export default function Users() {
       // refresh list
       populateUsers();
     } else {
-      handleOpenMsgModal({
+      handleOpenToast({
         type: "error",
         info: "An unknown error accured.",
         autoHideDuration: 5000,
@@ -134,16 +134,6 @@ export default function Users() {
       setFilterDirection("asc");
     }
   };
-
-  function reverseFunction() {
-    let reversana = searchResults.reverse();
-
-    setFilterDirection((oldFilterDirection) => {
-      if (oldFilterDirection === "asc") return "desc";
-      else return "asc";
-    });
-    setSearchResults(reversana);
-  }
 
   function filterFunction(filterBy) {
     let filtrirana;
@@ -173,6 +163,16 @@ export default function Users() {
     setSearchResults(filtrirana);
   }
 
+  function reverseFunction() {
+    let reversana = searchResults.reverse();
+
+    setFilterDirection((oldFilterDirection) => {
+      if (oldFilterDirection === "asc") return "desc";
+      else return "asc";
+    });
+    setSearchResults(reversana);
+  }
+
   useEffect(() => {
     populateUsers();
   }, []);
@@ -182,14 +182,14 @@ export default function Users() {
       <UserForm
         openModal={openUserFormModal}
         setOpenModal={setOpenUserFormModal}
-        fetchUsers={populateUsers}
+        populateUsers={populateUsers}
       />
       <EditUserForm
         openModal={openEditFormModal}
         setOpenModal={setEditFormModal}
         bestuser={bestUser}
         id={id}
-        fetchUsers={populateUsers}
+        populateUsers={populateUsers}
       />
 
       <Container

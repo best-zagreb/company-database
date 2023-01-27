@@ -1,22 +1,15 @@
+import { CssBaseline, Snackbar, Alert as MuiAlert } from "@mui/material";
+
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, useContext, forwardRef } from "react";
 
-const Alert = forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import UserContext from "./context/UserContext";
+import ToastContext from "./context/ToastContext";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-
-import {
-  CssBaseline,
-  Typography,
-  Box,
-  Snackbar,
-  Alert as MuiAlert,
-} from "@mui/material";
 
 import Setup from "./components/pages/Setup";
 import Login from "./components/pages/Login";
@@ -29,20 +22,17 @@ import Company from "./components/pages/Company";
 
 import Header from "./components/Header";
 
-import UserContext from "./context/UserContext";
-import PopupContext from "./context/PopupContext";
+const Alert = forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export default function App() {
+  const { setUser } = useContext(UserContext);
+  const { toastOpen, toastMessage, handleOpenToast, handleCloseToast } =
+    useContext(ToastContext);
+
   const [appIsSetup, setAppIsSetup] = useState(true);
   const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
-
-  const { setUser } = useContext(UserContext);
-  const {
-    msgModalOpen,
-    popupMessage,
-    handleOpenMsgModal,
-    handleCloseMsgModal,
-  } = useContext(PopupContext);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -59,7 +49,7 @@ export default function App() {
     );
 
     if (serverResponse.status === 200) {
-      handleOpenMsgModal({
+      handleOpenToast({
         type: "info",
         info: "Login successful.",
         autoHideDuration: 1000,
@@ -76,7 +66,7 @@ export default function App() {
 
       setUserIsLoggedIn(true);
     } else if (serverResponse.status === 404) {
-      handleOpenMsgModal({
+      handleOpenToast({
         type: "error",
         info: "You do not have access to Company Database. If you believe this is a mistake, contact your administrator at email@example.com.",
         autoHideDuration: 5000,
@@ -141,15 +131,15 @@ export default function App() {
         {/* <Route path="setup" element={<Setup setAppIsSetup={setAppIsSetup} />} /> */}
       </Routes>
 
-      {popupMessage && (
+      {toastMessage && (
         <Snackbar
-          open={msgModalOpen}
+          open={toastOpen}
           sx={{ maxWidth: "480px" }}
-          autoHideDuration={popupMessage.autoHideDuration}
-          onClose={handleCloseMsgModal}
+          autoHideDuration={toastMessage.autoHideDuration}
+          onClose={handleCloseToast}
         >
-          <Alert onClose={handleCloseMsgModal} severity={popupMessage.type}>
-            {popupMessage.info}
+          <Alert onClose={handleCloseToast} severity={toastMessage.type}>
+            {toastMessage.info}
           </Alert>
         </Snackbar>
       )}

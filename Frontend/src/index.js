@@ -6,18 +6,18 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 
 import { UserProvider } from "./context/UserContext";
-import { PopupProvider } from "./context/PopupContext";
+import { ToastProvider } from "./context/ToastContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <UserProvider>
-    <PopupProvider>
+    <ToastProvider>
       <React.StrictMode>
         <BrowserRouter>
           <App />
         </BrowserRouter>
       </React.StrictMode>
-    </PopupProvider>
+    </ToastProvider>
   </UserProvider>
 );
 

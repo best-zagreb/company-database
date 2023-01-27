@@ -1,12 +1,16 @@
-import { useState } from "react";
+import {
+  Backdrop,
+  Box,
+  Modal,
+  Fade,
+  Button,
+  TextField,
+  MenuItem,
+} from "@mui/material";
 
-import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
+import { useState, useContext } from "react";
+
+import ToastContext from "../../context/ToastContext";
 
 import "./Form.css";
 
@@ -44,8 +48,10 @@ function ValidateEmail(inputEmail) {
   }
 }
 
-export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
-  const onSubmit = (e) => {
+export default function UserForm({ openModal, setOpenModal, populateUsers }) {
+  const { handleOpenToast } = useContext(ToastContext);
+
+  async function onSubmit(e) {
     e.preventDefault();
 
     if (
@@ -67,25 +73,47 @@ export default function UserForm({ openModal, setOpenModal, fetchUsers }) {
       // console.log(user);
 
       const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-      fetch("http://159.65.127.217:8080/users/", {
+
+      const serverResponse = await fetch("http://159.65.127.217:8080/users/", {
         method: "POST",
         headers: {
           googleTokenEncoded: JWToken.credential,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(user),
-      })
-        .then((response) => response.json())
-        .then((json) => {
-          // if error display error toast
-          console.log(json);
+      });
 
-          // if success display success toast, close modal and update users list
-          setOpenModal(false);
-          fetchUsers();
+      // later to be changed to 201 Created
+      if (serverResponse.status === 200) {
+        handleOpenToast({
+          type: "success",
+          info: "User " + user.firstName + " " + user.lastName + " added.",
+          autoHideDuration: 1000,
         });
+
+        setOpenModal(false);
+        populateUsers();
+      } else if (serverResponse.status === 400) {
+        handleOpenToast({
+          type: "error",
+          info: "User with those details cannot be added.",
+          autoHideDuration: 5000,
+        });
+      } else if (serverResponse.status === 403) {
+        handleOpenToast({
+          type: "error",
+          info: "Administrator privileges are needed for manipulating users.",
+          autoHideDuration: 5000,
+        });
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "An unknown error accured whilst trying to add user.",
+          autoHideDuration: 5000,
+        });
+      }
     }
-  };
+  }
 
   const [name, setName] = useState();
   const [surname, setSurname] = useState();
