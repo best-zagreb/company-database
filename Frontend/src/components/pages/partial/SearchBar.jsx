@@ -20,7 +20,7 @@ const UserSearchBar = ({ posts, setSearchResults }) => {
         freeSolo
         size="small"
         disableClearable
-        onInputChange={(inputValue) => {
+        onInputChange={(e, inputValue) => {
           handleSearchChange(inputValue);
         }}
         // throws error because it takes string "firstName lastName" as key, needs to be changed to take id as key
@@ -63,7 +63,7 @@ const CompanySearchBar = ({ posts, setSearchResults }) => {
         freeSolo
         size="small"
         disableClearable
-        onInputChange={(inputValue) => {
+        onInputChange={(e, inputValue) => {
           handleSearchChange(inputValue);
         }}
         // throws error because it takes string "name" as key, needs to be changed to take id as key
@@ -109,7 +109,7 @@ const ProjectSearchBar = ({ posts, setSearchResults }) => {
         freeSolo
         size="small"
         disableClearable
-        onInputChange={(inputValue) => {
+        onInputChange={(e, inputValue) => {
           handleSearchChange(inputValue);
         }}
         // throws error because it takes string "name" as key, needs to be changed to take id as key
@@ -122,7 +122,7 @@ const ProjectSearchBar = ({ posts, setSearchResults }) => {
               ...params.InputProps,
               type: "search",
               startAdornment: (
-                <InputAdornment>
+                <InputAdornment position="start">
                   <SearchIcon />
                 </InputAdornment>
               ),

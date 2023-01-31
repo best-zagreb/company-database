@@ -29,7 +29,7 @@ function UserPost({ user, editHandler, handleDelete }) {
           display: { xs: "none", md: "table-cell" },
         }}
       >
-        {user.authority}
+        {user.authority.charAt(0) + user.authority.slice(1).toLowerCase()}
       </TableCell>
       <TableCell>
         <IconButton

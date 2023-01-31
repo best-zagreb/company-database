@@ -5,24 +5,15 @@ import {
   Fade,
   Button,
   TextField,
+  Select,
   MenuItem,
 } from "@mui/material";
 
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 
 import ToastContext from "../../context/ToastContext";
 
 import "./Form.css";
-
-const user = {
-  firstName: null,
-  lastName: null,
-  nickname: null,
-  loginEmailString: null,
-  notificationEmailString: null,
-  authority: null,
-  description: null,
-};
 
 const authLevels = [
   {
@@ -48,8 +39,42 @@ function ValidateEmail(inputEmail) {
   }
 }
 
-export default function UserForm({ openModal, setOpenModal, populateUsers }) {
+export default function UserForm({
+  user,
+  openUserFormModal,
+  setOpenUserFormModal,
+  populateUsers,
+}) {
   const { handleOpenToast } = useContext(ToastContext);
+
+  useEffect(() => {
+    if (user) {
+      setName(user.firstName);
+      setNameIsValid(true);
+      setSurname(user.lastName);
+      setSurnameIsValid(true);
+      setNickname(user.nickname);
+      setNicknameIsValid(true);
+      setLoginEmail(user.loginEmail);
+      setLoginEmailIsValid(true);
+      setNotificationEmail(user.notificationEmail);
+      setNotificationEmailIsValid(true);
+      setAuthLevel(
+        user.authority.charAt(0) + user.authority.slice(1).toLowerCase()
+      );
+      setAuthLevelIsValid(true);
+      setDescription(user.description);
+      setDescriptionIsValid(true);
+    } else {
+      setName("");
+      setSurname("");
+      setNickname("");
+      setLoginEmail("");
+      setNotificationEmail("");
+      setAuthLevel(authLevels[0].value);
+      setDescription("");
+    }
+  }, [user]);
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -63,54 +88,108 @@ export default function UserForm({ openModal, setOpenModal, populateUsers }) {
       authLevelIsValid &&
       descriptionIsValid
     ) {
-      user.firstName = name;
-      user.lastName = surname;
-      user.nickname = nickname;
-      user.loginEmail = loginEmail;
-      user.notificationEmail = notificationEmail;
-      user.authority = authLevel.toUpperCase();
-      user.description = description;
-      // console.log(user);
-
       const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
-      const serverResponse = await fetch("http://159.65.127.217:8080/users/", {
-        method: "POST",
-        headers: {
-          googleTokenEncoded: JWToken.credential,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user),
-      });
+      if (!user) {
+        // create new user object
+        user = {
+          firstName: name,
+          lastName: surname,
+          nickname: nickname,
+          loginEmail: loginEmail,
+          notificationEmail: notificationEmail,
+          authority: authLevel.toUpperCase(),
+          description: description,
+        };
 
-      // later to be changed to 201 Created
-      if (serverResponse.status === 200) {
-        handleOpenToast({
-          type: "success",
-          info: "User " + user.firstName + " " + user.lastName + " added.",
-          autoHideDuration: 1000,
+        let serverResponse = await fetch("http://159.65.127.217:8080/users/", {
+          method: "POST",
+          headers: {
+            googleTokenEncoded: JWToken.credential,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
         });
 
-        setOpenModal(false);
-        populateUsers();
-      } else if (serverResponse.status === 400) {
-        handleOpenToast({
-          type: "error",
-          info: "User with those details cannot be added.",
-          autoHideDuration: 5000,
-        });
-      } else if (serverResponse.status === 403) {
-        handleOpenToast({
-          type: "error",
-          info: "Administrator privileges are needed for manipulating users.",
-          autoHideDuration: 5000,
-        });
+        // later to be changed to 201 Created
+        if (serverResponse.status === 200) {
+          handleOpenToast({
+            type: "success",
+            info: "User " + user.firstName + " " + user.lastName + " added.",
+            autoHideDuration: 1000,
+          });
+
+          setOpenUserFormModal(false);
+          populateUsers();
+        } else if (serverResponse.status === 400) {
+          handleOpenToast({
+            type: "error",
+            info: "Invalid user details.",
+            autoHideDuration: 5000,
+          });
+        } else if (serverResponse.status === 403) {
+          handleOpenToast({
+            type: "error",
+            info: "Administrator privileges are needed for manipulating users.",
+            autoHideDuration: 5000,
+          });
+        } else {
+          handleOpenToast({
+            type: "error",
+            info: "An unknown error accured whilst trying to add user.",
+            autoHideDuration: 5000,
+          });
+        }
       } else {
-        handleOpenToast({
-          type: "error",
-          info: "An unknown error accured whilst trying to add user.",
-          autoHideDuration: 5000,
-        });
+        // update existing user object so id stays the same
+        user.firstName = name;
+        user.lastName = surname;
+        user.nickname = nickname;
+        user.loginEmail = loginEmail;
+        user.notificationEmail = notificationEmail;
+        user.authority = authLevel.toUpperCase();
+        user.description = description;
+
+        let serverResponse = await fetch(
+          "http://159.65.127.217:8080/users/" + user.id,
+          {
+            method: "PUT",
+            headers: {
+              googleTokenEncoded: JWToken.credential,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(user),
+          }
+        );
+
+        if (serverResponse.status === 200) {
+          handleOpenToast({
+            type: "success",
+            info: "User " + user.firstName + " " + user.lastName + " updated.",
+            autoHideDuration: 1000,
+          });
+
+          setOpenUserFormModal(false);
+          populateUsers();
+        } else if (serverResponse.status === 400) {
+          handleOpenToast({
+            type: "error",
+            info: "Invalid user details.",
+            autoHideDuration: 5000,
+          });
+        } else if (serverResponse.status === 403) {
+          handleOpenToast({
+            type: "error",
+            info: "Administrator privileges are needed for manipulating users.",
+            autoHideDuration: 5000,
+          });
+        } else {
+          handleOpenToast({
+            type: "error",
+            info: "An unknown error accured whilst trying to update user.",
+            autoHideDuration: 5000,
+          });
+        }
       }
     }
   }
@@ -120,7 +199,7 @@ export default function UserForm({ openModal, setOpenModal, populateUsers }) {
   const [nickname, setNickname] = useState();
   const [loginEmail, setLoginEmail] = useState();
   const [notificationEmail, setNotificationEmail] = useState();
-  const [authLevel, setAuthLevel] = useState("Observer");
+  const [authLevel, setAuthLevel] = useState();
   const [description, setDescription] = useState();
 
   const [nameIsValid, setNameIsValid] = useState(false);
@@ -184,7 +263,6 @@ export default function UserForm({ openModal, setOpenModal, populateUsers }) {
     setNotificationEmail(input);
   };
   const [authLevelIsValid, setAuthLevelIsValid] = useState(true);
-  const [authLevelDirty, setAuthLevelDirty] = useState(false);
   const handleAuthLevelChange = (e) => {
     const input = e.target.value;
     if (input === "Observer" || input === "Moderator" || input === "Admin") {
@@ -213,9 +291,9 @@ export default function UserForm({ openModal, setOpenModal, populateUsers }) {
         className="FormModal"
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
-        open={openModal}
+        open={openUserFormModal}
         onClose={() => {
-          setOpenModal(false);
+          setOpenUserFormModal(false);
         }}
         closeAfterTransition
         BackdropComponent={Backdrop}
@@ -223,19 +301,19 @@ export default function UserForm({ openModal, setOpenModal, populateUsers }) {
           timeout: 500,
         }}
       >
-        <Fade in={openModal}>
+        <Fade in={openUserFormModal}>
           <Box className="Box">
-            <h2>Add a new user</h2>
+            <h2>{!user ? "Add new user" : "Update existing user"}</h2>
 
             <form onSubmit={onSubmit}>
               <TextField
-                id="outlined"
                 label="Name"
                 type="text"
                 required
                 fullWidth
                 margin="dense"
                 placeholder="Jane"
+                value={name}
                 inputProps={{ minLength: 2, maxLength: 35 }}
                 onBlur={() => {
                   setNameDirty(true);
@@ -249,13 +327,13 @@ export default function UserForm({ openModal, setOpenModal, populateUsers }) {
                 onChange={handleNameChange}
               />
               <TextField
-                id="outlined"
                 label="Surname"
                 type="text"
                 required
                 fullWidth
                 margin="dense"
                 placeholder="Doe"
+                value={surname}
                 inputProps={{ minLength: 2, maxLength: 35 }}
                 onBlur={() => {
                   setSurnameDirty(true);
@@ -269,11 +347,11 @@ export default function UserForm({ openModal, setOpenModal, populateUsers }) {
                 onChange={handleSurnameChange}
               />
               <TextField
-                id="outlined"
                 label="Nickname"
                 type="text"
                 fullWidth
                 margin="dense"
+                value={nickname}
                 inputProps={{ maxLength: 35 }}
                 error={!nicknameIsValid}
                 helperText={
@@ -283,13 +361,13 @@ export default function UserForm({ openModal, setOpenModal, populateUsers }) {
               />
 
               <TextField
-                id="outlined"
                 label="Login email"
                 type="text"
                 required
                 fullWidth
                 margin="dense"
                 placeholder="jane.doe@best.hr"
+                value={loginEmail}
                 inputProps={{ minLength: 6, maxLength: 55 }}
                 onBlur={() => {
                   setLoginEmailDirty(true);
@@ -303,13 +381,13 @@ export default function UserForm({ openModal, setOpenModal, populateUsers }) {
                 onChange={handleLoginEmailChange}
               />
               <TextField
-                id="outlined"
                 label="Notification email"
                 type="text"
                 required
                 fullWidth
                 margin="dense"
                 placeholder="jane.doe@gmail.com"
+                value={notificationEmail}
                 inputProps={{ minLength: 6, maxLength: 55 }}
                 onBlur={() => {
                   setNotificationEmailDirty(true);
@@ -323,23 +401,13 @@ export default function UserForm({ openModal, setOpenModal, populateUsers }) {
                 onChange={handleNotificationEmailChange}
               />
 
-              <TextField
-                id="outlined-select-authorization-level"
-                select
+              <Select
                 label="Authorization level"
                 required
                 fullWidth
                 margin="dense"
                 value={authLevel}
-                onBlur={() => {
-                  setAuthLevelDirty(true);
-                }}
-                error={authLevelDirty && !authLevelIsValid}
-                helperText={
-                  authLevelDirty &&
-                  !authLevelIsValid &&
-                  "Invalid authorization level"
-                }
+                error={!authLevelIsValid}
                 onChange={handleAuthLevelChange}
               >
                 {authLevels.map((option) => (
@@ -347,16 +415,16 @@ export default function UserForm({ openModal, setOpenModal, populateUsers }) {
                     {option.label}
                   </MenuItem>
                 ))}
-              </TextField>
+              </Select>
 
               <TextField
-                id="outlined-multiline-static"
                 label="Description"
                 fullWidth
                 multiline
                 minRows={2}
                 maxRows={4}
                 margin="dense"
+                value={description}
                 inputProps={{ maxLength: 475 }}
                 error={!descriptionIsValid}
                 helperText={
@@ -370,14 +438,14 @@ export default function UserForm({ openModal, setOpenModal, populateUsers }) {
                 <Button
                   variant="outlined"
                   onClick={() => {
-                    setOpenModal(false);
+                    setOpenUserFormModal(false);
                   }}
                 >
                   Cancel
                 </Button>
 
                 <Button variant="contained" type="submit">
-                  Add user
+                  {!user ? "Add user" : "Update user"}
                 </Button>
               </div>
             </form>

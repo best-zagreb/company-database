@@ -18,7 +18,6 @@ import { useState, useEffect, useContext } from "react";
 import ToastContext from "../../context/ToastContext";
 
 import UserForm from "../forms/UserForm";
-import EditUserForm from "../forms/EditUserForm";
 
 import { UserSearchBar } from "./partial/SearchBar";
 import { UserListPage } from "./partial/ListPage";
@@ -45,9 +44,7 @@ export default function Users() {
   const { handleOpenToast } = useContext(ToastContext);
 
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
-  const [openEditFormModal, setEditFormModal] = useState(false);
-  const [bestUser, setUser] = useState([]);
-  const [id, setId] = useState();
+  const [user, setUser] = useState();
 
   const [posts, setPosts] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
@@ -116,13 +113,12 @@ export default function Users() {
   }
 
   function handleEdit(user) {
-    setEditFormModal(true);
     setUser(user);
-    setId(user.id);
+    setOpenUserFormModal(true);
   }
 
   const [filterBy, setFilterBy] = useState("Name");
-  const [filterDirection, setFilterDirection] = useState("asc");
+  const [filterDirection, setFilterDirection] = useState("desc");
 
   const handleFilterResults = (property) => (event) => {
     let filterByCategory = property;
@@ -180,15 +176,9 @@ export default function Users() {
   return (
     <>
       <UserForm
-        openModal={openUserFormModal}
-        setOpenModal={setOpenUserFormModal}
-        populateUsers={populateUsers}
-      />
-      <EditUserForm
-        openModal={openEditFormModal}
-        setOpenModal={setEditFormModal}
-        bestuser={bestUser}
-        id={id}
+        user={user}
+        openUserFormModal={openUserFormModal}
+        setOpenUserFormModal={setOpenUserFormModal}
         populateUsers={populateUsers}
       />
 
@@ -209,7 +199,10 @@ export default function Users() {
           variant="contained"
           size="medium"
           startIcon={<AddCircleIcon />}
-          onClick={() => setOpenUserFormModal(true)}
+          onClick={() => {
+            setUser();
+            setOpenUserFormModal(true);
+          }}
         >
           Add user
         </Button>
