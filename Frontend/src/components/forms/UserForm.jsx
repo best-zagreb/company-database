@@ -1,19 +1,21 @@
 import {
   Backdrop,
-  Box,
   Modal,
   Fade,
   Button,
   TextField,
-  Select,
   MenuItem,
+  Typography,
+  FormControl,
+  Box,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
 import { useState, useContext, useEffect } from "react";
 
 import ToastContext from "../../context/ToastContext";
 
-import "./Form.css";
+import TextInput from "../partial/TextInput";
 
 const authLevels = [
   {
@@ -21,23 +23,22 @@ const authLevels = [
     label: "Observer",
   },
   {
+    value: "FR team member",
+    label: "FR team member",
+  },
+  {
+    value: "FR responsible",
+    label: "FR responsible",
+  },
+  {
     value: "Moderator",
     label: "Moderator",
   },
   {
     value: "Admin",
-    label: "Admin",
+    label: "Administrator",
   },
 ];
-
-function ValidateEmail(inputEmail) {
-  const mailformat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-  if (inputEmail.match(mailformat)) {
-    return true;
-  } else {
-    return false;
-  }
-}
 
 export default function UserForm({
   user,
@@ -47,38 +48,62 @@ export default function UserForm({
 }) {
   const { handleOpenToast } = useContext(ToastContext);
 
-  useEffect(() => {
-    if (user) {
-      setName(user.firstName);
-      setNameIsValid(true);
-      setSurname(user.lastName);
-      setSurnameIsValid(true);
-      setNickname(user.nickname);
-      setNicknameIsValid(true);
-      setLoginEmail(user.loginEmail);
-      setLoginEmailIsValid(true);
-      setNotificationEmail(user.notificationEmail);
-      setNotificationEmailIsValid(true);
-      setAuthLevel(
-        user.authority.charAt(0) + user.authority.slice(1).toLowerCase()
-      );
+  const [name, setName] = useState();
+  const [surname, setSurname] = useState();
+  const [nickname, setNickname] = useState();
+  const [loginEmail, setLoginEmail] = useState();
+  const [notificationEmail, setNotificationEmail] = useState();
+  const [authLevel, setAuthLevel] = useState();
+  const [description, setDescription] = useState();
+
+  const [nameIsValid, setNameIsValid] = useState(false);
+  // const handleNameChange = (e) => {
+  //   const input = e.target.value;
+  //   if (input.length >= 2 && input.length <= 35) {
+  //     setNameIsValid(true);
+  //   } else {
+  //     setNameIsValid(false);
+  //   }
+
+  //   setName(input);
+  // };
+  const [surnameIsValid, setSurnameIsValid] = useState(false);
+  // const handleSurnameChange = (e) => {
+  //   const input = e.target.value;
+  //   if (input.length >= 2 && input.length <= 35) {
+  //     setSurnameIsValid(true);
+  //   } else {
+  //     setSurnameIsValid(false);
+  //   }
+
+  //   setSurname(input);
+  // };
+  const [nicknameIsValid, setNicknameIsValid] = useState(true);
+  const [loginEmailIsValid, setLoginEmailIsValid] = useState(false);
+  const [notificationEmailIsValid, setNotificationEmailIsValid] =
+    useState(false);
+  const [authLevelIsValid, setAuthLevelIsValid] = useState(true);
+  const handleAuthLevelChange = (e) => {
+    const input = e.target.value;
+    if (
+      input == authLevels[0].value ||
+      input == authLevels[1].value ||
+      input == authLevels[2].value ||
+      input == authLevels[3].value ||
+      input == authLevels[4].value
+    ) {
       setAuthLevelIsValid(true);
-      setDescription(user.description);
-      setDescriptionIsValid(true);
     } else {
-      setName("");
-      setSurname("");
-      setNickname("");
-      setLoginEmail("");
-      setNotificationEmail("");
-      setAuthLevel(authLevels[0].value);
-      setDescription("");
+      setAuthLevelIsValid(false);
     }
-  }, [user]);
 
-  async function onSubmit(e) {
-    e.preventDefault();
+    setAuthLevel(input);
+  };
+  const [descriptionIsValid, setDescriptionIsValid] = useState(true);
 
+  const [loadingButton, setLoadingButton] = useState(false);
+
+  async function submit() {
     if (
       nameIsValid &&
       surnameIsValid &&
@@ -88,6 +113,8 @@ export default function UserForm({
       authLevelIsValid &&
       descriptionIsValid
     ) {
+      setLoadingButton(true);
+
       const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
       if (!user) {
@@ -95,7 +122,7 @@ export default function UserForm({
         user = {
           firstName: name,
           lastName: surname,
-          nickname: nickname,
+          nickname: nickname !== "" ? nickname : null,
           loginEmail: loginEmail,
           notificationEmail: notificationEmail,
           authority: authLevel.toUpperCase(),
@@ -144,7 +171,7 @@ export default function UserForm({
         // update existing user object so id stays the same
         user.firstName = name;
         user.lastName = surname;
-        user.nickname = nickname;
+        user.nickname = nickname !== "" ? nickname : null;
         user.loginEmail = loginEmail;
         user.notificationEmail = notificationEmail;
         user.authority = authLevel.toUpperCase();
@@ -191,250 +218,245 @@ export default function UserForm({
           });
         }
       }
+
+      setLoadingButton(false);
     }
   }
 
-  const [name, setName] = useState();
-  const [surname, setSurname] = useState();
-  const [nickname, setNickname] = useState();
-  const [loginEmail, setLoginEmail] = useState();
-  const [notificationEmail, setNotificationEmail] = useState();
-  const [authLevel, setAuthLevel] = useState();
-  const [description, setDescription] = useState();
-
-  const [nameIsValid, setNameIsValid] = useState(false);
-  const [nameDirty, setNameDirty] = useState(false);
-  const handleNameChange = (e) => {
-    const input = e.target.value;
-    if (input.length >= 2 && input.length <= 35) {
+  useEffect(() => {
+    if (user) {
+      setName(user.firstName);
       setNameIsValid(true);
-    } else {
-      setNameIsValid(false);
-    }
-
-    setName(input);
-  };
-  const [surnameIsValid, setSurnameIsValid] = useState(false);
-  const [surnameDirty, setSurnameDirty] = useState(false);
-  const handleSurnameChange = (e) => {
-    const input = e.target.value;
-    if (input.length >= 2 && input.length <= 35) {
+      setSurname(user.lastName);
       setSurnameIsValid(true);
-    } else {
-      setSurnameIsValid(false);
-    }
-
-    setSurname(input);
-  };
-  const [nicknameIsValid, setNicknameIsValid] = useState(true);
-  const handleNicknameChange = (e) => {
-    const input = e.target.value;
-    if (input.length <= 35) {
-      setNicknameIsValid(true);
-    } else {
-      setNicknameIsValid(false);
-    }
-
-    setNickname(input);
-  };
-  const [loginEmailIsValid, setLoginEmailIsValid] = useState(false);
-  const [loginEmailDirty, setLoginEmailDirty] = useState(false);
-  const handleLoginEmailChange = (e) => {
-    const input = e.target.value;
-    if (ValidateEmail(input)) {
+      setNickname(user.nickname ? user.nickname : "");
+      setLoginEmail(user.loginEmail);
       setLoginEmailIsValid(true);
-    } else {
-      setLoginEmailIsValid(false);
-    }
-
-    setLoginEmail(input);
-  };
-  const [notificationEmailIsValid, setNotificationEmailIsValid] =
-    useState(false);
-  const [notificationEmailDirty, setNotificationEmailDirty] = useState(false);
-  const handleNotificationEmailChange = (e) => {
-    const input = e.target.value;
-    if (ValidateEmail(input)) {
+      setNotificationEmail(user.notificationEmail);
       setNotificationEmailIsValid(true);
+      setAuthLevel(
+        user.authority.charAt(0) + user.authority.slice(1).toLowerCase()
+      );
+      setDescription(user.description);
     } else {
+      setName("");
+      setNameIsValid(false);
+      setSurname("");
+      setSurnameIsValid(false);
+      setNickname("");
+      setLoginEmail("");
+      setLoginEmailIsValid(false);
+      setNotificationEmail("");
       setNotificationEmailIsValid(false);
+      setAuthLevel(authLevels[0].value);
+      setDescription("");
     }
-
-    setNotificationEmail(input);
-  };
-  const [authLevelIsValid, setAuthLevelIsValid] = useState(true);
-  const handleAuthLevelChange = (e) => {
-    const input = e.target.value;
-    if (input === "Observer" || input === "Moderator" || input === "Admin") {
-      setAuthLevelIsValid(true);
-    } else {
-      setAuthLevelIsValid(false);
-    }
-
-    setAuthLevel(input);
-  };
-  const [descriptionIsValid, setDescriptionIsValid] = useState(true);
-  const handleDescriptionChange = (e) => {
-    const input = e.target.value;
-    if (input.length <= 475) {
-      setDescriptionIsValid(true);
-    } else {
-      setDescriptionIsValid(false);
-    }
-
-    setDescription(input);
-  };
+    setNicknameIsValid(true);
+    setAuthLevelIsValid(true);
+    setDescriptionIsValid(true);
+  }, [openUserFormModal]);
 
   return (
-    <div>
-      <Modal
-        className="FormModal"
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={openUserFormModal}
-        onClose={() => {
-          setOpenUserFormModal(false);
-        }}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={openUserFormModal}>
-          <Box className="Box">
-            <h2>{!user ? "Add new user" : "Update existing user"}</h2>
+    <>
+      <Backdrop open={openUserFormModal}>
+        <Modal
+          open={openUserFormModal}
+          // submit on Enter key
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              submit();
+            }
+          }}
+          // close on Escape key
+          onClose={() => {
+            setOpenUserFormModal(false);
+          }}
+        >
+          <Fade in={openUserFormModal}>
+            <FormControl
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
 
-            <form onSubmit={onSubmit}>
-              <TextField
-                label="Name"
-                type="text"
-                required
-                fullWidth
-                margin="dense"
-                placeholder="Jane"
-                value={name}
-                inputProps={{ minLength: 2, maxLength: 35 }}
-                onBlur={() => {
-                  setNameDirty(true);
-                }}
-                error={nameDirty && !nameIsValid}
-                helperText={
-                  nameDirty &&
-                  !nameIsValid &&
-                  "Name must be between 2 and 35 characters"
-                }
-                onChange={handleNameChange}
-              />
-              <TextField
-                label="Surname"
-                type="text"
-                required
-                fullWidth
-                margin="dense"
-                placeholder="Doe"
-                value={surname}
-                inputProps={{ minLength: 2, maxLength: 35 }}
-                onBlur={() => {
-                  setSurnameDirty(true);
-                }}
-                error={surnameDirty && !surnameIsValid}
-                helperText={
-                  surnameDirty &&
-                  !surnameIsValid &&
-                  "Surname must be between 2 and 35 characters"
-                }
-                onChange={handleSurnameChange}
-              />
-              <TextField
-                label="Nickname"
-                type="text"
-                fullWidth
-                margin="dense"
-                value={nickname}
-                inputProps={{ maxLength: 35 }}
-                error={!nicknameIsValid}
-                helperText={
-                  !nicknameIsValid && "Nickname must be under 35 characters"
-                }
-                onChange={handleNicknameChange}
-              />
+                maxWidth: "95%",
+                width: "30rem",
 
-              <TextField
-                label="Login email"
-                type="text"
-                required
-                fullWidth
-                margin="dense"
-                placeholder="jane.doe@best.hr"
-                value={loginEmail}
-                inputProps={{ minLength: 6, maxLength: 55 }}
-                onBlur={() => {
-                  setLoginEmailDirty(true);
-                }}
-                error={loginEmailDirty && !loginEmailIsValid}
-                helperText={
-                  loginEmailDirty && !loginEmailIsValid
-                    ? "Invalid email or email length"
-                    : "User will login to CDB with this email"
-                }
-                onChange={handleLoginEmailChange}
-              />
-              <TextField
-                label="Notification email"
-                type="text"
-                required
-                fullWidth
-                margin="dense"
-                placeholder="jane.doe@gmail.com"
-                value={notificationEmail}
-                inputProps={{ minLength: 6, maxLength: 55 }}
-                onBlur={() => {
-                  setNotificationEmailDirty(true);
-                }}
-                error={notificationEmailDirty && !notificationEmailIsValid}
-                helperText={
-                  notificationEmailDirty && !notificationEmailIsValid
-                    ? "Invalid email or email length"
-                    : "App notifications will be sent to this email"
-                }
-                onChange={handleNotificationEmailChange}
-              />
+                maxHeight: "95%",
+                overflowY: "auto",
 
-              <Select
-                label="Authorization level"
-                required
-                fullWidth
-                margin="dense"
-                value={authLevel}
-                error={!authLevelIsValid}
-                onChange={handleAuthLevelChange}
+                borderRadius: "1.5rem",
+                padding: "1rem",
+
+                backgroundColor: "whitesmoke",
+                boxShadow: "#666 2px 2px 8px",
+              }}
+            >
+              <Typography
+                variant="h5"
+                gutterBottom
+                sx={{ textTransform: "uppercase", fontWeight: "bold" }}
               >
-                {authLevels.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Select>
+                {!user ? "Add user" : "Update  user"}
+              </Typography>
 
-              <TextField
-                label="Description"
-                fullWidth
-                multiline
-                minRows={2}
-                maxRows={4}
-                margin="dense"
-                value={description}
-                inputProps={{ maxLength: 475 }}
-                error={!descriptionIsValid}
-                helperText={
-                  !descriptionIsValid &&
-                  "Description must be under 475 characters"
-                }
-                onChange={handleDescriptionChange}
-              />
+              <Box>
+                <TextInput
+                  labelText={"Name"}
+                  isRequired={true}
+                  placeholderText={"Jane"}
+                  helperText={{
+                    error: "Name must be between 2 and 35 characters",
+                    details: "",
+                  }}
+                  inputProps={{ minLength: 2, maxLength: 35 }}
+                  validationFunction={(input) => {
+                    return input.length >= 2 && input.length <= 35;
+                  }}
+                  value={name}
+                  setValue={setName}
+                  valueIsValid={nameIsValid}
+                  setValueIsValid={setNameIsValid}
+                ></TextInput>
+                <TextInput
+                  labelText={"Surname"}
+                  isRequired={true}
+                  placeholderText={"Doe"}
+                  helperText={{
+                    error: "Surname must be between 2 and 35 characters",
+                    details: "",
+                  }}
+                  inputProps={{ minLength: 2, maxLength: 35 }}
+                  validationFunction={(input) => {
+                    return input.length >= 2 && input.length <= 35;
+                  }}
+                  value={surname}
+                  setValue={setSurname}
+                  valueIsValid={surnameIsValid}
+                  setValueIsValid={setSurnameIsValid}
+                ></TextInput>
+                <TextInput
+                  labelText={"Nickname"}
+                  helperText={{
+                    error: "Nickname must be under 35 characters",
+                    details: "",
+                  }}
+                  inputProps={{ maxLength: 35 }}
+                  validationFunction={(input) => {
+                    return input.length <= 35;
+                  }}
+                  value={nickname}
+                  setValue={setNickname}
+                  valueIsValid={nicknameIsValid}
+                  setValueIsValid={setNicknameIsValid}
+                ></TextInput>
 
-              <div className="action-btns">
+                <TextInput
+                  labelText={"Login email"}
+                  isRequired={true}
+                  placeholderText={"jane.doe@gmail.com"}
+                  helperText={{
+                    error: "Invalid email or email length",
+                    details: "User will login to CDB with this email",
+                  }}
+                  inputProps={{ minLength: 6, maxLength: 55 }}
+                  validationFunction={(input) => {
+                    const mailformat =
+                      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+                    return (
+                      input.length >= 6 &&
+                      input.length <= 55 &&
+                      input.match(mailformat)
+                    );
+                  }}
+                  value={loginEmail}
+                  setValue={setLoginEmail}
+                  valueIsValid={loginEmailIsValid}
+                  setValueIsValid={setLoginEmailIsValid}
+                ></TextInput>
+                <TextInput
+                  labelText={"Notification email"}
+                  isRequired={true}
+                  placeholderText={"jane.doe@gmail.com"}
+                  helperText={{
+                    error: "Invalid email or email length",
+                    details: "App notifications will be sent to this email",
+                  }}
+                  inputProps={{ minLength: 6, maxLength: 55 }}
+                  validationFunction={(input) => {
+                    const mailformat =
+                      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+                    return (
+                      input.length >= 6 &&
+                      input.length <= 55 &&
+                      input.match(mailformat)
+                    );
+                  }}
+                  value={notificationEmail}
+                  setValue={setNotificationEmail}
+                  valueIsValid={notificationEmailIsValid}
+                  setValueIsValid={setNotificationEmailIsValid}
+                ></TextInput>
+
+                <TextField
+                  label="Authorization level"
+                  required
+                  fullWidth
+                  select
+                  margin="dense"
+                  helperText={
+                    !authLevelIsValid && "Invalid authorization level"
+                  }
+                  value={authLevel}
+                  error={!authLevelIsValid}
+                  onChange={handleAuthLevelChange}
+                >
+                  {authLevels.map((option) => (
+                    <MenuItem
+                      key={option.value}
+                      value={option.value}
+                      // temporary solution for not being able to change when FR levels
+                      disabled={
+                        option === authLevels[1] || option === authLevels[2]
+                      }
+                    >
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+
+                <TextInput
+                  labelText={"Description"}
+                  textFieldProps={{
+                    multiline: true,
+                    minRows: 2,
+                    maxRows: 5,
+                  }}
+                  helperText={{
+                    error: "Description must be under 475 characters",
+                    details: "",
+                  }}
+                  inputProps={{ maxLength: 475 }}
+                  validationFunction={(input) => {
+                    return input.length <= 475;
+                  }}
+                  value={description}
+                  setValue={setDescription}
+                  valueIsValid={descriptionIsValid}
+                  setValueIsValid={setDescriptionIsValid}
+                ></TextInput>
+              </Box>
+
+              <Box
+                sx={{
+                  marginBlock: "3%",
+
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: 1,
+                }}
+              >
                 <Button
                   variant="outlined"
                   onClick={() => {
@@ -444,14 +466,30 @@ export default function UserForm({
                   Cancel
                 </Button>
 
-                <Button variant="contained" type="submit">
-                  {!user ? "Add user" : "Update user"}
-                </Button>
-              </div>
-            </form>
-          </Box>
-        </Fade>
-      </Modal>
-    </div>
+                <LoadingButton
+                  variant="contained"
+                  onClick={submit}
+                  loading={loadingButton}
+                  disabled={
+                    !(
+                      nameIsValid &&
+                      surnameIsValid &&
+                      nicknameIsValid &&
+                      loginEmailIsValid &&
+                      notificationEmailIsValid &&
+                      authLevelIsValid &&
+                      descriptionIsValid
+                    )
+                  }
+                >
+                  {/* span needed because of bug */}
+                  <span>{!user ? "Add user" : "Update user"}</span>
+                </LoadingButton>
+              </Box>
+            </FormControl>
+          </Fade>
+        </Modal>
+      </Backdrop>
+    </>
   );
 }
