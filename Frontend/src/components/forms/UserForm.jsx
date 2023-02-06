@@ -261,6 +261,7 @@ export default function UserForm({
       <Backdrop open={openUserFormModal}>
         <Modal
           open={openUserFormModal}
+          closeAfterTransition
           // submit on Enter key
           onKeyDown={(e) => {
             if (e.key === "Enter") {
