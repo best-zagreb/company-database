@@ -138,8 +138,8 @@ export default function UserForm({
           body: JSON.stringify(user),
         });
 
-        // later to be changed to 201 Created
-        if (serverResponse.status === 200) {
+        if (serverResponse.ok) {
+          // any 2xy status code
           handleOpenToast({
             type: "success",
             info: "User " + user.firstName + " " + user.lastName + " added.",

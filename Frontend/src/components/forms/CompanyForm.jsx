@@ -119,7 +119,8 @@ export default function UserForm({
         }
       );
 
-      if (serverResponse.status === 201) {
+      if (serverResponse.ok) {
+        // any 2xy status code
         handleOpenToast({
           type: "success",
           info: "Company " + company.name + " added.",

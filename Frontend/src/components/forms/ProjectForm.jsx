@@ -83,8 +83,8 @@ export default function ProjectForm({
         }
       );
 
-      // later to be changed to 201 Created
-      if (serverResponse.status === 200) {
+      if (serverResponse.ok) {
+        // any 2xy status code
         handleOpenToast({
           type: "success",
           info: "Project " + project.name + " added.",

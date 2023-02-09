@@ -48,7 +48,8 @@ export default function App() {
       }
     );
 
-    if (serverResponse.status === 200) {
+    if (serverResponse.ok) {
+      // any 2xy status code
       handleOpenToast({
         type: "info",
         info: "Login successful.",
