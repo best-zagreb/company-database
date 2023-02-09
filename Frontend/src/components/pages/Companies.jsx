@@ -58,7 +58,7 @@ export default function Companies() {
       }
     );
 
-    if (serverResponse.status === 200) {
+    if (serverResponse.ok) {
       const json = await serverResponse.json();
 
       setPosts(json);
@@ -68,7 +68,6 @@ export default function Companies() {
       handleOpenToast({
         type: "error",
         info: "An unknown error accured whilst trying to get companies.",
-        autoHideDuration: 5000,
       });
     }
   }

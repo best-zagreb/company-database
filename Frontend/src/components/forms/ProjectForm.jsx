@@ -88,7 +88,6 @@ export default function ProjectForm({
         handleOpenToast({
           type: "success",
           info: "Project " + project.name + " added.",
-          autoHideDuration: 1000,
         });
 
         setOpenModal(false);
@@ -97,19 +96,16 @@ export default function ProjectForm({
         handleOpenToast({
           type: "error",
           info: "Project with those details cannot be added.",
-          autoHideDuration: 5000,
         });
       } else if (serverResponse.status === 403) {
         handleOpenToast({
           type: "error",
-          info: "Moderator privileges are needed for manipulating projects.",
-          autoHideDuration: 5000,
+          info: "Moderator privileges are required for manipulating projects.",
         });
       } else {
         handleOpenToast({
           type: "error",
           info: "An unknown error accured whilst trying to add project.",
-          autoHideDuration: 5000,
         });
       }
     }

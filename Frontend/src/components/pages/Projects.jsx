@@ -56,7 +56,7 @@ export default function Projects() {
       headers: { googleTokenEncoded: JWToken.credential },
     });
 
-    if (serverResponse.status === 200) {
+    if (serverResponse.ok) {
       const json = await serverResponse.json();
 
       setPosts(json);
@@ -66,7 +66,6 @@ export default function Projects() {
       handleOpenToast({
         type: "error",
         info: "An unknown error accured whilst trying to get projects.",
-        autoHideDuration: 5000,
       });
     }
   }

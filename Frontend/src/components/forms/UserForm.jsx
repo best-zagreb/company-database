@@ -57,27 +57,7 @@ export default function UserForm({
   const [description, setDescription] = useState();
 
   const [nameIsValid, setNameIsValid] = useState(false);
-  // const handleNameChange = (e) => {
-  //   const input = e.target.value;
-  //   if (input.length >= 2 && input.length <= 35) {
-  //     setNameIsValid(true);
-  //   } else {
-  //     setNameIsValid(false);
-  //   }
-
-  //   setName(input);
-  // };
   const [surnameIsValid, setSurnameIsValid] = useState(false);
-  // const handleSurnameChange = (e) => {
-  //   const input = e.target.value;
-  //   if (input.length >= 2 && input.length <= 35) {
-  //     setSurnameIsValid(true);
-  //   } else {
-  //     setSurnameIsValid(false);
-  //   }
-
-  //   setSurname(input);
-  // };
   const [nicknameIsValid, setNicknameIsValid] = useState(true);
   const [loginEmailIsValid, setLoginEmailIsValid] = useState(false);
   const [notificationEmailIsValid, setNotificationEmailIsValid] =
@@ -143,7 +123,6 @@ export default function UserForm({
           handleOpenToast({
             type: "success",
             info: "User " + user.firstName + " " + user.lastName + " added.",
-            autoHideDuration: 1000,
           });
 
           setOpenUserFormModal(false);
@@ -152,19 +131,16 @@ export default function UserForm({
           handleOpenToast({
             type: "error",
             info: "Invalid user details.",
-            autoHideDuration: 5000,
           });
         } else if (serverResponse.status === 403) {
           handleOpenToast({
             type: "error",
-            info: "Administrator privileges are needed for manipulating users.",
-            autoHideDuration: 5000,
+            info: "Administrator privileges are required for manipulating users.",
           });
         } else {
           handleOpenToast({
             type: "error",
             info: "An unknown error accured whilst trying to add user.",
-            autoHideDuration: 5000,
           });
         }
       } else {
@@ -189,11 +165,11 @@ export default function UserForm({
           }
         );
 
-        if (serverResponse.status === 200) {
+        if (serverResponse.ok) {
+          // any 2xy status code
           handleOpenToast({
             type: "success",
             info: "User " + user.firstName + " " + user.lastName + " updated.",
-            autoHideDuration: 1000,
           });
 
           setOpenUserFormModal(false);
@@ -202,19 +178,21 @@ export default function UserForm({
           handleOpenToast({
             type: "error",
             info: "Invalid user details.",
-            autoHideDuration: 5000,
           });
         } else if (serverResponse.status === 403) {
           handleOpenToast({
             type: "error",
-            info: "Administrator privileges are needed for manipulating users.",
-            autoHideDuration: 5000,
+            info: "Administrator privileges are required for manipulating users.",
+          });
+        } else if (serverResponse.status === 404) {
+          handleOpenToast({
+            type: "error",
+            info: "User with id " + user.id + " does not exists.",
           });
         } else {
           handleOpenToast({
             type: "error",
             info: "An unknown error accured whilst trying to update user.",
-            autoHideDuration: 5000,
           });
         }
       }

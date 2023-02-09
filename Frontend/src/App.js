@@ -21,6 +21,7 @@ import Companies from "./components/pages/Companies";
 import Company from "./components/pages/Company";
 
 import Header from "./components/Header";
+import DeleteAlert from "./components/forms/DeleteAlert";
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -104,7 +105,6 @@ export default function App() {
   return (
     <>
       <CssBaseline enableColorScheme />
-
       <Routes>
         <Route
           path="/"
@@ -133,18 +133,28 @@ export default function App() {
         {/* <Route path="setup" element={<Setup setAppIsSetup={setAppIsSetup} />} /> */}
       </Routes>
 
-      {toastMessage && (
-        <Snackbar
-          open={toastOpen}
-          sx={{ maxWidth: "480px" }}
-          autoHideDuration={toastMessage.autoHideDuration}
-          onClose={handleCloseToast}
-        >
-          <Alert onClose={handleCloseToast} severity={toastMessage.type}>
-            {toastMessage.info}
-          </Alert>
-        </Snackbar>
-      )}
+      <Snackbar
+        open={toastOpen}
+        sx={{ maxWidth: "480px" }}
+        autoHideDuration={
+          toastMessage?.type === "success"
+            ? 1500
+            : toastMessage?.type === "info"
+            ? 1000
+            : toastMessage?.type === "warning"
+            ? 3000
+            : toastMessage?.type === "error"
+            ? 5000
+            : null
+        }
+        onClose={handleCloseToast}
+      >
+        <Alert onClose={handleCloseToast} severity={toastMessage?.type}>
+          {toastMessage?.info}
+        </Alert>
+      </Snackbar>
+
+      <DeleteAlert></DeleteAlert>
     </>
   );
 }

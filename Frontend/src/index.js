@@ -9,16 +9,19 @@ import { BrowserRouter } from "react-router-dom";
 
 import { UserProvider } from "./context/UserContext";
 import { ToastProvider } from "./context/ToastContext";
+import { DeleteAlertProvider } from "./context/DeleteAlertContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <UserProvider>
     <ToastProvider>
-      <React.StrictMode>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </React.StrictMode>
+      <DeleteAlertProvider>
+        <React.StrictMode>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </React.StrictMode>
+      </DeleteAlertProvider>
     </ToastProvider>
   </UserProvider>
 );

@@ -124,7 +124,6 @@ export default function UserForm({
         handleOpenToast({
           type: "success",
           info: "Company " + company.name + " added.",
-          autoHideDuration: 1000,
         });
 
         setOpenModal(false);
@@ -133,13 +132,11 @@ export default function UserForm({
         handleOpenToast({
           type: "error",
           info: "Company with those details cannot be added.",
-          autoHideDuration: 5000,
         });
       } else if (serverResponse.status === 403) {
         handleOpenToast({
           type: "error",
-          info: "FR responsible privileges are needed for manipulating companies.",
-          autoHideDuration: 5000,
+          info: "FR responsible privileges are required for manipulating companies.",
         });
       } else {
         handleOpenToast({

@@ -16,6 +16,7 @@ import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 import { useState, useEffect, useContext } from "react";
 
 import ToastContext from "../../context/ToastContext";
+import DeleteAlertContext from "../../context/DeleteAlertContext";
 
 import UserForm from "../forms/UserForm";
 
@@ -42,6 +43,8 @@ const filterTypes = [
 
 export default function Users() {
   const { handleOpenToast } = useContext(ToastContext);
+  const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
+    useContext(DeleteAlertContext);
 
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
   const [user, setUser] = useState();
@@ -66,48 +69,6 @@ export default function Users() {
       handleOpenToast({
         type: "error",
         info: "An unknown error accured whilst trying to get users.",
-        autoHideDuration: 5000,
-      });
-    }
-  }
-
-  async function handleDelete(user) {
-    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-
-    const serverResponse = await fetch(
-      "http://159.65.127.217:8080/users/" + user.id,
-      {
-        method: "DELETE",
-        headers: {
-          googleTokenEncoded: JWToken.credential,
-        },
-      }
-    );
-
-    if (serverResponse.status === 200) {
-      handleOpenToast({
-        type: "success",
-        info: "User " + user.firstName + " " + user.lastName + " deleted.",
-        autoHideDuration: 1000,
-      });
-
-      // refresh list
-      populateUsers();
-    } else if (serverResponse.status === 404) {
-      handleOpenToast({
-        type: "error",
-        info:
-          "User " + user.firstName + " " + user.lastName + " doesn't exist.",
-        autoHideDuration: 5000,
-      });
-
-      // refresh list
-      populateUsers();
-    } else {
-      handleOpenToast({
-        type: "error",
-        info: "An unknown error accured.",
-        autoHideDuration: 5000,
       });
     }
   }
@@ -115,6 +76,14 @@ export default function Users() {
   function handleEdit(user) {
     setUser(user);
     setOpenUserFormModal(true);
+  }
+
+  async function handleDelete(user) {
+    setObject({ type: "User", name: user.firstName + " " + user.lastName });
+    setEndpoint("http://159.65.127.217:8080/users/" + user.id);
+    setPopulateObjects({ function: populateUsers });
+
+    setOpenDeleteAlert(true);
   }
 
   const [filterBy, setFilterBy] = useState("Name");
