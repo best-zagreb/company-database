@@ -1,7 +1,7 @@
-import { CssBaseline, Snackbar, Alert as MuiAlert } from "@mui/material";
+import { CssBaseline } from "@mui/material";
 
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState, useContext, forwardRef } from "react";
+import { useEffect, useState, useContext } from "react";
 
 import UserContext from "./context/UserContext";
 import ToastContext from "./context/ToastContext";
@@ -21,16 +21,12 @@ import Companies from "./components/pages/Companies";
 import Company from "./components/pages/Company";
 
 import Header from "./components/Header";
+import Toast from "./components/Toast";
 import DeleteAlert from "./components/forms/DeleteAlert";
-
-const Alert = forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 export default function App() {
   const { setUser } = useContext(UserContext);
-  const { toastOpen, toastMessage, handleOpenToast, handleCloseToast } =
-    useContext(ToastContext);
+  const { handleOpenToast } = useContext(ToastContext);
 
   const [appIsSetup, setAppIsSetup] = useState(true);
   const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
@@ -133,26 +129,7 @@ export default function App() {
         {/* <Route path="setup" element={<Setup setAppIsSetup={setAppIsSetup} />} /> */}
       </Routes>
 
-      <Snackbar
-        open={toastOpen}
-        sx={{ maxWidth: "480px" }}
-        autoHideDuration={
-          toastMessage?.type === "success"
-            ? 1500
-            : toastMessage?.type === "info"
-            ? 1000
-            : toastMessage?.type === "warning"
-            ? 3000
-            : toastMessage?.type === "error"
-            ? 5000
-            : null
-        }
-        onClose={handleCloseToast}
-      >
-        <Alert onClose={handleCloseToast} severity={toastMessage?.type}>
-          {toastMessage?.info}
-        </Alert>
-      </Snackbar>
+      <Toast></Toast>
 
       <DeleteAlert></DeleteAlert>
     </>
