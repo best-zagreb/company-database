@@ -116,7 +116,7 @@ export default function UserForm({
         body: JSON.stringify(company),
       });
 
-      if (serverResponse.ok1) {
+      if (serverResponse.ok) {
         handleOpenToast({
           type: "success",
           info: "Company " + company.name + " added.",
@@ -132,7 +132,7 @@ export default function UserForm({
       } else if (serverResponse.status === 403) {
         handleOpenToast({
           type: "error",
-          info: "FR responsible privileges are needed for manipulating companies.",
+          info: "FR responsible privileges are required for manipulating companies.",
         });
       } else {
         handleOpenToast({

@@ -57,27 +57,7 @@ export default function UserForm({
   const [description, setDescription] = useState();
 
   const [nameIsValid, setNameIsValid] = useState(false);
-  // const handleNameChange = (e) => {
-  //   const input = e.target.value;
-  //   if (input.length >= 2 && input.length <= 35) {
-  //     setNameIsValid(true);
-  //   } else {
-  //     setNameIsValid(false);
-  //   }
-
-  //   setName(input);
-  // };
   const [surnameIsValid, setSurnameIsValid] = useState(false);
-  // const handleSurnameChange = (e) => {
-  //   const input = e.target.value;
-  //   if (input.length >= 2 && input.length <= 35) {
-  //     setSurnameIsValid(true);
-  //   } else {
-  //     setSurnameIsValid(false);
-  //   }
-
-  //   setSurname(input);
-  // };
   const [nicknameIsValid, setNicknameIsValid] = useState(true);
   const [loginEmailIsValid, setLoginEmailIsValid] = useState(false);
   const [notificationEmailIsValid, setNotificationEmailIsValid] =
@@ -154,7 +134,7 @@ export default function UserForm({
         } else if (serverResponse.status === 403) {
           handleOpenToast({
             type: "error",
-            info: "Administrator privileges are needed for manipulating users.",
+            info: "Administrator privileges are required for manipulating users.",
           });
         } else {
           handleOpenToast({
@@ -200,7 +180,12 @@ export default function UserForm({
         } else if (serverResponse.status === 403) {
           handleOpenToast({
             type: "error",
-            info: "Administrator privileges are needed for manipulating users.",
+            info: "Administrator privileges are required for manipulating users.",
+          });
+        } else if (serverResponse.status === 404) {
+          handleOpenToast({
+            type: "error",
+            info: "User with id " + user.id + " does not exists.",
           });
         } else {
           handleOpenToast({

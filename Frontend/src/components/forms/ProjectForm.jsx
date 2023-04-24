@@ -96,7 +96,7 @@ export default function ProjectForm({
       } else if (serverResponse.status === 403) {
         handleOpenToast({
           type: "error",
-          info: "Moderator privileges are needed for manipulating projects.",
+          info: "Moderator privileges are required for manipulating projects.",
         });
       } else {
         handleOpenToast({
