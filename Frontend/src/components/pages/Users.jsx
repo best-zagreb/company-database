@@ -80,7 +80,7 @@ export default function Users() {
 
   async function handleDelete(user) {
     setObject({ type: "User", name: user.firstName + " " + user.lastName });
-    setEndpoint("http://159.65.127.217:8080/users/" + user.id);
+    setEndpoint("http://localhost:8080/users/" + user.id);
     setPopulateObjects({ function: populateUsers });
 
     setOpenDeleteAlert(true);
