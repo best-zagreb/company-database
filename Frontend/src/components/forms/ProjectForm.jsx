@@ -1,313 +1,533 @@
 import {
   Backdrop,
-  Box,
   Modal,
   Fade,
   Button,
   TextField,
   MenuItem,
+  Typography,
+  FormControl,
+  Box,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import moment from "moment";
 
 import UserContext from "../../context/UserContext";
 import ToastContext from "../../context/ToastContext";
 
+import TextInput from "../partial/TextInput";
+
 import "./Form.css";
 
-const project = {
-  idCreator: null, //int
-  name: null,
-  category: null,
-  type: null, //toUpper
-  startDate: null, //date
-  endDate: null, //date
-  idFRResp: null, //int
-  frgoal: null, //int
-  firstPingDate: null, //date
-  secondPingDate: null, //date
-};
-
-const typeConst = [
-  {
-    value: "Internal",
-  },
+const projectTypes = [
   {
     value: "External",
+    label: "External",
+  },
+  {
+    value: "Internal",
+    label: "Internal",
   },
 ];
 
 export default function ProjectForm({
+  project,
+  populateProjects,
   openModal,
   setOpenModal,
-  populateProjects,
 }) {
   const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
 
-  async function onSubmit(e) {
-    e.preventDefault();
-
-    if (
-      nameIsValid //&&
-      // categoryIsValid &&
-      // startDateIsValid &&
-      // endDateIsValid &&
-      // FRgoalIsValid &&
-      // firstPingDateIsValid &&
-      // secondPingDateIsValid
-    ) {
-      project.idCreator = user.id;
-      project.name = name;
-      project.category = category;
-      project.type = type.toUpperCase();
-      project.startDate = startDate;
-      project.endDate = endDate;
-      project.idFRResp = idFRResp; // TODO, change to it extracts the id from user
-      project.frgoal = FRgoal;
-      project.firstPingDate = firstPingDate;
-      project.secondPingDate = secondPingDate;
-      // console.log(project);
-
-      const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-
-      const serverResponse = await fetch("http://localhost:8080/projects/", {
-        method: "POST",
-        headers: {
-          googleTokenEncoded: JWToken.credential,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(project),
-      });
-
-      if (serverResponse.ok) {
-        handleOpenToast({
-          type: "success",
-          info: "Project " + project.name + " added.",
-        });
-
-        setOpenModal(false);
-        populateProjects();
-      } else if (serverResponse.status === 400) {
-        handleOpenToast({
-          type: "error",
-          info: "Project with those details cannot be added.",
-        });
-      } else if (serverResponse.status === 403) {
-        handleOpenToast({
-          type: "error",
-          info: "Moderator privileges are required for manipulating projects.",
-        });
-      } else {
-        handleOpenToast({
-          type: "error",
-          info: "An unknown error accured whilst trying to add project.",
-        });
-      }
-    }
-  }
+  const [loadingButton, setLoadingButton] = useState(false);
 
   const [name, setName] = useState();
   const [category, setCategory] = useState();
-  const [type, setType] = useState("External");
+  const [type, setType] = useState();
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
-  const [idFRResp, setidFRResp] = useState();
-  const [FRgoal, setFRgoal] = useState();
+  const [FRRespID, setFRRespID] = useState();
+  const [FRGoal, setFRGoal] = useState();
   const [firstPingDate, setFirstPingDate] = useState();
   const [secondPingDate, setSecondPingDate] = useState();
 
-  const [nameIsValid, setNameIsValid] = useState(false);
-  const handleNameChange = (e) => {
-    const input = e.target.value;
-    if (input.length >= 2 && input.length <= 35) {
+  const [nameIsValid, setNameIsValid] = useState();
+  const [categoryIsValid, setCategoryIsValid] = useState();
+  const [typeIsValid, setTypeIsValid] = useState();
+  const [startDateIsValid, setStartDateIsValid] = useState();
+  const [endDateIsValid, setEndDateIsValid] = useState();
+  const [FRRespIDIsValid, setFRRespIDIsValid] = useState();
+  const [FRGoalIsValid, setFRGoalIsValid] = useState();
+  const [firstPingDateIsValid, setFirstPingDateIsValid] = useState();
+  const [secondPingDateIsValid, setSecondPingDateIsValid] = useState();
+
+  async function submit() {
+    if (
+      nameIsValid &&
+      categoryIsValid &&
+      startDateIsValid &&
+      endDateIsValid &&
+      FRRespIDIsValid &&
+      FRGoalIsValid &&
+      firstPingDateIsValid &&
+      secondPingDateIsValid
+    ) {
+      setLoadingButton(true);
+
+      const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+
+      if (!project) {
+        project = {
+          idCreator: user.id,
+
+          name: name.trim(),
+          category: category.trim(),
+          type: type.trim().toUpperCase(),
+          startDate: startDate,
+          endDate: endDate,
+          idFRResp: FRRespID, // TODO: change to it extracts the id from user
+          frgoal: FRGoal !== "" ? FRGoal : null,
+          firstPingDate: firstPingDate,
+          secondPingDate: secondPingDate,
+        };
+
+        const serverResponse = await fetch("http://localhost:8080/projects/", {
+          method: "POST",
+          headers: {
+            googleTokenEncoded: JWToken.credential,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(project),
+        });
+
+        if (serverResponse.ok) {
+          handleOpenToast({
+            type: "success",
+            info: "Project " + project.name + " added.",
+          });
+
+          setOpenModal(false);
+          populateProjects();
+        } else if (serverResponse.status === 400) {
+          handleOpenToast({
+            type: "error",
+            info: "Invalid project details.",
+          });
+        } else if (serverResponse.status === 403) {
+          handleOpenToast({
+            type: "error",
+            info: "Moderator privileges are required for manipulating projects.",
+          });
+        } else {
+          handleOpenToast({
+            type: "error",
+            info: "An unknown error accured whilst trying to add project.",
+          });
+        }
+      } else {
+        project.idCreator = user.id;
+
+        project.name = name.trim();
+        project.category = category.trim();
+        project.type = type.trim().toUpperCase();
+        project.startDate = startDate;
+        project.endDate = endDate;
+        project.idFRResp = FRRespID; // TODO: change to it extracts the id from user
+        project.frgoal = FRGoal !== "" ? FRGoal : null;
+        project.firstPingDate = firstPingDate;
+        project.secondPingDate = secondPingDate;
+
+        const serverResponse = await fetch("http://localhost:8080/projects/", {
+          method: "POST",
+          headers: {
+            googleTokenEncoded: JWToken.credential,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(project),
+        });
+
+        if (serverResponse.ok) {
+          handleOpenToast({
+            type: "success",
+            info: "Project " + project.name + " added.",
+          });
+
+          setOpenModal(false);
+          populateProjects();
+        } else if (serverResponse.status === 400) {
+          handleOpenToast({
+            type: "error",
+            info: "Invalid project details.",
+          });
+        } else if (serverResponse.status === 403) {
+          handleOpenToast({
+            type: "error",
+            info: "Moderator privileges are required for manipulating projects.",
+          });
+        } else if (serverResponse.status === 404) {
+          handleOpenToast({
+            type: "error",
+            info: "Project with id " + project.id + " does not exists.",
+          });
+        } else {
+          handleOpenToast({
+            type: "error",
+            info: "An unknown error accured whilst trying to add project.",
+          });
+        }
+      }
+
+      setLoadingButton(false);
+    }
+  }
+
+  useEffect(() => {
+    if (project) {
+      setName(project.name);
       setNameIsValid(true);
-      setName(input);
-    }
-  };
-
-  const [categoryIsValid, setCategoryIsValid] = useState(false);
-  const handleCategoryChange = (e) => {
-    const input = e.target.value;
-    if (input.length >= 2 && input.length <= 35) {
+      setCategory(project.category);
       setCategoryIsValid(true);
-      setCategory(input);
+      setType(project.type.charAt(0) + project.type.slice(1).toLowerCase());
+      setStartDate(project.startDate);
+      setEndDate(project.endDate);
+      setFRRespID(project.frresp.id);
+      setFRRespIDIsValid(true);
+      setFRGoal(project.frgoal || "");
+      setFirstPingDate(project.firstPingDate || "");
+      setSecondPingDate(project.secondPingDate || "");
+    } else {
+      setName("");
+      setNameIsValid(false);
+      setCategory("");
+      setCategoryIsValid(false);
+      setType(projectTypes[0].value);
+      setStartDate(moment());
+      setEndDate(moment().add(6, "months"));
+      setFRRespID("");
+      setFRRespIDIsValid(false);
+      setFRGoal("");
+      setFirstPingDate("");
+      setSecondPingDate("");
     }
-  };
-
-  const handleTypeChange = (e) => {
-    const input = e.target.value;
-    setType(input);
-  };
-
-  const [startDateIsValid, setStartDateIsValid] = useState(false);
-  const handleStartDateChange = (e) => {
-    const input = e.target.value;
-    setStartDate(input);
-  };
-
-  const [endDateIsValid, setEndDateIsValid] = useState(false);
-  const handleEndDateChange = (e) => {
-    const input = e.target.value;
-    setEndDate(input);
-  };
-
-  const [FRrepIDIsValid, setFRrepIDIsValid] = useState(false);
-  const handleFRrepIDchange = (e) => {
-    const input = e.target.value;
-    setidFRResp(input);
-  };
-
-  const [FRgoalIsValid, setFRgoalIsValid] = useState(false);
-  const handleFRgoalChange = (e) => {
-    const input = e.target.value;
-    setFRgoal(input);
-  };
-
-  const [firstPingDateIsValid, setFirstPingDateIsValid] = useState(false);
-  const handleFirstPingChange = (e) => {
-    const input = e.target.value;
-    setFirstPingDate(input);
-  };
-
-  const [secondPingDateIsValid, setSecondPingDateIsValid] = useState(false);
-  const handleSecondPingChange = (e) => {
-    const input = e.target.value;
-    setSecondPingDate(input);
-  };
+    // optional and predefined fields
+    setTypeIsValid(true);
+    setStartDateIsValid(true);
+    setEndDateIsValid(true);
+    setFRGoalIsValid(true);
+    setFirstPingDateIsValid(true);
+    setSecondPingDateIsValid(true);
+  }, [openModal]);
 
   return (
-    <div>
-      <Modal
-        className="FormModal"
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={openModal}
-        onClose={() => {
-          setOpenModal(false);
-        }}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={openModal}>
-          <Box className="Box">
-            <h2>Add a new project</h2>
+    <>
+      <Backdrop open={openModal}>
+        <Modal
+          open={openModal}
+          closeAfterTransition
+          // submit on Enter key
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              submit();
+            }
+          }}
+          // close on Escape key
+          onClose={() => {
+            setOpenModal(false);
+          }}
+        >
+          <Fade in={openModal}>
+            <FormControl
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
 
-            <form onSubmit={onSubmit}>
-              <TextField
-                id="outlined"
-                label="Project name"
-                type="text"
-                required
-                fullWidth
-                margin="dense"
-                placeholder="Project of Heroes"
-                inputProps={{ minLength: 2, maxLength: 35 }}
-                onChange={handleNameChange}
-              />
+                maxWidth: "95%",
+                width: "30rem",
 
-              <TextField
-                id="outlined"
-                label="Category"
-                type="text"
-                required
-                fullWidth
-                margin="dense"
-                placeholder="Hackathon"
-                inputProps={{ minLength: 2, maxLength: 35 }}
-                onChange={handleCategoryChange}
-              />
+                maxHeight: "95%",
 
-              <TextField
-                id="outlined-select-authorization-level"
-                select
-                label="Project type"
-                fullWidth
-                margin="dense"
-                value={type}
-                onChange={handleTypeChange}
+                borderRadius: "1.5rem",
+                padding: "1rem",
+
+                backgroundColor: "whitesmoke",
+                boxShadow: "#666 2px 2px 8px",
+              }}
+            >
+              <Typography
+                variant="h5"
+                gutterBottom
+                sx={{ textTransform: "uppercase", fontWeight: "bold" }}
               >
-                {typeConst.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.value}
-                  </MenuItem>
-                ))}
-              </TextField>
+                {!project ? "Add project" : "Update project"}
+              </Typography>
 
-              <TextField
-                id="outlined"
-                label="Start date"
-                required
-                type="text"
-                fullWidth
-                margin="dense"
-                placeholder="YYYY-MM-DD"
-                inputProps={{ minLength: 10, maxLength: 10 }}
-                onChange={handleStartDateChange}
-              />
+              <Box
+                sx={{
+                  overflowY: "auto",
+                }}
+              >
+                <TextInput
+                  labelText={"Project name"}
+                  isRequired
+                  helperText={{
+                    error: "Project name must be between 2 and 35 characters",
+                    details: "",
+                  }}
+                  inputProps={{ minLength: 2, maxLength: 35 }}
+                  validationFunction={(input) => {
+                    return input.length >= 2 && input.length <= 35;
+                  }}
+                  value={name}
+                  setValue={setName}
+                  valueIsValid={nameIsValid}
+                  setValueIsValid={setNameIsValid}
+                ></TextInput>
+                <TextInput
+                  labelText={"Category"}
+                  isRequired
+                  placeholderText={"Hackathon"}
+                  helperText={{
+                    error: "Category must be between 2 and 35 characters",
+                    details: "",
+                  }}
+                  inputProps={{ minLength: 2, maxLength: 35 }}
+                  validationFunction={(input) => {
+                    return input.length >= 2 && input.length <= 35;
+                  }}
+                  value={category}
+                  setValue={setCategory}
+                  valueIsValid={categoryIsValid}
+                  setValueIsValid={setCategoryIsValid}
+                ></TextInput>
 
-              <TextField
-                id="outlined"
-                label="End date"
-                required
-                type="text"
-                fullWidth
-                margin="dense"
-                placeholder="YYYY-MM-DD"
-                inputProps={{ minLength: 10, maxLength: 10 }}
-                onChange={handleEndDateChange}
-              />
+                <TextField
+                  label="Project type"
+                  required
+                  fullWidth
+                  select
+                  margin="dense"
+                  helperText={!typeIsValid && "Invalid project type"}
+                  value={type}
+                  error={!typeIsValid}
+                  onChange={(e) => {
+                    const input = e.target.value;
+                    if (
+                      input === projectTypes[0].value ||
+                      input === projectTypes[1].value
+                    ) {
+                      setTypeIsValid(true);
+                    } else {
+                      setTypeIsValid(false);
+                    }
 
-              <TextField
-                id="outlined"
-                label="ID of FR responsible for project"
-                type="text"
-                required
-                fullWidth
-                margin="dense"
-                inputProps={{ minLength: 1, maxLength: 4 }}
-                onChange={handleFRrepIDchange}
-              />
+                    setType(input);
+                  }}
+                >
+                  {projectTypes.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
 
-              <TextField
-                id="outlined"
-                label="FR goal for this project"
-                type="text"
-                required
-                fullWidth
-                margin="dense"
-                inputProps={{ minLength: 1 }}
-                onChange={handleFRgoalChange}
-              />
+                <DatePicker
+                  label="Start date"
+                  required
+                  displayWeekNumber
+                  format="DD.MM.YYYY."
+                  minDate={moment("1980-01-01")}
+                  maxDate={moment().add(2, "years")}
+                  value={startDate}
+                  onChange={(date) => {
+                    const input = date;
+                    if (
+                      input >= moment("1980-01-01") &&
+                      input <= moment().add(2, "years")
+                    ) {
+                      setStartDateIsValid(true);
+                    } else {
+                      setStartDateIsValid(false);
+                    }
 
-              <TextField
-                id="outlined"
-                label="First ping date"
-                required
-                type="text"
-                fullWidth
-                margin="dense"
-                placeholder="YYYY-MM-DD"
-                inputProps={{ minLength: 10, maxLength: 10 }}
-                onChange={handleFirstPingChange}
-              />
+                    setStartDate(input);
+                  }}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      margin: "dense",
+                      helperText: !startDateIsValid && "Invalid start date",
+                      error: !startDateIsValid,
+                    },
+                  }}
+                />
+                <DatePicker
+                  label="End date"
+                  required
+                  displayWeekNumber
+                  format="DD.MM.YYYY."
+                  minDate={startDate}
+                  maxDate={moment().add(2, "years")}
+                  value={endDate}
+                  onChange={(date) => {
+                    const input = date;
+                    if (
+                      input >= startDate &&
+                      input <= moment().add(2, "years")
+                    ) {
+                      setEndDateIsValid(true);
+                    } else {
+                      setEndDateIsValid(false);
+                    }
 
-              <TextField
-                id="outlined"
-                label="Second ping date"
-                required
-                type="text"
-                fullWidth
-                margin="dense"
-                placeholder="YYYY-MM-DD"
-                inputProps={{ minLength: 10, maxLength: 10 }}
-                onChange={handleSecondPingChange}
-              />
+                    setEndDate(input);
+                  }}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      margin: "dense",
+                      helperText: !endDateIsValid && "Invalid end date",
+                      error: !endDateIsValid,
+                    },
+                  }}
+                />
 
-              <div className="action-btns">
+                {/* TODO: change so it shows a DDL with names and sends users ID */}
+                <TextInput
+                  labelText={"FR responsible ID"}
+                  inputType={"number"}
+                  placeholderText={"0"}
+                  isRequired
+                  helperText={{
+                    error: "(TODO: User " + FRRespID + " does not exist)",
+                    details: "",
+                  }}
+                  inputProps={{
+                    min: 0,
+                    max: 9999,
+                    minLength: 1,
+                    maxLength: 4,
+                  }}
+                  validationFunction={(input) => {
+                    return (
+                      input === null ||
+                      (input >= 0 &&
+                        input <= 9999 &&
+                        input.length >= 1 &&
+                        input.length <= 4)
+                    );
+                  }}
+                  value={FRRespID}
+                  setValue={setFRRespID}
+                  valueIsValid={FRRespIDIsValid}
+                  setValueIsValid={setFRRespIDIsValid}
+                ></TextInput>
+
+                <TextInput
+                  labelText={"FR goal"}
+                  inputType={"number"}
+                  placeholderText={"10000"}
+                  helperText={{
+                    error: "FR goal (if present) must be between 1 and 999999",
+                    details: "",
+                  }}
+                  inputProps={{
+                    min: 1,
+                    max: 999999,
+                    minLength: 1,
+                    maxLength: 6,
+                  }}
+                  validationFunction={(input) => {
+                    return (
+                      input === null ||
+                      input === "" ||
+                      (input >= 1 &&
+                        input <= 999999 &&
+                        input.length >= 1 &&
+                        input.length <= 6)
+                    );
+                  }}
+                  value={FRGoal}
+                  setValue={setFRGoal}
+                  valueIsValid={FRGoalIsValid}
+                  setValueIsValid={setFRGoalIsValid}
+                ></TextInput>
+
+                <DatePicker
+                  label="First ping date"
+                  displayWeekNumber
+                  format="DD.MM.YYYY."
+                  minDate={startDate}
+                  maxDate={endDate}
+                  onChange={(date) => {
+                    const input = date;
+                    if (
+                      input === null ||
+                      (input >= startDate && input <= endDate)
+                    ) {
+                      setFirstPingDateIsValid(true);
+                    } else {
+                      setFirstPingDateIsValid(false);
+                    }
+
+                    setFirstPingDate(input);
+                  }}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      margin: "dense",
+                      helperText:
+                        !firstPingDateIsValid &&
+                        "First ping date must be between project start and end date",
+                      error: !firstPingDateIsValid,
+                    },
+                  }}
+                />
+                <DatePicker
+                  label="Second ping date"
+                  displayWeekNumber
+                  format="DD.MM.YYYY."
+                  minDate={firstPingDate || startDate}
+                  maxDate={endDate}
+                  onClick={(date) => {
+                    const input = date;
+                    if (
+                      input === null ||
+                      (input >= startDate && input <= endDate)
+                    ) {
+                      setSecondPingDateIsValid(true);
+                    } else {
+                      setSecondPingDateIsValid(false);
+                    }
+
+                    setSecondPingDate(input);
+                  }}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      margin: "dense",
+                      helperText:
+                        !secondPingDateIsValid &&
+                        "Second ping date must be between project start and end date",
+                      error: !secondPingDateIsValid,
+                    },
+                  }}
+                />
+              </Box>
+
+              <Box
+                sx={{
+                  marginBlock: "3%",
+
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: 1,
+                }}
+              >
                 <Button
                   variant="outlined"
                   onClick={() => {
@@ -317,14 +537,31 @@ export default function ProjectForm({
                   Cancel
                 </Button>
 
-                <Button variant="contained" type="submit">
-                  Add project
-                </Button>
-              </div>
-            </form>
-          </Box>
-        </Fade>
-      </Modal>
-    </div>
+                <LoadingButton
+                  variant="contained"
+                  onClick={submit}
+                  loading={loadingButton}
+                  disabled={
+                    !(
+                      nameIsValid &&
+                      categoryIsValid &&
+                      startDateIsValid &&
+                      endDateIsValid &&
+                      FRRespIDIsValid &&
+                      FRGoalIsValid &&
+                      firstPingDateIsValid &&
+                      secondPingDateIsValid
+                    )
+                  }
+                >
+                  {/* span needed because of bug */}
+                  <span>{!project ? "Add project" : "Update project"}</span>
+                </LoadingButton>
+              </Box>
+            </FormControl>
+          </Fade>
+        </Modal>
+      </Backdrop>
+    </>
   );
 }

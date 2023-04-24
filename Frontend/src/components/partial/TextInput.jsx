@@ -5,6 +5,7 @@ import { useState } from "react";
 
 export default function TextInput({
   labelText,
+  inputType,
   isRequired,
   placeholderText,
   helperText,
@@ -17,7 +18,7 @@ export default function TextInput({
   validationFunction,
 }) {
   const [valueDirty, setValueDirty] = useState(false);
-  const handleNameChange = (e) => {
+  const handleChange = (e) => {
     let input = e.target.value;
 
     if (validationFunction(input)) {
@@ -35,7 +36,7 @@ export default function TextInput({
     <>
       <TextField
         label={labelText}
-        type="text"
+        type={inputType}
         fullWidth
         margin="dense"
         required={isRequired}
@@ -50,7 +51,7 @@ export default function TextInput({
         helperText={
           valueDirty && !valueIsValid ? helperText.error : helperText.details
         }
-        onChange={handleNameChange}
+        onChange={handleChange}
       />
     </>
   );

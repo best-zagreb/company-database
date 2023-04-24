@@ -42,11 +42,13 @@ const authLevels = [
 
 export default function UserForm({
   user,
-  openUserFormModal,
+  openUserFormModal: openModal,
   setOpenUserFormModal,
   populateUsers,
 }) {
   const { handleOpenToast } = useContext(ToastContext);
+
+  const [loadingButton, setLoadingButton] = useState(false);
 
   const [name, setName] = useState();
   const [surname, setSurname] = useState();
@@ -56,32 +58,13 @@ export default function UserForm({
   const [authLevel, setAuthLevel] = useState();
   const [description, setDescription] = useState();
 
-  const [nameIsValid, setNameIsValid] = useState(false);
-  const [surnameIsValid, setSurnameIsValid] = useState(false);
-  const [nicknameIsValid, setNicknameIsValid] = useState(true);
-  const [loginEmailIsValid, setLoginEmailIsValid] = useState(false);
-  const [notificationEmailIsValid, setNotificationEmailIsValid] =
-    useState(false);
-  const [authLevelIsValid, setAuthLevelIsValid] = useState(true);
-  const handleAuthLevelChange = (e) => {
-    const input = e.target.value;
-    if (
-      input == authLevels[0].value ||
-      input == authLevels[1].value ||
-      input == authLevels[2].value ||
-      input == authLevels[3].value ||
-      input == authLevels[4].value
-    ) {
-      setAuthLevelIsValid(true);
-    } else {
-      setAuthLevelIsValid(false);
-    }
-
-    setAuthLevel(input);
-  };
-  const [descriptionIsValid, setDescriptionIsValid] = useState(true);
-
-  const [loadingButton, setLoadingButton] = useState(false);
+  const [nameIsValid, setNameIsValid] = useState();
+  const [surnameIsValid, setSurnameIsValid] = useState();
+  const [nicknameIsValid, setNicknameIsValid] = useState();
+  const [loginEmailIsValid, setLoginEmailIsValid] = useState();
+  const [notificationEmailIsValid, setNotificationEmailIsValid] = useState();
+  const [authLevelIsValid, setAuthLevelIsValid] = useState();
+  const [descriptionIsValid, setDescriptionIsValid] = useState();
 
   async function submit() {
     if (
@@ -109,7 +92,7 @@ export default function UserForm({
           description: description.trim(),
         };
 
-        let serverResponse = await fetch("http://localhost:8080/users/", {
+        const serverResponse = await fetch("http://localhost:8080/users/", {
           method: "POST",
           headers: {
             googleTokenEncoded: JWToken.credential,
@@ -152,7 +135,7 @@ export default function UserForm({
         user.authority = authLevel.trim().toUpperCase();
         user.description = description.trim();
 
-        let serverResponse = await fetch(
+        const serverResponse = await fetch(
           "http://localhost:8080/users/" + user.id,
           {
             method: "PUT",
@@ -205,7 +188,7 @@ export default function UserForm({
       setNameIsValid(true);
       setSurname(user.lastName);
       setSurnameIsValid(true);
-      setNickname(user.nickname ? user.nickname : "");
+      setNickname(user.nickname || "");
       setLoginEmail(user.loginEmail);
       setLoginEmailIsValid(true);
       setNotificationEmail(user.notificationEmail);
@@ -227,16 +210,17 @@ export default function UserForm({
       setAuthLevel(authLevels[0].value);
       setDescription("");
     }
+    // optional and predefined fields
     setNicknameIsValid(true);
     setAuthLevelIsValid(true);
     setDescriptionIsValid(true);
-  }, [openUserFormModal]);
+  }, [openModal]);
 
   return (
     <>
-      <Backdrop open={openUserFormModal}>
+      <Backdrop open={openModal}>
         <Modal
-          open={openUserFormModal}
+          open={openModal}
           closeAfterTransition
           // submit on Enter key
           onKeyDown={(e) => {
@@ -249,7 +233,7 @@ export default function UserForm({
             setOpenUserFormModal(false);
           }}
         >
-          <Fade in={openUserFormModal}>
+          <Fade in={openModal}>
             <FormControl
               sx={{
                 position: "absolute",
@@ -261,7 +245,6 @@ export default function UserForm({
                 width: "30rem",
 
                 maxHeight: "95%",
-                overflowY: "auto",
 
                 borderRadius: "1.5rem",
                 padding: "1rem",
@@ -275,13 +258,17 @@ export default function UserForm({
                 gutterBottom
                 sx={{ textTransform: "uppercase", fontWeight: "bold" }}
               >
-                {!user ? "Add user" : "Update  user"}
+                {!user ? "Add user" : "Update user"}
               </Typography>
 
-              <Box>
+              <Box
+                sx={{
+                  overflowY: "auto",
+                }}
+              >
                 <TextInput
                   labelText={"Name"}
-                  isRequired={true}
+                  isRequired
                   placeholderText={"Jane"}
                   helperText={{
                     error: "Name must be between 2 and 35 characters",
@@ -298,7 +285,7 @@ export default function UserForm({
                 ></TextInput>
                 <TextInput
                   labelText={"Surname"}
-                  isRequired={true}
+                  isRequired
                   placeholderText={"Doe"}
                   helperText={{
                     error: "Surname must be between 2 and 35 characters",
@@ -331,7 +318,7 @@ export default function UserForm({
 
                 <TextInput
                   labelText={"Login email"}
-                  isRequired={true}
+                  isRequired
                   placeholderText={"jane.doe@gmail.com"}
                   helperText={{
                     error: "Invalid email or email length",
@@ -354,7 +341,7 @@ export default function UserForm({
                 ></TextInput>
                 <TextInput
                   labelText={"Notification email"}
-                  isRequired={true}
+                  isRequired
                   placeholderText={"jane.doe@gmail.com"}
                   helperText={{
                     error: "Invalid email or email length",
@@ -387,7 +374,22 @@ export default function UserForm({
                   }
                   value={authLevel}
                   error={!authLevelIsValid}
-                  onChange={handleAuthLevelChange}
+                  onChange={(e) => {
+                    const input = e.target.value;
+                    if (
+                      input === authLevels[0].value ||
+                      input === authLevels[1].value ||
+                      input === authLevels[2].value ||
+                      input === authLevels[3].value ||
+                      input === authLevels[4].value
+                    ) {
+                      setAuthLevelIsValid(true);
+                    } else {
+                      setAuthLevelIsValid(false);
+                    }
+
+                    setAuthLevel(input);
+                  }}
                 >
                   {authLevels.map((option) => (
                     <MenuItem
