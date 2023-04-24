@@ -35,7 +35,6 @@ export default function Header({ setUserIsLoggedIn }) {
     handleOpenToast({
       type: "info",
       info: "Logout successful.",
-      autoHideDuration: 1000,
     });
 
     setUserIsLoggedIn(false);

@@ -63,7 +63,7 @@ export default function ProjectForm({
       project.type = type.toUpperCase();
       project.startDate = startDate;
       project.endDate = endDate;
-      project.idFRResp = idFRResp;
+      project.idFRResp = idFRResp; // TODO, change to it extracts the id from user
       project.frgoal = FRgoal;
       project.firstPingDate = firstPingDate;
       project.secondPingDate = secondPingDate;
@@ -71,24 +71,19 @@ export default function ProjectForm({
 
       const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
-      const serverResponse = await fetch(
-        "http://159.65.127.217:8080/projects/",
-        {
-          method: "POST",
-          headers: {
-            googleTokenEncoded: JWToken.credential,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(project),
-        }
-      );
+      const serverResponse = await fetch("http://localhost:8080/projects/", {
+        method: "POST",
+        headers: {
+          googleTokenEncoded: JWToken.credential,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(project),
+      });
 
-      // later to be changed to 201 Created
-      if (serverResponse.status === 200) {
+      if (serverResponse.ok) {
         handleOpenToast({
           type: "success",
           info: "Project " + project.name + " added.",
-          autoHideDuration: 1000,
         });
 
         setOpenModal(false);
@@ -97,19 +92,16 @@ export default function ProjectForm({
         handleOpenToast({
           type: "error",
           info: "Project with those details cannot be added.",
-          autoHideDuration: 5000,
         });
       } else if (serverResponse.status === 403) {
         handleOpenToast({
           type: "error",
           info: "Moderator privileges are needed for manipulating projects.",
-          autoHideDuration: 5000,
         });
       } else {
         handleOpenToast({
           type: "error",
           info: "An unknown error accured whilst trying to add project.",
-          autoHideDuration: 5000,
         });
       }
     }

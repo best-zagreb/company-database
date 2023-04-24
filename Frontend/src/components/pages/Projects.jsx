@@ -51,12 +51,12 @@ export default function Projects() {
   async function populateProjects() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
-    const serverResponse = await fetch("http://159.65.127.217:8080/projects/", {
+    const serverResponse = await fetch("http://localhost:8080/projects/", {
       method: "GET",
       headers: { googleTokenEncoded: JWToken.credential },
     });
 
-    if (serverResponse.status === 200) {
+    if (serverResponse.ok) {
       const json = await serverResponse.json();
 
       setPosts(json);
@@ -66,7 +66,6 @@ export default function Projects() {
       handleOpenToast({
         type: "error",
         info: "An unknown error accured whilst trying to get projects.",
-        autoHideDuration: 5000,
       });
     }
   }

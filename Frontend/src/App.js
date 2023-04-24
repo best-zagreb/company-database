@@ -38,21 +38,17 @@ export default function App() {
   const location = useLocation();
 
   async function loginUser(JWToken) {
-    const serverResponse = await fetch(
-      "http://159.65.127.217:8080/users/login",
-      {
-        method: "GET",
-        headers: {
-          googleTokenEncoded: JWToken.credential,
-        },
-      }
-    );
+    const serverResponse = await fetch("http://localhost:8080/users/login", {
+      method: "GET",
+      headers: {
+        googleTokenEncoded: JWToken.credential,
+      },
+    });
 
-    if (serverResponse.status === 200) {
+    if (serverResponse.ok) {
       handleOpenToast({
         type: "info",
         info: "Login successful.",
-        autoHideDuration: 1000,
       });
 
       const loginInfo = {
@@ -70,7 +66,6 @@ export default function App() {
       handleOpenToast({
         type: "error",
         info: "You do not have access to Company Database. If you believe this is a mistake, contact your administrator at email@example.com.",
-        autoHideDuration: 5000,
       });
     }
   }
@@ -136,7 +131,17 @@ export default function App() {
         <Snackbar
           open={toastOpen}
           sx={{ maxWidth: "480px" }}
-          autoHideDuration={toastMessage.autoHideDuration}
+          autoHideDuration={
+            toastMessage.autoHideDuration
+              ? toastMessage.autoHideDuration
+              : toastMessage.type === "success"
+              ? 1500 // default for success
+              : toastMessage.type === "info"
+              ? 2000 // default for info
+              : toastMessage.type === "error"
+              ? 5000 // default for error
+              : 3000 // default
+          }
           onClose={handleCloseToast}
         >
           <Alert onClose={handleCloseToast} severity={toastMessage.type}>

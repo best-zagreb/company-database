@@ -107,23 +107,19 @@ export default function UserForm({
 
       const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
-      const serverResponse = await fetch(
-        "http://159.65.127.217:8080/companies/",
-        {
-          method: "POST",
-          headers: {
-            googleTokenEncoded: JWToken.credential,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(company),
-        }
-      );
+      const serverResponse = await fetch("http://localhost:8080/companies/", {
+        method: "POST",
+        headers: {
+          googleTokenEncoded: JWToken.credential,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(company),
+      });
 
-      if (serverResponse.status === 201) {
+      if (serverResponse.ok1) {
         handleOpenToast({
           type: "success",
           info: "Company " + company.name + " added.",
-          autoHideDuration: 1000,
         });
 
         setOpenModal(false);
@@ -132,19 +128,16 @@ export default function UserForm({
         handleOpenToast({
           type: "error",
           info: "Company with those details cannot be added.",
-          autoHideDuration: 5000,
         });
       } else if (serverResponse.status === 403) {
         handleOpenToast({
           type: "error",
           info: "FR responsible privileges are needed for manipulating companies.",
-          autoHideDuration: 5000,
         });
       } else {
         handleOpenToast({
           type: "error",
           info: "An unknown error accured whilst trying to add company.",
-          autoHideDuration: 5000,
         });
       }
     }

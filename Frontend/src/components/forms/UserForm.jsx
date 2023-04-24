@@ -120,16 +120,16 @@ export default function UserForm({
       if (!user) {
         // create new user object
         user = {
-          firstName: name,
-          lastName: surname,
-          nickname: nickname !== "" ? nickname : null,
-          loginEmail: loginEmail,
-          notificationEmail: notificationEmail,
-          authority: authLevel.toUpperCase(),
-          description: description,
+          firstName: name.trim(),
+          lastName: surname.trim(),
+          nickname: nickname !== "" ? nickname.trim() : null,
+          loginEmail: loginEmail.trim(),
+          notificationEmail: notificationEmail.trim(),
+          authority: authLevel.trim().toUpperCase(),
+          description: description.trim(),
         };
 
-        let serverResponse = await fetch("http://159.65.127.217:8080/users/", {
+        let serverResponse = await fetch("http://localhost:8080/users/", {
           method: "POST",
           headers: {
             googleTokenEncoded: JWToken.credential,
@@ -138,12 +138,10 @@ export default function UserForm({
           body: JSON.stringify(user),
         });
 
-        // later to be changed to 201 Created
-        if (serverResponse.status === 200) {
+        if (serverResponse.ok) {
           handleOpenToast({
             type: "success",
             info: "User " + user.firstName + " " + user.lastName + " added.",
-            autoHideDuration: 1000,
           });
 
           setOpenUserFormModal(false);
@@ -152,33 +150,30 @@ export default function UserForm({
           handleOpenToast({
             type: "error",
             info: "Invalid user details.",
-            autoHideDuration: 5000,
           });
         } else if (serverResponse.status === 403) {
           handleOpenToast({
             type: "error",
             info: "Administrator privileges are needed for manipulating users.",
-            autoHideDuration: 5000,
           });
         } else {
           handleOpenToast({
             type: "error",
             info: "An unknown error accured whilst trying to add user.",
-            autoHideDuration: 5000,
           });
         }
       } else {
         // update existing user object so id stays the same
-        user.firstName = name;
-        user.lastName = surname;
-        user.nickname = nickname !== "" ? nickname : null;
-        user.loginEmail = loginEmail;
-        user.notificationEmail = notificationEmail;
-        user.authority = authLevel.toUpperCase();
-        user.description = description;
+        user.firstName = name.trim();
+        user.lastName = surname.trim();
+        user.nickname = nickname !== "" ? nickname.trim() : null;
+        user.loginEmail = loginEmail.trim();
+        user.notificationEmail = notificationEmail.trim();
+        user.authority = authLevel.trim().toUpperCase();
+        user.description = description.trim();
 
         let serverResponse = await fetch(
-          "http://159.65.127.217:8080/users/" + user.id,
+          "http://localhost:8080/users/" + user.id,
           {
             method: "PUT",
             headers: {
@@ -189,11 +184,10 @@ export default function UserForm({
           }
         );
 
-        if (serverResponse.status === 200) {
+        if (serverResponse.ok) {
           handleOpenToast({
             type: "success",
             info: "User " + user.firstName + " " + user.lastName + " updated.",
-            autoHideDuration: 1000,
           });
 
           setOpenUserFormModal(false);
@@ -202,19 +196,16 @@ export default function UserForm({
           handleOpenToast({
             type: "error",
             info: "Invalid user details.",
-            autoHideDuration: 5000,
           });
         } else if (serverResponse.status === 403) {
           handleOpenToast({
             type: "error",
             info: "Administrator privileges are needed for manipulating users.",
-            autoHideDuration: 5000,
           });
         } else {
           handleOpenToast({
             type: "error",
             info: "An unknown error accured whilst trying to update user.",
-            autoHideDuration: 5000,
           });
         }
       }

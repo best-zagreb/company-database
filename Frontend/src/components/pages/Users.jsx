@@ -52,12 +52,12 @@ export default function Users() {
   async function populateUsers() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
-    const serverResponse = await fetch("http://159.65.127.217:8080/users/", {
+    const serverResponse = await fetch("http://localhost:8080/users/", {
       method: "GET",
       headers: { googleTokenEncoded: JWToken.credential },
     });
 
-    if (serverResponse.status === 200) {
+    if (serverResponse.ok) {
       const json = await serverResponse.json();
 
       setPosts(json);
@@ -66,7 +66,6 @@ export default function Users() {
       handleOpenToast({
         type: "error",
         info: "An unknown error accured whilst trying to get users.",
-        autoHideDuration: 5000,
       });
     }
   }
@@ -75,7 +74,7 @@ export default function Users() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     const serverResponse = await fetch(
-      "http://159.65.127.217:8080/users/" + user.id,
+      "http://localhost:8080/users/" + user.id,
       {
         method: "DELETE",
         headers: {
@@ -84,11 +83,10 @@ export default function Users() {
       }
     );
 
-    if (serverResponse.status === 200) {
+    if (serverResponse.ok) {
       handleOpenToast({
         type: "success",
         info: "User " + user.firstName + " " + user.lastName + " deleted.",
-        autoHideDuration: 1000,
       });
 
       // refresh list
@@ -98,7 +96,6 @@ export default function Users() {
         type: "error",
         info:
           "User " + user.firstName + " " + user.lastName + " doesn't exist.",
-        autoHideDuration: 5000,
       });
 
       // refresh list
@@ -107,7 +104,6 @@ export default function Users() {
       handleOpenToast({
         type: "error",
         info: "An unknown error accured.",
-        autoHideDuration: 5000,
       });
     }
   }

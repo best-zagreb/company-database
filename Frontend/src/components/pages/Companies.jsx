@@ -50,15 +50,12 @@ export default function Companies() {
   async function populateCompanies() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
-    const serverResponse = await fetch(
-      "http://159.65.127.217:8080/companies/",
-      {
-        method: "GET",
-        headers: { googleTokenEncoded: JWToken.credential },
-      }
-    );
+    const serverResponse = await fetch("http://localhost:8080/companies/", {
+      method: "GET",
+      headers: { googleTokenEncoded: JWToken.credential },
+    });
 
-    if (serverResponse.status === 200) {
+    if (serverResponse.ok) {
       const json = await serverResponse.json();
 
       setPosts(json);
@@ -68,7 +65,6 @@ export default function Companies() {
       handleOpenToast({
         type: "error",
         info: "An unknown error accured whilst trying to get companies.",
-        autoHideDuration: 5000,
       });
     }
   }
