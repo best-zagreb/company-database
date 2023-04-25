@@ -19,7 +19,7 @@ import ToastContext from "../../context/ToastContext";
 
 import ProjectForm from "./../forms/ProjectForm";
 
-import { ProjectListPage } from "./partial/ListPage";
+import ListPage from "./partial/ListPage";
 import SearchBar from "./partial/SearchBar";
 
 const filterTypes = [
@@ -174,10 +174,9 @@ export default function Projects() {
                   <TableCell
                     key={cellName.value}
                     sx={
+                      cellName.value === "Category" ||
                       cellName.value === "Project end date" ||
-                      cellName.value === "Category"
-                        ? { display: { xs: "none", sm: "table-cell" } }
-                        : cellName.value === "FR goal"
+                      cellName.value === "FR goal"
                         ? {
                             display: { xs: "none", md: "table-cell" },
                           }
@@ -197,7 +196,7 @@ export default function Projects() {
               </TableRow>
             </TableHead>
             <TableBody>
-              <ProjectListPage searchResults={searchResults} />
+              <ListPage type="project" searchResults={searchResults} />
             </TableBody>
           </Table>
         </TableContainer>

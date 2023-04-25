@@ -17,7 +17,7 @@ import { useState, useEffect, useContext } from "react";
 import ToastContext from "../../context/ToastContext";
 
 import SearchBar from "./partial/SearchBar";
-import { CompanyListPage } from "./partial/ListPage";
+import ListPage from "./partial/ListPage";
 
 import CompanyForm from "../forms/CompanyForm";
 
@@ -171,10 +171,9 @@ export default function Companies() {
                   <TableCell
                     key={cellName.value}
                     sx={
-                      cellName.value === "Industry" ||
-                      cellName.value === "ABC categorization"
-                        ? { display: { xs: "none", sm: "table-cell" } }
-                        : cellName.value === "Budget planning month"
+                      cellName.value === "ABC categorization" ||
+                      cellName.value === "Budget planning month" ||
+                      cellName.value === "Webpage URL"
                         ? {
                             display: { xs: "none", md: "table-cell" },
                           }
@@ -194,7 +193,7 @@ export default function Companies() {
               </TableRow>
             </TableHead>
             <TableBody>
-              <CompanyListPage searchResults={searchResults} />
+              <ListPage type="company" searchResults={searchResults} />
             </TableBody>
           </Table>
         </TableContainer>

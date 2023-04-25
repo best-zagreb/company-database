@@ -21,7 +21,7 @@ import DeleteAlertContext from "../../context/DeleteAlertContext";
 import UserForm from "../forms/UserForm";
 
 import SearchBar from "./partial/SearchBar";
-import { UserListPage } from "./partial/ListPage";
+import ListPage from "./partial/ListPage";
 
 const filterTypes = [
   {
@@ -182,46 +182,44 @@ export default function Users() {
       </Container>
 
       <Container maxWidth="false">
-        <TableContainer component={Paper}>
-          <Table size="small" aria-label="users table">
-            <TableHead>
-              <TableRow>
-                {filterTypes.map((cellName) => (
-                  <TableCell
-                    key={cellName.value}
-                    sx={
-                      cellName.value === "Nickname" ||
-                      cellName.value === "E-mail"
-                        ? { display: { xs: "none", sm: "table-cell" } }
-                        : cellName.value === "Max authorization level"
-                        ? {
-                            display: { xs: "none", md: "table-cell" },
-                          }
-                        : { undefined }
+        <Table size="small" aria-label="users table">
+          <TableHead>
+            <TableRow>
+              {filterTypes.map((cellName) => (
+                <TableCell
+                  key={cellName.value}
+                  sx={
+                    cellName.value === "Nickname" ||
+                    cellName.value === "E-mail" ||
+                    cellName.value === "Max authorization level"
+                      ? {
+                          display: { xs: "none", md: "table-cell" },
+                        }
+                      : { undefined }
+                  }
+                >
+                  {cellName.value}
+                  <TableSortLabel
+                    active={filterBy === cellName.value}
+                    direction={
+                      filterBy === cellName.value ? filterDirection : "asc"
                     }
-                  >
-                    {cellName.value}
-                    <TableSortLabel
-                      active={filterBy === cellName.value}
-                      direction={
-                        filterBy === cellName.value ? filterDirection : "asc"
-                      }
-                      onClick={handleFilterResults(cellName.value)}
-                    ></TableSortLabel>
-                  </TableCell>
-                ))}
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <UserListPage
-                searchResults={searchResults}
-                editHandler={handleEdit}
-                handleDelete={handleDelete}
-              />
-            </TableBody>
-          </Table>
-        </TableContainer>
+                    onClick={handleFilterResults(cellName.value)}
+                  ></TableSortLabel>
+                </TableCell>
+              ))}
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <ListPage
+              type="user"
+              searchResults={searchResults}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
+          </TableBody>
+        </Table>
       </Container>
     </>
   );

@@ -1,32 +1,103 @@
-import { UserPost, CompanyPost, ProjectPost } from "./Post.jsx";
+import { TableCell, TableRow, IconButton, Link } from "@mui/material";
+import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
-const UserListPage = ({ searchResults, editHandler, handleDelete }) => {
-  const results = searchResults.map((user) => (
-    <UserPost
-      key={user.id}
-      user={user}
-      editHandler={editHandler}
-      handleDelete={handleDelete}
-    />
-  ));
-
-  return <>{results?.length > 0 && results}</>;
+const columns = {
+  user: [
+    { key: "firstName" },
+    { key: "lastName" },
+    { key: "nickname", xsHide: true },
+    { key: "loginEmail", xsHide: true },
+    { key: "authority", xsHide: true },
+  ],
+  company: [
+    { key: "name" },
+    { key: "domain" },
+    { key: "abcCategory", xsHide: true },
+    {
+      key: "budgetPlanningMonth",
+      xsHide: true,
+    },
+    { key: "webUrl", xsHide: true },
+  ],
+  project: [
+    { key: "name" },
+    { key: "category", xsHide: true },
+    { key: "frresp" },
+    { key: "endDate", xsHide: true },
+    { key: "frgoal", xsHide: true },
+  ],
 };
 
-const CompanyListPage = ({ searchResults }) => {
-  const results = searchResults.map((company) => (
-    <CompanyPost key={company.id} company={company} />
-  ));
+export default function ListPage({
+  type,
+  searchResults,
+  handleEdit,
+  handleDelete,
+}) {
+  return (
+    <>
+      {searchResults?.length > 0 &&
+        searchResults.map((data) => (
+          <TableRow key={data.id}>
+            {columns[type].map((column) => {
+              const value = data[column.key];
+              const xsHide = column.xsHide;
 
-  return <>{results?.length > 0 && results}</>;
-};
+              return (
+                <TableCell
+                  key={column.key}
+                  sx={{
+                    display: {
+                      xs: xsHide ? "none" : "table-cell",
+                      md: "table-cell",
+                    },
+                  }}
+                >
+                  {column.key === "frresp" ? (
+                    value.firstName + " " + value.lastName
+                  ) : column.key === "webUrl" ? (
+                    <Link href={value} target="_blank" rel="noopener">
+                      {value}
+                    </Link>
+                  ) : (
+                    value
+                  )}
+                </TableCell>
+              );
+            })}
 
-const ProjectListPage = ({ searchResults }) => {
-  const results = searchResults.map((project) => (
-    <ProjectPost key={project.id} project={project} />
-  ));
-
-  return <>{results?.length > 0 && results}</>;
-};
-
-export { UserListPage, CompanyListPage, ProjectListPage };
+            {type === "user" && (
+              <TableCell>
+                <IconButton
+                  size="small"
+                  aria-label="edit"
+                  onClick={() => handleEdit(data)}
+                  sx={{
+                    margin: 0.25,
+                    color: "white",
+                    backgroundColor: "#1976d2",
+                    borderRadius: 1,
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  aria-label="delete"
+                  onClick={() => handleDelete(data)}
+                  sx={{
+                    margin: 0.25,
+                    color: "white",
+                    backgroundColor: "#1976d2",
+                    borderRadius: 1,
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </TableCell>
+            )}
+          </TableRow>
+        ))}
+    </>
+  );
+}
