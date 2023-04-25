@@ -44,7 +44,7 @@ export default function Companies() {
     },
   ];
 
-  const [posts, setPosts] = useState([]);
+  const [tableItems, setPosts] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
   async function populateCompanies() {
@@ -148,7 +148,7 @@ export default function Companies() {
       >
         <SearchBar
           type="companies"
-          posts={posts}
+          tableItems={tableItems}
           setSearchResults={setSearchResults}
         />
 

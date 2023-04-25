@@ -1,14 +1,9 @@
 import {
-  Button,
-  TableCell,
-  TableHead,
-  Paper,
-  TableContainer,
-  TableRow,
-  TableBody,
-  Table,
-  TableSortLabel,
   Container,
+  Box,
+  Button,
+  Typography,
+  CircularProgress,
 } from "@mui/material";
 
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
@@ -21,25 +16,7 @@ import DeleteAlertContext from "../../context/DeleteAlertContext";
 import UserForm from "../forms/UserForm";
 
 import SearchBar from "./partial/SearchBar";
-import ListPage from "./partial/ListPage";
-
-const filterTypes = [
-  {
-    value: "Name",
-  },
-  {
-    value: "Surname",
-  },
-  {
-    value: "Nickname",
-  },
-  {
-    value: "E-mail",
-  },
-  {
-    value: "Max authorization level",
-  },
-];
+import TableComponent from "./partial/TableComponent";
 
 export default function Users() {
   const { handleOpenToast } = useContext(ToastContext);
@@ -49,10 +26,14 @@ export default function Users() {
   const [openUserFormModal, setOpenUserFormModal] = useState(false);
   const [user, setUser] = useState();
 
-  const [posts, setPosts] = useState([]);
+  const [tableItems, setTableItems] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
+  const [loading, setLoading] = useState(true);
+
   async function populateUsers() {
+    setLoading(true);
+
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     const serverResponse = await fetch("http://localhost:8080/users/", {
@@ -63,7 +44,7 @@ export default function Users() {
     if (serverResponse.ok) {
       const json = await serverResponse.json();
 
-      setPosts(json);
+      setTableItems(json);
       setSearchResults(json);
     } else {
       handleOpenToast({
@@ -71,6 +52,8 @@ export default function Users() {
         info: "An unknown error accured whilst trying to get users.",
       });
     }
+
+    setLoading(false);
   }
 
   function handleEdit(user) {
@@ -84,58 +67,6 @@ export default function Users() {
     setPopulateObjects({ function: populateUsers });
 
     setOpenDeleteAlert(true);
-  }
-
-  const [filterBy, setFilterBy] = useState("Name");
-  const [filterDirection, setFilterDirection] = useState("desc");
-
-  const handleFilterResults = (property) => (event) => {
-    let filterByCategory = property;
-    if (filterByCategory === filterBy) {
-      reverseFunction();
-    } else {
-      setFilterBy(filterByCategory);
-      filterFunction(filterByCategory);
-      setFilterDirection("asc");
-    }
-  };
-
-  function filterFunction(filterBy) {
-    let filtrirana;
-
-    if (filterBy === "Name") {
-      filtrirana = searchResults.sort((a, b) =>
-        a.firstName.localeCompare(b.firstName)
-      );
-    } else if (filterBy === "Surname") {
-      filtrirana = searchResults.sort((a, b) =>
-        a.lastName.localeCompare(b.lastName)
-      );
-    } else if (filterBy === "Nickname") {
-      filtrirana = searchResults.sort((a, b) =>
-        a.nickname.localeCompare(b.nickname)
-      );
-    } else if (filterBy === "E-mail") {
-      filtrirana = searchResults.sort((a, b) =>
-        a.loginEmail.localeCompare(b.loginEmail)
-      );
-    } else if (filterBy === "Max authorization level") {
-      filtrirana = searchResults.sort((a, b) =>
-        a.authority.localeCompare(b.authority)
-      );
-    }
-
-    setSearchResults(filtrirana);
-  }
-
-  function reverseFunction() {
-    let reversana = searchResults.reverse();
-
-    setFilterDirection((oldFilterDirection) => {
-      if (oldFilterDirection === "asc") return "desc";
-      else return "asc";
-    });
-    setSearchResults(reversana);
   }
 
   useEffect(() => {
@@ -164,7 +95,7 @@ export default function Users() {
       >
         <SearchBar
           type="users"
-          posts={posts}
+          tableItems={tableItems}
           setSearchResults={setSearchResults}
         />
 
@@ -182,44 +113,23 @@ export default function Users() {
       </Container>
 
       <Container maxWidth="false">
-        <Table size="small" aria-label="users table">
-          <TableHead>
-            <TableRow>
-              {filterTypes.map((cellName) => (
-                <TableCell
-                  key={cellName.value}
-                  sx={
-                    cellName.value === "Nickname" ||
-                    cellName.value === "E-mail" ||
-                    cellName.value === "Max authorization level"
-                      ? {
-                          display: { xs: "none", md: "table-cell" },
-                        }
-                      : { undefined }
-                  }
-                >
-                  {cellName.value}
-                  <TableSortLabel
-                    active={filterBy === cellName.value}
-                    direction={
-                      filterBy === cellName.value ? filterDirection : "asc"
-                    }
-                    onClick={handleFilterResults(cellName.value)}
-                  ></TableSortLabel>
-                </TableCell>
-              ))}
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <ListPage
-              type="user"
-              searchResults={searchResults}
-              handleEdit={handleEdit}
-              handleDelete={handleDelete}
-            />
-          </TableBody>
-        </Table>
+        {loading ? (
+          <Box sx={{ display: "grid", placeItems: "center" }}>
+            <CircularProgress size={100} />
+          </Box>
+        ) : searchResults?.length <= 0 ? (
+          <Typography variant="h4" align="center">
+            {"No users :("}
+          </Typography>
+        ) : (
+          <TableComponent
+            type="users"
+            searchResults={searchResults}
+            setSearchResults={setSearchResults}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          ></TableComponent>
+        )}
       </Container>
     </>
   );

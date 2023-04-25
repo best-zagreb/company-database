@@ -45,7 +45,7 @@ export default function Projects() {
 
   const [openProjectFormModal, setOpenProjectFormModal] = useState(false);
 
-  const [posts, setPosts] = useState([]);
+  const [tableItems, setPosts] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
   async function populateProjects() {
@@ -151,7 +151,7 @@ export default function Projects() {
       >
         <SearchBar
           type="projects"
-          posts={posts}
+          tableItems={tableItems}
           setSearchResults={setSearchResults}
         />
 
