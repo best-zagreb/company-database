@@ -18,7 +18,7 @@ import moment from "moment";
 import UserContext from "../../context/UserContext";
 import ToastContext from "../../context/ToastContext";
 
-import TextInput from "../partial/TextInput";
+import TextInput from "./partial/TextInput";
 
 import "./Form.css";
 
@@ -66,156 +66,109 @@ export default function ProjectForm({
 
   async function submit() {
     if (
-      nameIsValid &&
-      categoryIsValid &&
-      startDateIsValid &&
-      endDateIsValid &&
-      FRRespIDIsValid &&
-      FRGoalIsValid &&
-      firstPingDateIsValid &&
-      secondPingDateIsValid
+      !nameIsValid ||
+      !categoryIsValid ||
+      !startDateIsValid ||
+      !endDateIsValid ||
+      !FRRespIDIsValid ||
+      !FRGoalIsValid ||
+      !firstPingDateIsValid ||
+      !secondPingDateIsValid
     ) {
-      setLoadingButton(true);
-
-      const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-
-      if (!project) {
-        project = {
-          idCreator: user.id,
-
-          name: name.trim(),
-          category: category.trim(),
-          type: type.trim().toUpperCase(),
-          startDate: startDate,
-          endDate: endDate,
-          idFRResp: FRRespID, // TODO: change to it extracts the id from user
-          frgoal: FRGoal !== "" ? FRGoal : null,
-          firstPingDate: firstPingDate,
-          secondPingDate: secondPingDate,
-        };
-
-        const serverResponse = await fetch("http://localhost:8080/projects/", {
-          method: "POST",
-          headers: {
-            googleTokenEncoded: JWToken.credential,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(project),
-        });
-
-        if (serverResponse.ok) {
-          handleOpenToast({
-            type: "success",
-            info: "Project " + project.name + " added.",
-          });
-
-          setOpenModal(false);
-          populateProjects();
-        } else if (serverResponse.status === 400) {
-          handleOpenToast({
-            type: "error",
-            info: "Invalid project details.",
-          });
-        } else if (serverResponse.status === 403) {
-          handleOpenToast({
-            type: "error",
-            info: "Moderator privileges are required for manipulating projects.",
-          });
-        } else {
-          handleOpenToast({
-            type: "error",
-            info: "An unknown error accured whilst trying to add project.",
-          });
-        }
-      } else {
-        project.idCreator = user.id;
-
-        project.name = name.trim();
-        project.category = category.trim();
-        project.type = type.trim().toUpperCase();
-        project.startDate = startDate;
-        project.endDate = endDate;
-        project.idFRResp = FRRespID; // TODO: change to it extracts the id from user
-        project.frgoal = FRGoal !== "" ? FRGoal : null;
-        project.firstPingDate = firstPingDate;
-        project.secondPingDate = secondPingDate;
-
-        const serverResponse = await fetch("http://localhost:8080/projects/", {
-          method: "POST",
-          headers: {
-            googleTokenEncoded: JWToken.credential,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(project),
-        });
-
-        if (serverResponse.ok) {
-          handleOpenToast({
-            type: "success",
-            info: "Project " + project.name + " added.",
-          });
-
-          setOpenModal(false);
-          populateProjects();
-        } else if (serverResponse.status === 400) {
-          handleOpenToast({
-            type: "error",
-            info: "Invalid project details.",
-          });
-        } else if (serverResponse.status === 403) {
-          handleOpenToast({
-            type: "error",
-            info: "Moderator privileges are required for manipulating projects.",
-          });
-        } else if (serverResponse.status === 404) {
-          handleOpenToast({
-            type: "error",
-            info: "Project with id " + project.id + " does not exists.",
-          });
-        } else {
-          handleOpenToast({
-            type: "error",
-            info: "An unknown error accured whilst trying to add project.",
-          });
-        }
-      }
-
-      setLoadingButton(false);
+      return;
     }
+
+    setLoadingButton(true);
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+    const projectData = {
+      idCreator: user.id,
+      name: name.trim(),
+      category: category.trim(),
+      type: type.trim().toUpperCase(),
+      startDate: startDate,
+      endDate: endDate,
+      idFRResp: FRRespID, // TODO: change to it extracts the id from user
+      frgoal: FRGoal !== "" ? FRGoal : null,
+      firstPingDate: firstPingDate,
+      secondPingDate: secondPingDate,
+    };
+
+    const request = {
+      method: project ? "PUT" : "POST",
+      headers: {
+        googleTokenEncoded: JWToken.credential,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(projectData),
+    };
+
+    const serverResponse = await fetch(
+      `http://localhost:8080/projects/${project?.id ?? ""}`,
+      request
+    );
+
+    if (serverResponse.ok) {
+      handleOpenToast({
+        type: "success",
+        info:
+          "Project " +
+          projectData.name +
+          " " +
+          (project ? "updated" : "added") +
+          ".",
+      });
+
+      setOpenModal(false);
+      populateProjects();
+    } else if (serverResponse.status === 400) {
+      handleOpenToast({
+        type: "error",
+        info: "Invalid project details.",
+      });
+    } else if (serverResponse.status === 403) {
+      handleOpenToast({
+        type: "error",
+        info: "Moderator privileges are required for manipulating projects.",
+      });
+    } else if (serverResponse.status === 404) {
+      handleOpenToast({
+        type: "error",
+        info: "Project with id " + project.id + " does not exist.",
+      });
+    } else {
+      handleOpenToast({
+        type: "error",
+        info:
+          "An unknown error occurred while trying to " +
+          (project ? "update" : "add") +
+          " project.",
+      });
+    }
+
+    setLoadingButton(false);
   }
 
   useEffect(() => {
-    if (project) {
-      setName(project.name);
-      setNameIsValid(true);
-      setCategory(project.category);
-      setCategoryIsValid(true);
-      setType(project.type.charAt(0) + project.type.slice(1).toLowerCase());
-      setStartDate(project.startDate);
-      setEndDate(project.endDate);
-      setFRRespID(project.frresp.id);
-      setFRRespIDIsValid(true);
-      setFRGoal(project.frgoal || "");
-      setFirstPingDate(project.firstPingDate || "");
-      setSecondPingDate(project.secondPingDate || "");
-    } else {
-      setName("");
-      setNameIsValid(false);
-      setCategory("");
-      setCategoryIsValid(false);
-      setType(projectTypes[0].value);
-      setStartDate(moment());
-      setEndDate(moment().add(6, "months"));
-      setFRRespID("");
-      setFRRespIDIsValid(false);
-      setFRGoal("");
-      setFirstPingDate("");
-      setSecondPingDate("");
-    }
-    // optional and predefined fields
+    setName(project?.name);
+    setCategory(project?.category);
+    setType(
+      project?.type.charAt(0) + project?.type.slice(1).toLowerCase() ||
+        projectTypes[0].value
+    );
+    setStartDate(project?.startDate || moment());
+    setEndDate(project?.endDate || moment().add(6, "months"));
+    setFRRespID(project?.frresp.id);
+    setFRGoal(project?.frgoal);
+    setFirstPingDate(project?.firstPingDate);
+    setSecondPingDate(project?.secondPingDate);
+
+    // optional and predefined fields are always valid
+    setNameIsValid(project ? true : false);
+    setCategoryIsValid(project ? true : false);
     setTypeIsValid(true);
     setStartDateIsValid(true);
     setEndDateIsValid(true);
+    setFRRespIDIsValid(project ? true : false);
     setFRGoalIsValid(true);
     setFirstPingDateIsValid(true);
     setSecondPingDateIsValid(true);

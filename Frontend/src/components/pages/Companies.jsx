@@ -1,138 +1,111 @@
 import {
-  TableSortLabel,
-  TableCell,
-  TableHead,
-  Paper,
-  TableContainer,
-  TableRow,
-  TableBody,
-  Table,
-  Button,
   Container,
+  Box,
+  Button,
+  Typography,
+  CircularProgress,
 } from "@mui/material";
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 
 import { useState, useEffect, useContext } from "react";
 
 import ToastContext from "../../context/ToastContext";
-
-import SearchBar from "./partial/SearchBar";
-import ListPage from "./partial/ListPage";
+// import DeleteAlertContext from "../../context/DeleteAlertContext";
 
 import CompanyForm from "../forms/CompanyForm";
+
+import SearchBar from "./partial/SearchBar";
+import TableComponent from "./partial/TableComponent";
+
+const tableColumns = [
+  {
+    key: "name",
+    label: "Company name",
+  },
+  {
+    key: "domain",
+    label: "Industry",
+  },
+  {
+    key: "abcCategory",
+    label: "ABC categorization",
+    xsHide: true,
+  },
+  {
+    key: "budgetPlanningMonth",
+    label: "Budget planning month",
+    xsHide: true,
+  },
+  {
+    key: "webUrl",
+    label: "Webpage URL",
+    xsHide: true,
+  },
+];
 
 export default function Companies() {
   const { handleOpenToast } = useContext(ToastContext);
 
-  const [openCompanyFormModal, setOpenCompanyFormModal] = useState(false);
+  const [openFormModal, setOpenFormModal] = useState(false);
 
-  const filterTypes = [
-    {
-      value: "Company name",
-    },
-    {
-      value: "Industry",
-    },
-    {
-      value: "ABC categorization",
-    },
-    {
-      value: "Budget planning month",
-    },
-    {
-      value: "Webpage URL",
-    },
-  ];
+  const [data, setData] = useState([]);
 
-  const [tableItems, setPosts] = useState([]);
-  const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  async function populateCompanies() {
+  async function populateTable() {
+    setLoading(true);
+
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
-    const serverResponse = await fetch("http://localhost:8080/companies/", {
-      method: "GET",
-      headers: { googleTokenEncoded: JWToken.credential },
-    });
+    try {
+      const serverResponse = await fetch("http://localhost:8080/companies/", {
+        method: "GET",
+        headers: { googleTokenEncoded: JWToken.credential },
+      });
 
-    if (serverResponse.ok) {
-      const json = await serverResponse.json();
+      if (serverResponse.ok) {
+        const json = await serverResponse.json();
 
-      setPosts(json);
-      setSearchResults(json);
-      //let newData = data.sort((a, b) => a.name.localeCompare(b.name))
-    } else {
+        setData(json);
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "A server error occurred whilst fetching data.",
+        });
+      }
+    } catch (error) {
       handleOpenToast({
         type: "error",
-        info: "An unknown error accured whilst trying to get companies.",
+        info: "An error occurred whilst trying to fetch data.",
       });
     }
+
+    setLoading(false);
   }
 
-  const [filterBy, setFilterBy] = useState("Company name");
-  const [filterDirection, setFilterDirection] = useState("asc");
+  // function handleEdit(company) {
+  //   setUser(company);
+  //   setOpenFormModal(true);
+  // }
 
-  const handleFilterResults = (property) => (event) => {
-    let filterByCategory = property;
-    if (filterByCategory === filterBy) {
-      reverseFunction();
-    } else {
-      setFilterBy(filterByCategory);
-      filterFunction(filterByCategory);
-      setFilterDirection("asc");
-    }
-  };
+  // async function handleDelete(company) {
+  //   setObject({ type: "Company", name: company.name });
+  //   setEndpoint("http://localhost:8080/company/" + company.id);
+  //   setPopulateObjects({ function: populateTable });
 
-  function reverseFunction() {
-    let reversana = searchResults.reverse();
-
-    setFilterDirection((oldFilterDirection) => {
-      if (oldFilterDirection === "asc") return "desc";
-      else return "asc";
-    });
-    setSearchResults(reversana);
-  }
-
-  function filterFunction(filterBy) {
-    let filtrirana;
-
-    if (filterBy === "Company name") {
-      filtrirana = searchResults.sort((a, b) => a.name.localeCompare(b.name));
-      setSearchResults(filtrirana);
-    } else if (filterBy === "Industry") {
-      filtrirana = searchResults.sort((a, b) =>
-        a.domain.localeCompare(b.domain)
-      );
-      setSearchResults(filtrirana);
-    } else if (filterBy === "ABC categorization") {
-      filtrirana = searchResults.sort((a, b) =>
-        a.abcCategory.localeCompare(b.abcCategory)
-      );
-      setSearchResults(filtrirana);
-    } else if (filterBy === "Budget planning month") {
-      filtrirana = searchResults.sort((a, b) =>
-        a.budgetPlanningMonth.localeCompare(b.budgetPlanningMonth)
-      );
-      setSearchResults(filtrirana);
-    } else if (filterBy === "Webpage URL") {
-      filtrirana = searchResults.sort((a, b) =>
-        a.webUrl.localeCompare(b.webUrl)
-      );
-    }
-
-    setSearchResults(filtrirana);
-  }
+  //   setOpenDeleteAlert(true);
+  // }
 
   useEffect(() => {
-    populateCompanies();
+    populateTable();
   }, []);
 
   return (
     <>
       <CompanyForm
-        openModal={openCompanyFormModal}
-        setOpenModal={setOpenCompanyFormModal}
-        populateCompanies={populateCompanies}
+        openModal={openFormModal}
+        setOpenModal={setOpenFormModal}
+        populateCompanies={populateTable}
       />
 
       <Container
@@ -146,57 +119,36 @@ export default function Companies() {
           gap: 1,
         }}
       >
-        <SearchBar
-          type="companies"
-          tableItems={tableItems}
-          setSearchResults={setSearchResults}
-        />
+        <SearchBar type="companies" data={data} setData={setData} />
 
         <Button
           variant="contained"
           size="medium"
           startIcon={<AddCircleIcon />}
-          onClick={() => setOpenCompanyFormModal(true)}
+          onClick={() => setOpenFormModal(true)}
         >
           Add company
         </Button>
       </Container>
 
       <Container maxWidth="false">
-        <TableContainer component={Paper}>
-          <Table size="small" aria-label="companies table">
-            <TableHead>
-              <TableRow>
-                {filterTypes.map((cellName) => (
-                  <TableCell
-                    key={cellName.value}
-                    sx={
-                      cellName.value === "ABC categorization" ||
-                      cellName.value === "Budget planning month" ||
-                      cellName.value === "Webpage URL"
-                        ? {
-                            display: { xs: "none", md: "table-cell" },
-                          }
-                        : { undefined }
-                    }
-                  >
-                    {cellName.value}
-                    <TableSortLabel
-                      active={filterBy === cellName.value}
-                      direction={
-                        filterBy === cellName.value ? filterDirection : "asc"
-                      }
-                      onClick={handleFilterResults(cellName.value)}
-                    ></TableSortLabel>
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <ListPage type="company" searchResults={searchResults} />
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {loading ? (
+          <Box sx={{ display: "grid", placeItems: "center" }}>
+            <CircularProgress size={100} />
+          </Box>
+        ) : data?.length <= 0 ? (
+          <Typography variant="h4" align="center">
+            {"No companies :("}
+          </Typography>
+        ) : (
+          <TableComponent
+            tableColumns={tableColumns}
+            data={data}
+            setData={setData}
+            // handleEdit={handleEdit}
+            // handleDelete={handleDelete}
+          ></TableComponent>
+        )}
       </Container>
     </>
   );

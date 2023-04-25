@@ -15,7 +15,7 @@ import { useState, useContext, useEffect } from "react";
 
 import ToastContext from "../../context/ToastContext";
 
-import TextInput from "../partial/TextInput";
+import TextInput from "./partial/TextInput";
 
 const authLevels = [
   {
@@ -68,150 +68,100 @@ export default function UserForm({
 
   async function submit() {
     if (
-      nameIsValid &&
-      surnameIsValid &&
-      nicknameIsValid &&
-      loginEmailIsValid &&
-      notificationEmailIsValid &&
-      authLevelIsValid &&
-      descriptionIsValid
+      !nameIsValid ||
+      !surnameIsValid ||
+      !nicknameIsValid ||
+      !loginEmailIsValid ||
+      !notificationEmailIsValid ||
+      !authLevelIsValid ||
+      !descriptionIsValid
     ) {
-      setLoadingButton(true);
-
-      const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-
-      if (!user) {
-        // create new user object
-        user = {
-          firstName: name.trim(),
-          lastName: surname.trim(),
-          nickname: nickname !== "" ? nickname.trim() : null,
-          loginEmail: loginEmail.trim(),
-          notificationEmail: notificationEmail.trim(),
-          authority: authLevel.trim().toUpperCase(),
-          description: description.trim(),
-        };
-
-        const serverResponse = await fetch("http://localhost:8080/users/", {
-          method: "POST",
-          headers: {
-            googleTokenEncoded: JWToken.credential,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(user),
-        });
-
-        if (serverResponse.ok) {
-          handleOpenToast({
-            type: "success",
-            info: "User " + user.firstName + " " + user.lastName + " added.",
-          });
-
-          setOpenUserFormModal(false);
-          populateUsers();
-        } else if (serverResponse.status === 400) {
-          handleOpenToast({
-            type: "error",
-            info: "Invalid user details.",
-          });
-        } else if (serverResponse.status === 403) {
-          handleOpenToast({
-            type: "error",
-            info: "Administrator privileges are required for manipulating users.",
-          });
-        } else {
-          handleOpenToast({
-            type: "error",
-            info: "An unknown error accured whilst trying to add user.",
-          });
-        }
-      } else {
-        // update existing user object so id stays the same
-        user.firstName = name.trim();
-        user.lastName = surname.trim();
-        user.nickname = nickname !== "" ? nickname.trim() : null;
-        user.loginEmail = loginEmail.trim();
-        user.notificationEmail = notificationEmail.trim();
-        user.authority = authLevel.trim().toUpperCase();
-        user.description = description.trim();
-
-        const serverResponse = await fetch(
-          "http://localhost:8080/users/" + user.id,
-          {
-            method: "PUT",
-            headers: {
-              googleTokenEncoded: JWToken.credential,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(user),
-          }
-        );
-
-        if (serverResponse.ok) {
-          handleOpenToast({
-            type: "success",
-            info: "User " + user.firstName + " " + user.lastName + " updated.",
-          });
-
-          setOpenUserFormModal(false);
-          populateUsers();
-        } else if (serverResponse.status === 400) {
-          handleOpenToast({
-            type: "error",
-            info: "Invalid user details.",
-          });
-        } else if (serverResponse.status === 403) {
-          handleOpenToast({
-            type: "error",
-            info: "Administrator privileges are required for manipulating users.",
-          });
-        } else if (serverResponse.status === 404) {
-          handleOpenToast({
-            type: "error",
-            info: "User with id " + user.id + " does not exists.",
-          });
-        } else {
-          handleOpenToast({
-            type: "error",
-            info: "An unknown error accured whilst trying to update user.",
-          });
-        }
-      }
-
-      setLoadingButton(false);
+      return;
     }
+
+    setLoadingButton(true);
+
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+
+    const newUser = {
+      firstName: name.trim(),
+      lastName: surname.trim(),
+      nickname: nickname !== "" ? nickname.trim() : null,
+      loginEmail: loginEmail.trim(),
+      notificationEmail: notificationEmail.trim(),
+      authority: authLevel.trim().toUpperCase(),
+      description: description.trim(),
+    };
+
+    const request = {
+      method: user ? "PUT" : "POST",
+      headers: {
+        googleTokenEncoded: JWToken.credential,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newUser),
+    };
+
+    const serverResponse = await fetch(
+      `http://localhost:8080/users/${user?.id ?? ""}`,
+      request
+    );
+
+    if (serverResponse.ok) {
+      handleOpenToast({
+        type: "success",
+        info: `User ${newUser.firstName} ${newUser.lastName} ${
+          user ? "updated" : "added"
+        }.`,
+      });
+      setOpenUserFormModal(false);
+      populateUsers();
+    } else if (serverResponse.status === 400) {
+      handleOpenToast({
+        type: "error",
+        info: "Invalid user details.",
+      });
+    } else if (serverResponse.status === 403) {
+      handleOpenToast({
+        type: "error",
+        info: "Administrator privileges are required for manipulating users.",
+      });
+    } else if (serverResponse.status === 404) {
+      handleOpenToast({
+        type: "error",
+        info: "User with id " + user.id + " does not exist.",
+      });
+    } else {
+      handleOpenToast({
+        type: "error",
+        info:
+          "An unknown error occurred while trying to " +
+          (user ? "update" : "add") +
+          " user.",
+      });
+    }
+
+    setLoadingButton(false);
   }
 
   useEffect(() => {
-    if (user) {
-      setName(user.firstName);
-      setNameIsValid(true);
-      setSurname(user.lastName);
-      setSurnameIsValid(true);
-      setNickname(user.nickname || "");
-      setLoginEmail(user.loginEmail);
-      setLoginEmailIsValid(true);
-      setNotificationEmail(user.notificationEmail);
-      setNotificationEmailIsValid(true);
-      setAuthLevel(
-        user.authority.charAt(0) + user.authority.slice(1).toLowerCase()
-      );
-      setDescription(user.description);
-    } else {
-      setName("");
-      setNameIsValid(false);
-      setSurname("");
-      setSurnameIsValid(false);
-      setNickname("");
-      setLoginEmail("");
-      setLoginEmailIsValid(false);
-      setNotificationEmail("");
-      setNotificationEmailIsValid(false);
-      setAuthLevel(authLevels[0].value);
-      setDescription("");
-    }
-    // optional and predefined fields
+    setName(user?.firstName);
+    setSurname(user?.lastName);
+    setNickname(user?.nickname);
+    setLoginEmail(user?.loginEmail);
+    setNotificationEmail(user?.notificationEmail);
+    setAuthLevel(
+      user?.authority.charAt(0) + user?.authority.slice(1).toLowerCase() ||
+        authLevels[0].value
+    );
+    setDescription(user?.description);
+
+    // optional and predefined fields are always valid
+    setNameIsValid(user ? true : false);
+    setSurnameIsValid(user ? true : false);
     setNicknameIsValid(true);
+    setLoginEmailIsValid(user ? true : false);
+    setNotificationEmailIsValid(user ? true : false);
     setAuthLevelIsValid(true);
     setDescriptionIsValid(true);
   }, [openModal]);

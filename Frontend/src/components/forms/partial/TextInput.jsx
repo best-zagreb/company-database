@@ -1,7 +1,5 @@
 import { TextField } from "@mui/material";
-import { useEffect } from "react";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function TextInput({
   labelText,
@@ -41,7 +39,7 @@ export default function TextInput({
         margin="dense"
         required={isRequired}
         placeholder={placeholderText}
-        value={value}
+        value={value || ""}
         inputProps={inputProps}
         {...textFieldProps}
         onBlur={() => {

@@ -1,11 +1,11 @@
 import { Autocomplete, TextField, InputAdornment } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
 
-export default function SearchBar({ type, tableItems, setSearchResults }) {
-  const handleSearchChange = (value) => {
+export default function SearchBar({ type, data, setData }) {
+  function handleChange(value) {
     value = value.toLowerCase();
 
-    const resultsArray = tableItems.filter((item) => {
+    const results = data.filter((item) => {
       switch (type) {
         case "users":
           return (item.firstName + " " + item.lastName)
@@ -23,8 +23,8 @@ export default function SearchBar({ type, tableItems, setSearchResults }) {
       }
     });
 
-    setSearchResults(resultsArray);
-  };
+    setData(results);
+  }
 
   return (
     <Autocomplete
@@ -32,9 +32,9 @@ export default function SearchBar({ type, tableItems, setSearchResults }) {
       size="small"
       disableClearable
       onInputChange={(e, inputValue) => {
-        handleSearchChange(inputValue);
+        handleChange(inputValue);
       }}
-      options={tableItems.map((item) => ({
+      options={data.map((item) => ({
         value: item.id,
         label:
           type === "users" ? `${item.firstName} ${item.lastName}` : item.name,

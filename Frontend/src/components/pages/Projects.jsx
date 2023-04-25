@@ -1,141 +1,93 @@
 import {
-  TableSortLabel,
-  TableCell,
-  TableHead,
-  Paper,
-  TableContainer,
-  TableRow,
-  TableBody,
-  Table,
   Container,
+  Box,
   Button,
+  Typography,
+  CircularProgress,
 } from "@mui/material";
-
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 
 import { useState, useEffect, useContext } from "react";
 
 import ToastContext from "../../context/ToastContext";
+// import DeleteAlertContext from "../../context/DeleteAlertContext";
 
 import ProjectForm from "./../forms/ProjectForm";
 
-import ListPage from "./partial/ListPage";
 import SearchBar from "./partial/SearchBar";
+import TableComponent from "./partial/TableComponent";
 
-const filterTypes = [
-  {
-    value: "Project name",
-  },
-  {
-    value: "Category",
-  },
-  {
-    value: "FR responsible",
-  },
-  {
-    value: "Project end date",
-  },
-  {
-    value: "FR goal",
-  },
+const tableColumns = [
+  { key: "name", label: "Project name" },
+  { key: "category", label: "Category", xsHide: true },
+  { key: "frresp", label: "FR responsible" },
+  { key: "endDate", label: "Project end date", xsHide: true },
+  { key: "frgoal", label: "FR goal", xsHide: true },
 ];
 
 export default function Projects() {
   const { handleOpenToast } = useContext(ToastContext);
 
-  const [openProjectFormModal, setOpenProjectFormModal] = useState(false);
+  const [openFormModal, setOpenFormModal] = useState(false);
 
-  const [tableItems, setPosts] = useState([]);
-  const [searchResults, setSearchResults] = useState([]);
+  const [data, setData] = useState([]);
 
-  async function populateProjects() {
+  const [loading, setLoading] = useState(true);
+
+  async function populateTable() {
+    setLoading(true);
+
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
-    const serverResponse = await fetch("http://localhost:8080/projects/", {
-      method: "GET",
-      headers: { googleTokenEncoded: JWToken.credential },
-    });
+    try {
+      const serverResponse = await fetch("http://localhost:8080/projects/", {
+        method: "GET",
+        headers: { googleTokenEncoded: JWToken.credential },
+      });
 
-    if (serverResponse.ok) {
-      const json = await serverResponse.json();
+      if (serverResponse.ok) {
+        const json = await serverResponse.json();
 
-      setPosts(json);
-      setSearchResults(json);
-      //let newData = data.sort((a, b) => a.name.localeCompare(b.name))
-    } else {
+        setData(json);
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "A server error occurred whilst fetching data.",
+        });
+      }
+    } catch (error) {
       handleOpenToast({
         type: "error",
-        info: "An unknown error accured whilst trying to get projects.",
-      });
-    }
-  }
-
-  const [filterBy, setFilterBy] = useState("Project name");
-  const [filterDirection, setFilterDirection] = useState("asc");
-
-  const handleFilterResults = (property) => (event) => {
-    let filterByCategory = property;
-    if (filterByCategory === filterBy) {
-      reverseFunction();
-    } else {
-      setFilterBy(filterByCategory);
-      filterFunction(filterByCategory);
-      setFilterDirection("asc");
-    }
-  };
-
-  function reverseFunction() {
-    let reversana = searchResults.reverse();
-
-    setFilterDirection((oldFilterDirection) => {
-      if (oldFilterDirection === "asc") return "desc";
-      else return "asc";
-    });
-    setSearchResults(reversana);
-  }
-
-  function filterFunction(filterBy) {
-    let filtrirana;
-
-    if (filterBy === "Project name") {
-      filtrirana = searchResults.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (filterBy === "Category") {
-      filtrirana = searchResults.sort((a, b) =>
-        a.category.localeCompare(b.category)
-      );
-    } else if (filterBy === "FR responsible") {
-      filtrirana = searchResults.sort((a, b) => {
-        (a.frresp.firstName + " " + a.frresp.lastName).localeCompare(
-          b.frresp.firstName + " " + b.frresp.lastName
-        );
-      });
-    } else if (filterBy === "Project end date") {
-      filtrirana = searchResults.sort((a, b) => {
-        if (a.endDate < b.endDate) return -1;
-        else if (a.endDate === b.endDate) return 0;
-        else return 1;
-      });
-    } else if (filterBy === "FR goal") {
-      filtrirana = searchResults.sort((a, b) => {
-        if (a.frgoal < b.frgoal) return -1;
-        else if (a.frgoal === b.frgoal) return 0;
-        else return 1;
+        info: "An error occurred whilst trying to fetch data.",
       });
     }
 
-    setSearchResults(filtrirana);
+    setLoading(false);
   }
+
+  // function handleEdit(project) {
+  //   setUser(project);
+  //   setOpenFormModal(true);
+  // }
+
+  // async function handleDelete(project) {
+  //   setObject({ type: "Project", name: project.name });
+  //   setEndpoint("http://localhost:8080/projects/" + project.id);
+  //   setPopulateObjects({ function: populateTable });
+
+  //   setOpenDeleteAlert(true);
+  // }
 
   useEffect(() => {
-    populateProjects();
+    populateTable();
   }, []);
 
   return (
     <>
       <ProjectForm
-        openModal={openProjectFormModal}
-        setOpenModal={setOpenProjectFormModal}
-        populateProjects={populateProjects}
+        openModal={openFormModal}
+        setOpenModal={setOpenFormModal}
+        populateProjects={populateTable}
       />
 
       <Container
@@ -149,57 +101,36 @@ export default function Projects() {
           gap: 1,
         }}
       >
-        <SearchBar
-          type="projects"
-          tableItems={tableItems}
-          setSearchResults={setSearchResults}
-        />
+        <SearchBar type="projects" data={data} setData={setData} />
 
         <Button
           variant="contained"
           size="medium"
           startIcon={<AddCircleIcon />}
-          onClick={() => setOpenProjectFormModal(true)}
+          onClick={() => setOpenFormModal(true)}
         >
           Add project
         </Button>
       </Container>
 
       <Container maxWidth="false">
-        <TableContainer component={Paper}>
-          <Table size="small" aria-label="projects table">
-            <TableHead>
-              <TableRow>
-                {filterTypes.map((cellName) => (
-                  <TableCell
-                    key={cellName.value}
-                    sx={
-                      cellName.value === "Category" ||
-                      cellName.value === "Project end date" ||
-                      cellName.value === "FR goal"
-                        ? {
-                            display: { xs: "none", md: "table-cell" },
-                          }
-                        : { undefined }
-                    }
-                  >
-                    {cellName.value}
-                    <TableSortLabel
-                      active={filterBy === cellName.value}
-                      direction={
-                        filterBy === cellName.value ? filterDirection : "asc"
-                      }
-                      onClick={handleFilterResults(cellName.value)}
-                    ></TableSortLabel>
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <ListPage type="project" searchResults={searchResults} />
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {loading ? (
+          <Box sx={{ display: "grid", placeItems: "center" }}>
+            <CircularProgress size={100} />
+          </Box>
+        ) : data?.length <= 0 ? (
+          <Typography variant="h4" align="center">
+            {"No users :("}
+          </Typography>
+        ) : (
+          <TableComponent
+            tableColumns={tableColumns}
+            data={data}
+            setData={setData}
+            // handleEdit={handleEdit}
+            // handleDelete={handleDelete}
+          ></TableComponent>
+        )}
       </Container>
     </>
   );

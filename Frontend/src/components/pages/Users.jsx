@@ -5,7 +5,6 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
-
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 
 import { useState, useEffect, useContext } from "react";
@@ -18,38 +17,51 @@ import UserForm from "../forms/UserForm";
 import SearchBar from "./partial/SearchBar";
 import TableComponent from "./partial/TableComponent";
 
+const tableColumns = [
+  { key: "firstName", label: "Name" },
+  { key: "lastName", label: "Surname" },
+  { key: "nickname", label: "Nickname", xsHide: true },
+  { key: "loginEmail", label: "E-mail", xsHide: true },
+  { key: "authority", label: "Max authorization level", xsHide: true },
+];
+
 export default function Users() {
   const { handleOpenToast } = useContext(ToastContext);
   const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
     useContext(DeleteAlertContext);
 
-  const [openUserFormModal, setOpenUserFormModal] = useState(false);
+  const [openFormModal, setOpenFormModal] = useState(false);
   const [user, setUser] = useState();
 
-  const [tableItems, setTableItems] = useState([]);
-  const [searchResults, setSearchResults] = useState([]);
+  const [data, setData] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
-  async function populateUsers() {
+  async function populateTable() {
     setLoading(true);
 
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
-    const serverResponse = await fetch("http://localhost:8080/users/", {
-      method: "GET",
-      headers: { googleTokenEncoded: JWToken.credential },
-    });
+    try {
+      const serverResponse = await fetch("http://localhost:8080/users/", {
+        method: "GET",
+        headers: { googleTokenEncoded: JWToken.credential },
+      });
 
-    if (serverResponse.ok) {
-      const json = await serverResponse.json();
+      if (serverResponse.ok) {
+        const json = await serverResponse.json();
 
-      setTableItems(json);
-      setSearchResults(json);
-    } else {
+        setData(json);
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "A server error occurred whilst fetching data.",
+        });
+      }
+    } catch (error) {
       handleOpenToast({
         type: "error",
-        info: "An unknown error accured whilst trying to get users.",
+        info: "An error occurred whilst trying to fetch data.",
       });
     }
 
@@ -58,28 +70,28 @@ export default function Users() {
 
   function handleEdit(user) {
     setUser(user);
-    setOpenUserFormModal(true);
+    setOpenFormModal(true);
   }
 
-  async function handleDelete(user) {
+  function handleDelete(user) {
     setObject({ type: "User", name: user.firstName + " " + user.lastName });
     setEndpoint("http://localhost:8080/users/" + user.id);
-    setPopulateObjects({ function: populateUsers });
+    setPopulateObjects({ function: populateTable });
 
     setOpenDeleteAlert(true);
   }
 
   useEffect(() => {
-    populateUsers();
+    populateTable();
   }, []);
 
   return (
     <>
       <UserForm
         user={user}
-        openUserFormModal={openUserFormModal}
-        setOpenUserFormModal={setOpenUserFormModal}
-        populateUsers={populateUsers}
+        openUserFormModal={openFormModal}
+        setOpenUserFormModal={setOpenFormModal}
+        populateUsers={populateTable}
       />
 
       <Container
@@ -93,11 +105,7 @@ export default function Users() {
           gap: 1,
         }}
       >
-        <SearchBar
-          type="users"
-          tableItems={tableItems}
-          setSearchResults={setSearchResults}
-        />
+        <SearchBar type="users" data={data} setData={setData} />
 
         <Button
           variant="contained"
@@ -105,7 +113,7 @@ export default function Users() {
           startIcon={<AddCircleIcon />}
           onClick={() => {
             setUser();
-            setOpenUserFormModal(true);
+            setOpenFormModal(true);
           }}
         >
           Add user
@@ -117,15 +125,16 @@ export default function Users() {
           <Box sx={{ display: "grid", placeItems: "center" }}>
             <CircularProgress size={100} />
           </Box>
-        ) : searchResults?.length <= 0 ? (
+        ) : data?.length <= 0 ? (
           <Typography variant="h4" align="center">
             {"No users :("}
           </Typography>
         ) : (
           <TableComponent
+            tableColumns={tableColumns}
+            data={data}
+            setData={setData}
             type="users"
-            searchResults={searchResults}
-            setSearchResults={setSearchResults}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
           ></TableComponent>
