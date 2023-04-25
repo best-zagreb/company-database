@@ -34,6 +34,7 @@ export default function Users() {
   const [user, setUser] = useState();
 
   const [data, setData] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
@@ -52,6 +53,7 @@ export default function Users() {
         const json = await serverResponse.json();
 
         setData(json);
+        setSearchResults(json);
       } else {
         handleOpenToast({
           type: "error",
@@ -105,7 +107,11 @@ export default function Users() {
           gap: 1,
         }}
       >
-        <SearchBar type="users" data={data} setData={setData} />
+        <SearchBar
+          type="users"
+          data={data}
+          setSearchResults={setSearchResults}
+        />
 
         <Button
           variant="contained"
@@ -132,8 +138,8 @@ export default function Users() {
         ) : (
           <TableComponent
             tableColumns={tableColumns}
-            data={data}
-            setData={setData}
+            searchResults={searchResults}
+            setSearchResults={setSearchResults}
             type="users"
             handleEdit={handleEdit}
             handleDelete={handleDelete}

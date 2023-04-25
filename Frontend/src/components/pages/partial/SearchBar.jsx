@@ -1,7 +1,7 @@
 import { Autocomplete, TextField, InputAdornment } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
 
-export default function SearchBar({ type, data, setData }) {
+export default function SearchBar({ type, data, setSearchResults }) {
   function handleChange(value) {
     value = value.toLowerCase();
 
@@ -14,16 +14,13 @@ export default function SearchBar({ type, data, setData }) {
         case "companies":
           return item.name.toLowerCase().includes(value);
         case "projects":
-          return (
-            item.name.toLowerCase().includes(value) ||
-            item.category.toLowerCase().includes(value)
-          );
+          return item.name.toLowerCase().includes(value);
         default:
-          return false;
+          return true;
       }
     });
 
-    setData(results);
+    setSearchResults(results);
   }
 
   return (

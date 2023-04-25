@@ -49,6 +49,7 @@ export default function Companies() {
   const [openFormModal, setOpenFormModal] = useState(false);
 
   const [data, setData] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
@@ -67,6 +68,7 @@ export default function Companies() {
         const json = await serverResponse.json();
 
         setData(json);
+        setSearchResults(json);
       } else {
         handleOpenToast({
           type: "error",
@@ -119,7 +121,11 @@ export default function Companies() {
           gap: 1,
         }}
       >
-        <SearchBar type="companies" data={data} setData={setData} />
+        <SearchBar
+          type="companies"
+          data={data}
+          setSearchResults={setSearchResults}
+        />
 
         <Button
           variant="contained"
@@ -143,8 +149,8 @@ export default function Companies() {
         ) : (
           <TableComponent
             tableColumns={tableColumns}
-            data={data}
-            setData={setData}
+            searchResults={searchResults}
+            setSearchResults={setSearchResults}
             // handleEdit={handleEdit}
             // handleDelete={handleDelete}
           ></TableComponent>

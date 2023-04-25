@@ -11,11 +11,12 @@ import {
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
 import { useState } from "react";
+import moment from "moment";
 
 export default function TableComponent({
   tableColumns,
-  data,
-  setData,
+  searchResults,
+  setSearchResults,
   type,
   handleEdit,
   handleDelete,
@@ -26,7 +27,7 @@ export default function TableComponent({
   function handleSort(column) {
     if (column === sortBy) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-      setData([...data].reverse());
+      setSearchResults([...searchResults].reverse());
     } else {
       setSortDirection("desc");
       setSortBy(column);
@@ -40,8 +41,8 @@ export default function TableComponent({
 
     if (!key) return;
 
-    setData(
-      data.sort((a, b) => {
+    setSearchResults(
+      searchResults.sort((a, b) => {
         if (a[key] === null) {
           return 1;
         } else if (b[key] === null) {
@@ -80,7 +81,7 @@ export default function TableComponent({
         </TableRow>
       </TableHead>
       <TableBody>
-        {data.map((data) => (
+        {searchResults.map((data) => (
           <TableRow key={data.id}>
             {tableColumns.map((column) => {
               const value = data[column.key];
@@ -102,6 +103,8 @@ export default function TableComponent({
                     <Link href={value} target="_blank">
                       {value}
                     </Link>
+                  ) : column.key === "endDate" ? (
+                    moment(value).format("DD.MM.YYYY.")
                   ) : (
                     value
                   )}

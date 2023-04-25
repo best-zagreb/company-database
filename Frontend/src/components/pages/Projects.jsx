@@ -31,6 +31,7 @@ export default function Projects() {
   const [openFormModal, setOpenFormModal] = useState(false);
 
   const [data, setData] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
@@ -49,6 +50,7 @@ export default function Projects() {
         const json = await serverResponse.json();
 
         setData(json);
+        setSearchResults(json);
       } else {
         handleOpenToast({
           type: "error",
@@ -101,7 +103,11 @@ export default function Projects() {
           gap: 1,
         }}
       >
-        <SearchBar type="projects" data={data} setData={setData} />
+        <SearchBar
+          type="projects"
+          data={data}
+          setSearchResults={setSearchResults}
+        />
 
         <Button
           variant="contained"
@@ -125,8 +131,8 @@ export default function Projects() {
         ) : (
           <TableComponent
             tableColumns={tableColumns}
-            data={data}
-            setData={setData}
+            searchResults={searchResults}
+            setSearchResults={setSearchResults}
             // handleEdit={handleEdit}
             // handleDelete={handleDelete}
           ></TableComponent>
