@@ -47,8 +47,13 @@ export default function TableComponent({
           return 1;
         } else if (b[key] === null) {
           return -1;
+        } else if (key === "frresp") {
+          (a[key].firstName + " " + a[key].lastName).localeCompare(
+            b[key].firstName + " " + b[key].lastName
+          );
         } else {
-          return a[key].localeCompare(b[key]);
+          // toString needed when sorting numbers
+          return a[key].toString().localeCompare(b[key].toString());
         }
       })
     );
