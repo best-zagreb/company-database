@@ -16,7 +16,7 @@ import { useState, useEffect, useContext } from "react";
 
 import ToastContext from "../../context/ToastContext";
 
-import { CompanySearchBar } from "./partial/SearchBar";
+import SearchBar from "./partial/SearchBar";
 import { CompanyListPage } from "./partial/ListPage";
 
 import CompanyForm from "../forms/CompanyForm";
@@ -146,7 +146,11 @@ export default function Companies() {
           gap: 1,
         }}
       >
-        <CompanySearchBar posts={posts} setSearchResults={setSearchResults} />
+        <SearchBar
+          type="companies"
+          posts={posts}
+          setSearchResults={setSearchResults}
+        />
 
         <Button
           variant="contained"

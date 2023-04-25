@@ -20,7 +20,7 @@ import ToastContext from "../../context/ToastContext";
 import ProjectForm from "./../forms/ProjectForm";
 
 import { ProjectListPage } from "./partial/ListPage";
-import { ProjectSearchBar } from "./partial/SearchBar";
+import SearchBar from "./partial/SearchBar";
 
 const filterTypes = [
   {
@@ -149,7 +149,11 @@ export default function Projects() {
           gap: 1,
         }}
       >
-        <ProjectSearchBar posts={posts} setSearchResults={setSearchResults} />
+        <SearchBar
+          type="projects"
+          posts={posts}
+          setSearchResults={setSearchResults}
+        />
 
         <Button
           variant="contained"

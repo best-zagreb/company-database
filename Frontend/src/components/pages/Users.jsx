@@ -20,7 +20,7 @@ import DeleteAlertContext from "../../context/DeleteAlertContext";
 
 import UserForm from "../forms/UserForm";
 
-import { UserSearchBar } from "./partial/SearchBar";
+import SearchBar from "./partial/SearchBar";
 import { UserListPage } from "./partial/ListPage";
 
 const filterTypes = [
@@ -162,7 +162,11 @@ export default function Users() {
           gap: 1,
         }}
       >
-        <UserSearchBar posts={posts} setSearchResults={setSearchResults} />
+        <SearchBar
+          type="users"
+          posts={posts}
+          setSearchResults={setSearchResults}
+        />
 
         <Button
           variant="contained"

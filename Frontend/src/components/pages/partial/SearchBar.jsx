@@ -1,138 +1,65 @@
 import { Autocomplete, TextField, InputAdornment } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
 
-const UserSearchBar = ({ posts, setSearchResults }) => {
+export default function SearchBar({ type, posts, setSearchResults }) {
   const handleSearchChange = (value) => {
     value = value.toLowerCase();
 
-    const resultsArray = posts.filter((user) => {
-      return (user.firstName + " " + user.lastName)
-        .toLowerCase()
-        .includes(value);
+    const resultsArray = posts.filter((item) => {
+      switch (type) {
+        case "users":
+          return (item.firstName + " " + item.lastName)
+            .toLowerCase()
+            .includes(value);
+        case "companies":
+          return item.name.toLowerCase().includes(value);
+        case "projects":
+          return (
+            item.name.toLowerCase().includes(value) ||
+            item.category.toLowerCase().includes(value)
+          );
+        default:
+          return false;
+      }
     });
 
     setSearchResults(resultsArray);
   };
 
   return (
-    <>
-      <Autocomplete
-        freeSolo
-        size="small"
-        disableClearable
-        onInputChange={(e, inputValue) => {
-          handleSearchChange(inputValue);
-        }}
-        // throws error because it takes string "firstName lastName" as key, needs to be changed to take id as key
-        options={posts.map((user) => user.firstName + " " + user.lastName)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Search users"
-            InputProps={{
-              ...params.InputProps,
-              type: "search",
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        )}
-        sx={{ width: "50%", maxWidth: "15rem" }}
-      />
-    </>
+    <Autocomplete
+      freeSolo
+      size="small"
+      disableClearable
+      onInputChange={(e, inputValue) => {
+        handleSearchChange(inputValue);
+      }}
+      options={posts.map((item) => ({
+        value: item.id,
+        label:
+          type === "users" ? `${item.firstName} ${item.lastName}` : item.name,
+      }))}
+      renderOption={(props, option) => (
+        <li {...props} key={option.value}>
+          {option.label}
+        </li>
+      )}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={`Search ${type}`}
+          InputProps={{
+            ...params.InputProps,
+            type: "search",
+            startAdornment: (
+              <InputAdornment position="end">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      )}
+      sx={{ width: "50%", maxWidth: "15rem" }}
+    />
   );
-};
-
-const CompanySearchBar = ({ posts, setSearchResults }) => {
-  const handleSearchChange = (value) => {
-    value = value.toLowerCase();
-
-    const resultsArray = posts.filter((company) => {
-      return company.name.toLowerCase().includes(value);
-    });
-
-    setSearchResults(resultsArray);
-  };
-
-  return (
-    <>
-      <Autocomplete
-        freeSolo
-        size="small"
-        disableClearable
-        onInputChange={(e, inputValue) => {
-          handleSearchChange(inputValue);
-        }}
-        // throws error because it takes string "name" as key, needs to be changed to take id as key
-        options={posts.map((company) => company.name)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Search companies"
-            InputProps={{
-              ...params.InputProps,
-              type: "search",
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        )}
-        sx={{ width: "50%", maxWidth: "15rem" }}
-      />
-    </>
-  );
-};
-
-const ProjectSearchBar = ({ posts, setSearchResults }) => {
-  const handleSearchChange = (value) => {
-    value = value.toLowerCase();
-
-    const resultsArray = posts.filter((project) => {
-      return (
-        project.name.toLowerCase().includes(value) ||
-        project.category.toLowerCase().includes(value)
-      );
-    });
-
-    setSearchResults(resultsArray);
-  };
-
-  return (
-    <>
-      <Autocomplete
-        freeSolo
-        size="small"
-        disableClearable
-        onInputChange={(e, inputValue) => {
-          handleSearchChange(inputValue);
-        }}
-        // throws error because it takes string "name" as key, needs to be changed to take id as key
-        options={posts.map((project) => project.name)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Search projects"
-            InputProps={{
-              ...params.InputProps,
-              type: "search",
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        )}
-        sx={{ width: "50%", maxWidth: "15rem" }}
-      />
-    </>
-  );
-};
-
-export { UserSearchBar, CompanySearchBar, ProjectSearchBar };
+}
