@@ -43,7 +43,8 @@ export default function ProjectForm({
   const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
 
-  const [usersForFRResponsible, setUsersForFRResponsible] = useState([]);
+  const [usersForFRResp, setUsersForFRResp] = useState([]);
+  const [projectsForCategories, setProjectsForCategories] = useState([]);
   const [loadingButton, setLoadingButton] = useState(false);
 
   const [name, setName] = useState();
@@ -66,7 +67,7 @@ export default function ProjectForm({
   const [firstPingDateIsValid, setFirstPingDateIsValid] = useState();
   const [secondPingDateIsValid, setSecondPingDateIsValid] = useState();
 
-  async function fetchUsers() {
+  async function fetchUsersForFRResp() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
@@ -79,11 +80,39 @@ export default function ProjectForm({
         const json = await serverResponse.json();
 
         // console.log(json);
-        setUsersForFRResponsible(json);
+        setUsersForFRResp(json);
       } else {
         handleOpenToast({
           type: "error",
           info: "A server error occurred whilst fetching users for FR responsible input field.",
+        });
+      }
+    } catch (error) {
+      handleOpenToast({
+        type: "error",
+        info: "An error occurred whilst trying to connect to server.",
+      });
+    }
+  }
+
+  async function fetchProjectsForCategories() {
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+
+    try {
+      const serverResponse = await fetch("http://localhost:8080/projects/", {
+        method: "GET",
+        headers: { googleTokenEncoded: JWToken.credential },
+      });
+
+      if (serverResponse.ok) {
+        const json = await serverResponse.json();
+
+        // console.log(json);
+        setProjectsForCategories(json);
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "A server error occurred whilst fetching projects for Category input field.",
         });
       }
     } catch (error) {
@@ -179,7 +208,8 @@ export default function ProjectForm({
   }
 
   useEffect(() => {
-    fetchUsers();
+    fetchUsersForFRResp();
+    fetchProjectsForCategories();
 
     setName(project?.name);
     setCategory(project?.category);
@@ -272,23 +302,48 @@ export default function ProjectForm({
                   valueIsValid={nameIsValid}
                   setValueIsValid={setNameIsValid}
                 ></TextInput>
-                <TextInput
-                  labelText={"Category"}
-                  isRequired
-                  placeholderText={"Hackathon"}
-                  helperText={{
-                    error: "Category must be between 2 and 35 characters",
-                    details: "",
+
+                <Autocomplete
+                  options={projectsForCategories
+                    .map((project) => project.category)
+                    .filter(
+                      (category, index, array) =>
+                        array.indexOf(category) === index
+                    )
+                    .sort((a, b) => {
+                      if (a === null) {
+                        return 1;
+                      } else if (b === null) {
+                        return -1;
+                      } else {
+                        return a.localeCompare(b);
+                      }
+                    })}
+                  filterOptions={(options, { inputValue }) =>
+                    options.filter((option) =>
+                      option.toLowerCase().includes(inputValue.toLowerCase())
+                    )
+                  }
+                  clearOnEscape
+                  openOnFocus
+                  freeSolo
+                  inputValue={category || ""}
+                  onInputChange={(event, value) => {
+                    setCategory(value);
+                    setCategoryIsValid(value.length >= 2 && value.length <= 35);
                   }}
-                  inputProps={{ minLength: 2, maxLength: 35 }}
-                  validationFunction={(input) => {
-                    return input.length >= 2 && input.length <= 35;
-                  }}
-                  value={category}
-                  setValue={setCategory}
-                  valueIsValid={categoryIsValid}
-                  setValueIsValid={setCategoryIsValid}
-                ></TextInput>
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Category"
+                      placeholder="Hackathon"
+                      required
+                      fullWidth
+                      margin="dense"
+                      // InputLabelProps={{ shrink: true }}
+                    />
+                  )}
+                />
 
                 <TextField
                   label="Project type"
@@ -382,7 +437,7 @@ export default function ProjectForm({
                 />
 
                 <Autocomplete
-                  options={usersForFRResponsible}
+                  options={usersForFRResp}
                   clearOnEscape
                   openOnFocus
                   getOptionLabel={(option) =>
@@ -401,7 +456,7 @@ export default function ProjectForm({
                   onChange={(e, inputValue) => {
                     setFRRespID(inputValue?.id);
                     setFRRespIDIsValid(
-                      usersForFRResponsible
+                      usersForFRResp
                         .map((option) => option.id)
                         .includes(inputValue?.id)
                     );
