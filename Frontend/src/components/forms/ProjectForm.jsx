@@ -340,7 +340,6 @@ export default function ProjectForm({
                       required
                       fullWidth
                       margin="dense"
-                      // InputLabelProps={{ shrink: true }}
                     />
                   )}
                 />

@@ -5,6 +5,7 @@ import {
   Fade,
   Button,
   TextField,
+  Autocomplete,
   MenuItem,
   FormLabel,
   RadioGroup,
@@ -14,11 +15,11 @@ import {
 
 import "./Form.css";
 
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 
 import ToastContext from "../../context/ToastContext";
 
-const company = {
+const newCompany = {
   name: null,
   domain: null,
   abcCategory: null, //char
@@ -30,31 +31,34 @@ const company = {
   contactInFuture: null, //bool
 };
 
-const ABC = [
+const abcCategories = [
   {
     value: "A",
+    label: "A",
   },
   {
     value: "B",
+    label: "B",
   },
   {
     value: "C",
+    label: "C",
   },
 ];
 
 const months = [
-  { value: "January" },
-  { value: "February" },
-  { value: "March" },
-  { value: "April" },
-  { value: "May" },
-  { value: "June" },
-  { value: "July" },
-  { value: "August" },
-  { value: "September" },
-  { value: "October" },
-  { value: "November" },
-  { value: "December" },
+  { value: "January", label: "January" },
+  { value: "February", label: "February" },
+  { value: "March", label: "March" },
+  { value: "April", label: "April" },
+  { value: "May", label: "May" },
+  { value: "June", label: "June" },
+  { value: "July", label: "July" },
+  { value: "August", label: "August" },
+  { value: "September", label: "September" },
+  { value: "October", label: "October" },
+  { value: "November", label: "November" },
+  { value: "December", label: "December" },
 ];
 
 const isValidUrl = (urlString) => {
@@ -75,33 +79,64 @@ function validateURL(website) {
   else return false;
 }
 
-export default function UserForm({
+export default function CompanyForm({
+  company,
   openModal,
   setOpenModal,
   populateCompanies,
 }) {
   const { handleOpenToast } = useContext(ToastContext);
 
+  const [companiesForSectors, setCompaniesForSectors] = useState([]);
+
+  async function fetchCompaniesForSectors() {
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+
+    try {
+      const serverResponse = await fetch("http://localhost:8080/companies/", {
+        method: "GET",
+        headers: { googleTokenEncoded: JWToken.credential },
+      });
+
+      if (serverResponse.ok) {
+        const json = await serverResponse.json();
+
+        // console.log(json);
+        setCompaniesForSectors(json);
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "A server error occurred whilst fetching companies for Sector input field.",
+        });
+      }
+    } catch (error) {
+      handleOpenToast({
+        type: "error",
+        info: "An error occurred whilst trying to connect to server.",
+      });
+    }
+  }
+
   async function onSubmit(e) {
     e.preventDefault();
 
     if (
       nameIsValid &&
-      industryIsValid &&
+      sectorIsValid &&
       countryIsValid &&
       zipCodeIsValid &&
       adressIsValid &&
       doContactIsValid
     ) {
-      company.name = name;
-      company.domain = industry;
-      company.abcCategory = abcCategorization.toLowerCase();
-      company.budgetPlanningMonth = budgetMonth;
-      company.country = country;
-      company.zipCode = zipCode;
-      company.address = address;
-      company.webUrl = url;
-      company.contactInFuture = doContact;
+      newCompany.name = name;
+      newCompany.domain = sector;
+      newCompany.abcCategory = abcCategorization.toLowerCase();
+      newCompany.budgetPlanningMonth = budgetMonth;
+      newCompany.country = country;
+      newCompany.zipCode = zipCode;
+      newCompany.address = address;
+      newCompany.webUrl = url;
+      newCompany.contactInFuture = doContact;
 
       //console.log(company);
 
@@ -113,13 +148,13 @@ export default function UserForm({
           googleTokenEncoded: JWToken.credential,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(company),
+        body: JSON.stringify(newCompany),
       });
 
       if (serverResponse.ok) {
         handleOpenToast({
           type: "success",
-          info: "Company " + company.name + " added.",
+          info: "Company " + newCompany.name + " added.",
         });
 
         setOpenModal(false);
@@ -144,9 +179,12 @@ export default function UserForm({
   }
 
   const [name, setName] = useState();
-  const [industry, setIndustry] = useState();
-  const [abcCategorization, setabcCategorization] = useState();
+  const [sector, setSector] = useState();
+  const [sectorIsValid, setSectorIsValid] = useState();
+  const [abcCategorization, setAbcCategorization] = useState();
+  const [abcCategorizationIsValid, setAbcCategorizationIsValid] = useState();
   const [budgetMonth, setBudgetMonth] = useState();
+  const [budgetMonthIsValid, setBudgetMonthIsValid] = useState();
   const [country, setCountry] = useState();
   //const [town, setTown] = useState();
   const [zipCode, setZipCode] = useState();
@@ -162,25 +200,6 @@ export default function UserForm({
       setNameIsValid(true);
       setName(input);
     }
-  };
-
-  const [industryIsValid, setIndustryIsValid] = useState(false);
-  const handleIndustryChange = (e) => {
-    const input = e.target.value;
-    if (input.length >= 2 && input.length <= 35) {
-      setIndustryIsValid(true);
-      setIndustry(input);
-    }
-  };
-
-  const handleabcChange = (e) => {
-    const input = e.target.value;
-    setabcCategorization(input);
-  };
-
-  const handleBudgetPlanningMonth = (e) => {
-    const input = e.target.value;
-    setBudgetMonth(input);
   };
 
   const [countryIsValid, setCountryIsValid] = useState(false);
@@ -250,6 +269,17 @@ export default function UserForm({
     }
   };
 
+  useEffect(() => {
+    fetchCompaniesForSectors();
+
+    setSector(company?.domain);
+    setSectorIsValid(company ? true : false);
+    setAbcCategorization(company?.abcCategorization || abcCategories[0].value);
+    setAbcCategorizationIsValid(true);
+    setBudgetMonth(company?.budgetMonth || months[0].value);
+    setBudgetMonthIsValid(true);
+  }, [openModal]);
+
   return (
     <div>
       <Modal
@@ -283,44 +313,100 @@ export default function UserForm({
                 onChange={handleNameChange}
               />
 
-              <TextField
-                id="outlined"
-                label="Industry"
-                type="text"
-                required
-                fullWidth
-                margin="dense"
-                placeholder="IT"
-                inputProps={{ minLength: 2, maxLength: 35 }}
-                onChange={handleIndustryChange}
+              <Autocomplete
+                options={companiesForSectors
+                  .map((company) => company.domain)
+                  .filter(
+                    (domain, index, array) => array.indexOf(domain) === index
+                  )
+                  .sort((a, b) => {
+                    if (a === null) {
+                      return 1;
+                    } else if (b === null) {
+                      return -1;
+                    } else {
+                      return a.localeCompare(b);
+                    }
+                  })}
+                filterOptions={(options, { inputValue }) =>
+                  options.filter((option) =>
+                    option.toLowerCase().includes(inputValue.toLowerCase())
+                  )
+                }
+                clearOnEscape
+                openOnFocus
+                freeSolo
+                inputValue={sector || ""}
+                onInputChange={(event, value) => {
+                  setSector(value);
+                  setSectorIsValid(value.length >= 2 && value.length <= 35);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Sector"
+                    placeholder="IT"
+                    required
+                    fullWidth
+                    margin="dense"
+                  />
+                )}
               />
 
               <TextField
-                id="outlined-select-authorization-level"
-                select
                 label="ABC categorization"
+                required
                 fullWidth
+                select
                 margin="dense"
-                onChange={handleabcChange}
+                helperText={
+                  !abcCategorizationIsValid && "Invalid ABC categorization"
+                }
+                value={abcCategorization}
+                error={!abcCategorizationIsValid}
+                onChange={(e) => {
+                  const input = e.target.value;
+
+                  setAbcCategorizationIsValid(
+                    abcCategories
+                      .map((category) => category.value)
+                      .includes(input)
+                  );
+
+                  setAbcCategorization(input);
+                }}
               >
-                {ABC.map((option) => (
+                {abcCategories.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
-                    {option.value}
+                    {option.label}
                   </MenuItem>
                 ))}
               </TextField>
 
               <TextField
-                id="outlined-select-authorization-level"
-                select
                 label="Budget planning month"
+                required
                 fullWidth
+                select
                 margin="dense"
-                onChange={handleBudgetPlanningMonth}
+                helperText={
+                  !budgetMonthIsValid && "Invalid budget planning month"
+                }
+                value={budgetMonth}
+                error={!budgetMonthIsValid}
+                onChange={(e) => {
+                  const input = e.target.value;
+
+                  setBudgetMonthIsValid(
+                    months.map((month) => month.value).includes(input)
+                  );
+
+                  setBudgetMonth(input);
+                }}
               >
                 {months.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
-                    {option.value}
+                    {option.label}
                   </MenuItem>
                 ))}
               </TextField>
