@@ -6,7 +6,10 @@ import {
   TextField,
   MenuItem,
   Typography,
+  FormGroup,
   FormControl,
+  FormControlLabel,
+  Checkbox,
   Box,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
@@ -55,6 +58,7 @@ export default function UserForm({
   const [nickname, setNickname] = useState();
   const [loginEmail, setLoginEmail] = useState();
   const [notificationEmail, setNotificationEmail] = useState();
+  const [useDifferentEmails, setUseDifferentEmails] = useState();
   const [authLevel, setAuthLevel] = useState();
   const [description, setDescription] = useState();
 
@@ -76,6 +80,10 @@ export default function UserForm({
       !authLevelIsValid ||
       !descriptionIsValid
     ) {
+      handleOpenToast({
+        type: "error",
+        info: "Invalid user details.",
+      });
       return;
     }
 
@@ -88,7 +96,9 @@ export default function UserForm({
       lastName: surname.trim(),
       nickname: nickname && nickname !== "" ? nickname.trim() : null,
       loginEmail: loginEmail.trim(),
-      notificationEmail: notificationEmail.trim(),
+      notificationEmail: useDifferentEmails
+        ? notificationEmail.trim()
+        : loginEmail.trim(),
       authority: authLevel.trim().toUpperCase(),
       description:
         description && description !== "" ? description.trim() : null,
@@ -151,6 +161,7 @@ export default function UserForm({
     setNickname(user?.nickname || "");
     setLoginEmail(user?.loginEmail);
     setNotificationEmail(user?.notificationEmail);
+    setUseDifferentEmails(user ? true : false);
     setAuthLevel(
       user?.authority.charAt(0) + user?.authority.slice(1).toLowerCase() ||
         authLevels[0].value
@@ -162,7 +173,7 @@ export default function UserForm({
     setSurnameIsValid(user ? true : false);
     setNicknameIsValid(true);
     setLoginEmailIsValid(user ? true : false);
-    setNotificationEmailIsValid(user ? true : false);
+    setNotificationEmailIsValid(true);
     setAuthLevelIsValid(true);
     setDescriptionIsValid(true);
   }, [openModal]);
@@ -270,6 +281,7 @@ export default function UserForm({
                 <TextInput
                   labelText={"Login email"}
                   isRequired
+                  readOnly={useDifferentEmails}
                   placeholderText={"jane.doe@gmail.com"}
                   helperText={{
                     error: "Invalid email or email length",
@@ -290,29 +302,46 @@ export default function UserForm({
                   valueIsValid={loginEmailIsValid}
                   setValueIsValid={setLoginEmailIsValid}
                 ></TextInput>
-                <TextInput
-                  labelText={"Notification email"}
-                  isRequired
-                  placeholderText={"jane.doe@gmail.com"}
-                  helperText={{
-                    error: "Invalid email or email length",
-                    details: "App notifications will be sent to this email",
-                  }}
-                  inputProps={{ minLength: 6, maxLength: 55 }}
-                  validationFunction={(input) => {
-                    const mailformat =
-                      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-                    return (
-                      input.length >= 6 &&
-                      input.length <= 55 &&
-                      input.match(mailformat)
-                    );
-                  }}
-                  value={notificationEmail}
-                  setValue={setNotificationEmail}
-                  valueIsValid={notificationEmailIsValid}
-                  setValueIsValid={setNotificationEmailIsValid}
-                ></TextInput>
+
+                <FormControlLabel
+                  label="Use separate emails for notifications."
+                  control={
+                    <Checkbox
+                      checked={useDifferentEmails}
+                      onChange={(e) => {
+                        setUseDifferentEmails(e.target.checked);
+                      }}
+                    />
+                  }
+                  sx={{ margin: "0", width: "100%" }}
+                />
+
+                {useDifferentEmails && (
+                  <TextInput
+                    labelText={"Notification email"}
+                    isRequired
+                    placeholderText={"jane.doe@gmail.com"}
+                    helperText={{
+                      error: "Invalid email or email length",
+                      details: "App notifications will be sent to this email",
+                    }}
+                    inputProps={{ minLength: 6, maxLength: 55 }}
+                    validationFunction={(input) => {
+                      const mailformat =
+                        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+                      return (
+                        !useDifferentEmails ||
+                        (input.length >= 6 &&
+                          input.length <= 55 &&
+                          input.match(mailformat))
+                      );
+                    }}
+                    value={notificationEmail}
+                    setValue={setNotificationEmail}
+                    valueIsValid={notificationEmailIsValid}
+                    setValueIsValid={setNotificationEmailIsValid}
+                  ></TextInput>
+                )}
 
                 <TextField
                   label="Authorization level"
