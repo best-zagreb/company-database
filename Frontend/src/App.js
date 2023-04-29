@@ -1,4 +1,4 @@
-import { CssBaseline } from "@mui/material";
+import { CssBaseline, Box, CircularProgress } from "@mui/material";
 
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
@@ -31,40 +31,60 @@ export default function App() {
   const [appIsSetup, setAppIsSetup] = useState(true);
   const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
 
+  const [loadingUser, setLoadingUser] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
 
   async function loginUser(JWToken) {
-    const serverResponse = await fetch("http://localhost:8080/users/login", {
-      method: "GET",
-      headers: {
-        googleTokenEncoded: JWToken.credential,
-      },
-    });
+    setLoadingUser(true);
 
-    if (serverResponse.ok) {
-      handleOpenToast({
-        type: "info",
-        info: "Login successful.",
+    try {
+      const serverResponse = await fetch("http://localhost:8080/users/login", {
+        method: "GET",
+        headers: {
+          googleTokenEncoded: JWToken.credential,
+        },
       });
 
-      const loginInfo = {
-        JWT: JWToken,
-        lastLogin: new Date(),
-        automaticLoginDaysDuration: 7, // change later to be pulled for user settings from database or smth
-      };
-      localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+      if (serverResponse.ok) {
+        handleOpenToast({
+          type: "info",
+          info: "Login successful.",
+        });
 
-      const json = await serverResponse.json();
-      setUser(json);
+        const loginInfo = {
+          JWT: JWToken,
+          lastLogin: new Date(),
+          automaticLoginDaysDuration: 7, // change later to be pulled for user settings from database or smth
+        };
+        localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
 
-      setUserIsLoggedIn(true);
-    } else if (serverResponse.status === 404) {
+        const json = await serverResponse.json();
+        setUser(json);
+
+        setUserIsLoggedIn(true);
+      } else if (serverResponse.status === 404) {
+        handleOpenToast({
+          type: "error",
+          info: "You do not have access to Company Database. If you believe this is a mistake, contact your administrator at email@example.com.",
+        });
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "An unknown error occurred whilst trying to login.",
+        });
+      }
+    } catch (error) {
       handleOpenToast({
         type: "error",
-        info: "You do not have access to Company Database. If you believe this is a mistake, contact your administrator at email@example.com.",
+        info: "An error occurred whilst trying to connect to server.",
       });
+
+      navigate("/login");
     }
+
+    setLoadingUser(false);
   }
 
   useEffect(() => {
@@ -81,47 +101,60 @@ export default function App() {
           loginInfo.automaticLoginDaysDuration
       ) {
         // if JWT of user exists in local storage and user has logged in the last X days
-        const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-        loginUser(JWToken);
+        loginUser(loginInfo.JWT);
       } else {
         navigate("/login");
       }
     } else {
-      if (location.pathname !== "/login") navigate(location.pathname);
-      else navigate("/");
+      if (location.pathname !== "/login") {
+        navigate(location.pathname);
+      } else {
+        navigate("/");
+      }
     }
   }, [userIsLoggedIn]);
 
   return (
     <>
       <CssBaseline enableColorScheme />
-      <Routes>
-        <Route
-          path="/"
-          element={<Header setUserIsLoggedIn={setUserIsLoggedIn} />}
-        >
-          <Route index element={<Home />} />
 
-          <Route path="users">
-            <Route index element={<Users />} />
+      {loadingUser ? (
+        <Box sx={{ display: "grid", placeItems: "center", height: "100%" }}>
+          <CircularProgress size={100} />
+        </Box>
+      ) : (
+        <Routes>
+          (
+          <Route
+            path="/"
+            element={<Header setUserIsLoggedIn={setUserIsLoggedIn} />}
+          >
+            <Route index element={<Home />} />
+
+            <Route path="users">
+              <Route index element={<Users />} />
+            </Route>
+
+            <Route path="projects">
+              <Route index element={<Projects />} />
+            </Route>
+
+            <Route path="companies" element={<Companies />} />
+
+            <Route path="companies/:id">
+              <Route index element={<Company />} />
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
           </Route>
-
-          <Route path="projects">
-            <Route index element={<Projects />} />
-          </Route>
-
-          <Route path="companies" element={<Companies />} />
-
-          <Route path="companies/:id">
-            <Route index element={<Company />} />
-          </Route>
-
-          <Route path="*" element={<NotFound />} />
-        </Route>
-
-        <Route path="login" element={<Login loginUser={loginUser} />} />
-        {/* <Route path="setup" element={<Setup setAppIsSetup={setAppIsSetup} />} /> */}
-      </Routes>
+          )
+          <Route
+            path="login"
+            element={<Login loginUser={loginUser} loading={loadingUser} />}
+          />
+          {/* <Route path="setup" element={<Setup setAppIsSetup={setAppIsSetup} />} /> */}
+        </Routes>
+      )}
 
       <Toast></Toast>
 

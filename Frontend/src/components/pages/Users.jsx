@@ -63,7 +63,7 @@ export default function Users() {
     } catch (error) {
       handleOpenToast({
         type: "error",
-        info: "An error occurred whilst trying to fetch data.",
+        info: "An error occurred whilst trying to connect to server.",
       });
     }
 

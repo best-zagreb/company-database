@@ -139,7 +139,7 @@ export default function ProjectForm({
       handleOpenToast({
         type: "error",
         info:
-          "An unknown error occurred while trying to " +
+          "An unknown error occurred whilst trying to " +
           (project ? "update" : "add") +
           " project.",
       });

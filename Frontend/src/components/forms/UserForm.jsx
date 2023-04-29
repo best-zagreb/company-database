@@ -135,7 +135,7 @@ export default function UserForm({
       handleOpenToast({
         type: "error",
         info:
-          "An unknown error occurred while trying to " +
+          "An unknown error occurred whilst trying to " +
           (user ? "update" : "add") +
           " user.",
       });

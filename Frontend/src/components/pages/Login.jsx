@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, CircularProgress } from "@mui/material";
 
-export default function Login({ loginUser }) {
+export default function Login({ loginUser, loading }) {
   function handleCallbackResponse(response) {
     loginUser(response);
   }
@@ -34,9 +34,9 @@ export default function Login({ loginUser }) {
   return (
     <Box
       sx={{
-        height: "100vh",
+        height: "100%",
 
-        display: "flex",
+        display: loading ? "none" : "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
@@ -50,7 +50,10 @@ export default function Login({ loginUser }) {
       </Typography>
 
       <Box
-        sx={{ transform: "scale(1.75)", margin: 2 }}
+        sx={{
+          transform: "scale(1.75)",
+          margin: 2,
+        }}
         id="signInWithGoogleButton"
       ></Box>
     </Box>
