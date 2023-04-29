@@ -27,7 +27,6 @@ export default function SearchBar({ type, data, setSearchResults }) {
     <Autocomplete
       freeSolo
       size="small"
-      disableClearable
       onInputChange={(e, inputValue) => {
         handleChange(inputValue);
       }}
@@ -47,7 +46,6 @@ export default function SearchBar({ type, data, setSearchResults }) {
           label={`Search ${type}`}
           InputProps={{
             ...params.InputProps,
-            type: "search",
             startAdornment: (
               <InputAdornment position="end">
                 <SearchIcon />

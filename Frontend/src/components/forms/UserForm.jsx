@@ -86,11 +86,12 @@ export default function UserForm({
     const newUser = {
       firstName: name.trim(),
       lastName: surname.trim(),
-      nickname: nickname !== "" ? nickname.trim() : null,
+      nickname: nickname && nickname !== "" ? nickname.trim() : null,
       loginEmail: loginEmail.trim(),
       notificationEmail: notificationEmail.trim(),
       authority: authLevel.trim().toUpperCase(),
-      description: description.trim(),
+      description:
+        description && description !== "" ? description.trim() : null,
     };
 
     const request = {
@@ -147,7 +148,7 @@ export default function UserForm({
   useEffect(() => {
     setName(user?.firstName);
     setSurname(user?.lastName);
-    setNickname(user?.nickname);
+    setNickname(user?.nickname || "");
     setLoginEmail(user?.loginEmail);
     setNotificationEmail(user?.notificationEmail);
     setAuthLevel(
@@ -327,11 +328,7 @@ export default function UserForm({
                   onChange={(e) => {
                     const input = e.target.value;
                     if (
-                      input === authLevels[0].value ||
-                      input === authLevels[1].value ||
-                      input === authLevels[2].value ||
-                      input === authLevels[3].value ||
-                      input === authLevels[4].value
+                      authLevels.map((option) => option.value).includes(input)
                     ) {
                       setAuthLevelIsValid(true);
                     } else {

@@ -4,6 +4,7 @@ import {
   Fade,
   Button,
   TextField,
+  Autocomplete,
   MenuItem,
   Typography,
   FormControl,
@@ -42,6 +43,7 @@ export default function ProjectForm({
   const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
 
+  const [usersForFRResponsible, setUsersForFRResponsible] = useState([]);
   const [loadingButton, setLoadingButton] = useState(false);
 
   const [name, setName] = useState();
@@ -63,6 +65,34 @@ export default function ProjectForm({
   const [FRGoalIsValid, setFRGoalIsValid] = useState();
   const [firstPingDateIsValid, setFirstPingDateIsValid] = useState();
   const [secondPingDateIsValid, setSecondPingDateIsValid] = useState();
+
+  async function fetchUsers() {
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+
+    try {
+      const serverResponse = await fetch("http://localhost:8080/users/", {
+        method: "GET",
+        headers: { googleTokenEncoded: JWToken.credential },
+      });
+
+      if (serverResponse.ok) {
+        const json = await serverResponse.json();
+
+        // console.log(json);
+        setUsersForFRResponsible(json);
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "A server error occurred whilst fetching users for FR responsible input field.",
+        });
+      }
+    } catch (error) {
+      handleOpenToast({
+        type: "error",
+        info: "An error occurred whilst trying to connect to server.",
+      });
+    }
+  }
 
   async function submit() {
     if (
@@ -149,6 +179,8 @@ export default function ProjectForm({
   }
 
   useEffect(() => {
+    fetchUsers();
+
     setName(project?.name);
     setCategory(project?.category);
     setType(
@@ -349,36 +381,41 @@ export default function ProjectForm({
                   }}
                 />
 
-                {/* TODO: change so it shows a DDL with names and sends users ID */}
-                <TextInput
-                  labelText={"FR responsible ID"}
-                  inputType={"number"}
-                  placeholderText={"0"}
-                  isRequired
-                  helperText={{
-                    error: "(TODO: User " + FRRespID + " does not exist)",
-                    details: "",
-                  }}
-                  inputProps={{
-                    min: 0,
-                    max: 9999,
-                    minLength: 1,
-                    maxLength: 4,
-                  }}
-                  validationFunction={(input) => {
-                    return (
-                      input === null ||
-                      (input >= 0 &&
-                        input <= 9999 &&
-                        input.length >= 1 &&
-                        input.length <= 4)
+                <Autocomplete
+                  options={usersForFRResponsible}
+                  clearOnEscape
+                  openOnFocus
+                  getOptionLabel={(option) =>
+                    option.firstName + " " + option.lastName
+                  }
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  filterOptions={(options, { inputValue }) =>
+                    options.filter((option) =>
+                      (option.firstName + " " + option.lastName)
+                        .toLowerCase()
+                        .includes(inputValue.toLowerCase())
+                    )
+                  }
+                  onChange={(e, inputValue) => {
+                    setFRRespID(inputValue?.id);
+                    setFRRespIDIsValid(
+                      usersForFRResponsible
+                        .map((option) => option.id)
+                        .includes(inputValue?.id)
                     );
                   }}
-                  value={FRRespID}
-                  setValue={setFRRespID}
-                  valueIsValid={FRRespIDIsValid}
-                  setValueIsValid={setFRRespIDIsValid}
-                ></TextInput>
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="FR responsible"
+                      required
+                      fullWidth
+                      margin="dense"
+                    />
+                  )}
+                />
 
                 <TextInput
                   labelText={"FR goal"}
