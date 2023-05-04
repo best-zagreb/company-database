@@ -8,6 +8,7 @@ import {
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 
 import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import ToastContext from "../../context/ToastContext";
 import DeleteAlertContext from "../../context/DeleteAlertContext";
@@ -26,6 +27,8 @@ const tableColumns = [
 ];
 
 export default function Users() {
+  const navigate = useNavigate();
+
   const { handleOpenToast } = useContext(ToastContext);
   const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
     useContext(DeleteAlertContext);
@@ -68,6 +71,10 @@ export default function Users() {
     }
 
     setLoading(false);
+  }
+
+  function handleView(user) {
+    navigate(`/users/${user.id}`);
   }
 
   function handleEdit(user) {
@@ -140,7 +147,7 @@ export default function Users() {
             tableColumns={tableColumns}
             searchResults={searchResults}
             setSearchResults={setSearchResults}
-            type="users"
+            handleView={handleView}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
           ></TableComponent>

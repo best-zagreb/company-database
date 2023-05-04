@@ -7,8 +7,14 @@ import {
   TableBody,
   IconButton,
   Link,
+  Box,
+  Tooltip,
 } from "@mui/material";
-import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
+import {
+  Visibility as DetailsIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+} from "@mui/icons-material";
 
 import { useState } from "react";
 import moment from "moment";
@@ -17,7 +23,7 @@ export default function TableComponent({
   tableColumns,
   searchResults,
   setSearchResults,
-  type,
+  handleView,
   handleEdit,
   handleDelete,
 }) {
@@ -82,7 +88,7 @@ export default function TableComponent({
             </TableCell>
           ))}
 
-          {type === "users" && <TableCell>Actions</TableCell>}
+          <TableCell align="center">Actions</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -117,34 +123,57 @@ export default function TableComponent({
               );
             })}
 
-            {type === "users" && (
-              <TableCell>
-                <IconButton
-                  size="small"
-                  onClick={() => handleEdit(data)}
-                  sx={{
-                    marginInline: 0.25,
-                    color: "white",
-                    backgroundColor: "#1976d2",
-                    borderRadius: 1,
-                  }}
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
-                  size="small"
-                  onClick={() => handleDelete(data)}
-                  sx={{
-                    marginInline: 0.25,
-                    color: "white",
-                    backgroundColor: "#1976d2",
-                    borderRadius: 1,
-                  }}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
-            )}
+            <TableCell>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 0.5,
+                  flexWrap: "wrap",
+                }}
+              >
+                <Tooltip title="Details">
+                  <IconButton
+                    size="small"
+                    onClick={() => handleView(data)}
+                    sx={{
+                      color: "white",
+                      backgroundColor: "#1976d2",
+                      borderRadius: 1,
+                    }}
+                  >
+                    <DetailsIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Edit">
+                  <IconButton
+                    size="small"
+                    onClick={() => handleEdit(data)}
+                    sx={{
+                      color: "white",
+                      backgroundColor: "#1976d2",
+                      borderRadius: 1,
+                    }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete">
+                  <IconButton
+                    size="small"
+                    onClick={() => handleDelete(data)}
+                    sx={{
+                      color: "white",
+                      backgroundColor: "#1976d2",
+                      borderRadius: 1,
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

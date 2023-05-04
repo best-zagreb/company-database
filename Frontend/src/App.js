@@ -133,16 +133,20 @@ export default function App() {
 
             <Route path="users">
               <Route index element={<Users />} />
+
+              <Route path=":id" element={<Company />} />
             </Route>
 
             <Route path="projects">
               <Route index element={<Projects />} />
+
+              <Route path=":id" element={<Company />} />
             </Route>
 
-            <Route path="companies" element={<Companies />} />
+            <Route path="companies">
+              <Route index element={<Companies />} />
 
-            <Route path="companies/:id">
-              <Route index element={<Company />} />
+              <Route path=":id" element={<Company />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

@@ -181,7 +181,7 @@ export default function CompanyForm({
       // !townNameIsValid ||
       !zipCodeIsValid ||
       !addressIsValid ||
-      // !descriptionIsValid ||
+      !descriptionIsValid ||
       !contactInFutureIsValid
     ) {
       return;
@@ -205,7 +205,7 @@ export default function CompanyForm({
       zipCode: zipCode,
       address: address,
       webUrl: url,
-      // description: description,
+      description: description,
       contactInFuture: contactInFuture,
     };
 
@@ -274,7 +274,7 @@ export default function CompanyForm({
     setZipCode(company?.zipCode);
     setAddress(company?.address);
     setUrl(company?.url);
-    // setDescription(company?.description);
+    setDescription(company?.description);
     setContactInFuture(company?.contactInFuture || true);
 
     setNameIsValid(company ? true : false);
@@ -286,7 +286,7 @@ export default function CompanyForm({
     setZipCodeIsValid(company ? true : false);
     setAddressIsValid(company ? true : false);
     setUrlIsValid(true);
-    // setDescriptionIsValid(true);
+    setDescriptionIsValid(true);
     setContactInFutureIsValid(true);
 
     fetchExistingCompanies();

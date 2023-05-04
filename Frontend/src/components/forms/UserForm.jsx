@@ -45,7 +45,7 @@ const authLevels = [
 
 export default function UserForm({
   user,
-  openUserFormModal: openModal,
+  openUserFormModal,
   setOpenUserFormModal,
   populateUsers,
 }) {
@@ -176,13 +176,13 @@ export default function UserForm({
     setNotificationEmailIsValid(true);
     setAuthLevelIsValid(true);
     setDescriptionIsValid(true);
-  }, [openModal]);
+  }, [openUserFormModal]);
 
   return (
     <>
-      <Backdrop open={openModal}>
+      <Backdrop open={openUserFormModal}>
         <Modal
-          open={openModal}
+          open={openUserFormModal}
           closeAfterTransition
           // submit on Enter key
           onKeyDown={(e) => {
@@ -195,7 +195,7 @@ export default function UserForm({
             setOpenUserFormModal(false);
           }}
         >
-          <Fade in={openModal}>
+          <Fade in={openUserFormModal}>
             <FormControl
               sx={{
                 position: "absolute",

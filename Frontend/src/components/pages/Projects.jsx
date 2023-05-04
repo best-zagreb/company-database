@@ -8,9 +8,10 @@ import {
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 
 import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import ToastContext from "../../context/ToastContext";
-// import DeleteAlertContext from "../../context/DeleteAlertContext";
+import DeleteAlertContext from "../../context/DeleteAlertContext";
 
 import ProjectForm from "./../forms/ProjectForm";
 
@@ -26,9 +27,14 @@ const tableColumns = [
 ];
 
 export default function Projects() {
+  const navigate = useNavigate();
+
   const { handleOpenToast } = useContext(ToastContext);
+  const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
+    useContext(DeleteAlertContext);
 
   const [openFormModal, setOpenFormModal] = useState(false);
+  const [project, setProject] = useState();
 
   const [data, setData] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
@@ -67,18 +73,22 @@ export default function Projects() {
     setLoading(false);
   }
 
-  // function handleEdit(project) {
-  //   setUser(project);
-  //   setOpenFormModal(true);
-  // }
+  function handleView(project) {
+    navigate(`/projects/${project.id}`);
+  }
 
-  // async function handleDelete(project) {
-  //   setObject({ type: "Project", name: project.name });
-  //   setEndpoint("http://localhost:8080/projects/" + project.id);
-  //   setPopulateObjects({ function: populateTable });
+  function handleEdit(project) {
+    setProject(project);
+    setOpenFormModal(true);
+  }
 
-  //   setOpenDeleteAlert(true);
-  // }
+  function handleDelete(project) {
+    setObject({ type: "Project", name: project.name });
+    setEndpoint("http://localhost:8080/projects/" + project.id);
+    setPopulateObjects({ function: populateTable });
+
+    setOpenDeleteAlert(true);
+  }
 
   useEffect(() => {
     populateTable();
@@ -87,6 +97,7 @@ export default function Projects() {
   return (
     <>
       <ProjectForm
+        project={project}
         openModal={openFormModal}
         setOpenModal={setOpenFormModal}
         populateProjects={populateTable}
@@ -113,7 +124,10 @@ export default function Projects() {
           variant="contained"
           size="medium"
           startIcon={<AddCircleIcon />}
-          onClick={() => setOpenFormModal(true)}
+          onClick={() => {
+            setProject();
+            setOpenFormModal(true);
+          }}
         >
           Add project
         </Button>
@@ -126,15 +140,16 @@ export default function Projects() {
           </Box>
         ) : data?.length <= 0 ? (
           <Typography variant="h4" align="center">
-            {"No users :("}
+            {"No projects :("}
           </Typography>
         ) : (
           <TableComponent
             tableColumns={tableColumns}
             searchResults={searchResults}
             setSearchResults={setSearchResults}
-            // handleEdit={handleEdit}
-            // handleDelete={handleDelete}
+            handleView={handleView}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
           ></TableComponent>
         )}
       </Container>

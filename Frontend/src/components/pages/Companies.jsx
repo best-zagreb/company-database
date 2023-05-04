@@ -8,9 +8,10 @@ import {
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 
 import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import ToastContext from "../../context/ToastContext";
-// import DeleteAlertContext from "../../context/DeleteAlertContext";
+import DeleteAlertContext from "../../context/DeleteAlertContext";
 
 import CompanyForm from "../forms/CompanyForm";
 
@@ -44,9 +45,14 @@ const tableColumns = [
 ];
 
 export default function Companies() {
+  const navigate = useNavigate();
+
   const { handleOpenToast } = useContext(ToastContext);
+  const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
+    useContext(DeleteAlertContext);
 
   const [openFormModal, setOpenFormModal] = useState(false);
+  const [company, setCompany] = useState();
 
   const [data, setData] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
@@ -85,18 +91,22 @@ export default function Companies() {
     setLoading(false);
   }
 
-  // function handleEdit(company) {
-  //   setUser(company);
-  //   setOpenFormModal(true);
-  // }
+  function handleView(company) {
+    navigate(`/companies/${company.id}`);
+  }
 
-  // async function handleDelete(company) {
-  //   setObject({ type: "Company", name: company.name });
-  //   setEndpoint("http://localhost:8080/company/" + company.id);
-  //   setPopulateObjects({ function: populateTable });
+  function handleEdit(company) {
+    setCompany(company);
+    setOpenFormModal(true);
+  }
 
-  //   setOpenDeleteAlert(true);
-  // }
+  function handleDelete(company) {
+    setObject({ type: "Company", name: company.name });
+    setEndpoint("http://localhost:8080/companies/" + company.id);
+    setPopulateObjects({ function: populateTable });
+
+    setOpenDeleteAlert(true);
+  }
 
   useEffect(() => {
     populateTable();
@@ -105,6 +115,7 @@ export default function Companies() {
   return (
     <>
       <CompanyForm
+        company={company}
         openModal={openFormModal}
         setOpenModal={setOpenFormModal}
         populateCompanies={populateTable}
@@ -131,7 +142,10 @@ export default function Companies() {
           variant="contained"
           size="medium"
           startIcon={<AddCircleIcon />}
-          onClick={() => setOpenFormModal(true)}
+          onClick={() => {
+            setCompany();
+            setOpenFormModal(true);
+          }}
         >
           Add company
         </Button>
@@ -151,8 +165,9 @@ export default function Companies() {
             tableColumns={tableColumns}
             searchResults={searchResults}
             setSearchResults={setSearchResults}
-            // handleEdit={handleEdit}
-            // handleDelete={handleDelete}
+            handleView={handleView}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
           ></TableComponent>
         )}
       </Container>

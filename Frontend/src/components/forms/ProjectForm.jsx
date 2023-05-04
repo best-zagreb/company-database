@@ -41,8 +41,8 @@ export default function ProjectForm({
   const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
 
-  const [usersForFRResp, setUsersForFRResp] = useState([]);
-  const [projectsForCategories, setProjectsForCategories] = useState([]);
+  const [existingUsers, setExistingUsers] = useState([]);
+  const [existingProjects, setExistingProjects] = useState([]);
   const [loadingButton, setLoadingButton] = useState(false);
 
   const [name, setName] = useState();
@@ -65,7 +65,7 @@ export default function ProjectForm({
   const [firstPingDateIsValid, setFirstPingDateIsValid] = useState();
   const [secondPingDateIsValid, setSecondPingDateIsValid] = useState();
 
-  async function fetchUsersForFRResp() {
+  async function fetchExistingUsers() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
@@ -78,7 +78,7 @@ export default function ProjectForm({
         const json = await serverResponse.json();
 
         // console.log(json);
-        setUsersForFRResp(json);
+        setExistingUsers(json);
       } else {
         handleOpenToast({
           type: "error",
@@ -93,7 +93,7 @@ export default function ProjectForm({
     }
   }
 
-  async function fetchProjectsForCategories() {
+  async function fetchExistingProjects() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
@@ -106,7 +106,7 @@ export default function ProjectForm({
         const json = await serverResponse.json();
 
         // console.log(json);
-        setProjectsForCategories(json);
+        setExistingProjects(json);
       } else {
         handleOpenToast({
           type: "error",
@@ -212,12 +212,16 @@ export default function ProjectForm({
       project?.type.charAt(0) + project?.type.slice(1).toLowerCase() ||
         projectTypes[0].value
     );
-    setStartDate(project?.startDate || moment());
-    setEndDate(project?.endDate || moment().add(6, "months"));
+    setStartDate(project ? moment(project.startDate) : moment());
+    setEndDate(project ? moment(project.endDate) : moment().add(6, "months"));
     setFRRespID(project?.frresp.id);
     setFRGoal(project?.frgoal);
-    setFirstPingDate(project?.firstPingDate);
-    setSecondPingDate(project?.secondPingDate);
+    setFirstPingDate(
+      (project?.firstPingDate && moment(project.firstPingDate)) || null
+    );
+    setSecondPingDate(
+      (project?.secondPingDate && moment(project.secondPingDate)) || null
+    );
 
     // optional and predefined fields are always valid
     setNameIsValid(project ? true : false);
@@ -230,8 +234,8 @@ export default function ProjectForm({
     setFirstPingDateIsValid(true);
     setSecondPingDateIsValid(true);
 
-    fetchUsersForFRResp();
-    fetchProjectsForCategories();
+    fetchExistingUsers();
+    fetchExistingProjects();
   }, [openModal]);
 
   return (
@@ -302,7 +306,7 @@ export default function ProjectForm({
               ></TextInput>
 
               <Autocomplete
-                options={projectsForCategories
+                options={existingProjects
                   .map((project) => project.category)
                   .filter(
                     (category, index, array) =>
@@ -368,7 +372,6 @@ export default function ProjectForm({
 
               <DatePicker
                 label="Start date"
-                required
                 displayWeekNumber
                 format="DD.MM.YYYY."
                 minDate={moment("1980-01-01")}
@@ -377,8 +380,8 @@ export default function ProjectForm({
                 onChange={(date) => {
                   const input = date;
                   if (
-                    input >= moment("1980-01-01") &&
-                    input <= moment().add(2, "years")
+                    input.isAfter(moment("1980-01-01")) &&
+                    input.isBefore(moment().add(2, "years"))
                   ) {
                     setStartDateIsValid(true);
                   } else {
@@ -390,6 +393,7 @@ export default function ProjectForm({
                 slotProps={{
                   textField: {
                     fullWidth: true,
+                    required: true,
                     margin: "dense",
                     helperText: !startDateIsValid && "Invalid start date",
                     error: !startDateIsValid,
@@ -398,7 +402,6 @@ export default function ProjectForm({
               />
               <DatePicker
                 label="End date"
-                required
                 displayWeekNumber
                 format="DD.MM.YYYY."
                 minDate={startDate}
@@ -406,7 +409,10 @@ export default function ProjectForm({
                 value={endDate}
                 onChange={(date) => {
                   const input = date;
-                  if (input >= startDate && input <= moment().add(2, "years")) {
+                  if (
+                    input.isAfter(startDate) &&
+                    input.isBefore(moment().add(2, "years"))
+                  ) {
                     setEndDateIsValid(true);
                   } else {
                     setEndDateIsValid(false);
@@ -417,6 +423,7 @@ export default function ProjectForm({
                 slotProps={{
                   textField: {
                     fullWidth: true,
+                    required: true,
                     margin: "dense",
                     helperText: !endDateIsValid && "Invalid end date",
                     error: !endDateIsValid,
@@ -425,9 +432,10 @@ export default function ProjectForm({
               />
 
               <Autocomplete
-                options={usersForFRResp}
+                options={existingUsers}
                 clearOnEscape
                 openOnFocus
+                value={existingUsers.find((u) => u.id === FRRespID) || null}
                 getOptionLabel={(option) =>
                   option.firstName + " " + option.lastName
                 }
@@ -442,7 +450,7 @@ export default function ProjectForm({
                 onChange={(e, inputValue) => {
                   setFRRespID(inputValue?.id);
                   setFRRespIDIsValid(
-                    usersForFRResp
+                    existingUsers
                       .map((option) => option.id)
                       .includes(inputValue?.id)
                   );
@@ -492,13 +500,14 @@ export default function ProjectForm({
                 label="First ping date"
                 displayWeekNumber
                 format="DD.MM.YYYY."
+                value={firstPingDate}
                 minDate={startDate}
                 maxDate={endDate}
                 onChange={(date) => {
                   const input = date;
                   if (
                     input === null ||
-                    (input >= startDate && input <= endDate)
+                    (input.isAfter(startDate) && input.isBefore(endDate))
                   ) {
                     setFirstPingDateIsValid(true);
                   } else {
@@ -513,7 +522,7 @@ export default function ProjectForm({
                     margin: "dense",
                     helperText:
                       !firstPingDateIsValid &&
-                      "First ping date must be between project start and end date",
+                      "Date must be between project start and end date",
                     error: !firstPingDateIsValid,
                   },
                 }}
@@ -522,13 +531,14 @@ export default function ProjectForm({
                 label="Second ping date"
                 displayWeekNumber
                 format="DD.MM.YYYY."
+                value={secondPingDate}
                 minDate={firstPingDate || startDate}
                 maxDate={endDate}
-                onClick={(date) => {
+                onChange={(date) => {
                   const input = date;
                   if (
                     input === null ||
-                    (input >= startDate && input <= endDate)
+                    (input.isAfter(startDate) && input.isBefore(endDate))
                   ) {
                     setSecondPingDateIsValid(true);
                   } else {
@@ -543,7 +553,7 @@ export default function ProjectForm({
                     margin: "dense",
                     helperText:
                       !secondPingDateIsValid &&
-                      "Second ping date must be between project start and end date",
+                      "Date must be between project start and end date",
                     error: !secondPingDateIsValid,
                   },
                 }}
