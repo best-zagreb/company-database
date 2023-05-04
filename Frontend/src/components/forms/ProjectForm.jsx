@@ -144,7 +144,7 @@ export default function ProjectForm({
       type: type.trim().toUpperCase(),
       startDate: startDate,
       endDate: endDate,
-      idFRResp: FRRespID, // TODO: change to it extracts the id from user
+      idFRResp: FRRespID,
       frgoal: FRGoal !== "" ? FRGoal : null,
       firstPingDate: firstPingDate,
       secondPingDate: secondPingDate,

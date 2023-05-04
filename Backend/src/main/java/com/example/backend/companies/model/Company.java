@@ -21,7 +21,7 @@ public class Company
     private String domain;
 
     @Column(name = "abcCategory")
-    private char abcCategory;
+    private Character abcCategory;
 
     @Column(name = "budgetPlanningMonth")
     private String budgetPlanningMonth;
@@ -29,25 +29,28 @@ public class Company
     @Column(length = 60, name = "country", nullable = false)
     private String country;
 
+    // TODO: change zipcode to townName and delete town entity
+//    @Column(name = "townName", nullable = false, length = 120)
+//    private String townName;
     @Column(name = "zipCode", nullable = false)
     private int zipCode;
 
-    @Column(name = "Address", nullable = false, length = 120)
+    @Column(name = "address", nullable = false, length = 120)
     private String address;
 
-    @Column(name = "WebURL", length = 60)
+    @Column(name = "webUrl", length = 60)
     private String webUrl;
 
     @Column(name = "contactInFuture", nullable = false)
     private boolean contactInFuture;
 
-    @Column
+    @Column(name = "description", length = 480)
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
     private Set<Contact> contacts;
 
-    public Company(Long id, String name, String domain, char abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture, String description) {
+    public Company(Long id, String name, String domain, Character abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture, String description) {
         this.id = id;
         this.name = name;
         this.domain = domain;
@@ -61,7 +64,7 @@ public class Company
         this.description = description;
     }
 
-    public Company(String name, String domain, char abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture, String description) {
+    public Company(String name, String domain, Character abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture, String description) {
         this.name = name;
         this.domain = domain;
         this.abcCategory = abcCategory;
@@ -99,12 +102,12 @@ public class Company
         this.domain = domain;
     }
 
-    public char getAbcCategory()
+    public Character getAbcCategory()
     {
         return abcCategory;
     }
 
-    public void setAbcCategory(char abcCategory)
+    public void setAbcCategory(Character abcCategory)
     {
         this.abcCategory = abcCategory;
     }

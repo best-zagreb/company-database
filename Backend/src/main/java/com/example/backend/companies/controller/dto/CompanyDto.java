@@ -11,7 +11,7 @@ public class CompanyDto
 
     private String domain;
 
-    private char abcCategory;
+    private Character abcCategory;
 
     private String budgetPlanningMonth;
 
@@ -27,7 +27,7 @@ public class CompanyDto
 
     private String description;
 
-    public CompanyDto(String name, String domain, char abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture, String description) {
+    public CompanyDto(String name, String domain, Character abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture, String description) {
         this.name = name;
         this.domain = domain;
         this.abcCategory = abcCategory;
@@ -75,12 +75,12 @@ public class CompanyDto
         this.domain = domain;
     }
 
-    public char getAbcCategory()
+    public Character getAbcCategory()
     {
         return abcCategory;
     }
 
-    public void setAbcCategory(char abcCategory)
+    public void setAbcCategory(Character abcCategory)
     {
         this.abcCategory = abcCategory;
     }
