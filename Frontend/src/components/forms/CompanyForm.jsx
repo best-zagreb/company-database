@@ -1,23 +1,26 @@
 import {
   Backdrop,
-  Box,
   Modal,
   Fade,
   Button,
   TextField,
   Autocomplete,
   MenuItem,
+  Typography,
+  FormControl,
+  FormControlLabel,
   FormLabel,
   RadioGroup,
-  FormControlLabel,
   Radio,
+  Box,
 } from "@mui/material";
-
-import "./Form.css";
+import { LoadingButton } from "@mui/lab";
 
 import { useState, useContext, useEffect } from "react";
 
 import ToastContext from "../../context/ToastContext";
+
+import TextInput from "./partial/TextInput";
 
 const newCompany = {
   name: null,
@@ -32,21 +35,14 @@ const newCompany = {
 };
 
 const abcCategories = [
-  {
-    value: "A",
-    label: "A",
-  },
-  {
-    value: "B",
-    label: "B",
-  },
-  {
-    value: "C",
-    label: "C",
-  },
+  { value: "Unknown", label: "Unknown" },
+  { value: "A", label: "A" },
+  { value: "B", label: "B" },
+  { value: "C", label: "C" },
 ];
 
 const months = [
+  { value: "Unknown", label: "Unknown" },
   { value: "January", label: "January" },
   { value: "February", label: "February" },
   { value: "March", label: "March" },
@@ -88,6 +84,33 @@ export default function CompanyForm({
   const { handleOpenToast } = useContext(ToastContext);
 
   const [companiesForSectors, setCompaniesForSectors] = useState([]);
+  const [countriesForAddress, setCountriesForAddress] = useState([]);
+  // const [townsForAddress, setTownsForAddress] = useState([]);
+  const [loadingButton, setLoadingButton] = useState(false);
+
+  const [name, setName] = useState();
+  const [sector, setSector] = useState();
+  const [abcCategorization, setAbcCategorization] = useState();
+  const [budgetMonth, setBudgetMonth] = useState();
+  const [country, setCountry] = useState();
+  //const [town, setTown] = useState();
+  const [zipCode, setZipCode] = useState();
+  const [address, setAdress] = useState();
+  const [url, setUrl] = useState();
+  //const [description, setDescription] = useState();
+  const [contactInFuture, setContactInFuture] = useState();
+
+  const [nameIsValid, setNameIsValid] = useState(false);
+  const [sectorIsValid, setSectorIsValid] = useState();
+  const [abcCategorizationIsValid, setAbcCategorizationIsValid] = useState();
+  const [budgetPlanningMonthIsValid, setBudgetPlanningMonthIsValid] =
+    useState();
+  const [countryIsValid, setCountryIsValid] = useState(false);
+  // const [townIsValid, setTownIsValid] = useState(false);
+  const [zipCodeIsValid, setZipCodeIsValid] = useState(false);
+  const [adressIsValid, setAdressIsValid] = useState(false);
+  const [urlIsValid, setUrlIsValid] = useState(false);
+  const [contactInFutureIsValid, setContactInFutureIsValid] = useState(true);
 
   async function fetchCompaniesForSectors() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
@@ -116,8 +139,69 @@ export default function CompanyForm({
       });
     }
   }
+  async function fetchCountriesForAddress() {
+    try {
+      const serverResponse = await fetch(
+        "https://restcountries.com/v3.1/all?fields=name,cca2",
+        {
+          method: "GET",
+        }
+      );
 
-  async function onSubmit(e) {
+      if (serverResponse.ok) {
+        const json = await serverResponse.json();
+
+        // console.log(json);
+        setCountriesForAddress(json);
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "A server error occurred whilst fetching companies for Country input field.",
+        });
+      }
+    } catch (error) {
+      handleOpenToast({
+        type: "error",
+        info: "An error occurred whilst trying to connect to server.",
+      });
+    }
+  }
+  async function fetchCitiesForAddress(inputValue) {
+    try {
+      const serverResponse = await fetch(
+        "http://api.geonames.org/postalCodeSearchJSON?maxRows=250&username=crazyfreak" +
+          "&placename_startsWith=" +
+          encodeURIComponent(inputValue || " ") +
+          "&country=" +
+          encodeURIComponent(
+            countriesForAddress.find((c) => c.name.official === country)
+              ?.cca2 || ""
+          ),
+        {
+          method: "GET",
+        }
+      );
+
+      if (serverResponse.ok) {
+        const json = await serverResponse.json();
+
+        // console.log(json.postalCodes);
+        setTownsForAddress(json.postalCodes);
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "A server error occurred whilst fetching companies for Town input field.",
+        });
+      }
+    } catch (error) {
+      handleOpenToast({
+        type: "error",
+        info: "An error occurred whilst trying to connect to server.",
+      });
+    }
+  }
+
+  async function submit(e) {
     e.preventDefault();
 
     if (
@@ -126,17 +210,19 @@ export default function CompanyForm({
       countryIsValid &&
       zipCodeIsValid &&
       adressIsValid &&
-      doContactIsValid
+      contactInFutureIsValid
     ) {
       newCompany.name = name;
       newCompany.domain = sector;
-      newCompany.abcCategory = abcCategorization.toLowerCase();
-      newCompany.budgetPlanningMonth = budgetMonth;
+      newCompany.abcCategory =
+        abcCategorization === abcCategories[0].value ? null : abcCategorization;
+      newCompany.budgetPlanningMonth =
+        budgetMonth === months[0].value ? null : budgetMonth;
       newCompany.country = country;
       newCompany.zipCode = zipCode;
       newCompany.address = address;
       newCompany.webUrl = url;
-      newCompany.contactInFuture = doContact;
+      newCompany.contactInFuture = contactInFuture;
 
       //console.log(company);
 
@@ -178,65 +264,28 @@ export default function CompanyForm({
     }
   }
 
-  const [name, setName] = useState();
-  const [sector, setSector] = useState();
-  const [sectorIsValid, setSectorIsValid] = useState();
-  const [abcCategorization, setAbcCategorization] = useState();
-  const [abcCategorizationIsValid, setAbcCategorizationIsValid] = useState();
-  const [budgetMonth, setBudgetMonth] = useState();
-  const [budgetMonthIsValid, setBudgetMonthIsValid] = useState();
-  const [country, setCountry] = useState();
-  //const [town, setTown] = useState();
-  const [zipCode, setZipCode] = useState();
-  const [address, setAdress] = useState();
-  const [url, setUrl] = useState();
-  //const [description, setDescription] = useState();
-  const [doContact, setDoContact] = useState();
-
-  const [nameIsValid, setNameIsValid] = useState(false);
-  const handleNameChange = (e) => {
-    const input = e.target.value;
-    if (input.length >= 2 && input.length <= 35) {
-      setNameIsValid(true);
-      setName(input);
-    }
-  };
-
-  const [countryIsValid, setCountryIsValid] = useState(false);
-  const handleCountryChange = (e) => {
-    const input = e.target.value;
-    if (input.length >= 2 && input.length <= 56) {
-      setCountryIsValid(true);
-      setCountry(input);
-    }
-  };
-
-  const [zipCodeIsValid, setNotificationEmailIsValid] = useState(false);
   const handleZipCodeChange = (e) => {
     const input = e.target.value;
-    if (input.length == 5 && !isNaN(input)) setNotificationEmailIsValid(true);
+    if (input.length == 5 && !isNaN(input)) setZipCodeIsValid(true);
     setZipCode(input);
   };
 
-  // const [townIsValid, setTownlIsValid] = useState(false);
   // const handleTownChange = (e) => {
   //   const input = e.target.value;
   //   if (input.length >= 2 && input.length <= 56) {
-  //     setTownlIsValid(true);
+  //     setTownIsValid(true);
   //     setTown(input);
   //   }
   // };
 
-  const [adressIsValid, setAdresslIsValid] = useState(false);
   const handleAdressChange = (e) => {
     const input = e.target.value;
     if (input.length >= 2 && input.length <= 56) {
-      setAdresslIsValid(true);
+      setAdressIsValid(true);
       setAdress(input);
     }
   };
 
-  const [urlIsValid, setUrlIsValid] = useState(false);
   const handleUrlChange = (e) => {
     const input = e.target.value;
     if (isValidUrl(input)) {
@@ -258,60 +307,104 @@ export default function CompanyForm({
   //   setDescription(input);
   // };
 
-  const [doContactIsValid, setDoContactIsValid] = useState(true);
   const handleDoContactChange = (e) => {
     const input = e.target.value;
-    setDoContactIsValid(true);
+    setContactInFutureIsValid(true);
     if (input === "yes") {
-      setDoContact(true);
+      setContactInFuture(true);
     } else {
-      setDoContact(false);
+      setContactInFuture(false);
     }
   };
 
   useEffect(() => {
-    fetchCompaniesForSectors();
-
+    setName(company?.name);
     setSector(company?.domain);
-    setSectorIsValid(company ? true : false);
     setAbcCategorization(company?.abcCategorization || abcCategories[0].value);
-    setAbcCategorizationIsValid(true);
     setBudgetMonth(company?.budgetMonth || months[0].value);
-    setBudgetMonthIsValid(true);
+    setCountry(company?.country);
+    // setTown(company?.town);
+    setZipCode(company?.zipCode);
+
+    setNameIsValid(company ? true : false);
+    setSectorIsValid(company ? true : false);
+    setAbcCategorizationIsValid(true);
+    setBudgetPlanningMonthIsValid(true);
+    setCountryIsValid(company ? true : false);
+    setTownIsValid(company ? true : false);
+    setZipCodeIsValid(company ? true : false);
+
+    fetchCompaniesForSectors();
+    fetchCountriesForAddress();
+    // fetchCitiesForAddress();
   }, [openModal]);
 
   return (
-    <div>
+    <Backdrop open={openModal}>
       <Modal
-        className="FormModal"
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
         open={openModal}
+        closeAfterTransition
+        // submit on Enter key
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            submit();
+          }
+        }}
+        // close on Escape key
         onClose={() => {
           setOpenModal(false);
         }}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
       >
         <Fade in={openModal}>
-          <Box className="Box">
-            <h2>Add a new Company</h2>
+          <FormControl
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
 
-            <form onSubmit={onSubmit}>
-              <TextField
-                id="outlined"
-                label="Name"
-                type="text"
-                required
-                fullWidth
-                margin="dense"
-                placeholder="Company of Heroes"
+              maxWidth: "95%",
+              width: "30rem",
+
+              maxHeight: "95%",
+
+              borderRadius: "1.5rem",
+              padding: "1rem",
+
+              backgroundColor: "whitesmoke",
+              boxShadow: "#666 2px 2px 8px",
+            }}
+          >
+            <Typography
+              variant="h5"
+              gutterBottom
+              sx={{ textTransform: "uppercase", fontWeight: "bold" }}
+            >
+              {!company ? "Add company" : "Update company"}
+            </Typography>
+
+            <Box
+              sx={{
+                overflowY: "auto",
+              }}
+            >
+              <TextInput
+                labelText={"Company name"}
+                placeholderText={"Vision <O>"}
+                isRequired
+                helperText={{
+                  error: "Company name must be between 2 and 35 characters",
+                  details: "",
+                }}
                 inputProps={{ minLength: 2, maxLength: 35 }}
-                onChange={handleNameChange}
-              />
+                validationFunction={(input) => {
+                  return input.length >= 2 && input.length <= 35;
+                }}
+                value={name}
+                setValue={setName}
+                valueIsValid={nameIsValid}
+                setValueIsValid={setNameIsValid}
+              ></TextInput>
 
               <Autocomplete
                 options={companiesForSectors
@@ -320,13 +413,7 @@ export default function CompanyForm({
                     (domain, index, array) => array.indexOf(domain) === index
                   )
                   .sort((a, b) => {
-                    if (a === null) {
-                      return 1;
-                    } else if (b === null) {
-                      return -1;
-                    } else {
-                      return a.localeCompare(b);
-                    }
+                    return a.localeCompare(b);
                   })}
                 filterOptions={(options, { inputValue }) =>
                   options.filter((option) =>
@@ -355,7 +442,6 @@ export default function CompanyForm({
 
               <TextField
                 label="ABC categorization"
-                required
                 fullWidth
                 select
                 margin="dense"
@@ -385,19 +471,18 @@ export default function CompanyForm({
 
               <TextField
                 label="Budget planning month"
-                required
                 fullWidth
                 select
                 margin="dense"
                 helperText={
-                  !budgetMonthIsValid && "Invalid budget planning month"
+                  !budgetPlanningMonthIsValid && "Invalid budget planning month"
                 }
                 value={budgetMonth}
-                error={!budgetMonthIsValid}
+                error={!budgetPlanningMonthIsValid}
                 onChange={(e) => {
                   const input = e.target.value;
 
-                  setBudgetMonthIsValid(
+                  setBudgetPlanningMonthIsValid(
                     months.map((month) => month.value).includes(input)
                   );
 
@@ -411,18 +496,85 @@ export default function CompanyForm({
                 ))}
               </TextField>
 
-              <TextField
-                id="outlined"
-                label="Country"
-                required
-                type="text"
-                fullWidth
-                margin="dense"
-                inputProps={{ minLength: 4, maxLength: 56 }}
-                onChange={handleCountryChange}
+              <Autocomplete
+                options={countriesForAddress
+                  .map((country) => country.name.official)
+                  .sort((a, b) => {
+                    return a.localeCompare(b);
+                  })}
+                filterOptions={(options, { inputValue }) =>
+                  options.filter((option) =>
+                    option.toLowerCase().includes(inputValue.toLowerCase())
+                  )
+                }
+                clearOnEscape
+                openOnFocus
+                freeSolo
+                inputValue={country || ""}
+                onInputChange={(event, value) => {
+                  setCountry(value);
+                  setCountryIsValid(value.length >= 4 && value.length <= 56);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Country"
+                    placeholder="Croatia"
+                    required
+                    fullWidth
+                    margin="dense"
+                  />
+                )}
               />
 
+              {/* <Autocomplete
+                options={townsForAddress
+                  .map((town) => town.placeName)
+                  .filter(
+                    (placeName, index, array) =>
+                      array.indexOf(placeName) === index
+                  )
+                  .sort((a, b) => {
+                    return a.localeCompare(b);
+                  })}
+                filterOptions={(options, { inputValue }) =>
+                  options.filter((option) =>
+                    option.toLowerCase().includes(inputValue.toLowerCase())
+                  )
+                }
+                clearOnEscape
+                openOnFocus
+                freeSolo
+                inputValue={town || ""}
+                onInputChange={(event, value) => {
+                  setTown(value);
+                  if (country === "")
+                    setCountry(
+                      countriesForAddress.find(
+                        (c) =>
+                          c.cca2 ===
+                          townsForAddress.find(
+                            (town) => town.placeName === value
+                          )?.countryCode
+                      )?.name.official || ""
+                    ); // set country based on chosen town
+                  fetchCitiesForAddress(value);
+                  // setTownIsValid(value.length >= 2 && value.length <= 56);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Town"
+                    placeholder="El Pueblo de Nuestra Senora, Reina de los Angeles del Rio Porciuncula"
+                    required
+                    fullWidth
+                    margin="dense"
+                  />
+                )}
+              /> */}
+
               <TextField
+                disabled={!countryIsValid}
                 id="outlined"
                 label="ZIP code"
                 type="text"
@@ -434,20 +586,9 @@ export default function CompanyForm({
                 onChange={handleZipCodeChange}
               />
 
-              {/* <TextField
-                id="outlined"
-                label="Town"
-                type="text"
-                fullWidth
-                margin="dense"
-                placeholder="Zagreb"
-                inputProps={{ minLength: 2, maxLength: 56 }}
-                onChange={handleTownChange}
-              /> */}
-
               <TextField
                 id="outlined"
-                label="Adress"
+                label="Address"
                 type="text"
                 required
                 fullWidth
@@ -467,16 +608,16 @@ export default function CompanyForm({
               />
 
               {/* <TextField
-                id="outlined-multiline-static"
-                label="Description"
-                fullWidth
-                multiline
-                minRows={2}
-                maxRows={4}
-                margin="dense"
-                inputProps={{ maxLength: 475 }}
-                onChange={handleDescriptionChange}
-              /> */}
+                  id="outlined-multiline-static"
+                  label="Description"
+                  fullWidth
+                  multiline
+                  minRows={2}
+                  maxRows={4}
+                  margin="dense"
+                  inputProps={{ maxLength: 475 }}
+                  onChange={handleDescriptionChange}
+                /> */}
 
               <FormLabel id="demo-radio-buttons-group-label">
                 Contact in future
@@ -491,25 +632,50 @@ export default function CompanyForm({
                 <FormControlLabel value="yes" control={<Radio />} label="Yes" />
                 <FormControlLabel value="no" control={<Radio />} label="No" />
               </RadioGroup>
+            </Box>
 
-              <div className="action-btns">
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    setOpenModal(false);
-                  }}
-                >
-                  Cancel
-                </Button>
+            <Box
+              sx={{
+                marginBlock: "3%",
 
-                <Button variant="contained" type="submit">
-                  Add company
-                </Button>
-              </div>
-            </form>
-          </Box>
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 1,
+              }}
+            >
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setOpenModal(false);
+                }}
+              >
+                Cancel
+              </Button>
+
+              <LoadingButton
+                variant="contained"
+                onClick={submit}
+                loading={loadingButton}
+                // disabled={
+                //   !(
+                //     nameIsValid &&
+                //     categoryIsValid &&
+                //     startDateIsValid &&
+                //     endDateIsValid &&
+                //     FRRespIDIsValid &&
+                //     FRGoalIsValid &&
+                //     firstPingDateIsValid &&
+                //     secondPingDateIsValid
+                //   )
+                // }
+              >
+                {/* span needed because of bug */}
+                <span>{!company ? "Add company" : "Update company"}</span>
+              </LoadingButton>
+            </Box>
+          </FormControl>
         </Fade>
       </Modal>
-    </div>
+    </Backdrop>
   );
 }

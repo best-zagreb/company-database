@@ -24,7 +24,7 @@ const tableColumns = [
   },
   {
     key: "domain",
-    label: "Industry",
+    label: "Sector",
   },
   {
     key: "abcCategory",

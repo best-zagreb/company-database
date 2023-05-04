@@ -21,8 +21,6 @@ import ToastContext from "../../context/ToastContext";
 
 import TextInput from "./partial/TextInput";
 
-import "./Form.css";
-
 const projectTypes = [
   {
     value: "External",
@@ -208,9 +206,6 @@ export default function ProjectForm({
   }
 
   useEffect(() => {
-    fetchUsersForFRResp();
-    fetchProjectsForCategories();
-
     setName(project?.name);
     setCategory(project?.category);
     setType(
@@ -234,378 +229,369 @@ export default function ProjectForm({
     setFRGoalIsValid(true);
     setFirstPingDateIsValid(true);
     setSecondPingDateIsValid(true);
+
+    fetchUsersForFRResp();
+    fetchProjectsForCategories();
   }, [openModal]);
 
   return (
-    <>
-      <Backdrop open={openModal}>
-        <Modal
-          open={openModal}
-          closeAfterTransition
-          // submit on Enter key
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              submit();
-            }
-          }}
-          // close on Escape key
-          onClose={() => {
-            setOpenModal(false);
-          }}
-        >
-          <Fade in={openModal}>
-            <FormControl
+    <Backdrop open={openModal}>
+      <Modal
+        open={openModal}
+        closeAfterTransition
+        // submit on Enter key
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            submit();
+          }
+        }}
+        // close on Escape key
+        onClose={() => {
+          setOpenModal(false);
+        }}
+      >
+        <Fade in={openModal}>
+          <FormControl
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+
+              maxWidth: "95%",
+              width: "30rem",
+
+              maxHeight: "95%",
+
+              borderRadius: "1.5rem",
+              padding: "1rem",
+
+              backgroundColor: "whitesmoke",
+              boxShadow: "#666 2px 2px 8px",
+            }}
+          >
+            <Typography
+              variant="h5"
+              gutterBottom
+              sx={{ textTransform: "uppercase", fontWeight: "bold" }}
+            >
+              {!project ? "Add project" : "Update project"}
+            </Typography>
+
+            <Box
               sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-
-                maxWidth: "95%",
-                width: "30rem",
-
-                maxHeight: "95%",
-
-                borderRadius: "1.5rem",
-                padding: "1rem",
-
-                backgroundColor: "whitesmoke",
-                boxShadow: "#666 2px 2px 8px",
+                overflowY: "auto",
               }}
             >
-              <Typography
-                variant="h5"
-                gutterBottom
-                sx={{ textTransform: "uppercase", fontWeight: "bold" }}
-              >
-                {!project ? "Add project" : "Update project"}
-              </Typography>
+              <TextInput
+                labelText={"Project name"}
+                placeholderText={"Severus"}
+                isRequired
+                helperText={{
+                  error: "Project name must be between 2 and 35 characters",
+                  details: "",
+                }}
+                inputProps={{ minLength: 2, maxLength: 35 }}
+                validationFunction={(input) => {
+                  return input.length >= 2 && input.length <= 35;
+                }}
+                value={name}
+                setValue={setName}
+                valueIsValid={nameIsValid}
+                setValueIsValid={setNameIsValid}
+              ></TextInput>
 
-              <Box
-                sx={{
-                  overflowY: "auto",
+              <Autocomplete
+                options={projectsForCategories
+                  .map((project) => project.category)
+                  .filter(
+                    (category, index, array) =>
+                      array.indexOf(category) === index
+                  )
+                  .sort((a, b) => {
+                    return a.localeCompare(b);
+                  })}
+                filterOptions={(options, { inputValue }) =>
+                  options.filter((option) =>
+                    option.toLowerCase().includes(inputValue.toLowerCase())
+                  )
+                }
+                clearOnEscape
+                openOnFocus
+                freeSolo
+                inputValue={category || ""}
+                onInputChange={(event, value) => {
+                  setCategory(value);
+                  setCategoryIsValid(value.length >= 2 && value.length <= 35);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Category"
+                    placeholder="Hackathon"
+                    required
+                    fullWidth
+                    margin="dense"
+                  />
+                )}
+              />
+
+              <TextField
+                label="Project type"
+                required
+                fullWidth
+                select
+                margin="dense"
+                helperText={!typeIsValid && "Invalid project type"}
+                value={type}
+                error={!typeIsValid}
+                onChange={(e) => {
+                  const input = e.target.value;
+                  if (
+                    input === projectTypes[0].value ||
+                    input === projectTypes[1].value
+                  ) {
+                    setTypeIsValid(true);
+                  } else {
+                    setTypeIsValid(false);
+                  }
+
+                  setType(input);
                 }}
               >
-                <TextInput
-                  labelText={"Project name"}
-                  isRequired
-                  helperText={{
-                    error: "Project name must be between 2 and 35 characters",
-                    details: "",
-                  }}
-                  inputProps={{ minLength: 2, maxLength: 35 }}
-                  validationFunction={(input) => {
-                    return input.length >= 2 && input.length <= 35;
-                  }}
-                  value={name}
-                  setValue={setName}
-                  valueIsValid={nameIsValid}
-                  setValueIsValid={setNameIsValid}
-                ></TextInput>
+                {projectTypes.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
 
-                <Autocomplete
-                  options={projectsForCategories
-                    .map((project) => project.category)
-                    .filter(
-                      (category, index, array) =>
-                        array.indexOf(category) === index
-                    )
-                    .sort((a, b) => {
-                      if (a === null) {
-                        return 1;
-                      } else if (b === null) {
-                        return -1;
-                      } else {
-                        return a.localeCompare(b);
-                      }
-                    })}
-                  filterOptions={(options, { inputValue }) =>
-                    options.filter((option) =>
-                      option.toLowerCase().includes(inputValue.toLowerCase())
-                    )
+              <DatePicker
+                label="Start date"
+                required
+                displayWeekNumber
+                format="DD.MM.YYYY."
+                minDate={moment("1980-01-01")}
+                maxDate={moment().add(2, "years")}
+                value={startDate}
+                onChange={(date) => {
+                  const input = date;
+                  if (
+                    input >= moment("1980-01-01") &&
+                    input <= moment().add(2, "years")
+                  ) {
+                    setStartDateIsValid(true);
+                  } else {
+                    setStartDateIsValid(false);
                   }
-                  clearOnEscape
-                  openOnFocus
-                  freeSolo
-                  inputValue={category || ""}
-                  onInputChange={(event, value) => {
-                    setCategory(value);
-                    setCategoryIsValid(value.length >= 2 && value.length <= 35);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Category"
-                      placeholder="Hackathon"
-                      required
-                      fullWidth
-                      margin="dense"
-                    />
-                  )}
-                />
 
-                <TextField
-                  label="Project type"
-                  required
-                  fullWidth
-                  select
-                  margin="dense"
-                  helperText={!typeIsValid && "Invalid project type"}
-                  value={type}
-                  error={!typeIsValid}
-                  onChange={(e) => {
-                    const input = e.target.value;
-                    if (
-                      input === projectTypes[0].value ||
-                      input === projectTypes[1].value
-                    ) {
-                      setTypeIsValid(true);
-                    } else {
-                      setTypeIsValid(false);
-                    }
-
-                    setType(input);
-                  }}
-                >
-                  {projectTypes.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-
-                <DatePicker
-                  label="Start date"
-                  required
-                  displayWeekNumber
-                  format="DD.MM.YYYY."
-                  minDate={moment("1980-01-01")}
-                  maxDate={moment().add(2, "years")}
-                  value={startDate}
-                  onChange={(date) => {
-                    const input = date;
-                    if (
-                      input >= moment("1980-01-01") &&
-                      input <= moment().add(2, "years")
-                    ) {
-                      setStartDateIsValid(true);
-                    } else {
-                      setStartDateIsValid(false);
-                    }
-
-                    setStartDate(input);
-                  }}
-                  slotProps={{
-                    textField: {
-                      fullWidth: true,
-                      margin: "dense",
-                      helperText: !startDateIsValid && "Invalid start date",
-                      error: !startDateIsValid,
-                    },
-                  }}
-                />
-                <DatePicker
-                  label="End date"
-                  required
-                  displayWeekNumber
-                  format="DD.MM.YYYY."
-                  minDate={startDate}
-                  maxDate={moment().add(2, "years")}
-                  value={endDate}
-                  onChange={(date) => {
-                    const input = date;
-                    if (
-                      input >= startDate &&
-                      input <= moment().add(2, "years")
-                    ) {
-                      setEndDateIsValid(true);
-                    } else {
-                      setEndDateIsValid(false);
-                    }
-
-                    setEndDate(input);
-                  }}
-                  slotProps={{
-                    textField: {
-                      fullWidth: true,
-                      margin: "dense",
-                      helperText: !endDateIsValid && "Invalid end date",
-                      error: !endDateIsValid,
-                    },
-                  }}
-                />
-
-                <Autocomplete
-                  options={usersForFRResp}
-                  clearOnEscape
-                  openOnFocus
-                  getOptionLabel={(option) =>
-                    option.firstName + " " + option.lastName
+                  setStartDate(input);
+                }}
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                    margin: "dense",
+                    helperText: !startDateIsValid && "Invalid start date",
+                    error: !startDateIsValid,
+                  },
+                }}
+              />
+              <DatePicker
+                label="End date"
+                required
+                displayWeekNumber
+                format="DD.MM.YYYY."
+                minDate={startDate}
+                maxDate={moment().add(2, "years")}
+                value={endDate}
+                onChange={(date) => {
+                  const input = date;
+                  if (input >= startDate && input <= moment().add(2, "years")) {
+                    setEndDateIsValid(true);
+                  } else {
+                    setEndDateIsValid(false);
                   }
-                  isOptionEqualToValue={(option, value) =>
-                    option.id === value.id
+
+                  setEndDate(input);
+                }}
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                    margin: "dense",
+                    helperText: !endDateIsValid && "Invalid end date",
+                    error: !endDateIsValid,
+                  },
+                }}
+              />
+
+              <Autocomplete
+                options={usersForFRResp}
+                clearOnEscape
+                openOnFocus
+                getOptionLabel={(option) =>
+                  option.firstName + " " + option.lastName
+                }
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                filterOptions={(options, { inputValue }) =>
+                  options.filter((option) =>
+                    (option.firstName + " " + option.lastName)
+                      .toLowerCase()
+                      .includes(inputValue.toLowerCase())
+                  )
+                }
+                onChange={(e, inputValue) => {
+                  setFRRespID(inputValue?.id);
+                  setFRRespIDIsValid(
+                    usersForFRResp
+                      .map((option) => option.id)
+                      .includes(inputValue?.id)
+                  );
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="FR responsible"
+                    required
+                    fullWidth
+                    margin="dense"
+                  />
+                )}
+              />
+
+              <TextInput
+                labelText={"FR goal"}
+                inputType={"number"}
+                placeholderText={"10000"}
+                helperText={{
+                  error: "FR goal (if present) must be between 1 and 999999",
+                  details: "",
+                }}
+                inputProps={{
+                  min: 1,
+                  max: 999999,
+                  minLength: 1,
+                  maxLength: 6,
+                }}
+                validationFunction={(input) => {
+                  return (
+                    input === null ||
+                    input === "" ||
+                    (input >= 1 &&
+                      input <= 999999 &&
+                      input.length >= 1 &&
+                      input.length <= 6)
+                  );
+                }}
+                value={FRGoal}
+                setValue={setFRGoal}
+                valueIsValid={FRGoalIsValid}
+                setValueIsValid={setFRGoalIsValid}
+              ></TextInput>
+
+              <DatePicker
+                label="First ping date"
+                displayWeekNumber
+                format="DD.MM.YYYY."
+                minDate={startDate}
+                maxDate={endDate}
+                onChange={(date) => {
+                  const input = date;
+                  if (
+                    input === null ||
+                    (input >= startDate && input <= endDate)
+                  ) {
+                    setFirstPingDateIsValid(true);
+                  } else {
+                    setFirstPingDateIsValid(false);
                   }
-                  filterOptions={(options, { inputValue }) =>
-                    options.filter((option) =>
-                      (option.firstName + " " + option.lastName)
-                        .toLowerCase()
-                        .includes(inputValue.toLowerCase())
-                    )
+
+                  setFirstPingDate(input);
+                }}
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                    margin: "dense",
+                    helperText:
+                      !firstPingDateIsValid &&
+                      "First ping date must be between project start and end date",
+                    error: !firstPingDateIsValid,
+                  },
+                }}
+              />
+              <DatePicker
+                label="Second ping date"
+                displayWeekNumber
+                format="DD.MM.YYYY."
+                minDate={firstPingDate || startDate}
+                maxDate={endDate}
+                onClick={(date) => {
+                  const input = date;
+                  if (
+                    input === null ||
+                    (input >= startDate && input <= endDate)
+                  ) {
+                    setSecondPingDateIsValid(true);
+                  } else {
+                    setSecondPingDateIsValid(false);
                   }
-                  onChange={(e, inputValue) => {
-                    setFRRespID(inputValue?.id);
-                    setFRRespIDIsValid(
-                      usersForFRResp
-                        .map((option) => option.id)
-                        .includes(inputValue?.id)
-                    );
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="FR responsible"
-                      required
-                      fullWidth
-                      margin="dense"
-                    />
-                  )}
-                />
 
-                <TextInput
-                  labelText={"FR goal"}
-                  inputType={"number"}
-                  placeholderText={"10000"}
-                  helperText={{
-                    error: "FR goal (if present) must be between 1 and 999999",
-                    details: "",
-                  }}
-                  inputProps={{
-                    min: 1,
-                    max: 999999,
-                    minLength: 1,
-                    maxLength: 6,
-                  }}
-                  validationFunction={(input) => {
-                    return (
-                      input === null ||
-                      input === "" ||
-                      (input >= 1 &&
-                        input <= 999999 &&
-                        input.length >= 1 &&
-                        input.length <= 6)
-                    );
-                  }}
-                  value={FRGoal}
-                  setValue={setFRGoal}
-                  valueIsValid={FRGoalIsValid}
-                  setValueIsValid={setFRGoalIsValid}
-                ></TextInput>
+                  setSecondPingDate(input);
+                }}
+                slotProps={{
+                  textField: {
+                    fullWidth: true,
+                    margin: "dense",
+                    helperText:
+                      !secondPingDateIsValid &&
+                      "Second ping date must be between project start and end date",
+                    error: !secondPingDateIsValid,
+                  },
+                }}
+              />
+            </Box>
 
-                <DatePicker
-                  label="First ping date"
-                  displayWeekNumber
-                  format="DD.MM.YYYY."
-                  minDate={startDate}
-                  maxDate={endDate}
-                  onChange={(date) => {
-                    const input = date;
-                    if (
-                      input === null ||
-                      (input >= startDate && input <= endDate)
-                    ) {
-                      setFirstPingDateIsValid(true);
-                    } else {
-                      setFirstPingDateIsValid(false);
-                    }
+            <Box
+              sx={{
+                marginBlock: "3%",
 
-                    setFirstPingDate(input);
-                  }}
-                  slotProps={{
-                    textField: {
-                      fullWidth: true,
-                      margin: "dense",
-                      helperText:
-                        !firstPingDateIsValid &&
-                        "First ping date must be between project start and end date",
-                      error: !firstPingDateIsValid,
-                    },
-                  }}
-                />
-                <DatePicker
-                  label="Second ping date"
-                  displayWeekNumber
-                  format="DD.MM.YYYY."
-                  minDate={firstPingDate || startDate}
-                  maxDate={endDate}
-                  onClick={(date) => {
-                    const input = date;
-                    if (
-                      input === null ||
-                      (input >= startDate && input <= endDate)
-                    ) {
-                      setSecondPingDateIsValid(true);
-                    } else {
-                      setSecondPingDateIsValid(false);
-                    }
-
-                    setSecondPingDate(input);
-                  }}
-                  slotProps={{
-                    textField: {
-                      fullWidth: true,
-                      margin: "dense",
-                      helperText:
-                        !secondPingDateIsValid &&
-                        "Second ping date must be between project start and end date",
-                      error: !secondPingDateIsValid,
-                    },
-                  }}
-                />
-              </Box>
-
-              <Box
-                sx={{
-                  marginBlock: "3%",
-
-                  display: "flex",
-                  justifyContent: "space-between",
-                  gap: 1,
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 1,
+              }}
+            >
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setOpenModal(false);
                 }}
               >
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    setOpenModal(false);
-                  }}
-                >
-                  Cancel
-                </Button>
+                Cancel
+              </Button>
 
-                <LoadingButton
-                  variant="contained"
-                  onClick={submit}
-                  loading={loadingButton}
-                  disabled={
-                    !(
-                      nameIsValid &&
-                      categoryIsValid &&
-                      startDateIsValid &&
-                      endDateIsValid &&
-                      FRRespIDIsValid &&
-                      FRGoalIsValid &&
-                      firstPingDateIsValid &&
-                      secondPingDateIsValid
-                    )
-                  }
-                >
-                  {/* span needed because of bug */}
-                  <span>{!project ? "Add project" : "Update project"}</span>
-                </LoadingButton>
-              </Box>
-            </FormControl>
-          </Fade>
-        </Modal>
-      </Backdrop>
-    </>
+              <LoadingButton
+                variant="contained"
+                onClick={submit}
+                loading={loadingButton}
+                disabled={
+                  !(
+                    nameIsValid &&
+                    categoryIsValid &&
+                    startDateIsValid &&
+                    endDateIsValid &&
+                    FRRespIDIsValid &&
+                    FRGoalIsValid &&
+                    firstPingDateIsValid &&
+                    secondPingDateIsValid
+                  )
+                }
+              >
+                {/* span needed because of bug */}
+                <span>{!project ? "Add project" : "Update project"}</span>
+              </LoadingButton>
+            </Box>
+          </FormControl>
+        </Fade>
+      </Modal>
+    </Backdrop>
   );
 }
