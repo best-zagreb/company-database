@@ -5,23 +5,8 @@
 ## Description
 Glavni cilj ove web aplikacije je evidencija statusa suradnja kompanija na projektima i jednostavan uvid od strane ovlaštenih korisnika.
 
-Aplikacija treba biti izvedena kao web aplikacija kojoj će korisnici pristupati uz pomoć google autentifikatora.  
-Sustav treba podržavati radi više korisnika u stvarnom vremenu.
-Aplikacija, osim računalima (desktop, laptop), treba biti prilagođena (engl. responsive) i mobilnom uređaju te tabletu.  
-Aplikacija treba biti jednostavna za korištenje, a sučelje pregledno i intuitivno.  
-Frontend treba biti rađen u React-u, dok Backend treba koristiti postgresql relacijsku bazu podataka i Spring boot.
-
 ## Visuals
 *Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.*
-
-## Authors and acknowledgment
-Ivor Baričević  
-Petar Hajduk  
-Matej Balog  
-Marko Čengić  
-Nikola Capan  
-Jakov Jakovac  
-Lovro Čunović  
 
 ## License
 *For open source projects, say how it is licensed.*
