@@ -1,6 +1,7 @@
 #### Backend ####
 
 Backend/HELP.md
+Backend/.gradle
 Backend/target/
 !Backend/*.mvn/wrapper/maven-wrapper.jar
 !Backend/*/src/main/*/target/

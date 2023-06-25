@@ -1,22 +1,38 @@
-
-
 # Company Database
 
 ## Description
-Glavni cilj ove web aplikacije je evidencija statusa suradnja kompanija na projektima i jednostavan uvid od strane ovlaštenih korisnika.
+Web app for managing collaboration status records with companies per project.
 
 ## Visuals
 *Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.*
 
 ## License
-*For open source projects, say how it is licensed.*
+Licensed under GNU GPL v3 license.
 
-## Project status
-*If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.*
+
+## How to run
+
+### Backend
+
+1. Download and install [Java JDK 17](https://www.oracle.com/java/technologies/downloads/#jdk17-windows) and [postgreSQL](https://drive.google.com/file/d/1hChUO7OT8dlp7L3fN8c3vHBEvyK5QFE0/view?usp=sharing)
+2. Create postgreSQL database with name `your_database_name` (for example `cdb-dev`)
+3. Open Backend folder as project using your favorite editor
+4. Add environment variables to project
+  - In [Intellij IDEA](https://www.twilio.com/blog/set-up-env-variables-intellij-idea-java) (`SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/your_database_name; SPRING_DATASOURCE_USERNAME=your_username; SPRING_DATASOURCE_PASSWORD=your_password`)
+  - In [Eclipse](https://examples.javacodegeeks.com/java-development/desktop-java/ide/eclipse/eclipse-environment-variable-setup-example/)
+5. Run `BackendApplication` class in `src/main/java/com.example.backend`
+
+### Frontend
+
+1. Download and install [node.js with npm](https://nodejs.org/en/download)
+2. Open terminal and change current directory to Frontend: `cd Frontend`
+3. Install node modules: `npm install .`
+4. Start React app: `npm start`
+
 
 ## Dodatne upute za rad s git
 
-### Postupak za rad na kodu i dokumentaciji.
+### Postupak za rad na kodu.
 
 #### Ažuriranje lokalnog repozitorija
 
