@@ -87,7 +87,7 @@ export default function CompanyForm({
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("http://localhost:8080/companies/", {
+      const serverResponse = await fetch("/companies/", {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
@@ -219,7 +219,7 @@ export default function CompanyForm({
     };
 
     const serverResponse = await fetch(
-      `http://localhost:8080/companies/${company?.id ?? ""}`,
+      `/companies/${company?.id ?? ""}`,
       request
     );
 

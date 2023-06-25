@@ -39,7 +39,7 @@ export default function ContactForm({
     // console.log(contactTemplate);
 
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-    // fetch("http://localhost:8080/companies/" + company.id + "/contacts", {
+    // fetch("/companies/" + company.id + "/contacts", {
     //   method: "POST",
     //   headers: {
     //     googleTokenEncoded: JWToken.credential,

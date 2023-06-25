@@ -37,7 +37,6 @@ Backend/.vscode/
 #### Frontend ####
 # dependencies
 Frontend/node_modules
-Frontend/build
 Frontend/.pnp
 Frontend/.pnp.js
 

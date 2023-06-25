@@ -65,7 +65,7 @@ export default function Companies() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("http://localhost:8080/companies/", {
+      const serverResponse = await fetch("/companies/", {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
@@ -102,7 +102,7 @@ export default function Companies() {
 
   function handleDelete(company) {
     setObject({ type: "Company", name: company.name });
-    setEndpoint("http://localhost:8080/companies/" + company.id);
+    setEndpoint("/companies/" + company.id);
     setPopulateObjects({ function: populateTable });
 
     setOpenDeleteAlert(true);

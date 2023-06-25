@@ -69,7 +69,7 @@ export default function ProjectForm({
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("http://localhost:8080/users/", {
+      const serverResponse = await fetch("/users/", {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
@@ -97,7 +97,7 @@ export default function ProjectForm({
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("http://localhost:8080/projects/", {
+      const serverResponse = await fetch("/projects/", {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
@@ -160,7 +160,7 @@ export default function ProjectForm({
     };
 
     const serverResponse = await fetch(
-      `http://localhost:8080/projects/${project?.id ?? ""}`,
+      `/projects/${project?.id ?? ""}`,
       request
     );
 

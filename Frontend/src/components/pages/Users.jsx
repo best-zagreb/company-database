@@ -47,7 +47,7 @@ export default function Users() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("http://localhost:8080/users/", {
+      const serverResponse = await fetch("/users/", {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
@@ -84,7 +84,7 @@ export default function Users() {
 
   function handleDelete(user) {
     setObject({ type: "User", name: user.firstName + " " + user.lastName });
-    setEndpoint("http://localhost:8080/users/" + user.id);
+    setEndpoint("/users/" + user.id);
     setPopulateObjects({ function: populateTable });
 
     setOpenDeleteAlert(true);
