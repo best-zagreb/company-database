@@ -1,20 +1,16 @@
 package com.example.backend;
 
-import com.example.backend.collaborations.model.Collaboration;
 import com.example.backend.collaborations.service.CollaborationsService;
 import com.example.backend.companies.controller.dto.CompanyDto;
 import com.example.backend.companies.model.Company;
-import com.example.backend.companies.model.Contact;
 import com.example.backend.companies.repo.CompanyRepository;
 import com.example.backend.companies.repo.ContactRepository;
 import com.example.backend.companies.service.CompanyService;
 import com.example.backend.user.model.AUTHORITY;
 import com.example.backend.user.model.AppUser;
-import org.junit.Rule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -52,7 +48,7 @@ public class CompanyServiceTests
                 new Company(Long.valueOf(3), "name", "domain", 'a', "March", "Croatia", 10000, "Address", "example.com", false, "opis"));
         Mockito.when(companyRepository.findAll()).thenReturn(companies);
 
-        List<Company> result = companyService.getAllCompanies(mockUser(AUTHORITY.ADMIN));
+        List<Company> result = companyService.getAllCompanies(mockUser(AUTHORITY.ADMINISTRATOR));
         assertThat(result).isSameAs(companies);
     }
 
@@ -69,7 +65,7 @@ public class CompanyServiceTests
     {
         Company company = new Company(Long.valueOf(1), "name", "domain", 'a', "March", "Croatia", 10000, "Address", "example.com", false, "opis");
         Mockito.when(companyRepository.findById(Mockito.any())).thenReturn(Optional.of(company));
-        Company result = companyService.getCompany(mockUser(AUTHORITY.ADMIN), Long.valueOf(1));
+        Company result = companyService.getCompany(mockUser(AUTHORITY.ADMINISTRATOR), Long.valueOf(1));
         assertThat(result).isSameAs(company);
     }
 
@@ -101,7 +97,7 @@ public class CompanyServiceTests
         );
 
         Mockito.when(companyRepository.save(Mockito.any())).thenReturn(company);
-        Company result = companyService.createCompany(mockUser(AUTHORITY.ADMIN), companyDto);
+        Company result = companyService.createCompany(mockUser(AUTHORITY.ADMINISTRATOR), companyDto);
         assertThat(result).isSameAs(company);
     }
 
@@ -109,7 +105,7 @@ public class CompanyServiceTests
     public void deleteCompany_WhenCompanyDoesntExist_ThrowsEntityNotFoundException(){
         Mockito.when(companyRepository.findById(Mockito.any())).thenReturn(Optional.empty());
         Assertions.assertThrows(EntityNotFoundException.class, () -> {
-            companyService.deleteCompany(mockUser(AUTHORITY.ADMIN), Long.valueOf(1));
+            companyService.deleteCompany(mockUser(AUTHORITY.ADMINISTRATOR), Long.valueOf(1));
         });
     }
 

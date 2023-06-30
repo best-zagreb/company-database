@@ -38,7 +38,7 @@ const authLevels = [
     label: "Moderator",
   },
   {
-    value: "Admin",
+    value: "Administrator",
     label: "Administrator",
   },
 ];

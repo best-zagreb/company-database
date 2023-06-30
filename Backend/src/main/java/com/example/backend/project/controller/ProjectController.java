@@ -1,7 +1,6 @@
 package com.example.backend.project.controller;
 
 import com.example.backend.collaborations.model.Collaboration;
-import com.example.backend.collaborations.repo.CollaborationsRepository;
 import com.example.backend.collaborations.service.CollaborationsService;
 import com.example.backend.companies.service.CompanyService;
 import com.example.backend.project.controller.dpo.FRTeamMemberDPO;
@@ -84,7 +83,7 @@ public class ProjectController {
 
     @PostMapping()
     public ResponseEntity addProject(@RequestHeader String googleTokenEncoded, @RequestBody ProjectDTO projectDTO){
-        List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMIN);
+        List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
             return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
@@ -98,7 +97,7 @@ public class ProjectController {
 
     @PutMapping("/{id}")
     public ResponseEntity updateProject(@RequestHeader String googleTokenEncoded, @RequestBody ProjectDTO projectDTO, @PathVariable Long id){
-        List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMIN);
+        List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
             return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
@@ -113,7 +112,7 @@ public class ProjectController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteProjects(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
-        List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMIN);
+        List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
             return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
@@ -213,7 +212,7 @@ public class ProjectController {
 
     @PutMapping("/{projectId}/frteammembers/{memberId}")
     public ResponseEntity addFrTeamMember(@RequestHeader String googleTokenEncoded, @PathVariable Long projectId, @PathVariable Long memberId){
-        List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMIN, AUTHORITY.FR_RESPONSIBLE);
+        List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR, AUTHORITY.FR_RESPONSIBLE);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
             return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
@@ -236,7 +235,7 @@ public class ProjectController {
 
     @DeleteMapping("/{projectId}/frteammembers/{memberId}")
     public ResponseEntity deleteFrTeamMember(@RequestHeader String googleTokenEncoded, @PathVariable Long projectId, @PathVariable Long memberId){
-        List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMIN, AUTHORITY.FR_RESPONSIBLE);
+        List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR, AUTHORITY.FR_RESPONSIBLE);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
             return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);

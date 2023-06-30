@@ -15,6 +15,8 @@ export default function SearchBar({ type, data, setSearchResults }) {
           return item.name.toLowerCase().includes(value);
         case "projects":
           return item.name.toLowerCase().includes(value);
+        case "collaborations":
+          return item.name.toLowerCase().includes(value);
         default:
           return true;
       }
@@ -33,7 +35,7 @@ export default function SearchBar({ type, data, setSearchResults }) {
       options={data.map((item) => ({
         value: item.id,
         label:
-          type === "users" ? `${item.firstName} ${item.lastName}` : item.name,
+          type === "users" ? `${item.firstName} ${item.lastName}` : item.name, // TODO: collaborations label?
       }))}
       renderOption={(props, option) => (
         <li {...props} key={option.value}>

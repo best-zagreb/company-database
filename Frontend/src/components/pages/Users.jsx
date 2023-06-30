@@ -106,7 +106,7 @@ export default function Users() {
       <Container
         maxWidth="false"
         sx={{
-          paddingBlock: 1.5,
+          paddingBlock: 2,
 
           display: "flex",
           justifyContent: "space-between",

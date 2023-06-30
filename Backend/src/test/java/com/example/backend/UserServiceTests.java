@@ -26,7 +26,7 @@ public class UserServiceTests {
     public void addUserTest() {
         UserDTO userDTO = new UserDTO(
                 "peroperic@gmail.com",
-                AUTHORITY.ADMIN,
+                AUTHORITY.ADMINISTRATOR,
                 "pero",
                 "peric",
                 "nest@nesto.com",
@@ -35,7 +35,7 @@ public class UserServiceTests {
         );
         AppUser test = new AppUser(
                 "peroperic@gmail.com",
-                AUTHORITY.ADMIN,
+                AUTHORITY.ADMINISTRATOR,
                 "pero",
                 "peric",
                 "nest@nesto.com",

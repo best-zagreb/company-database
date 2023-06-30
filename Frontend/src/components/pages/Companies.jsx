@@ -92,7 +92,7 @@ export default function Companies() {
   }
 
   function handleView(company) {
-    navigate(`/companies/${company.id}`);
+    navigate("/companies/" + encodeURIComponent(company.name));
   }
 
   function handleEdit(company) {
@@ -124,7 +124,7 @@ export default function Companies() {
       <Container
         maxWidth="false"
         sx={{
-          paddingBlock: 1.5,
+          paddingBlock: 2,
 
           display: "flex",
           justifyContent: "space-between",

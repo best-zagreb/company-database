@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class UserController {
     @ResponseBody
     public ResponseEntity addUser(@RequestHeader String googleTokenEncoded, @RequestBody UserDTO userDTO) {
         if (userService.existsAny()) {
-            List<AUTHORITY> a = List.of(AUTHORITY.ADMIN);
+            List<AUTHORITY> a = List.of(AUTHORITY.ADMINISTRATOR);
             String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
             if (email == null)
                 return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
@@ -57,7 +56,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     @ResponseBody
     public ResponseEntity deleteUser(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
-        List<AUTHORITY> a = List.of(AUTHORITY.ADMIN);
+        List<AUTHORITY> a = List.of(AUTHORITY.ADMINISTRATOR);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
             return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
@@ -90,7 +89,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity updateUser(@RequestHeader String googleTokenEncoded, @RequestBody UserDTO userDTO, @PathVariable Long id){
-        List<AUTHORITY> a = new LinkedList<>(List.of(AUTHORITY.ADMIN));
+        List<AUTHORITY> a = new LinkedList<>(List.of(AUTHORITY.ADMINISTRATOR));
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
             return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);

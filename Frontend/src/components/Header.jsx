@@ -59,16 +59,13 @@ export default function Header({ setUserIsLoggedIn }) {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ zIndex: "1000" }}>
         <Container maxWidth="false">
           <Toolbar disableGutters>
             <Box sx={{ flexGrow: 1, display: { xs: "flex", sm: "none" } }}>
               <Tooltip title="Open app menu">
                 <IconButton
                   size="large"
-                  aria-label="menu"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
                   onClick={handleOpenNavMenu}
                   color="inherit"
                 >

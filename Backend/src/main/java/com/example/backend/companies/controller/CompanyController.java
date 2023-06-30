@@ -1,5 +1,4 @@
 package com.example.backend.companies.controller;
-import com.example.backend.collaborations.repo.CollaborationsRepository;
 import com.example.backend.collaborations.service.CollaborationsService;
 import com.example.backend.companies.controller.dto.CompanyDto;
 import com.example.backend.companies.controller.dto.ContactDto;
@@ -163,7 +162,7 @@ public class CompanyController
     @GetMapping("/{id}/collaborations")
     @ResponseBody
     public ResponseEntity getCollaborationsForCompany(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
-        List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMIN, AUTHORITY.FR_RESPONSIBLE);
+        List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR, AUTHORITY.FR_RESPONSIBLE);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
             return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);

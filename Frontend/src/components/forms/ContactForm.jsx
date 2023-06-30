@@ -4,10 +4,12 @@ import { Backdrop, Box, Modal, Fade, Button, TextField } from "@mui/material";
 
 import "./Form.css";
 
+// TODO: needs to be completely redone using TextInput like the other forms
+
 export default function ContactForm({
   openModal,
   setOpenModal,
-  fetchContacts,
+  fetchData,
   company,
   contact,
 }) {
