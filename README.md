@@ -14,13 +14,15 @@ Licensed under GNU GPL v3 license.
 
 ### Backend
 
-1. Download and install [Java JDK 17](https://www.oracle.com/java/technologies/downloads/#jdk17-windows) and [postgreSQL](https://drive.google.com/file/d/1hChUO7OT8dlp7L3fN8c3vHBEvyK5QFE0/view?usp=sharing)
+1. Download and install [Java JDK 17](https://www.oracle.com/java/technologies/downloads/#jdk17-windows), [Gradle](https://gradle.org/install/) and [PostgreSQL](https://drive.google.com/file/d/1hChUO7OT8dlp7L3fN8c3vHBEvyK5QFE0/view?usp=sharing)
 2. Create postgreSQL database with name `your_database_name` (for example `cdb-dev`)
 3. Open Backend folder as project using your favorite editor
 4. Add environment variables to project
-  - In [Intellij IDEA](https://www.twilio.com/blog/set-up-env-variables-intellij-idea-java) (`SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/your_database_name; SPRING_DATASOURCE_USERNAME=your_username; SPRING_DATASOURCE_PASSWORD=your_password`)
-  - In [Eclipse](https://examples.javacodegeeks.com/java-development/desktop-java/ide/eclipse/eclipse-environment-variable-setup-example/)
-5. Run `BackendApplication` class in `src/main/java/com.example.backend`
+    - In [Intellij IDEA](https://www.twilio.com/blog/set-up-env-variables-intellij-idea-java) (`SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/your_database_name; SPRING_DATASOURCE_USERNAME=your_superuser_username; SPRING_DATASOURCE_PASSWORD=your_superuser_password`)
+    - In [Eclipse](https://examples.javacodegeeks.com/java-development/desktop-java/ide/eclipse/eclipse-environment-variable-setup-example/)
+5. Run and stop `BackendApplication` class in `src/main/java/com.example.backend` to create all relations (tables) in the database
+6. Add initial user to database with command `INSERT INTO app_user (id, firstname, lastname, nickname, loginmail, notificationemail, authority, description) VALUES (0, 'YourName', 'YourSurname', 'YourNickname', 'IMPORTANTYourEmail@gmail.com',  'IMPORTANTYourEmail@gmail.com', 0, null);`
+    - If you want to use backend without frontend (for example with Postman) I suggest using _cdb.dev@best.hr_ email which generates the following JWT credential for authorization: _eyJhbGciOiJSUzI1NiIsImtpZCI6ImEzYmRiZmRlZGUzYmFiYjI2NTFhZmNhMjY3OGRkZThjMGIzNWRmNzYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJuYmYiOjE2OTAxMzE4MzAsImF1ZCI6IjU2MDg4NTMzMTU2LWlnZzFmaWE3ZGN1bnRybHAxZ24xbTNxbnM0OGhicDQxLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTExMjQxMTYyNDQ5ODk0MDcxMzcwIiwiaGQiOiJiZXN0LmhyIiwiZW1haWwiOiJjZGIuZGV2QGJlc3QuaHIiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXpwIjoiNTYwODg1MzMxNTYtaWdnMWZpYTdkY3VudHJscDFnbjFtM3FuczQ4aGJwNDEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJuYW1lIjoiQ0RCIERldiBBY2NvdW50IiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FBY0hUdGNOcW1sZ3NQRTZvaDRiZUwxSldWQ0pKM2w2RE4yVXVQTExnUmdTYURvSz1zOTYtYyIsImdpdmVuX25hbWUiOiJDREIgRGV2IiwiZmFtaWx5X25hbWUiOiJBY2NvdW50IiwiaWF0IjoxNjkwMTMyMTMwLCJleHAiOjE2OTAxMzU3MzAsImp0aSI6IjcxODgxNDk2MWU0Nzk4ZTI5ZDlmNjYyOWE3MWFlOWQ1MjI3ZWI4YzgifQ.V3kl0eWyPhfBhpdCRHkobYG17bIvwsa4IROgm13rUqj2-0cV1EiSwtA8yHgyafgkuKxckmk4Na6KsvhmvSCCrtN6KQIg4RdaKS0obPLLxmDP6jSD19HGcAP2JsDS16p_UBFP91DVws_4uXds6fRsETwOYQSqN2aZo0auZBv003nwKsWK6KT2o7L2hl1nbkW3gUQa6e-QmehQiixFrETgxhYVK-WWyb55fUuCfo5eh-K-mymLR1JXNHcThvVggTkPDb4WCWWJCXvlexTh6VrRikVj5T3wM4UXj4Z4j5j83MCj1rsKrJ6L0Anw9bIptd1yrPF09mBHdXNp_OVwlSF7Yw_
 
 ### Frontend
 
