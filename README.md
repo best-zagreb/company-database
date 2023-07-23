@@ -14,25 +14,6 @@ Licensed under GNU GPL v3 license.
 
 ### Backend
 
-1. Download and install [Java JDK 17](https://www.oracle.com/java/technologies/downloads/#jdk17-windows), [gradle](https://gradle.org/install/) and [postgreSQL](https://drive.google.com/file/d/1hChUO7OT8dlp7L3fN8c3vHBEvyK5QFE0/view?usp=sharing)
-2. Create postgreSQL database with name `your_database_name` (for example `cdb-dev`)
-3. Add first user to database with command `INSERT INTO app_user (id, firstname, lastname, nickname, loginmail, notificationemail, authority, description) VALUES (0, 'YourName', 'YourSurname', 'YourNickname', 'IMPORTANTYourEmail@gmail.com',  'IMPORTANTYourEmail@gmail.com
-# Company Database
-
-## Description
-Web app for managing collaboration status records with companies per project.
-
-## Visuals
-*Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.*
-
-## License
-Licensed under GNU GPL v3 license.
-
-
-## How to run
-
-### Backend
-
 1. Download and install [Java JDK 17](https://www.oracle.com/java/technologies/downloads/#jdk17-windows), [Gradle](https://gradle.org/install/) and [PostgreSQL](https://drive.google.com/file/d/1hChUO7OT8dlp7L3fN8c3vHBEvyK5QFE0/view?usp=sharing)
 2. Create postgreSQL database with name `your_database_name` (for example `cdb-dev`)
 3. Open Backend folder as project using your favorite editor
