@@ -25,7 +25,7 @@ import {
   SchoolRounded as SchoolRoundedIcon,
 } from "@mui/icons-material";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import moment from "moment";
 
 export default function TableComponent({

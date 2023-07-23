@@ -156,7 +156,7 @@ export default function CompanyForm({
         const json = await serverResponse.json();
 
         // console.log(json.postalCodes);
-        setTownsFromAPI(json.postalCodes);
+        // setTownsFromAPI(json.postalCodes);
       } else {
         handleOpenToast({
           type: "error",

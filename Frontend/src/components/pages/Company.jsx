@@ -448,7 +448,7 @@ export default function Company() {
         setSearchResults(
           json.collaborations
             .map((collaboration) => {
-              collaboration.name;
+              return collaboration.name;
             })
             .sort((a, b) => (b.priority ? 1 : -1)) // sort the rows by prirority attribute on first load
         );
@@ -476,7 +476,7 @@ export default function Company() {
   function handleDeleteCollaboration(collaboration) {
     setObject({ type: "Collaboration", name: collaboration.name });
     setEndpoint("/collaborations/" + collaboration.id);
-    setPopulateObjects({ function: populateCollaborationsTable });
+    setPopulateObjects({ function: fetchCompany });
 
     setOpenDeleteAlert(true);
   }
