@@ -2,11 +2,13 @@ package com.example.backend.user.service;
 
 
 import com.example.backend.user.controller.dto.UserDTO;
+import com.example.backend.user.model.AUTHORITY;
 import com.example.backend.user.model.AppUser;
 import com.example.backend.user.repo.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.naming.AuthenticationException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -25,24 +27,23 @@ public class UserService {
         else return userRepository.findByLoginEmail(email).get(0);
     }
 
-    public AppUser addUser(UserDTO userDTO){
-        AppUser appUser = new AppUser(
-                userDTO.getLoginEmail(),
-                userDTO.getAuthority(),
-                userDTO.getFirstName(),
-                userDTO.getLastName(),
-                userDTO.getNotificationEmail(),
-                userDTO.getDescription(),
-                userDTO.getNickname()
-        );
-        return userRepository.save(appUser);
+    public AppUser addUser(UserDTO userDTO, AppUser user) throws AuthenticationException {
+        if (user == null) throw new AuthenticationException();
+        if (!List.of(AUTHORITY.ADMINISTRATOR).contains(user.getAuthority())) throw new AuthenticationException();
+
+        return userRepository.save(userDTO.toAppUser());
     }
 
-    public void deleteUser(Long id){
+    public void deleteUser(Long id, AppUser user) throws AuthenticationException {
+        if (user == null) throw new AuthenticationException();
+        if (!List.of(AUTHORITY.ADMINISTRATOR).contains(user.getAuthority())) throw new AuthenticationException();
+
         userRepository.deleteById(id);
     }
 
-    public List<AppUser> findAll(){
+    public List<AppUser> findAll(AppUser user) throws AuthenticationException {
+        if (user == null) throw new AuthenticationException();
+
         return userRepository.findAll();
     }
 
@@ -51,11 +52,16 @@ public class UserService {
         return i > 0;
     }
 
-    public Optional<AppUser> findById(Long id){
+    public Optional<AppUser> findById(Long id, AppUser user) throws AuthenticationException {
+        if (user == null) throw new AuthenticationException();
+
         return userRepository.findById(id);
     }
 
-    public AppUser updateUser(UserDTO userDTO, Long id){
+    public AppUser updateUser(UserDTO userDTO, Long id, AppUser user) throws AuthenticationException {
+        if (user == null) throw new AuthenticationException();
+        if (!List.of(AUTHORITY.ADMINISTRATOR).contains(user.getAuthority())) throw new AuthenticationException();
+
         AppUser appUser = userRepository.findById(id).get();
 
         appUser.setLoginEmail(userDTO.getLoginEmail());
