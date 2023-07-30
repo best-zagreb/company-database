@@ -15,7 +15,7 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
 
@@ -40,7 +40,7 @@ public class UserController {
         return new ResponseEntity(userService.addUser(userDTO), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/api/{id}")
     @ResponseBody
     public ResponseEntity findUser(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
@@ -53,7 +53,7 @@ public class UserController {
         return new ResponseEntity(userService.findById(id), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/api/{id}")
     @ResponseBody
     public ResponseEntity deleteUser(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
         List<AUTHORITY> a = List.of(AUTHORITY.ADMINISTRATOR);
@@ -82,12 +82,12 @@ public class UserController {
         return new ResponseEntity(userService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/exists-any")
+    @GetMapping("/api/exists-any")
     public boolean existsAny(){
         return userService.existsAny();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/api/{id}")
     public ResponseEntity updateUser(@RequestHeader String googleTokenEncoded, @RequestBody UserDTO userDTO, @PathVariable Long id){
         List<AUTHORITY> a = new LinkedList<>(List.of(AUTHORITY.ADMINISTRATOR));
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
@@ -102,7 +102,7 @@ public class UserController {
         return new ResponseEntity(userService.updateUser(userDTO, id), HttpStatus.OK);
     }
 
-    @GetMapping("/login")
+    @GetMapping("/api/login")
     @ResponseBody
     public ResponseEntity getByEmail(@RequestHeader String googleTokenEncoded){
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);

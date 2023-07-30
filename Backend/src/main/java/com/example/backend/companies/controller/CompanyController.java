@@ -18,7 +18,7 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/companies")
+@RequestMapping("/api/companies")
 public class CompanyController
 {
     private final CompanyService companyService;
@@ -59,7 +59,7 @@ public class CompanyController
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/api/{id}")
     @ResponseBody
     public ResponseEntity<Company> getCompany(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
         AppUser user = getUser(googleTokenEncoded);
@@ -75,7 +75,7 @@ public class CompanyController
         }
     }
 
-    @PostMapping("{companyId}/contacts")
+    @PostMapping("/api/{companyId}/contacts")
     @ResponseBody
     public ResponseEntity<Contact> addContact(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId, @RequestBody ContactDto contactDto){
         AppUser user = getUser(googleTokenEncoded);
@@ -125,7 +125,7 @@ public class CompanyController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("{companyId}/contacts/{contactId}")
+    @PutMapping("/api/{companyId}/contacts/{contactId}")
     @ResponseBody
     public ResponseEntity<Contact> editContact(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId, @PathVariable Long contactId, @RequestBody ContactDto contactDto){
         AppUser user = getUser(googleTokenEncoded);
@@ -141,7 +141,7 @@ public class CompanyController
         }
     }
 
-    @DeleteMapping("{companyId}/contacts/{contactId}")
+    @DeleteMapping("/api/{companyId}/contacts/{contactId}")
     @ResponseBody
     public ResponseEntity deleteContact(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId, @PathVariable Long contactId){
         AppUser user = getUser(googleTokenEncoded);
@@ -159,7 +159,7 @@ public class CompanyController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/collaborations")
+    @GetMapping("/api/{id}/collaborations")
     @ResponseBody
     public ResponseEntity getCollaborationsForCompany(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
         List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR, AUTHORITY.FR_RESPONSIBLE);
