@@ -29,11 +29,8 @@ public class Company
     @Column(length = 60, name = "country", nullable = false)
     private String country;
 
-    // TODO: change zipcode to townName and delete town entity
-//    @Column(name = "townName", nullable = false, length = 120)
-//    private String townName;
-    @Column(name = "zipCode", nullable = false)
-    private int zipCode;
+    @Column(name = "townName", nullable = false, length = 120)
+    private String townName;
 
     @Column(name = "address", nullable = false, length = 120)
     private String address;
@@ -50,27 +47,27 @@ public class Company
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
     private Set<Contact> contacts;
 
-    public Company(Long id, String name, String domain, Character abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture, String description) {
+    public Company(Long id, String name, String domain, Character abcCategory, String budgetPlanningMonth, String country, String townName, String address, String webUrl, boolean contactInFuture, String description) {
         this.id = id;
         this.name = name;
         this.domain = domain;
         this.abcCategory = abcCategory;
         this.budgetPlanningMonth = budgetPlanningMonth;
         this.country = country;
-        this.zipCode = zipCode;
+        this.townName = townName;
         this.address = address;
         this.webUrl = webUrl;
         this.contactInFuture = contactInFuture;
         this.description = description;
     }
 
-    public Company(String name, String domain, Character abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture, String description) {
+    public Company(String name, String domain, Character abcCategory, String budgetPlanningMonth, String country, String townName, String address, String webUrl, boolean contactInFuture, String description) {
         this.name = name;
         this.domain = domain;
         this.abcCategory = abcCategory;
         this.budgetPlanningMonth = budgetPlanningMonth;
         this.country = country;
-        this.zipCode = zipCode;
+        this.townName = townName;
         this.address = address;
         this.webUrl = webUrl;
         this.contactInFuture = contactInFuture;
@@ -132,14 +129,14 @@ public class Company
         this.country = country;
     }
 
-    public int getZipCode()
+    public String getTownName()
     {
-        return zipCode;
+        return townName;
     }
 
-    public void setZipCode(int zipCode)
+    public void setTownName(String townName)
     {
-        this.zipCode = zipCode;
+        this.townName = townName;
     }
 
     public String getAddress()
@@ -182,7 +179,7 @@ public class Company
         country = companyDto.getCountry();
         abcCategory = companyDto.getAbcCategory();
         budgetPlanningMonth = companyDto.getBudgetPlanningMonth();
-        zipCode = companyDto.getZipCode();
+        townName = companyDto.getTownName();
         webUrl = companyDto.getWebUrl();
         contactInFuture = companyDto.isContactInFuture();
         description = companyDto.getDescription();

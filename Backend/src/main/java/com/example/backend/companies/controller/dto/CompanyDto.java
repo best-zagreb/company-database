@@ -17,7 +17,7 @@ public class CompanyDto
 
     private String country;
 
-    private int zipCode;
+    private String townName;
 
     private String address;
 
@@ -27,13 +27,13 @@ public class CompanyDto
 
     private String description;
 
-    public CompanyDto(String name, String domain, Character abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture, String description) {
+    public CompanyDto(String name, String domain, Character abcCategory, String budgetPlanningMonth, String country, String townName, String address, String webUrl, boolean contactInFuture, String description) {
         this.name = name;
         this.domain = domain;
         this.abcCategory = abcCategory;
         this.budgetPlanningMonth = budgetPlanningMonth;
         this.country = country;
-        this.zipCode = zipCode;
+        this.townName = townName;
         this.address = address;
         this.webUrl = webUrl;
         this.contactInFuture = contactInFuture;
@@ -47,7 +47,7 @@ public class CompanyDto
                 abcCategory,
                 budgetPlanningMonth,
                 country,
-                zipCode,
+                townName,
                 address,
                 webUrl,
                 contactInFuture,
@@ -105,14 +105,14 @@ public class CompanyDto
         this.country = country;
     }
 
-    public int getZipCode()
+    public String getTownName()
     {
-        return zipCode;
+        return townName;
     }
 
-    public void setZipCode(int zipCode)
+    public void setTownName(String townName)
     {
-        this.zipCode = zipCode;
+        this.townName = townName;
     }
 
     public String getAddress()
