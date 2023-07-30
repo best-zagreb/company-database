@@ -17,8 +17,8 @@ public class Company
     @Column(name = "name", length = 60, nullable = false)
     private String name;
 
-    @Column(name = "domain", length = 40, nullable = false)
-    private String domain;
+    @Column(name = "sector", length = 40, nullable = false)
+    private String sector;
 
     @Column(name = "abcCategory")
     private Character abcCategory;
@@ -47,10 +47,10 @@ public class Company
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
     private Set<Contact> contacts;
 
-    public Company(Long id, String name, String domain, Character abcCategory, String budgetPlanningMonth, String country, String townName, String address, String webUrl, boolean contactInFuture, String description) {
+    public Company(Long id, String name, String sector, Character abcCategory, String budgetPlanningMonth, String country, String townName, String address, String webUrl, boolean contactInFuture, String description) {
         this.id = id;
         this.name = name;
-        this.domain = domain;
+        this.sector = sector;
         this.abcCategory = abcCategory;
         this.budgetPlanningMonth = budgetPlanningMonth;
         this.country = country;
@@ -61,9 +61,9 @@ public class Company
         this.description = description;
     }
 
-    public Company(String name, String domain, Character abcCategory, String budgetPlanningMonth, String country, String townName, String address, String webUrl, boolean contactInFuture, String description) {
+    public Company(String name, String sector, Character abcCategory, String budgetPlanningMonth, String country, String townName, String address, String webUrl, boolean contactInFuture, String description) {
         this.name = name;
-        this.domain = domain;
+        this.sector = sector;
         this.abcCategory = abcCategory;
         this.budgetPlanningMonth = budgetPlanningMonth;
         this.country = country;
@@ -89,14 +89,14 @@ public class Company
         this.name = name;
     }
 
-    public String getDomain()
+    public String getSector()
     {
-        return domain;
+        return sector;
     }
 
-    public void setDomain(String domain)
+    public void setSector(String sector)
     {
-        this.domain = domain;
+        this.sector = sector;
     }
 
     public Character getAbcCategory()
@@ -175,7 +175,7 @@ public class Company
     public void updateWith(CompanyDto companyDto){
         name = companyDto.getName();
         address = companyDto.getAddress();
-        domain = companyDto.getDomain();
+        sector = companyDto.getSector();
         country = companyDto.getCountry();
         abcCategory = companyDto.getAbcCategory();
         budgetPlanningMonth = companyDto.getBudgetPlanningMonth();

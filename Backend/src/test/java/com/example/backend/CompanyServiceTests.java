@@ -43,9 +43,9 @@ public class CompanyServiceTests
     public void getAllCompanies_ReturnsCompanies() throws AuthenticationException
     {
         List<Company> companies = List.of(
-                new Company(Long.valueOf(1), "name", "domain", 'a', "March", "Croatia", "Zagreb", "Address", "example.com", false, "opis"),
-                new Company(Long.valueOf(2), "name", "domain", 'a', "March", "Croatia", "Zagreb", "Address", "example.com", false, "opis"),
-                new Company(Long.valueOf(3), "name", "domain", 'a', "March", "Croatia", "Zagreb", "Address", "example.com", false, "opis"));
+                new Company(Long.valueOf(1), "name", "sector", 'a', "March", "Croatia", "Zagreb", "Address", "example.com", false, "opis"),
+                new Company(Long.valueOf(2), "name", "sector", 'a', "March", "Croatia", "Zagreb", "Address", "example.com", false, "opis"),
+                new Company(Long.valueOf(3), "name", "sector", 'a', "March", "Croatia", "Zagreb", "Address", "example.com", false, "opis"));
         Mockito.when(companyRepository.findAll()).thenReturn(companies);
 
         List<Company> result = companyService.getAllCompanies(mockUser(AUTHORITY.ADMINISTRATOR));
@@ -63,7 +63,7 @@ public class CompanyServiceTests
     @Test
     public void getCompany_IfUserIsAdmin_ReturnsCompany() throws AuthenticationException
     {
-        Company company = new Company(Long.valueOf(1), "name", "domain", 'a', "March", "Croatia", "Zagreb", "Address", "example.com", false, "opis");
+        Company company = new Company(Long.valueOf(1), "name", "sector", 'a', "March", "Croatia", "Zagreb", "Address", "example.com", false, "opis");
         Mockito.when(companyRepository.findById(Mockito.any())).thenReturn(Optional.of(company));
         Company result = companyService.getCompany(mockUser(AUTHORITY.ADMINISTRATOR), Long.valueOf(1));
         assertThat(result).isSameAs(company);
@@ -74,7 +74,7 @@ public class CompanyServiceTests
     {
         CompanyDto companyDto = new CompanyDto(
                 "name",
-                "domain",
+                "sector",
                 'a',
                 "February",
                 "Croatia",
@@ -85,7 +85,7 @@ public class CompanyServiceTests
                 "opis");
         Company company = new Company(
                 "name",
-                "domain",
+                "sector",
                 'a',
                 "February",
                 "Croatia",

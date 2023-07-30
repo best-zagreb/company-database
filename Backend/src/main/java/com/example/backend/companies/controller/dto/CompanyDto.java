@@ -9,7 +9,7 @@ public class CompanyDto
 {
     private String name;
 
-    private String domain;
+    private String sector;
 
     private Character abcCategory;
 
@@ -27,9 +27,9 @@ public class CompanyDto
 
     private String description;
 
-    public CompanyDto(String name, String domain, Character abcCategory, String budgetPlanningMonth, String country, String townName, String address, String webUrl, boolean contactInFuture, String description) {
+    public CompanyDto(String name, String sector, Character abcCategory, String budgetPlanningMonth, String country, String townName, String address, String webUrl, boolean contactInFuture, String description) {
         this.name = name;
-        this.domain = domain;
+        this.sector = sector;
         this.abcCategory = abcCategory;
         this.budgetPlanningMonth = budgetPlanningMonth;
         this.country = country;
@@ -43,7 +43,7 @@ public class CompanyDto
     public Company toCompany(){
         return new Company(
                 name,
-                domain,
+                sector,
                 abcCategory,
                 budgetPlanningMonth,
                 country,
@@ -65,14 +65,14 @@ public class CompanyDto
         this.name = name;
     }
 
-    public String getDomain()
+    public String getSector()
     {
-        return domain;
+        return sector;
     }
 
-    public void setDomain(String domain)
+    public void setSector(String sector)
     {
-        this.domain = domain;
+        this.sector = sector;
     }
 
     public Character getAbcCategory()
