@@ -32,7 +32,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import ToastContext from "../../context/ToastContext";
 import DeleteAlertContext from "../../context/DeleteAlertContext";
 
-import ContactForm from "../forms/ContactForm";
 import CollaborationForm from "../forms/CollaborationForm";
 
 import SearchBar from "./partial/SearchBar";
@@ -40,12 +39,8 @@ import TableComponent from "./partial/TableComponent";
 
 const tableColumns = [
   {
-    key: "companyName",
+    key: "name",
     label: "Company name",
-  },
-  {
-    key: "projectName",
-    label: "Project name",
   },
   {
     key: "responsible",
@@ -84,65 +79,42 @@ const tableColumns = [
   },
 ];
 
-const userInfo = {
-  loginEmail: "john.doe@gmail.com",
-  authority: "ADMINISTRATOR",
-  firstName: "John",
-  lastName: "Doe",
-  notificationEmail: "john.doe@gmail.com",
-  description: "Default humanoid being.",
-  nickname: "id 1",
-  projects: [
-    {
-      id: 1,
-      name: "Javor",
-      authority: "Member",
-    }
-  ],
-  collaborations: [
-    {
-      id: 1,
-      companyName: "Company",
-      projectName: "Project",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "FINANCIAL",
-      status: "CONTACTED",
-      comment:
-        "Sample comment 1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa a daw dawdawwd awdawda dwd ",
-      achievedValue: 75,
-    }
-  ],
-};
+function handleEditTeamMember(e, id) {
+  // TODO: make a PUT request na /projects/{id}/teamMembers/{id} and then update frTeamMembers list
+  console.log("Editing a team member is not yet implemented!");
+  // setEditFormModal(true);
+}
 
-export default function User() {
-  const { userId } = useParams();
+function handleDeleteTeamMember(e, id) {
+  // TODO: make a DELETE request na /projects/{id}/teamMembers/{id} and then update frTeamMembers list
+  console.log("Deleting a team member is not yet implemented!");
+}
+
+export default function Project() {
+  const { projectId } = useParams();
   const navigate = useNavigate();
 
   const { handleOpenToast } = useContext(ToastContext);
   const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
     useContext(DeleteAlertContext);
 
-  const [openContactFormModal, setOpenContactFormModal] = useState(false);
-  const [contact, setContact] = useState();
   const [openCollaborationFormModal, setOpenCollaborationFormModal] =
     useState(false);
   const [collaboration, setCollaboration] = useState();
 
-  const [user, setUser] = useState([]);
+  const [project, setProject] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
-  async function fetchUser() {
+  async function fetchProject() {
     setLoading(true);
 
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
       const serverResponse = await fetch(
-        "/users/" + userId,
+        "/projects/" + projectId,
         {
           method: "GET",
           headers: { googleTokenEncoded: JWToken.credential },
@@ -150,8 +122,9 @@ export default function User() {
       );
       if (serverResponse.ok) {
         const json = await serverResponse.json();
+        console.log(json);
 
-        setUser(json);
+        setProject(json);
         setSearchResults(
           json.collaborations
             .map((collaboration) => {
@@ -183,33 +156,22 @@ export default function User() {
   function handleDeleteCollaboration(collaboration) {
     setObject({ type: "Collaboration", name: collaboration.name });
     setEndpoint("/collaborations/" + collaboration.id);
-    setPopulateObjects({ function: fetchUser });
+    setPopulateObjects({ function: fetchProject });
 
     setOpenDeleteAlert(true);
   }
 
   useEffect(() => {
-    fetchUser();
-
-    setSearchResults(
-      userInfo.collaborations.sort((a, b) => (b.priority ? 1 : -1))
-    ); // TODO: remove when backend is connected
+    fetchProject();
   }, []);
 
   return (
     <>
-      <ContactForm
-        contact={contact}
-        openModal={openContactFormModal}
-        setOpenModal={setOpenContactFormModal}
-        fetchData={fetchUser}
-      />
-
       <CollaborationForm
         collaboration={collaboration}
         openModal={openCollaborationFormModal}
         setOpenModal={setOpenCollaborationFormModal}
-        fetchData={fetchUser}
+        fetchData={fetchProject}
       />
 
       <Box
@@ -231,7 +193,7 @@ export default function User() {
             variant="contained"
             startIcon={<KeyboardArrowLeftIcon />}
             onClick={() => {
-              navigate("/users");
+              navigate("/projects");
             }}
             sx={{
               borderTopLeftRadius: 0,
@@ -240,7 +202,7 @@ export default function User() {
               marginBlock: 2,
             }}
           >
-            Users
+            Projects
           </Button>
 
           <Container
@@ -257,7 +219,7 @@ export default function User() {
                 textTransform: "uppercase",
               }}
             >
-              {userInfo.firstName + ' ' + userInfo.lastName}
+              {project.name}
             </Typography>
 
             <Accordion defaultExpanded sx={{ marginBlock: 2 }}>
@@ -267,37 +229,56 @@ export default function User() {
                     textTransform: "uppercase",
                   }}
                 >
-                  USER INFO
+                  PROJECT INFO
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <List dense>
                   <ListItem disablePadding>
-                    <ListItemText primary={"Login email: " + userInfo.loginEmail} />
+                    <ListItemText primary={"Category: " + project.category} />
                   </ListItem>
 
                   <ListItem disablePadding>
                     <ListItemText
-                      primary={"Authority: " + userInfo.authority}
+                      primary={"Type: " + project.type}
                     />
                   </ListItem>
 
-                  <ListItem disablePadding>
-                    <ListItemText
-                      primary={"Notification email: " + userInfo.notificationEmail}
-                    />
-                  </ListItem>
+                    <ListItem disablePadding>
+                      <ListItemText
+                        primary={"Sart date: " + project.startDate}
+                      />
+                    </ListItem>
 
-                  <ListItem disablePadding>
-                    <ListItemText primary={"Nickname: " + userInfo.nickname} />
-                  </ListItem>
+                    <ListItem disablePadding>
+                      <ListItemText
+                        primary={"End date: " + project.endDate}
+                      />
+                    </ListItem>
 
-                  <ListItem disablePadding>
-                    <ListItemText
-                      primary={"Description: " + userInfo.description}
-                      sx={{ maxHeight: 60, overflowY: "auto" }}
-                    />
-                  </ListItem>
+                    <ListItem disablePadding>
+                      <ListItemText
+                        primary={"Fr responsible: " + project.frresp?.firstName + " " + project.frresp?.lastName}
+                      />
+                    </ListItem>
+
+                    <ListItem disablePadding>
+                      <ListItemText
+                        primary={"Fr goal: " + project.frgoal}
+                      />
+                    </ListItem>
+
+                    <ListItem disablePadding>
+                      <ListItemText
+                        primary={"First ping date: " + (project.firstPingDate ?? "")}
+                      />
+                    </ListItem>
+
+                    <ListItem disablePadding>
+                      <ListItemText
+                        primary={"Second ping date: " + (project.secondPingDate ?? "")}
+                      />
+                    </ListItem>
                 </List>
               </AccordionDetails>
             </Accordion>
@@ -313,12 +294,12 @@ export default function User() {
                     textTransform: "uppercase",
                   }}
                 >
-                  PROJECTS
+                  TEAM MEMBERS
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                {userInfo.projects?.map((project) => (
-                  <Box key={project.id} sx={{ marginBlock: 2 }}>
+                {project.frTeamMembers?.map((frTeamMember) => (
+                  <Box key={frTeamMember.id} sx={{ marginBlock: 2 }}>
                     <Box
                       sx={{
                         display: "flex",
@@ -327,18 +308,54 @@ export default function User() {
                       }}
                     >
                       <Typography>
-                        {project.name}
+                        {frTeamMember.firstName + " " + frTeamMember.lastName}
                       </Typography>
-                    </Box>
+                      <Box>
+                        <IconButton
+                          aria-label="edit frTeamMember"
+                          onClick={(e) => handleEditTeamMember(e, frTeamMember.id)}
+                          sx={{
+                            width: 20,
+                            height: 20,
 
-                    <List dense>
-                      <ListItem>
-                        <ListItemText
-                          primary={"    - " + project.authority}
-                          sx={{ overflow: "hidden" }}
-                        />
-                      </ListItem>
-                    </List>
+                            margin: 0.125,
+
+                            color: "white",
+                            backgroundColor: "#1976d2",
+                            borderRadius: 1,
+                          }}
+                        >
+                          <EditIcon
+                            sx={{
+                              width: 15,
+                              height: 15,
+                            }}
+                          />
+                        </IconButton>
+
+                        <IconButton
+                          aria-label="delete frTeamMember"
+                          onClick={(e) => handleDeleteTeamMember(e, frTeamMember.id)}
+                          sx={{
+                            width: 20,
+                            height: 20,
+
+                            margin: 0.125,
+
+                            color: "white",
+                            backgroundColor: "#1976d2",
+                            borderRadius: 1,
+                          }}
+                        >
+                          <DeleteIcon
+                            sx={{
+                              width: 15,
+                              height: 15,
+                            }}
+                          />
+                        </IconButton>
+                      </Box>
+                    </Box>
                   </Box>
                 ))}
               </AccordionDetails>
@@ -367,7 +384,7 @@ export default function User() {
           >
             <SearchBar
               type="collaborations"
-              data={userInfo.collaborations}
+              data={project.collaborations}
               setSearchResults={setSearchResults}
             />
 
@@ -389,7 +406,7 @@ export default function User() {
               <Box sx={{ display: "grid", placeItems: "center" }}>
                 <CircularProgress size={100} />
               </Box>
-            ) : userInfo.collaborations?.length <= 0 ? (
+            ) : project.collaborations?.length <= 0 ? (
               <Typography variant="h4" align="center">
                 {"No collaborations :("}
               </Typography>

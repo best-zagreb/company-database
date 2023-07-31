@@ -20,6 +20,7 @@ import Projects from "./components/pages/Projects";
 import Companies from "./components/pages/Companies";
 import Company from "./components/pages/Company";
 import User from "./components/pages/User";
+import Project from "./components/pages/Project";
 
 import Header from "./components/Header";
 import Toast from "./components/Toast";
@@ -141,7 +142,7 @@ export default function App() {
             <Route path="projects">
               <Route index element={<Projects />} />
 
-              <Route path=":projectId" element={<Company />} />
+              <Route path=":projectId" element={<Project />} />
             </Route>
 
             <Route path="companies">
