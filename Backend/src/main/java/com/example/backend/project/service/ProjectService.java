@@ -10,8 +10,7 @@ import com.example.backend.project.repo.ProjectRepository;
 import com.example.backend.user.model.AUTHORITY;
 import com.example.backend.user.model.AppUser;
 import com.example.backend.user.repo.UserRepository;
-import com.example.backend.util.exceptions.ProjectNotFoundException;
-import com.example.backend.util.exceptions.UserNotFoundException;
+import com.example.backend.util.exceptions.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,12 +34,12 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    public ProjectAndFRTeamMembersDPO findById(Long id, AppUser user) throws AuthenticationException, ProjectNotFoundException {
-        if (user == null) throw new AuthenticationException();
+    public ProjectAndFRTeamMembersDPO findById(Long id, AppUser user) throws AuthenticationException, EntityNotFoundException {
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
 
         Project project;
         if (projectRepository.findById(id).isPresent()) project = projectRepository.findById(id).get();
-        else throw new ProjectNotFoundException();
+        else throw new EntityNotFoundException("You do not have permission to execute this command.");
         Set<FRTeamMemberDPO> frTeamMemberDPOS = new HashSet<>();
         for (AppUser appUser: project.getFrteammembers()){
             FRTeamMemberDPO x = new FRTeamMemberDPO(
@@ -53,13 +52,13 @@ public class ProjectService {
         return new ProjectAndFRTeamMembersDPO(project, frTeamMemberDPOS);
     }
 
-    public Project addProject(ProjectDTO projectDTO, AppUser user) throws UserNotFoundException, AuthenticationException {
-        if (user == null) throw new AuthenticationException();
+    public Project addProject(ProjectDTO projectDTO, AppUser user) throws EntityNotFoundException, AuthenticationException {
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
         if (List.of(AUTHORITY.ADMINISTRATOR, AUTHORITY.MODERATOR).contains(user.getAuthority())) throw new AuthenticationException();
 
         AppUser frResp;
         if (userRepository.findById(projectDTO.getIdFRResp()).isPresent()) frResp = userRepository.findById(projectDTO.getIdFRResp()).get();
-        else throw new UserNotFoundException();
+        else throw new EntityNotFoundException();
 
         if (frResp.getAuthority() == AUTHORITY.OBSERVER || frResp.getAuthority() == AUTHORITY.FR_TEAM_MEMBER){
             frResp.setAuthority(AUTHORITY.FR_RESPONSIBLE);
@@ -71,14 +70,14 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    public Project updateProject(ProjectDTO projectDTO, Long id, AppUser user) throws AuthenticationException, ProjectNotFoundException, UserNotFoundException {
-        if (user == null) throw new AuthenticationException();
-        if (List.of(AUTHORITY.ADMINISTRATOR, AUTHORITY.MODERATOR).contains(user.getAuthority())) throw new AuthenticationException();
+    public Project updateProject(ProjectDTO projectDTO, Long id, AppUser user) throws AuthenticationException, EntityNotFoundException {
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
+        if (List.of(AUTHORITY.ADMINISTRATOR, AUTHORITY.MODERATOR).contains(user.getAuthority())) throw new AuthenticationException("You do not have permission to execute this command.");
 
 
         Project project;
         if (projectRepository.findById(id).isPresent()) project = projectRepository.findById(id).get();
-        else throw new ProjectNotFoundException();
+        else throw new EntityNotFoundException("User under id " + id + " not found.");
 
         project.setIdCreator(projectDTO.getIdCreator());
         project.setName(projectDTO.getName());
@@ -87,7 +86,7 @@ public class ProjectService {
         project.setStartDate(projectDTO.getStartDate());
         project.setEndDate(projectDTO.getEndDate());
         if (userRepository.findById(projectDTO.getIdFRResp()).isPresent()) project.setFRResp(userRepository.findById(projectDTO.getIdFRResp()).get());
-        else throw new UserNotFoundException();
+        else throw new EntityNotFoundException();
         project.setFRGoal(projectDTO.getFRgoal());
         project.setFirstPingDate(projectDTO.getFirstPingDate());
         project.setSecondPingDate(projectDTO.getSecondPingDate());
@@ -95,36 +94,36 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    public List<Collaboration> getCollaborations(Long id, AppUser user) throws AuthenticationException, ProjectNotFoundException {
-        if (user == null) throw new AuthenticationException();
+    public List<Collaboration> getCollaborations(Long id, AppUser user) throws AuthenticationException, EntityNotFoundException {
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
 
         AUTHORITY authority = user.getAuthority();
         Project project;
         if (projectRepository.findById(id).isPresent()) project = projectRepository.findById(id).get();
-        else throw new ProjectNotFoundException();
+        else throw new EntityNotFoundException("Project under id " + id + " not found.");
 
         if (authority == AUTHORITY.OBSERVER ||
                 (authority == AUTHORITY.FR_TEAM_MEMBER && !project.getFrteammembers().contains(user)) ||
                 (authority == AUTHORITY.FR_RESPONSIBLE && !Objects.equals(project.getFRResp().getId(), user.getId())))
-            throw new AuthenticationException();
+            throw new AuthenticationException("You do not have permission to execute this command.");
 
         return collaborationsRepository.findAllByCollaborationId_Project(project);
     }
 
-    public Project addFrTeamMember(Long projectId, Long teamMemberId, AppUser user) throws AuthenticationException, ProjectNotFoundException, UserNotFoundException {
-        if (user == null) throw new AuthenticationException();
+    public Project addFrTeamMember(Long projectId, Long teamMemberId, AppUser user) throws AuthenticationException, EntityNotFoundException {
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
         AUTHORITY authority = user.getAuthority();
         if (!List.of(AUTHORITY.ADMINISTRATOR, AUTHORITY.MODERATOR, AUTHORITY.FR_RESPONSIBLE).contains(authority))
-            throw new AuthenticationException();
+            throw new AuthenticationException("You do not have permission to execute this command.");
         Project project;
         if (projectRepository.findById(projectId).isPresent()) project = projectRepository.findById(projectId).get();
-        else throw new ProjectNotFoundException();
+        else throw new EntityNotFoundException("Project under id " + projectId + " not found.");
         AppUser newFRTeamMember;
         if (userRepository.findById(teamMemberId).isPresent()) newFRTeamMember = userRepository.findById(teamMemberId).get();
-        else throw new UserNotFoundException();
+        else throw new EntityNotFoundException("User under id " + teamMemberId + " not found.");
 
         if (authority == AUTHORITY.FR_RESPONSIBLE && !Objects.equals(project.getFRResp().getId(), user.getId())) {
-            throw new AuthenticationException();
+            throw new AuthenticationException("You do not have permission to execute this command.");
         }
 
         if (newFRTeamMember.getAuthority() == AUTHORITY.OBSERVER) {
@@ -136,15 +135,15 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    public Project deleteFrTeamMember(Long projectId, Long teamMemberId, AppUser user) throws AuthenticationException, ProjectNotFoundException, UserNotFoundException {
-        if (user == null) throw new AuthenticationException();
+    public Project deleteFrTeamMember(Long projectId, Long teamMemberId, AppUser user) throws AuthenticationException, EntityNotFoundException {
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
 
         Project project;
         if (projectRepository.findById(projectId).isPresent()) project = projectRepository.findById(projectId).get();
-        else throw new ProjectNotFoundException();
+        else throw new EntityNotFoundException("Project under id " + projectId + " not found.");
         AppUser FRTeamMember;
         if (userRepository.findById(teamMemberId).isPresent()) FRTeamMember = userRepository.findById(teamMemberId).get();
-        else throw new UserNotFoundException();
+        else throw new EntityNotFoundException("User under id " + teamMemberId + " not found.");
 
         project.removeFrTeamMember(FRTeamMember);
         if (FRTeamMember.getProjects().isEmpty() && FRTeamMember.getAuthority() == AUTHORITY.FR_TEAM_MEMBER){
@@ -154,11 +153,11 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    public void deleteProject(Long id, AppUser user) throws AuthenticationException, ProjectNotFoundException {
-        if (user == null) throw new AuthenticationException();
-        if (List.of(AUTHORITY.ADMINISTRATOR, AUTHORITY.MODERATOR).contains(user.getAuthority())) throw new AuthenticationException();
+    public void deleteProject(Long id, AppUser user) throws AuthenticationException, EntityNotFoundException {
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
+        if (List.of(AUTHORITY.ADMINISTRATOR, AUTHORITY.MODERATOR).contains(user.getAuthority())) throw new AuthenticationException("You do not have permission to execute this command.");
 
-        if (!projectRepository.existsById(id)) throw new ProjectNotFoundException();
+        if (!projectRepository.existsById(id)) throw new EntityNotFoundException("Project under id " + id + " not found.");
 
         projectRepository.deleteById(id);
     }

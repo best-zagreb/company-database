@@ -15,15 +15,11 @@ import com.example.backend.user.model.AppUser;
 import com.example.backend.user.repo.UserRepository;
 import com.example.backend.util.exceptions.*;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.naming.AuthenticationException;
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -36,11 +32,11 @@ public class CollaborationsService {
 
 
     public List<Collaboration> getCollaborationsForCompany(Long id) {
-        if (companyRepository.findById(id).isEmpty()) throw new EntityNotFoundException();
+        if (companyRepository.findById(id).isEmpty()) throw new javax.persistence.EntityNotFoundException();
         return collaborationsRepository.findAllByCollaborationId_Company(companyRepository.findById(id).get());
     }
 
-    public Collaboration addCollaboration(Long projectid, CollaborationDTO collaborationDTO, AppUser user) throws AuthenticationException, ProjectNotFoundException, CompanyNotFoundException, ContactNotFoundException, UserNotFoundException {
+    public Collaboration addCollaboration(Long projectid, CollaborationDTO collaborationDTO, AppUser user) throws AuthenticationException, ProjectNotFoundException, CompanyNotFoundException, ContactNotFoundException, EntityNotFoundException {
         if (user == null) throw new AuthenticationException();
 
         Project project;
@@ -54,7 +50,7 @@ public class CollaborationsService {
         else throw new ContactNotFoundException();
         AppUser contactResp;
         if (userRepository.findById(collaborationDTO.getContactResponsibleId()).isPresent()) contactResp = userRepository.findById(collaborationDTO.getContactResponsibleId()).get();
-        else throw new UserNotFoundException();
+        else throw new EntityNotFoundException();
 
         if (user.getAuthority() == AUTHORITY.OBSERVER || user.getAuthority() == AUTHORITY.FR_TEAM_MEMBER ||
                 (user.getAuthority() == AUTHORITY.FR_RESPONSIBLE && !Objects.equals(project.getFRResp().getId(), user.getId())))
@@ -74,7 +70,7 @@ public class CollaborationsService {
         return collaborationsRepository.save(collaboration);
     }
 
-    public Collaboration updateCollaboration(Long projectId, Long companyId, CollaborationDTO collaborationDTO, AppUser user) throws AuthenticationException, ProjectNotFoundException, CompanyNotFoundException, CollaborationNotFoundException, UserNotFoundException, ContactNotFoundException {
+    public Collaboration updateCollaboration(Long projectId, Long companyId, CollaborationDTO collaborationDTO, AppUser user) throws AuthenticationException, ProjectNotFoundException, CompanyNotFoundException, CollaborationNotFoundException, EntityNotFoundException, ContactNotFoundException {
         if (user == null) throw new AuthenticationException();
 
         CollaborationId collaborationId;
@@ -90,7 +86,7 @@ public class CollaborationsService {
         } else throw new CollaborationNotFoundException();
 
         if (userRepository.findById(collaborationDTO.getContactResponsibleId()).isPresent()) collaboration.setContactResponsible(userRepository.findById(collaborationDTO.getContactResponsibleId()).get());
-        else throw new UserNotFoundException();
+        else throw new EntityNotFoundException();
         if (contactRepository.findById(collaborationDTO.getContactId()).isPresent()) collaboration.setContact(contactRepository.findById(collaborationDTO.getContactId()).get());
         else throw new ContactNotFoundException();
         collaboration.setPriority(collaborationDTO.isPriority());

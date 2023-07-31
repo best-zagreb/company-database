@@ -5,6 +5,7 @@ import com.example.backend.user.model.AppUser;
 import com.example.backend.user.service.UserService;
 import com.example.backend.util.JwtVerifier;
 
+import com.example.backend.util.exceptions.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class UserController {
         try {
             return new ResponseEntity<>(userService.addUser(userDTO, user), HttpStatus.CREATED);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -38,11 +39,11 @@ public class UserController {
     public ResponseEntity findUser(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
         AppUser user = getUser(googleTokenEncoded);
         try {
-            Optional<AppUser> requestedUser  = userService.findById(id, user);
-            if (requestedUser.isPresent()) return new ResponseEntity(userService.findById(id, user), HttpStatus.FOUND);
-            else return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(userService.findById(id, user), HttpStatus.OK);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -54,7 +55,7 @@ public class UserController {
             userService.deleteUser(id, user);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -63,9 +64,9 @@ public class UserController {
     public ResponseEntity findAll(@RequestHeader String googleTokenEncoded){
         AppUser user = getUser(googleTokenEncoded);
         try {
-            return new ResponseEntity(userService.findAll(user), HttpStatus.FOUND);
+            return new ResponseEntity(userService.findAll(user), HttpStatus.OK);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -75,7 +76,9 @@ public class UserController {
         try {
             return new ResponseEntity<>(userService.updateUser(userDTO, id, user), HttpStatus.OK);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

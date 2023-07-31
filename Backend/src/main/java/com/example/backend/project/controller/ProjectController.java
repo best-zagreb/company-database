@@ -1,15 +1,10 @@
 package com.example.backend.project.controller;
 
-import com.example.backend.collaborations.model.Collaboration;
 import com.example.backend.collaborations.service.CollaborationsService;
 import com.example.backend.companies.service.CompanyService;
-import com.example.backend.project.controller.dpo.FRTeamMemberDPO;
-import com.example.backend.project.controller.dpo.ProjectAndFRTeamMembersDPO;
 import com.example.backend.project.controller.dto.CollaborationDTO;
 import com.example.backend.project.controller.dto.ProjectDTO;
-import com.example.backend.project.model.Project;
 import com.example.backend.project.service.ProjectService;
-import com.example.backend.user.model.AUTHORITY;
 import com.example.backend.user.model.AppUser;
 import com.example.backend.user.service.UserService;
 import com.example.backend.util.JwtVerifier;
@@ -20,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
-import java.util.*;
 
 @SuppressWarnings("ALL")
 @CrossOrigin
@@ -40,7 +34,7 @@ public class ProjectController {
         try {
             return new ResponseEntity(projectService.findAll(user), HttpStatus.FOUND);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -50,9 +44,9 @@ public class ProjectController {
         try {
             return new ResponseEntity(projectService.findById(id, user), HttpStatus.FOUND);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-        } catch (ProjectNotFoundException e) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -62,9 +56,9 @@ public class ProjectController {
         try {
             return new ResponseEntity(projectService.addProject(projectDTO, user), HttpStatus.CREATED);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -74,11 +68,9 @@ public class ProjectController {
         try {
             return new ResponseEntity(projectService.updateProject(projectDTO, id, user), HttpStatus.OK);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-        } catch (ProjectNotFoundException e){
-            return new ResponseEntity("Project not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -89,9 +81,9 @@ public class ProjectController {
             projectService.deleteProject(id, user);
             return new ResponseEntity(HttpStatus.OK);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-        } catch (ProjectNotFoundException e){
-            return new ResponseEntity("Project not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -101,9 +93,9 @@ public class ProjectController {
         try {
             return new ResponseEntity(projectService.getCollaborations(projectid, user), HttpStatus.OK);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-        } catch (ProjectNotFoundException e){
-            return new ResponseEntity("Project not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -114,15 +106,9 @@ public class ProjectController {
         try {
             return new ResponseEntity(collaborationsService.addCollaboration(projectid, collaborationDTO, user), HttpStatus.OK);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-        } catch (ProjectNotFoundException e) {
-            return new ResponseEntity("Project not found", HttpStatus.NOT_FOUND);
-        } catch (CompanyNotFoundException e) {
-            return new ResponseEntity("Company not found", HttpStatus.NOT_FOUND);
-        } catch (ContactNotFoundException e) {
-            return new ResponseEntity("Contact not found", HttpStatus.NOT_FOUND);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity("User not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -134,17 +120,9 @@ public class ProjectController {
         try {
             return new ResponseEntity(collaborationsService.updateCollaboration(projectid, companyid, collaborationDTO, user), HttpStatus.OK);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-        } catch (ProjectNotFoundException e) {
-            return new ResponseEntity("Project not found", HttpStatus.NOT_FOUND);
-        } catch (CompanyNotFoundException e) {
-            return new ResponseEntity("Company not found", HttpStatus.NOT_FOUND);
-        } catch (ContactNotFoundException e) {
-            return new ResponseEntity("Contact not found", HttpStatus.NOT_FOUND);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity("User not found", HttpStatus.NOT_FOUND);
-        } catch (CollaborationNotFoundException e) {
-            return new ResponseEntity("Collaboration not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -157,11 +135,7 @@ public class ProjectController {
             collaborationsService.deleteCollaboration(projectid, companyid, user);
             return new ResponseEntity(HttpStatus.OK);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-        } catch (ProjectNotFoundException e) {
-            return new ResponseEntity("Project not found", HttpStatus.NOT_FOUND);
-        } catch (CompanyNotFoundException e) {
-            return new ResponseEntity("Company not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -172,11 +146,9 @@ public class ProjectController {
         try {
             return new ResponseEntity(projectService.addFrTeamMember(projectId, memberId, user), HttpStatus.OK);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-        } catch (ProjectNotFoundException e) {
-            return new ResponseEntity("Project not found", HttpStatus.NOT_FOUND);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity("User not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -187,11 +159,9 @@ public class ProjectController {
         try {
             return new ResponseEntity(projectService.deleteFrTeamMember(projectId, memberId, user), HttpStatus.OK);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-        } catch (ProjectNotFoundException e) {
-            return new ResponseEntity("Project not found", HttpStatus.NOT_FOUND);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity("User not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
