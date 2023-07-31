@@ -38,323 +38,6 @@ import CollaborationForm from "../forms/CollaborationForm";
 import SearchBar from "./partial/SearchBar";
 import TableComponent from "./partial/TableComponent";
 
-// TODO: prikazni primjer, kasnije samo svugdje zamjeni companyInfo sa company state-om
-const companyInfo = {
-  name: "Oracle d.o.o.",
-  domain: "IT",
-  abcCategory: "A",
-  budgetPlanningMonth: "January",
-  country: "Hrvatska",
-  zipCode: "10000",
-  townName: "Zagreb",
-  address: "Jarunska ulica 2",
-  webURL: "https://firma.com",
-  description:
-    " bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim bave se tim i tim",
-  contactInFuture: false,
-  contacts: [
-    {
-      id: 0,
-      firstName: "Javor",
-      lastName: "Javorčević",
-      email: "javor.javorcevic@gmail.com",
-      tel: "098776224",
-      position: "HR specialist",
-      description: "Main contact",
-    },
-    {
-      id: 1,
-      firstName: "Javor",
-      lastName: "Javorčević",
-      email: "javor.javorcevic@gmail.com",
-      tel: "098776224",
-      position: "HR specialist",
-      description: "Main contact",
-    },
-    {
-      id: 2,
-      firstName: "Javor",
-      lastName: "Javorčević",
-      email: "javor.javorcevic@gmail.com",
-      tel: "098776224",
-      position: "HR specialist",
-      description: "Main contact",
-    },
-  ],
-  collaborations: [
-    {
-      id: 1,
-      name: "Project 1 nameeeeeeeeeeeeeeeeeeeeeeeee aewadddddddddddddd",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "FINANCIAL",
-      status: "CONTACTED",
-      comment:
-        "Sample comment 1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa a daw dawdawwd awdawda dwd ",
-      achievedValue: 75,
-    },
-    {
-      id: 2,
-      name: "Project 2",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "ACADEMIC",
-      status: "OFFER_SENT",
-      comment: "Sample comment 2",
-      achievedValue: 50,
-    },
-    {
-      id: 3,
-      name: "Project 3",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: true,
-      category: "MATERIAL",
-      status: "SUCCESSFUL",
-      comment: "Sample comment 3",
-      achievedValue: 100,
-    },
-    {
-      id: 4,
-      name: "Project 4",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "FINANCIAL_MATERIAL",
-      status: "UNSUCCESSFUL",
-      comment: "Sample comment 3",
-      achievedValue: 100,
-    },
-    {
-      id: 5,
-      name: "Project 5",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: true,
-      category: "FINANCIAL_ACADEMIC",
-      status: "PINGED",
-      comment: "Sample comment 3",
-      achievedValue: 100,
-    },
-    {
-      id: 6,
-      name: "Project 6",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "MATERIAL_ACADEMIC",
-      status: "MEETING_HELD",
-      comment: "Sample comment 3",
-      achievedValue: 100,
-    },
-    {
-      id: 7,
-      name: "Project 7",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: true,
-      category: "awdadwawdawda",
-      status: "udjkwahndiuawk",
-      comment: "Sample comment 3",
-      achievedValue: 100,
-    },
-    {
-      id: 8,
-      name: "Project 8 nameeeeeeeeeeeeeeeeeeeeeeeee aewadddddddddddddd",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "FINANCIAL_MATERIAL_ACADEMIC",
-      status: "CONTACTED",
-      comment:
-        "Sample comment 1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa a daw dawdawwd awdawda dwd ",
-      achievedValue: 75,
-    },
-    {
-      id: 9,
-      name: "Project 1 nameeeeeeeeeeeeeeeeeeeeeeeee aewadddddddddddddd",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "FINANCIAL",
-      status: "CONTACTED",
-      comment:
-        "Sample comment 1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa a daw dawdawwd awdawda dwd ",
-      achievedValue: 75,
-    },
-    {
-      id: 10,
-      name: "Project 2",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "ACADEMIC",
-      status: "OFFER_SENT",
-      comment: "Sample comment 2",
-      achievedValue: 50,
-    },
-    {
-      id: 11,
-      name: "Project 3",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: true,
-      category: "MATERIAL",
-      status: "SUCCESSFUL",
-      comment: "Sample comment 3",
-      achievedValue: 100,
-    },
-    {
-      id: 12,
-      name: "Project 4",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "FINANCIAL_MATERIAL",
-      status: "UNSUCCESSFUL",
-      comment: "Sample comment 3",
-      achievedValue: 100,
-    },
-    {
-      id: 13,
-      name: "Project 5",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: true,
-      category: "FINANCIAL_ACADEMIC",
-      status: "PINGED",
-      comment: "Sample comment 3",
-      achievedValue: 100,
-    },
-    {
-      id: 14,
-      name: "Project 6",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "MATERIAL_ACADEMIC",
-      status: "MEETING_HELD",
-      comment: "Sample comment 3",
-      achievedValue: 100,
-    },
-    {
-      id: 15,
-      name: "Project 7",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: true,
-      category: "awdadwawdawda",
-      status: "udjkwahndiuawk",
-      comment: "Sample comment 3",
-      achievedValue: 100,
-    },
-    {
-      id: 16,
-      name: "Project 8 nameeeeeeeeeeeeeeeeeeeeeeeee aewadddddddddddddd",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "FINANCIAL_MATERIAL_ACADEMIC",
-      status: "CONTACTED",
-      comment:
-        "Sample comment 1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa a daw dawdawwd awdawda dwd ",
-      achievedValue: 75,
-    },
-    {
-      id: 17,
-      name: "Project 1 nameeeeeeeeeeeeeeeeeeeeeeeee aewadddddddddddddd",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "FINANCIAL",
-      status: "CONTACTED",
-      comment:
-        "Sample comment 1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa a daw dawdawwd awdawda dwd ",
-      achievedValue: 75,
-    },
-    {
-      id: 18,
-      name: "Project 2",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "ACADEMIC",
-      status: "OFFER_SENT",
-      comment: "Sample comment 2",
-      achievedValue: 50,
-    },
-    {
-      id: 19,
-      name: "Project 3",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: true,
-      category: "MATERIAL",
-      status: "SUCCESSFUL",
-      comment: "Sample comment 3",
-      achievedValue: 100,
-    },
-    {
-      id: 20,
-      name: "Project 4",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "FINANCIAL_MATERIAL",
-      status: "UNSUCCESSFUL",
-      comment: "Sample comment 3",
-      achievedValue: 100,
-    },
-    {
-      id: 21,
-      name: "Project 5",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: true,
-      category: "FINANCIAL_ACADEMIC",
-      status: "PINGED",
-      comment: "Sample comment 3",
-      achievedValue: 100,
-    },
-    {
-      id: 22,
-      name: "Project 6",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "MATERIAL_ACADEMIC",
-      status: "MEETING_HELD",
-      comment: "Sample comment 3",
-      achievedValue: 100,
-    },
-    {
-      id: 23,
-      name: "Project 7",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: true,
-      category: "awdadwawdawda",
-      status: "udjkwahndiuawk",
-      comment: "Sample comment 3",
-      achievedValue: 100,
-    },
-    {
-      id: 24,
-      name: "Project 8 nameeeeeeeeeeeeeeeeeeeeeeeee aewadddddddddddddd",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "FINANCIAL_MATERIAL_ACADEMIC",
-      status: "CONTACTED",
-      comment:
-        "Sample comment 1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa a daw dawdawwd awdawda dwd ",
-      achievedValue: 75,
-    },
-  ],
-};
-
 const tableColumns = [
   {
     key: "name",
@@ -409,7 +92,7 @@ function handleDeleteContact(e, id) {
 }
 
 export default function Company() {
-  const { companyName } = useParams();
+  const { companyId } = useParams();
   const navigate = useNavigate();
 
   const { handleOpenToast } = useContext(ToastContext);
@@ -434,15 +117,15 @@ export default function Company() {
 
     try {
       const serverResponse = await fetch(
-        "/companies/" + decodeURIComponent(companyName),
+        "/companies/" + companyId,
         {
           method: "GET",
           headers: { googleTokenEncoded: JWToken.credential },
         }
       );
-
       if (serverResponse.ok) {
         const json = await serverResponse.json();
+        console.log(json);
 
         setCompany(json);
         setSearchResults(
@@ -483,11 +166,6 @@ export default function Company() {
 
   useEffect(() => {
     fetchCompany();
-
-    // sort the rows by prirority attribute on first load
-    setSearchResults(
-      companyInfo.collaborations.sort((a, b) => (b.priority ? 1 : -1))
-    ); // TODO: remove when backend is connected
   }, []);
 
   return (
@@ -551,7 +229,7 @@ export default function Company() {
                 textTransform: "uppercase",
               }}
             >
-              {companyInfo.name}
+              {company.name}
             </Typography>
 
             <Accordion defaultExpanded sx={{ marginBlock: 2 }}>
@@ -567,12 +245,12 @@ export default function Company() {
               <AccordionDetails>
                 <List dense>
                   <ListItem disablePadding>
-                    <ListItemText primary={"Domain: " + companyInfo.domain} />
+                    <ListItemText primary={"Domain: " + company.domain} />
                   </ListItem>
 
                   <ListItem disablePadding>
                     <ListItemText
-                      primary={"ABC Category: " + companyInfo.abcCategory}
+                      primary={"ABC Category: " + company.abcCategory}
                     />
                   </ListItem>
 
@@ -580,21 +258,21 @@ export default function Company() {
                     <ListItemText
                       primary={
                         "Budget planning month: " +
-                        companyInfo.budgetPlanningMonth
+                        company.budgetPlanningMonth
                       }
                     />
                   </ListItem>
 
                   <ListItem disablePadding>
-                    <ListItemText primary={"Country: " + companyInfo.country} />
+                    <ListItemText primary={"Country: " + company.country} />
                   </ListItem>
 
                   <ListItem disablePadding>
-                    <ListItemText primary={"Town: " + companyInfo.townName} />
+                    <ListItemText primary={"Town: " + company.townName} />
                   </ListItem>
 
                   <ListItem disablePadding>
-                    <ListItemText primary={"Address: " + companyInfo.address} />
+                    <ListItemText primary={"Address: " + company.address} />
                   </ListItem>
 
                   <ListItem disablePadding>
@@ -603,12 +281,12 @@ export default function Company() {
                         <Typography sx={{ fontSize: 10.5 }}>
                           Web:{" "}
                           <Link
-                            href={companyInfo.webURL}
+                            href={company.webURL}
                             underline="hover"
                             target="_blank"
                             rel="noopener"
                           >
-                            {companyInfo.webURL}
+                            {company.webURL}
                           </Link>
                         </Typography>
                       }
@@ -617,13 +295,13 @@ export default function Company() {
 
                   <ListItem disablePadding>
                     <ListItemText
-                      primary={"Description: " + companyInfo.description}
+                      primary={"Description: " + company.description}
                       sx={{ maxHeight: 60, overflowY: "auto" }}
                     />
                   </ListItem>
                 </List>
 
-                {companyInfo.contactInFuture === false && (
+                {company.contactInFuture === false && (
                   <Typography
                     sx={{
                       marginTop: 1,
@@ -655,7 +333,7 @@ export default function Company() {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                {companyInfo.contacts.map((contact) => (
+                {company?.contacts?.map((contact) => (
                   <Box key={contact.id} sx={{ marginBlock: 2 }}>
                     <Box
                       sx={{
@@ -795,7 +473,7 @@ export default function Company() {
           >
             <SearchBar
               type="collaborations"
-              data={companyInfo.collaborations}
+              data={company.collaborations}
               setSearchResults={setSearchResults}
             />
 
@@ -817,7 +495,7 @@ export default function Company() {
               <Box sx={{ display: "grid", placeItems: "center" }}>
                 <CircularProgress size={100} />
               </Box>
-            ) : companyInfo.collaborations?.length <= 0 ? (
+            ) : company.collaborations?.length <= 0 ? (
               <Typography variant="h4" align="center">
                 {"No collaborations :("}
               </Typography>

@@ -4,6 +4,12 @@ import { Search as SearchIcon } from "@mui/icons-material";
 export default function SearchBar({ type, data, setSearchResults }) {
   function handleChange(value) {
     value = value.toLowerCase();
+    console.log(data);
+    if (!data) {
+        console.log("HERE");
+        setSearchResults([]);
+        return
+    }
 
     const results = data.filter((item) => {
       switch (type) {
@@ -32,7 +38,7 @@ export default function SearchBar({ type, data, setSearchResults }) {
       onInputChange={(e, inputValue) => {
         handleChange(inputValue);
       }}
-      options={data.map((item) => ({
+      options={data?.map((item) => ({
         value: item.id,
         label:
           type === "users" ? `${item.firstName} ${item.lastName}` : item.name, // TODO: collaborations label?

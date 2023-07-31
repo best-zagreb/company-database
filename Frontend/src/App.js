@@ -146,7 +146,7 @@ export default function App() {
             <Route path="companies">
               <Route index element={<Companies />} />
 
-              <Route path=":companyName" element={<Company />} />
+              <Route path=":companyId" element={<Company />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />
