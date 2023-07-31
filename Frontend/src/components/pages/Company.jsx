@@ -125,7 +125,6 @@ export default function Company() {
       );
       if (serverResponse.ok) {
         const json = await serverResponse.json();
-        console.log(json);
 
         setCompany(json);
         setSearchResults(
@@ -333,7 +332,7 @@ export default function Company() {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                {company?.contacts?.map((contact) => (
+                {company.contacts?.map((contact) => (
                   <Box key={contact.id} sx={{ marginBlock: 2 }}>
                     <Box
                       sx={{
