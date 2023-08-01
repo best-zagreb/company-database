@@ -24,8 +24,10 @@ import {
   AddCircle as AddCircleIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
+  Clear as RemoveIcon
 } from "@mui/icons-material/";
 
+import * as moment from "moment"
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -79,13 +81,7 @@ const tableColumns = [
   },
 ];
 
-function handleEditTeamMember(e, id) {
-  // TODO: make a PUT request na /projects/{id}/teamMembers/{id} and then update frTeamMembers list
-  console.log("Editing a team member is not yet implemented!");
-  // setEditFormModal(true);
-}
-
-function handleDeleteTeamMember(e, id) {
+function handleRemoveProjectMember(e, id) {
   // TODO: make a DELETE request na /projects/{id}/teamMembers/{id} and then update frTeamMembers list
   console.log("Deleting a team member is not yet implemented!");
 }
@@ -246,13 +242,13 @@ export default function Project() {
 
                     <ListItem disablePadding>
                       <ListItemText
-                        primary={"Sart date: " + project.startDate}
+                        primary={"Start date: " + moment(project.startDate).format('DD.MM.YYYY')}
                       />
                     </ListItem>
 
                     <ListItem disablePadding>
                       <ListItemText
-                        primary={"End date: " + project.endDate}
+                        primary={"End date: " + moment(project.endDate).format('DD.MM.YYYY')}
                       />
                     </ListItem>
 
@@ -270,13 +266,13 @@ export default function Project() {
 
                     <ListItem disablePadding>
                       <ListItemText
-                        primary={"First ping date: " + (project.firstPingDate ?? "")}
+                        primary={"First ping date: " + (project.firstPingDate ? moment(project.firstPingDate).format('DD.MM.YYYY') : "")}
                       />
                     </ListItem>
 
                     <ListItem disablePadding>
                       <ListItemText
-                        primary={"Second ping date: " + (project.secondPingDate ?? "")}
+                        primary={"Second ping date: " + (project.secondPingDate ? moment(project.secondPingDate).format('DD.MM.YYYY') : "")}
                       />
                     </ListItem>
                 </List>
@@ -312,30 +308,8 @@ export default function Project() {
                       </Typography>
                       <Box>
                         <IconButton
-                          aria-label="edit frTeamMember"
-                          onClick={(e) => handleEditTeamMember(e, frTeamMember.id)}
-                          sx={{
-                            width: 20,
-                            height: 20,
-
-                            margin: 0.125,
-
-                            color: "white",
-                            backgroundColor: "#1976d2",
-                            borderRadius: 1,
-                          }}
-                        >
-                          <EditIcon
-                            sx={{
-                              width: 15,
-                              height: 15,
-                            }}
-                          />
-                        </IconButton>
-
-                        <IconButton
                           aria-label="delete frTeamMember"
-                          onClick={(e) => handleDeleteTeamMember(e, frTeamMember.id)}
+                          onClick={(e) => handleRemoveProjectMember(e, frTeamMember.id)}
                           sx={{
                             width: 20,
                             height: 20,
@@ -347,7 +321,7 @@ export default function Project() {
                             borderRadius: 1,
                           }}
                         >
-                          <DeleteIcon
+                          <RemoveIcon
                             sx={{
                               width: 15,
                               height: 15,

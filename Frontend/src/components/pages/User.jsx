@@ -91,7 +91,7 @@ const userInfo = {
   lastName: "Doe",
   notificationEmail: "john.doe@gmail.com",
   description: "Default humanoid being.",
-  nickname: "id 1",
+  nickname: "JD",
   projects: [
     {
       id: 1,
