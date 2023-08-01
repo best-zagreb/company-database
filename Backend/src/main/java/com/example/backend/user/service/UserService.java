@@ -20,6 +20,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public Boolean shouldSetup() {
+        return userRepository.count() < 3;
+    }
+
     public AppUser findByEmail(String email){
         if (userRepository.findByLoginEmail(email).isEmpty()) return null;
         else return userRepository.findByLoginEmail(email).get(0);

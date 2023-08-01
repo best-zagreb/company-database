@@ -89,7 +89,10 @@ export default function UserForm({
 
     setLoadingButton(true);
 
-    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+    const JWToken = null;
+    if (localStorage.getItem("loginInfo")) {
+        const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+    }
 
     const newUser = {
       firstName: name.trim(),
@@ -104,16 +107,29 @@ export default function UserForm({
         description && description !== "" ? description.trim() : null,
     };
 
-    const request = {
-      method: user ? "PUT" : "POST",
-      headers: {
-        googleTokenEncoded: JWToken.credential,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newUser),
-    };
+    var serverResponse;
 
-    const serverResponse = await fetch(`/users/${user?.id ?? ""}`, request);
+    if (!JWToken) {
+        const request = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newUser),
+        };
+        serverResponse = await fetch(`/users/setup`, request);
+    }
+    else {
+        const request = {
+          method: user ? "PUT" : "POST",
+          headers: {
+            googleTokenEncoded: JWToken.credential,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newUser),
+        };
+        serverResponse = await fetch(`/users/${user?.id ?? ""}`, request);
+    }
 
     if (serverResponse.ok) {
       handleOpenToast({
