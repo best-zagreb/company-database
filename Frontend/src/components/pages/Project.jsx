@@ -24,6 +24,8 @@ import {
   AddCircle as AddCircleIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
+  Lock as LockIcon,
+  LockOpen as LockOpenIcon
 } from "@mui/icons-material/";
 
 import { useEffect, useState, useContext } from "react";
@@ -33,6 +35,7 @@ import ToastContext from "../../context/ToastContext";
 import DeleteAlertContext from "../../context/DeleteAlertContext";
 
 import CollaborationForm from "../forms/CollaborationForm";
+import ProjectForm from "../forms/ProjectForm";
 
 import SearchBar from "./partial/SearchBar";
 import TableComponent from "./partial/TableComponent";
@@ -100,6 +103,7 @@ export default function Project() {
 
   const [openCollaborationFormModal, setOpenCollaborationFormModal] =
     useState(false);
+  const [openProjectFormModal, setOpenProjectFormModal] = useState(false);
   const [collaboration, setCollaboration] = useState();
 
   const [project, setProject] = useState([]);
@@ -122,7 +126,6 @@ export default function Project() {
       );
       if (serverResponse.ok) {
         const json = await serverResponse.json();
-        console.log(json);
 
         setProject(json);
         setSearchResults(
@@ -148,6 +151,52 @@ export default function Project() {
     setLoading(false);
   }
 
+  async function handleEditProject() {
+      setProject(project);
+      setOpenProjectFormModal(true);
+  }
+
+  function navigateProjects() {
+      navigate("/projects")
+  }
+
+  async function handleDeleteProject() {
+      setObject({ type: "Project", name: project.name });
+      setEndpoint("/projects/" + project.id);
+      setPopulateObjects({ function: navigateProjects });
+
+      setOpenDeleteAlert(true);
+  }
+
+  async function handleSoftLockProject() {
+    setLoading(true);
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+    try {
+      const serverResponse = await fetch(
+        "/projects/softLock/" + project.id,
+        {
+          method: "PUT",
+          headers: { googleTokenEncoded: JWToken.credential },
+        }
+      );
+      if (serverResponse.ok) {
+          const json = await serverResponse.json();
+          project.softLock = json;
+      } else {
+          handleOpenToast({
+            type: "error",
+            info: "A server error occurred whilst soft locking.",
+          });
+      }
+    } catch (error) {
+        handleOpenToast({
+          type: "error",
+          info: "An error occurred whilst trying to connect to server.",
+        });
+    }
+    setLoading(false);
+  }
+
   function handleEditCollaboration(collaboration) {
     setCollaboration(collaboration);
     setOpenCollaborationFormModal(true);
@@ -167,6 +216,13 @@ export default function Project() {
 
   return (
     <>
+      <ProjectForm
+        project={project}
+        populateProjects={fetchProject}
+        openModal={openProjectFormModal}
+        setOpenModal={setOpenProjectFormModal}
+      />
+
       <CollaborationForm
         collaboration={collaboration}
         openModal={openCollaborationFormModal}
@@ -204,6 +260,87 @@ export default function Project() {
           >
             Projects
           </Button>
+
+          <Box display="inline"
+              sx = {{
+                paddingBlock: 2,
+                float: 'right'
+              }}
+          >
+              <IconButton
+                aria-label="edit project"
+                onClick={(e) => handleEditProject(e)}
+                sx={{
+                  width: 40,
+                  height: 40,
+
+                  margin: 0.125,
+
+                  color: "white",
+                  backgroundColor: "#1976d2",
+                  borderRadius: 1,
+                }}
+              >
+                <EditIcon
+                  sx={{
+                    width: 30,
+                    height: 30,
+                  }}
+                />
+              </IconButton>
+
+              <IconButton
+                aria-label="delete project"
+                onClick={(e) => handleDeleteProject(e)}
+                sx={{
+                  width: 40,
+                  height: 40,
+
+                  margin: 0.125,
+
+                  color: "white",
+                  backgroundColor: "#1976d2",
+                  borderRadius: 1,
+                }}
+              >
+                <DeleteIcon
+                  sx={{
+                    width: 30,
+                    height: 30,
+                  }}
+                />
+              </IconButton>
+
+              <IconButton
+                  aria-label="soft lock project"
+                  onClick={(e) => handleSoftLockProject(e)}
+                  sx={{
+                    width: 40,
+                    height: 40,
+
+                    margin: 0.125,
+
+                    color: "white",
+                    backgroundColor: "#1976d2",
+                    borderRadius: 1,
+                  }}
+              >
+                { project.softLock ?
+                <LockOpenIcon
+                    sx={{
+                      width: 30,
+                      height: 30,
+                    }}
+                /> :
+                <LockIcon
+                    sx={{
+                      width: 30,
+                      height: 30,
+                    }}
+                />
+                }
+              </IconButton>
+          </Box>
 
           <Container
             sx={{

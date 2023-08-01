@@ -2,6 +2,7 @@ package com.example.backend.project.service;
 
 import com.example.backend.collaborations.model.Collaboration;
 import com.example.backend.collaborations.repo.CollaborationsRepository;
+import com.example.backend.companies.model.Company;
 import com.example.backend.project.controller.dto.ProjectDTO;
 import com.example.backend.project.model.Project;
 import com.example.backend.project.repo.ProjectRepository;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -86,6 +88,15 @@ public class ProjectService {
         }
         project.addFrTeamMember(user);
         projectRepository.save(project);
+    }
+
+    public Boolean softLockProject(Long id) throws EntityNotFoundException
+    {
+        Project project = projectRepository.findById(id).get();
+        boolean newSoftLock = project.getSoftLock() == null || !project.getSoftLock();
+        project.setSoftLock(newSoftLock);
+        projectRepository.save(project);
+        return newSoftLock;
     }
 
     public void deleteFrTeamMember(Long projectId, Long teamMemberId){

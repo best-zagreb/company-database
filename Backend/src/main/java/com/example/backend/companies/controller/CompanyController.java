@@ -107,6 +107,26 @@ public class CompanyController
         }
     }
 
+    @PutMapping("/softLock/{companyId}")
+    @ResponseBody
+    public ResponseEntity<Boolean> softLockCompany(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId){
+        AppUser user = getUser(googleTokenEncoded);
+        try
+        {
+            if (user == null) throw new AuthenticationException();
+            if (List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
+                throw new AuthenticationException();
+            }
+            return new ResponseEntity<>(companyService.softLockCompany(companyId), HttpStatus.OK);
+        } catch (AuthenticationException e)
+        {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e)
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @DeleteMapping("{companyId}")
     @ResponseBody
     public ResponseEntity<Company> deleteCompany(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId)

@@ -44,6 +44,11 @@ public class AppUser {
     @JsonIgnore
     private Set<Project> projects;
 
+    @Column(name = "softLock")
+    @Getter
+    @Setter
+    private Boolean softLock = false;
+
     public AppUser(String loginEmail,
                    AUTHORITY authority,
                    String firstName,
@@ -59,5 +64,6 @@ public class AppUser {
         this.description = description;
         this.nickname = nickname;
         this.projects = new HashSet<>();
+        this.softLock = false;
     }
 }

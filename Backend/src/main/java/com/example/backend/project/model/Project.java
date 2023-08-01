@@ -59,6 +59,11 @@ public class Project {
     @Column(name = "secondpingdate")
     private Date secondPingDate;
 
+    @Column(name = "softLock")
+    @Getter
+    @Setter
+    private Boolean softLock = false;
+
     public Project(Long idCreator,
                    String name,
                    String category,
@@ -81,6 +86,7 @@ public class Project {
         this.FRGoal = FRGoal;
         this.firstPingDate = firstPingDate;
         this.secondPingDate = secondPingDate;
+        this.softLock = false;
     }
 
     public void addFrTeamMember(AppUser user){

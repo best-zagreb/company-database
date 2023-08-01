@@ -1,12 +1,14 @@
 package com.example.backend.user.service;
 
 
+import com.example.backend.project.model.Project;
 import com.example.backend.user.controller.dto.UserDTO;
 import com.example.backend.user.model.AppUser;
 import com.example.backend.user.repo.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -53,6 +55,22 @@ public class UserService {
 
     public Optional<AppUser> findById(Long id){
         return userRepository.findById(id);
+    }
+
+    private <T> T getValue(Optional<T> obj) throws EntityNotFoundException {
+        if(obj.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+        return obj.get();
+    }
+
+    public Boolean softLockUser(Long id) throws EntityNotFoundException
+    {
+        AppUser user = getValue(userRepository.findById(id));
+        boolean newSoftLock = user.getSoftLock() == null || !user.getSoftLock();
+        user.setSoftLock(newSoftLock);
+        userRepository.save(user);
+        return newSoftLock;
     }
 
     public AppUser updateUser(UserDTO userDTO, Long id){

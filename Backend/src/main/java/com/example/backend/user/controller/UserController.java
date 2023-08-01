@@ -40,6 +40,23 @@ public class UserController {
         return new ResponseEntity(userService.addUser(userDTO), HttpStatus.OK);
     }
 
+    @PutMapping("/softLock/{userId}")
+    @ResponseBody
+    public ResponseEntity<Boolean> softLockUser(@RequestHeader String googleTokenEncoded, @PathVariable Long userId){
+        List<AUTHORITY> authorities = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR);
+        String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
+        if (email == null)
+            return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
+        AppUser user = userService.findByEmail(email);
+        if (user == null)
+            return new ResponseEntity("You don't have access to CDB", HttpStatus.UNAUTHORIZED);
+        if (!authorities.contains(user.getAuthority()))
+            return new ResponseEntity("You don't have premission to this resource", HttpStatus.UNAUTHORIZED);
+
+        if (!userService.existsById(userId)) return new ResponseEntity("User not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(userService.softLockUser(userId), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity findUser(@RequestHeader String googleTokenEncoded, @PathVariable Long id){

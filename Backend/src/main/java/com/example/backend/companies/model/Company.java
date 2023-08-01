@@ -1,7 +1,9 @@
 package com.example.backend.companies.model;
 
 import com.example.backend.companies.controller.dto.CompanyDto;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -47,6 +49,11 @@ public class Company
     @Column(name = "description", length = 480)
     private String description;
 
+    @Column(name = "softLock")
+    @Getter
+    @Setter
+    private Boolean softLock = false;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
     private Set<Contact> contacts;
 
@@ -62,6 +69,7 @@ public class Company
         this.webUrl = webUrl;
         this.contactInFuture = contactInFuture;
         this.description = description;
+        this.softLock = false;
     }
 
     public Company(String name, String domain, Character abcCategory, String budgetPlanningMonth, String country, int zipCode, String address, String webUrl, boolean contactInFuture, String description) {
@@ -75,6 +83,7 @@ public class Company
         this.webUrl = webUrl;
         this.contactInFuture = contactInFuture;
         this.description = description;
+        this.softLock = false;
     }
 
     public Long getId()

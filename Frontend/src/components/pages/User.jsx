@@ -24,6 +24,8 @@ import {
   AddCircle as AddCircleIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
+  Lock as LockIcon,
+  LockOpen as LockOpenIcon
 } from "@mui/icons-material/";
 
 import { useEffect, useState, useContext } from "react";
@@ -34,6 +36,7 @@ import DeleteAlertContext from "../../context/DeleteAlertContext";
 
 import ContactForm from "../forms/ContactForm";
 import CollaborationForm from "../forms/CollaborationForm";
+import UserForm from "../forms/UserForm";
 
 import SearchBar from "./partial/SearchBar";
 import TableComponent from "./partial/TableComponent";
@@ -89,6 +92,7 @@ const userInfo = {
   authority: "ADMINISTRATOR",
   firstName: "John",
   lastName: "Doe",
+  softLock: false,
   notificationEmail: "john.doe@gmail.com",
   description: "Default humanoid being.",
   nickname: "id 1",
@@ -125,6 +129,7 @@ export default function User() {
     useContext(DeleteAlertContext);
 
   const [openContactFormModal, setOpenContactFormModal] = useState(false);
+  const [openUserFormModal, setOpenUserFormModal] = useState(false);
   const [contact, setContact] = useState();
   const [openCollaborationFormModal, setOpenCollaborationFormModal] =
     useState(false);
@@ -175,6 +180,53 @@ export default function User() {
     setLoading(false);
   }
 
+
+  async function handleEditUser() {
+      setUser(user);
+      setOpenUserFormModal(true);
+  }
+
+  function navigateCompanies() {
+      navigate("/companies")
+  }
+
+  async function handleDeleteUser() {
+      setObject({ type: "User", name: user.name });
+      setEndpoint("/companies/" + user.id);
+      setPopulateObjects({ function: navigateCompanies });
+
+      setOpenDeleteAlert(true);
+  }
+
+  async function handleSoftLockUser() {
+    setLoading(true);
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+    try {
+      const serverResponse = await fetch(
+        "/companies/softLock/" + user.id,
+        {
+          method: "PUT",
+          headers: { googleTokenEncoded: JWToken.credential },
+        }
+      );
+      if (serverResponse.ok) {
+          const json = await serverResponse.json();
+          user.softLock = json;
+      } else {
+          handleOpenToast({
+            type: "error",
+            info: "A server error occurred whilst soft locking.",
+          });
+      }
+    } catch (error) {
+        handleOpenToast({
+          type: "error",
+          info: "An error occurred whilst trying to connect to server.",
+        });
+    }
+    setLoading(false);
+  }
+
   function handleEditCollaboration(collaboration) {
     setCollaboration(collaboration);
     setOpenCollaborationFormModal(true);
@@ -198,6 +250,13 @@ export default function User() {
 
   return (
     <>
+      <UserForm
+        user={userInfo}
+        openModal={openUserFormModal}
+        setOpenModal={setOpenUserFormModal}
+        populateCompanies={fetchUser}
+      />
+
       <ContactForm
         contact={contact}
         openModal={openContactFormModal}
@@ -242,6 +301,87 @@ export default function User() {
           >
             Users
           </Button>
+
+            <Box display="inline"
+                sx = {{
+                  paddingBlock: 2,
+                  float: 'right'
+                }}
+            >
+                <IconButton
+                  aria-label="edit user"
+                  onClick={(e) => handleEditUser(e)}
+                  sx={{
+                    width: 40,
+                    height: 40,
+
+                    margin: 0.125,
+
+                    color: "white",
+                    backgroundColor: "#1976d2",
+                    borderRadius: 1,
+                  }}
+                >
+                  <EditIcon
+                    sx={{
+                      width: 30,
+                      height: 30,
+                    }}
+                  />
+                </IconButton>
+
+                <IconButton
+                  aria-label="delete user"
+                  onClick={(e) => handleDeleteUser(e)}
+                  sx={{
+                    width: 40,
+                    height: 40,
+
+                    margin: 0.125,
+
+                    color: "white",
+                    backgroundColor: "#1976d2",
+                    borderRadius: 1,
+                  }}
+                >
+                  <DeleteIcon
+                    sx={{
+                      width: 30,
+                      height: 30,
+                    }}
+                  />
+                </IconButton>
+
+                <IconButton
+                    aria-label="soft lock user"
+                    onClick={(e) => handleSoftLockUser(e)}
+                    sx={{
+                      width: 40,
+                      height: 40,
+
+                      margin: 0.125,
+
+                      color: "white",
+                      backgroundColor: "#1976d2",
+                      borderRadius: 1,
+                    }}
+                >
+                  { user.softLock ?
+                  <LockOpenIcon
+                      sx={{
+                        width: 30,
+                        height: 30,
+                      }}
+                  /> :
+                  <LockIcon
+                      sx={{
+                        width: 30,
+                        height: 30,
+                      }}
+                  />
+                  }
+                </IconButton>
+            </Box>
 
           <Container
             sx={{

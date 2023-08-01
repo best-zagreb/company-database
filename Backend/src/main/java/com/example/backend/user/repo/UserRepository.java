@@ -6,12 +6,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @SuppressWarnings("ALL")
 @Repository
 public interface UserRepository extends JpaRepository<AppUser, Long> {
     List<AppUser> findByLoginEmail(String email);
 
+    Optional<AppUser> findById(Long Id);
 
     List<AppUser> findAll();
 }

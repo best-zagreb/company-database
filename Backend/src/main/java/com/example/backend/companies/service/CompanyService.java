@@ -40,6 +40,22 @@ public class CompanyService
         return companyRepository.findAll();
     }
 
+    private <T> T getValue(Optional<T> obj) throws EntityNotFoundException{
+        if(obj.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+        return obj.get();
+    }
+
+    public Boolean softLockCompany(Long id) throws EntityNotFoundException
+    {
+        Company company = getValue(companyRepository.findById(id));
+        boolean newSoftLock = company.getSoftLock() == null || !company.getSoftLock();
+        company.setSoftLock(newSoftLock);
+        companyRepository.save(company);
+        return newSoftLock;
+    }
+
     public Company getCompany(AppUser user, Long id) throws AuthenticationException
     {
         if (user == null) throw new AuthenticationException();
