@@ -136,6 +136,8 @@ public class ProjectController {
             return new ResponseEntity(HttpStatus.OK);
         } catch (AuthenticationException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
