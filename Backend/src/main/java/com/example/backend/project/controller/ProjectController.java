@@ -43,7 +43,7 @@ public class ProjectController {
         return new ResponseEntity(projectService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/api/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity getProjectById(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
@@ -95,7 +95,7 @@ public class ProjectController {
         return new ResponseEntity(projectService.addProject(projectDTO), HttpStatus.OK);
     }
 
-    @PutMapping("/api/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity updateProject(@RequestHeader String googleTokenEncoded, @RequestBody ProjectDTO projectDTO, @PathVariable Long id){
         List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
@@ -110,7 +110,7 @@ public class ProjectController {
         return new ResponseEntity(projectService.updateProject(projectDTO, id), HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteProjects(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
         List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
@@ -126,7 +126,7 @@ public class ProjectController {
         return new ResponseEntity("Project under id: " + id + " Successfully deleted", HttpStatus.OK);
     }
 
-    @GetMapping("/api/{id}/collaborations")
+    @GetMapping("/{id}/collaborations")
     public ResponseEntity getCollaborations(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
@@ -146,7 +146,7 @@ public class ProjectController {
         return new ResponseEntity(projectService.getCollaborations(id), HttpStatus.OK);
     }
 
-    @PostMapping("/api/{projectid}/collaborations")
+    @PostMapping("/{projectid}/collaborations")
     public ResponseEntity addCollaboration(@RequestHeader String googleTokenEncoded, @PathVariable Long projectid, @RequestBody CollaborationDTO collaborationDTO){
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
         if (email == null)
@@ -164,7 +164,7 @@ public class ProjectController {
         return new ResponseEntity(collaborationsService.addCollaboration(projectid, collaborationDTO), HttpStatus.OK);
     }
 
-    @PutMapping("/api/{projectid}/collaborations/{companyid}")
+    @PutMapping("/{projectid}/collaborations/{companyid}")
     public ResponseEntity addCollaboration(@RequestHeader String googleTokenEncoded, @PathVariable Long projectid,
                                            @PathVariable Long companyid, @RequestBody CollaborationDTO collaborationDTO) {
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
@@ -191,7 +191,7 @@ public class ProjectController {
         return new ResponseEntity(collaboration, HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/{projectid}/collaborations/{companyid}")
+    @DeleteMapping("/{projectid}/collaborations/{companyid}")
     public ResponseEntity deleteCollaboration(@RequestHeader String googleTokenEncoded, @PathVariable Long projectid,
                                            @PathVariable Long companyid) {
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
@@ -210,7 +210,7 @@ public class ProjectController {
         return new ResponseEntity("Collaboration deleted successfully", HttpStatus.OK);
     }
 
-    @PutMapping("/api/{projectId}/frteammembers/{memberId}")
+    @PutMapping("/{projectId}/frteammembers/{memberId}")
     public ResponseEntity addFrTeamMember(@RequestHeader String googleTokenEncoded, @PathVariable Long projectId, @PathVariable Long memberId){
         List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR, AUTHORITY.FR_RESPONSIBLE);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
@@ -233,7 +233,7 @@ public class ProjectController {
         return new ResponseEntity("FR member added successfully", HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/{projectId}/frteammembers/{memberId}")
+    @DeleteMapping("/{projectId}/frteammembers/{memberId}")
     public ResponseEntity deleteFrTeamMember(@RequestHeader String googleTokenEncoded, @PathVariable Long projectId, @PathVariable Long memberId){
         List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR, AUTHORITY.FR_RESPONSIBLE);
         String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);

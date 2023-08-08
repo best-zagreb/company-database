@@ -59,7 +59,7 @@ public class CompanyController
         }
     }
 
-    @GetMapping("/api/{id}")
+    @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<Company> getCompany(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
         AppUser user = getUser(googleTokenEncoded);
@@ -75,7 +75,7 @@ public class CompanyController
         }
     }
 
-    @PostMapping("/api/{companyId}/contacts")
+    @PostMapping("/{companyId}/contacts")
     @ResponseBody
     public ResponseEntity<Contact> addContact(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId, @RequestBody ContactDto contactDto){
         AppUser user = getUser(googleTokenEncoded);
@@ -125,7 +125,7 @@ public class CompanyController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/api/{companyId}/contacts/{contactId}")
+    @PutMapping("/{companyId}/contacts/{contactId}")
     @ResponseBody
     public ResponseEntity<Contact> editContact(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId, @PathVariable Long contactId, @RequestBody ContactDto contactDto){
         AppUser user = getUser(googleTokenEncoded);
@@ -141,7 +141,7 @@ public class CompanyController
         }
     }
 
-    @DeleteMapping("/api/{companyId}/contacts/{contactId}")
+    @DeleteMapping("/{companyId}/contacts/{contactId}")
     @ResponseBody
     public ResponseEntity deleteContact(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId, @PathVariable Long contactId){
         AppUser user = getUser(googleTokenEncoded);
@@ -159,7 +159,7 @@ public class CompanyController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/api/{id}/collaborations")
+    @GetMapping("/{id}/collaborations")
     @ResponseBody
     public ResponseEntity getCollaborationsForCompany(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
         List<AUTHORITY> a = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR, AUTHORITY.FR_RESPONSIBLE);
