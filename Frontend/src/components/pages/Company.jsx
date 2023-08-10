@@ -244,7 +244,7 @@ export default function Company() {
               <AccordionDetails>
                 <List dense>
                   <ListItem disablePadding>
-                    <ListItemText primary={"Domain: " + company.domain} />
+                    <ListItemText primary={"Sector: " + company.sector} />
                   </ListItem>
 
                   <ListItem disablePadding>
