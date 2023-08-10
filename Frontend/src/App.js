@@ -40,7 +40,7 @@ export default function App() {
     setLoadingUser(true);
 
     try {
-      const serverResponse = await fetch("/users/login", {
+      const serverResponse = await fetch("/api/users/login", {
         method: "GET",
         headers: {
           googleTokenEncoded: JWToken.credential,

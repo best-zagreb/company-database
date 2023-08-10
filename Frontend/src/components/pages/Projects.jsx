@@ -47,7 +47,7 @@ export default function Projects() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("/projects/", {
+      const serverResponse = await fetch("/api/projects/", {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
@@ -84,7 +84,7 @@ export default function Projects() {
 
   function handleDelete(project) {
     setObject({ type: "Project", name: project.name });
-    setEndpoint("/projects/" + project.id);
+    setEndpoint("/api/projects/" + project.id);
     setPopulateObjects({ function: populateTable });
 
     setOpenDeleteAlert(true);
