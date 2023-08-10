@@ -12,5 +12,5 @@ public interface CollaborationsRepository extends JpaRepository<Collaboration, C
 
     List<Collaboration> findAllByCollaborationId_Company(Company company);
 
-    List<Collaboration> findAllByCollaborationId_Project(Project id);
+    List<Collaboration> findAllByCollaborationId_Project(Project project);
 }

@@ -2,12 +2,14 @@ package com.example.backend.user.service;
 
 
 import com.example.backend.user.controller.dto.UserDTO;
+import com.example.backend.user.model.AUTHORITY;
 import com.example.backend.user.model.AppUser;
 import com.example.backend.user.repo.UserRepository;
+import com.example.backend.util.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
+import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,24 +27,23 @@ public class UserService {
         else return userRepository.findByLoginEmail(email).get(0);
     }
 
-    public AppUser addUser(UserDTO userDTO){
-        AppUser appUser = new AppUser(
-                userDTO.getLoginEmail(),
-                userDTO.getAuthority(),
-                userDTO.getFirstName(),
-                userDTO.getLastName(),
-                userDTO.getNotificationEmail(),
-                userDTO.getDescription(),
-                userDTO.getNickname()
-        );
-        return userRepository.save(appUser);
+    public AppUser addUser(UserDTO userDTO, AppUser user) throws AuthenticationException {
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
+        if (!List.of(AUTHORITY.ADMINISTRATOR).contains(user.getAuthority())) throw new AuthenticationException("You do not have permission to execute this command.");
+
+        return userRepository.save(userDTO.toAppUser());
     }
 
-    public void deleteUser(Long id){
+    public void deleteUser(Long id, AppUser user) throws AuthenticationException {
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
+        if (!List.of(AUTHORITY.ADMINISTRATOR).contains(user.getAuthority())) throw new AuthenticationException("You do not have permission to execute this command.");
+
         userRepository.deleteById(id);
     }
 
-    public List<AppUser> findAll(){
+    public List<AppUser> findAll(AppUser user) throws AuthenticationException {
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
+
         return userRepository.findAll();
     }
 
@@ -51,12 +52,20 @@ public class UserService {
         return i > 0;
     }
 
-    public Optional<AppUser> findById(Long id){
-        return userRepository.findById(id);
+    public AppUser findById(Long id, AppUser user) throws AuthenticationException, EntityNotFoundException {
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
+        Optional<AppUser> appUserOpt = userRepository.findById(id);
+        if (appUserOpt.isPresent()) return appUserOpt.get();
+        else throw new EntityNotFoundException("User under id " + id + "not found.");
     }
 
-    public AppUser updateUser(UserDTO userDTO, Long id){
-        AppUser appUser = userRepository.findById(id).get();
+    public AppUser updateUser(UserDTO userDTO, Long id, AppUser user) throws AuthenticationException, EntityNotFoundException {
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
+        if (!List.of(AUTHORITY.ADMINISTRATOR).contains(user.getAuthority())) throw new AuthenticationException("You do not have permission to execute this command.");
+
+        AppUser appUser;
+        if (userRepository.findById(id).isPresent()) appUser = userRepository.findById(id).get();
+        else throw new EntityNotFoundException("User under id " + id + " not found.");
 
         appUser.setLoginEmail(userDTO.getLoginEmail());
         appUser.setAuthority(userDTO.getAuthority());
