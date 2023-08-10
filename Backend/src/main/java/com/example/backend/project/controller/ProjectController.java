@@ -19,7 +19,7 @@ import javax.naming.AuthenticationException;
 @SuppressWarnings("ALL")
 @CrossOrigin
 @RestController
-@RequestMapping("/projects")
+@RequestMapping("/api/projects")
 @RequiredArgsConstructor
 public class ProjectController {
     private final ProjectService projectService;

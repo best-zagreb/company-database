@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
 
