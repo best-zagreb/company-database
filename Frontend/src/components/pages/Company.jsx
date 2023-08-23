@@ -41,7 +41,7 @@ import TableComponent from "./partial/TableComponent";
 // TODO: prikazni primjer, kasnije samo svugdje zamjeni companyInfo sa company state-om
 const companyInfo = {
   name: "Oracle d.o.o.",
-  domain: "IT",
+  sector: "IT",
   abcCategory: "A",
   budgetPlanningMonth: "January",
   country: "Hrvatska",
@@ -567,7 +567,7 @@ export default function Company() {
               <AccordionDetails>
                 <List dense>
                   <ListItem disablePadding>
-                    <ListItemText primary={"Domain: " + companyInfo.domain} />
+                    <ListItemText primary={"Sector: " + companyInfo.sector} />
                   </ListItem>
 
                   <ListItem disablePadding>

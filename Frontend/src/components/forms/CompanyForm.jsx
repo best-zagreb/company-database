@@ -55,7 +55,6 @@ export default function CompanyForm({
 
   const [existingCompanies, setExistingCompanies] = useState([]);
   const [countriesFromAPI, setCountriesFromAPI] = useState([]);
-  const [townsFromAPI, setTownsFromAPI] = useState([]);
   const [loadingButton, setLoadingButton] = useState(false);
 
   const [name, setName] = useState();
@@ -64,7 +63,6 @@ export default function CompanyForm({
   const [budgetPlanningMonth, setBudgetPlanningMonth] = useState();
   const [country, setCountry] = useState();
   const [townName, setTownName] = useState();
-  // const [zipCode, setZipCode] = useState();
   const [address, setAddress] = useState();
   const [url, setUrl] = useState();
   const [description, setDescription] = useState();
@@ -77,7 +75,6 @@ export default function CompanyForm({
     useState();
   const [countryIsValid, setCountryIsValid] = useState(false);
   const [townNameIsValid, setTownNameIsValid] = useState(false);
-  // const [zipCodeIsValid, setZipCodeIsValid] = useState(false);
   const [addressIsValid, setAddressIsValid] = useState(false);
   const [urlIsValid, setUrlIsValid] = useState(false);
   const [descriptionIsValid, setDescriptionIsValid] = useState(false);
@@ -128,39 +125,6 @@ export default function CompanyForm({
         handleOpenToast({
           type: "error",
           info: "A server error occurred whilst fetching companies for Country input field.",
-        });
-      }
-    } catch (error) {
-      handleOpenToast({
-        type: "error",
-        info: "An error occurred whilst trying to connect to server.",
-      });
-    }
-  }
-  async function fetchTownsFromAPI(inputValue) {
-    try {
-      const serverResponse = await fetch(
-        "http://api.geonames.org/postalCodeSearchJSON?maxRows=250&username=crazyfreak" +
-          "&placename_startsWith=" +
-          encodeURIComponent(inputValue || " ") +
-          "&country=" +
-          encodeURIComponent(
-            countriesFromAPI.find((c) => c.name.common === country)?.cca2 || ""
-          ),
-        {
-          method: "GET",
-        }
-      );
-
-      if (serverResponse.ok) {
-        const json = await serverResponse.json();
-
-        console.log(json.postalCodes);
-        setTownsFromAPI(json.postalCodes);
-      } else {
-        handleOpenToast({
-          type: "error",
-          info: "A server error occurred whilst fetching companies for Town input field.",
         });
       }
     } catch (error) {
@@ -265,12 +229,11 @@ export default function CompanyForm({
 
   useEffect(() => {
     setName(company?.name);
-    setSector(company?.domain);
+    setSector(company?.sector);
     setAbcCategorization(company?.abcCategorization || abcCategories[0].value);
     setBudgetPlanningMonth(company?.budgetMonth || months[0].value);
     setCountry(company?.country);
     setTownName(company?.townName);
-    //setZipCode(company?.zipCode);
     setAddress(company?.address);
     setUrl(company?.url);
     setDescription(company?.description);
@@ -282,7 +245,6 @@ export default function CompanyForm({
     setBudgetPlanningMonthIsValid(true);
     setCountryIsValid(company ? true : false);
     setTownNameIsValid(company ? true : false);
-    //setZipCodeIsValid(company ? true : false);
     setAddressIsValid(company ? true : false);
     setUrlIsValid(true);
     setDescriptionIsValid(true);
@@ -290,7 +252,6 @@ export default function CompanyForm({
 
     fetchExistingCompanies();
     fetchCountriesFromAPI();
-    fetchTownsFromAPI();
   }, [openModal]);
 
   return (
@@ -362,9 +323,9 @@ export default function CompanyForm({
 
               <Autocomplete
                 options={existingCompanies
-                  .map((company) => company.domain)
+                  .map((company) => company.sector)
                   .filter(
-                    (domain, index, array) => array.indexOf(domain) === index
+                    (sector, index, array) => array.indexOf(sector) === index
                   )
                   .sort((a, b) => {
                     return a.localeCompare(b);
@@ -486,11 +447,11 @@ export default function CompanyForm({
               />
 
               <Autocomplete
-                options={townsFromAPI
-                  .map((town) => town.placeName)
+                options={existingCompanies
+                  .map((company) => company.townName)
                   .filter(
-                    (placeName, index, array) =>
-                      array.indexOf(placeName) === index
+                    (townName, index, array) =>
+                      array.indexOf(townName) === index
                   )
                   .sort((a, b) => {
                     return a.localeCompare(b);
@@ -506,18 +467,20 @@ export default function CompanyForm({
                 inputValue={townName || ""}
                 onInputChange={(event, value) => {
                   setTownName(value);
-                  if (country === "")
-                    setCountry(
-                      countriesFromAPI.find(
-                        (c) =>
-                          c.cca2 ===
-                          townsFromAPI.find(
-                            (town) => town.placeName === value
-                          )?.countryCode
-                      )?.name.common || ""
-                    ); // set country based on chosen town
-                  //fetchCitiesFromAPI(value);
-                  //setTownIsValid(value.length >= 2 && value.length <= 115);
+                  setTownNameIsValid(value.length >= 2 && value.length <= 115);
+
+                  // set country based on chosen town
+                  if (!country || country === "") {
+                    const countryFromCity = existingCompanies.find(
+                      (company) => company.townName === value
+                    ).country;
+
+                    const matchedCountryInApi = countriesFromAPI.find(
+                      (country) => country.name.common === countryFromCity
+                    )?.name.common;
+
+                    setCountry(matchedCountryInApi || "");
+                  }
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -558,7 +521,7 @@ export default function CompanyForm({
                 validationFunction={(input) => {
                   const urlPattern = new RegExp(
                     "^(https?:\\/\\/)?" + // validate protocol
-                      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // validate domain name
+                      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // validate sector name
                       "((\\d{1,3}\\.){3}\\d{1,3}))" + // validate OR ip (v4) address
                       "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // validate port and path
                       "(\\?[;&a-z\\d%_.~+=-]*)?" + // validate query string

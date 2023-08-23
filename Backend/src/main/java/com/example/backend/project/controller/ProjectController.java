@@ -32,7 +32,7 @@ public class ProjectController {
     public ResponseEntity getAllProjects(@RequestHeader String googleTokenEncoded){
         AppUser user = getUser(googleTokenEncoded);
         try {
-            return new ResponseEntity(projectService.findAll(user), HttpStatus.FOUND);
+            return new ResponseEntity(projectService.findAll(user), HttpStatus.OK);
         } catch (AuthenticationException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
@@ -42,7 +42,7 @@ public class ProjectController {
     public ResponseEntity getProjectById(@RequestHeader String googleTokenEncoded, @PathVariable Long id){
         AppUser user = getUser(googleTokenEncoded);
         try {
-            return new ResponseEntity(projectService.findById(id, user), HttpStatus.FOUND);
+            return new ResponseEntity(projectService.findById(id, user), HttpStatus.OK);
         } catch (AuthenticationException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (EntityNotFoundException e) {

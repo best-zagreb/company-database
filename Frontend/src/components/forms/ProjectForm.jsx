@@ -108,6 +108,7 @@ export default function ProjectForm({
         // console.log(json);
         setExistingProjects(json);
       } else {
+        console.log(serverResponse);
         handleOpenToast({
           type: "error",
           info: "A server error occurred whilst fetching projects for Category input field.",
