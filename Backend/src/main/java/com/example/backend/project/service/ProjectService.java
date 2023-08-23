@@ -155,7 +155,7 @@ public class ProjectService {
 
     public void deleteProject(Long id, AppUser user) throws AuthenticationException, EntityNotFoundException {
         if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
-        if (List.of(AUTHORITY.ADMINISTRATOR, AUTHORITY.MODERATOR).contains(user.getAuthority())) throw new AuthenticationException("You do not have permission to execute this command.");
+        if (!List.of(AUTHORITY.ADMINISTRATOR, AUTHORITY.MODERATOR).contains(user.getAuthority())) throw new AuthenticationException("You do not have permission to execute this command.");
 
         if (!projectRepository.existsById(id)) throw new EntityNotFoundException("Project under id " + id + " not found.");
 

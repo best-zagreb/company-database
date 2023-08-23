@@ -21,7 +21,7 @@ import TableComponent from "./partial/TableComponent";
 const tableColumns = [
   { key: "name", label: "Project name" },
   { key: "category", label: "Category", xsHide: true },
-  { key: "frresp", label: "FR responsible" },
+  { key: "frresp", label: "Project responsible" },
   { key: "endDate", label: "Project end date", xsHide: true },
   { key: "frgoal", label: "FR goal", xsHide: true },
 ];

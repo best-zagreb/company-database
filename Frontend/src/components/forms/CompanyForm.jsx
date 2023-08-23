@@ -207,7 +207,7 @@ export default function CompanyForm({
     } else if (serverResponse.status === 403) {
       handleOpenToast({
         type: "error",
-        info: "FR responsible privileges are required for manipulating companies.",
+        info: "Project responsible privileges are required for manipulating companies.",
       });
     } else if (serverResponse.status === 404) {
       handleOpenToast({
