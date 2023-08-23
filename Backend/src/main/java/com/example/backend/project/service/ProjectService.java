@@ -54,7 +54,7 @@ public class ProjectService {
 
     public Project addProject(ProjectDTO projectDTO, AppUser user) throws EntityNotFoundException, AuthenticationException {
         if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
-        if (List.of(AUTHORITY.ADMINISTRATOR, AUTHORITY.MODERATOR).contains(user.getAuthority())) throw new AuthenticationException();
+        if (!List.of(AUTHORITY.ADMINISTRATOR, AUTHORITY.MODERATOR).contains(user.getAuthority())) throw new AuthenticationException();
 
         AppUser frResp;
         if (userRepository.findById(projectDTO.getIdFRResp()).isPresent()) frResp = userRepository.findById(projectDTO.getIdFRResp()).get();
@@ -72,7 +72,7 @@ public class ProjectService {
 
     public Project updateProject(ProjectDTO projectDTO, Long id, AppUser user) throws AuthenticationException, EntityNotFoundException {
         if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
-        if (List.of(AUTHORITY.ADMINISTRATOR, AUTHORITY.MODERATOR).contains(user.getAuthority())) throw new AuthenticationException("You do not have permission to execute this command.");
+        if (!List.of(AUTHORITY.ADMINISTRATOR, AUTHORITY.MODERATOR).contains(user.getAuthority())) throw new AuthenticationException("You do not have permission to execute this command.");
 
 
         Project project;
