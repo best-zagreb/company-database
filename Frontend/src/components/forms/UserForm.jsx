@@ -113,7 +113,7 @@ export default function UserForm({
       body: JSON.stringify(newUser),
     };
 
-    const serverResponse = await fetch(`/users/${user?.id ?? ""}`, request);
+    const serverResponse = await fetch(`/api/users/${user?.id ?? ""}`, request);
 
     if (serverResponse.ok) {
       handleOpenToast({

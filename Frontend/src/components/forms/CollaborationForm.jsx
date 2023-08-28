@@ -70,7 +70,7 @@ export default function CollaborationForm({
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("/users/", {
+      const serverResponse = await fetch("/api/users/", {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
@@ -98,7 +98,7 @@ export default function CollaborationForm({
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("/projects/", {
+      const serverResponse = await fetch("/api/projects/", {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
@@ -161,7 +161,7 @@ export default function CollaborationForm({
     };
 
     const serverResponse = await fetch(
-      `/projects/${collaboration?.id ?? ""}`,
+      `/api/projects/${collaboration?.id ?? ""}`,
       request
     );
 

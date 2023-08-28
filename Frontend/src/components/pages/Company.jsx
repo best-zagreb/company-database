@@ -117,7 +117,7 @@ export default function Company() {
 
     try {
       const serverResponse = await fetch(
-        "/companies/" + companyId,
+        "api/companies/" + companyId,
         {
           method: "GET",
           headers: { googleTokenEncoded: JWToken.credential },
@@ -157,7 +157,7 @@ export default function Company() {
 
   function handleDeleteCollaboration(collaboration) {
     setObject({ type: "Collaboration", name: collaboration.name });
-    setEndpoint("/collaborations/" + collaboration.id);
+    setEndpoint("/api/collaborations/" + collaboration.id);
     setPopulateObjects({ function: fetchCompany });
 
     setOpenDeleteAlert(true);
