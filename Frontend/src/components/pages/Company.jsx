@@ -126,7 +126,6 @@ export default function Company() {
       if (serverResponse.ok) {
         const json = await serverResponse.json();
 
-        console.log(json);
         setCompany(json);
         setSearchResults(
           json.collaborations
