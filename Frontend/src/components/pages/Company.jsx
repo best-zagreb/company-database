@@ -117,7 +117,7 @@ export default function Company() {
 
     try {
       const serverResponse = await fetch(
-        "api/companies/" + companyId,
+        "/api/companies/" + companyId,
         {
           method: "GET",
           headers: { googleTokenEncoded: JWToken.credential },
@@ -126,6 +126,7 @@ export default function Company() {
       if (serverResponse.ok) {
         const json = await serverResponse.json();
 
+        console.log(json);
         setCompany(json);
         setSearchResults(
           json.collaborations

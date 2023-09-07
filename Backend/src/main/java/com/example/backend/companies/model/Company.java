@@ -1,13 +1,17 @@
 package com.example.backend.companies.model;
 
 import com.example.backend.companies.controller.dto.CompanyDto;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @NoArgsConstructor
+@Getter @Setter
+
 public class Company
 {
     @Id
@@ -74,102 +78,9 @@ public class Company
         this.description = description;
     }
 
-    public Long getId()
-    {
-        return id;
-    }
-
-    public String getName()
-    {
-        return name;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    public String getSector()
-    {
-        return sector;
-    }
-
-    public void setSector(String sector)
-    {
-        this.sector = sector;
-    }
-
-    public Character getAbcCategory()
-    {
-        return abcCategory;
-    }
-
-    public void setAbcCategory(Character abcCategory)
-    {
-        this.abcCategory = abcCategory;
-    }
-
-    public String getBudgetPlanningMonth()
-    {
-        return budgetPlanningMonth;
-    }
-
-    public void setBudgetPlanningMonth(String budgetPlanningMonth)
-    {
-        this.budgetPlanningMonth = budgetPlanningMonth;
-    }
-
-    public String getCountry()
-    {
-        return country;
-    }
-
-    public void setCountry(String country)
-    {
-        this.country = country;
-    }
-
-    public String getTownName()
-    {
-        return townName;
-    }
-
-    public void setTownName(String townName)
-    {
-        this.townName = townName;
-    }
-
-    public String getAddress()
-    {
-        return address;
-    }
-
-    public void setAddress(String address)
-    {
-        this.address = address;
-    }
-
-    public String getWebUrl()
-    {
-        return webUrl;
-    }
-
-    public void setWebUrl(String webUrl)
-    {
-        this.webUrl = webUrl;
-    }
-
     public boolean shouldContactInFuture()
     {
         return contactInFuture;
-    }
-
-    public void setContactInFuture(boolean contactInFuture)
-    {
-        this.contactInFuture = contactInFuture;
-    }
-    public Set<Contact> getContacts(){
-        return this.contacts;
     }
 
     public void updateWith(CompanyDto companyDto){

@@ -110,7 +110,7 @@ export default function Project() {
 
     try {
       const serverResponse = await fetch(
-        "/projects/" + projectId,
+        "/api/projects/" + projectId,
         {
           method: "GET",
           headers: { googleTokenEncoded: JWToken.credential },

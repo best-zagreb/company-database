@@ -142,7 +142,7 @@ export default function User() {
 
     try {
       const serverResponse = await fetch(
-        "/users/" + userId,
+        "/api/users/" + userId,
         {
           method: "GET",
           headers: { googleTokenEncoded: JWToken.credential },
