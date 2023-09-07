@@ -92,7 +92,7 @@ export default function Companies() {
   }
 
   function handleView(company) {
-    navigate("/companies/" + encodeURIComponent(company.name));
+    navigate("/companies/" + company.id);
   }
 
   function handleEdit(company) {

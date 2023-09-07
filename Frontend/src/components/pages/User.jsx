@@ -40,7 +40,11 @@ import TableComponent from "./partial/TableComponent";
 
 const tableColumns = [
   {
-    key: "name",
+    key: "companyName",
+    label: "Company name",
+  },
+  {
+    key: "projectName",
     label: "Project name",
   },
   {
@@ -80,19 +84,40 @@ const tableColumns = [
   },
 ];
 
-function handleEditContact(e, id) {
-  // TODO: make a PUT request na /companies/{id}/contacts/{id} and then update contacts list
-  console.log("Editing a contact is not yet implemented!");
-  // setEditFormModal(true);
-}
+const userInfo = {
+  loginEmail: "john.doe@gmail.com",
+  authority: "ADMINISTRATOR",
+  firstName: "John",
+  lastName: "Doe",
+  notificationEmail: "john.doe@gmail.com",
+  description: "Default humanoid being.",
+  nickname: "JD",
+  projects: [
+    {
+      id: 1,
+      name: "Javor",
+      authority: "Member",
+    }
+  ],
+  collaborations: [
+    {
+      id: 1,
+      companyName: "Company",
+      projectName: "Project",
+      responsible: "John Doe",
+      contact: "Jane Smith",
+      priority: false,
+      category: "FINANCIAL",
+      status: "CONTACTED",
+      comment:
+        "Sample comment 1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa a daw dawdawwd awdawda dwd ",
+      achievedValue: 75,
+    }
+  ],
+};
 
-function handleDeleteContact(e, id) {
-  // TODO: make a DELETE request na /companies/{id}/contacts/{id} and then update contacts list
-  console.log("Deleting a contact is not yet implemented!");
-}
-
-export default function Company() {
-  const { companyId } = useParams();
+export default function User() {
+  const { userId } = useParams();
   const navigate = useNavigate();
 
   const { handleOpenToast } = useContext(ToastContext);
@@ -105,19 +130,19 @@ export default function Company() {
     useState(false);
   const [collaboration, setCollaboration] = useState();
 
-  const [company, setCompany] = useState([]);
+  const [user, setUser] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
-  async function fetchCompany() {
+  async function fetchUser() {
     setLoading(true);
 
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
       const serverResponse = await fetch(
-        "/api/companies/" + companyId,
+        "/api/users/" + userId,
         {
           method: "GET",
           headers: { googleTokenEncoded: JWToken.credential },
@@ -126,7 +151,7 @@ export default function Company() {
       if (serverResponse.ok) {
         const json = await serverResponse.json();
 
-        setCompany(json);
+        setUser(json);
         setSearchResults(
           json.collaborations
             .map((collaboration) => {
@@ -157,14 +182,18 @@ export default function Company() {
 
   function handleDeleteCollaboration(collaboration) {
     setObject({ type: "Collaboration", name: collaboration.name });
-    setEndpoint("/api/collaborations/" + collaboration.id);
-    setPopulateObjects({ function: fetchCompany });
+    setEndpoint("/collaborations/" + collaboration.id);
+    setPopulateObjects({ function: fetchUser });
 
     setOpenDeleteAlert(true);
   }
 
   useEffect(() => {
-    fetchCompany();
+    fetchUser();
+
+    setSearchResults(
+      userInfo.collaborations.sort((a, b) => (b.priority ? 1 : -1))
+    ); // TODO: remove when backend is connected
   }, []);
 
   return (
@@ -173,14 +202,14 @@ export default function Company() {
         contact={contact}
         openModal={openContactFormModal}
         setOpenModal={setOpenContactFormModal}
-        fetchData={fetchCompany}
+        fetchData={fetchUser}
       />
 
       <CollaborationForm
         collaboration={collaboration}
         openModal={openCollaborationFormModal}
         setOpenModal={setOpenCollaborationFormModal}
-        fetchData={fetchCompany}
+        fetchData={fetchUser}
       />
 
       <Box
@@ -202,7 +231,7 @@ export default function Company() {
             variant="contained"
             startIcon={<KeyboardArrowLeftIcon />}
             onClick={() => {
-              navigate("/companies");
+              navigate("/users");
             }}
             sx={{
               borderTopLeftRadius: 0,
@@ -211,7 +240,7 @@ export default function Company() {
               marginBlock: 2,
             }}
           >
-            Companies
+            Users
           </Button>
 
           <Container
@@ -228,7 +257,7 @@ export default function Company() {
                 textTransform: "uppercase",
               }}
             >
-              {company.name}
+              {userInfo.firstName + ' ' + userInfo.lastName}
             </Typography>
 
             <Accordion defaultExpanded sx={{ marginBlock: 2 }}>
@@ -238,82 +267,38 @@ export default function Company() {
                     textTransform: "uppercase",
                   }}
                 >
-                  COMPANY INFO
+                  USER INFO
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <List dense>
                   <ListItem disablePadding>
-                    <ListItemText primary={"Sector: " + company.sector} />
+                    <ListItemText primary={"Login email: " + userInfo.loginEmail} />
                   </ListItem>
 
                   <ListItem disablePadding>
                     <ListItemText
-                      primary={"ABC Category: " + company.abcCategory}
+                      primary={"Authority: " + userInfo.authority}
                     />
                   </ListItem>
 
                   <ListItem disablePadding>
                     <ListItemText
-                      primary={
-                        "Budget planning month: " +
-                        company.budgetPlanningMonth
-                      }
+                      primary={"Notification email: " + userInfo.notificationEmail}
                     />
                   </ListItem>
 
                   <ListItem disablePadding>
-                    <ListItemText primary={"Country: " + company.country} />
-                  </ListItem>
-
-                  <ListItem disablePadding>
-                    <ListItemText primary={"Town: " + company.townName} />
-                  </ListItem>
-
-                  <ListItem disablePadding>
-                    <ListItemText primary={"Address: " + company.address} />
+                    <ListItemText primary={"Nickname: " + userInfo.nickname} />
                   </ListItem>
 
                   <ListItem disablePadding>
                     <ListItemText
-                      primary={
-                        <Typography sx={{ fontSize: 10.5 }}>
-                          Web:{" "}
-                          <Link
-                            href={company.webURL}
-                            underline="hover"
-                            target="_blank"
-                            rel="noopener"
-                          >
-                            {company.webURL}
-                          </Link>
-                        </Typography>
-                      }
-                    />
-                  </ListItem>
-
-                  <ListItem disablePadding>
-                    <ListItemText
-                      primary={"Description: " + company.description}
+                      primary={"Description: " + userInfo.description}
                       sx={{ maxHeight: 60, overflowY: "auto" }}
                     />
                   </ListItem>
                 </List>
-
-                {company.contactInFuture === false && (
-                  <Typography
-                    sx={{
-                      marginTop: 1,
-
-                      fontWeight: 700,
-                      fontSize: "1.375rem",
-                      textAlign: "center",
-                      color: "red",
-                    }}
-                  >
-                    DO NOT CONTACT
-                  </Typography>
-                )}
               </AccordionDetails>
             </Accordion>
 
@@ -328,12 +313,12 @@ export default function Company() {
                     textTransform: "uppercase",
                   }}
                 >
-                  CONTACTS
+                  PROJECTS
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                {company.contacts?.map((contact) => (
-                  <Box key={contact.id} sx={{ marginBlock: 2 }}>
+                {userInfo.projects?.map((project) => (
+                  <Box key={project.id} sx={{ marginBlock: 2 }}>
                     <Box
                       sx={{
                         display: "flex",
@@ -342,110 +327,20 @@ export default function Company() {
                       }}
                     >
                       <Typography>
-                        {contact.firstName + " " + contact.lastName}
+                        {project.name}
                       </Typography>
-                      <Box>
-                        <IconButton
-                          aria-label="edit contact"
-                          onClick={(e) => handleEditContact(e, contact.id)}
-                          sx={{
-                            width: 20,
-                            height: 20,
-
-                            margin: 0.125,
-
-                            color: "white",
-                            backgroundColor: "#1976d2",
-                            borderRadius: 1,
-                          }}
-                        >
-                          <EditIcon
-                            sx={{
-                              width: 15,
-                              height: 15,
-                            }}
-                          />
-                        </IconButton>
-
-                        <IconButton
-                          aria-label="delete contact"
-                          onClick={(e) => handleDeleteContact(e, contact.id)}
-                          sx={{
-                            width: 20,
-                            height: 20,
-
-                            margin: 0.125,
-
-                            color: "white",
-                            backgroundColor: "#1976d2",
-                            borderRadius: 1,
-                          }}
-                        >
-                          <DeleteIcon
-                            sx={{
-                              width: 15,
-                              height: 15,
-                            }}
-                          />
-                        </IconButton>
-                      </Box>
                     </Box>
 
                     <List dense>
-                      <ListItem disablePadding>
-                        <ListItemIcon sx={{ minWidth: 25 }}>
-                          <EmailIcon />
-                        </ListItemIcon>
+                      <ListItem>
                         <ListItemText
-                          primary={contact.email}
-                          sx={{
-                            overflow: "hidden",
-                          }}
-                        />
-                      </ListItem>
-
-                      <ListItem disablePadding>
-                        <ListItemIcon sx={{ minWidth: 25 }}>
-                          <PhoneIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={contact.tel}
-                          sx={{ overflow: "hidden" }}
-                        />
-                      </ListItem>
-
-                      <ListItem disablePadding>
-                        <ListItemIcon sx={{ minWidth: 25 }}>
-                          <WorkIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={contact.position}
-                          sx={{ overflow: "hidden" }}
-                        />
-                      </ListItem>
-
-                      <ListItem disablePadding>
-                        <ListItemIcon sx={{ minWidth: 25 }}>
-                          <DescriptionIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={contact.description}
+                          primary={"    - " + project.authority}
                           sx={{ overflow: "hidden" }}
                         />
                       </ListItem>
                     </List>
                   </Box>
                 ))}
-
-                <Box sx={{ display: "grid", placeItems: "center" }}>
-                  <Button
-                    variant="contained"
-                    startIcon={<AddCircleIcon />}
-                    onClick={() => setOpenContactFormModal(true)}
-                  >
-                    Add contact
-                  </Button>
-                </Box>
               </AccordionDetails>
             </Accordion>
           </Container>
@@ -472,7 +367,7 @@ export default function Company() {
           >
             <SearchBar
               type="collaborations"
-              data={company.collaborations}
+              data={userInfo.collaborations}
               setSearchResults={setSearchResults}
             />
 
@@ -494,7 +389,7 @@ export default function Company() {
               <Box sx={{ display: "grid", placeItems: "center" }}>
                 <CircularProgress size={100} />
               </Box>
-            ) : company.collaborations?.length <= 0 ? (
+            ) : userInfo.collaborations?.length <= 0 ? (
               <Typography variant="h4" align="center">
                 {"No collaborations :("}
               </Typography>
