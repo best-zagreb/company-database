@@ -5,11 +5,9 @@ import {
   Typography,
   Container,
   Button,
-  Link,
   Box,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
   IconButton,
   CircularProgress,
@@ -17,20 +15,15 @@ import {
 import {
   KeyboardArrowLeft as KeyboardArrowLeftIcon,
   ExpandMore as ExpandMoreIcon,
-  Email as EmailIcon,
-  Phone as PhoneIcon,
-  Work as WorkIcon,
-  Description as DescriptionIcon,
   AddCircle as AddCircleIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Clear as RemoveIcon
+  Clear as RemoveIcon,
 } from "@mui/icons-material/";
 
-import * as moment from "moment"
+import * as moment from "moment";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import UserContext from "../../context/UserContext";
 import ToastContext from "../../context/ToastContext";
 import DeleteAlertContext from "../../context/DeleteAlertContext";
 
@@ -81,7 +74,7 @@ const tableColumns = [
   },
 ];
 
-function handleRemoveProjectMember(e, id) {
+function handleRemoveProjectMember(id) {
   // TODO: make a DELETE request na /projects/{id}/teamMembers/{id} and then update frTeamMembers list
   console.log("Deleting a team member is not yet implemented!");
 }
@@ -90,6 +83,7 @@ export default function Project() {
   const { projectId } = useParams();
   const navigate = useNavigate();
 
+  const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
   const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
     useContext(DeleteAlertContext);
@@ -109,16 +103,12 @@ export default function Project() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch(
-        "/api/projects/" + projectId,
-        {
-          method: "GET",
-          headers: { googleTokenEncoded: JWToken.credential },
-        }
-      );
+      const serverResponse = await fetch("/api/projects/" + projectId, {
+        method: "GET",
+        headers: { googleTokenEncoded: JWToken.credential },
+      });
       if (serverResponse.ok) {
         const json = await serverResponse.json();
-        console.log(json);
 
         setProject(json);
         setSearchResults(
@@ -218,7 +208,7 @@ export default function Project() {
               {project.name}
             </Typography>
 
-            <Accordion defaultExpanded sx={{ marginBlock: 2 }}>
+            <Accordion defaultExpanded>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography
                   sx={{
@@ -235,103 +225,147 @@ export default function Project() {
                   </ListItem>
 
                   <ListItem disablePadding>
+                    <ListItemText primary={"Type: " + project.type} />
+                  </ListItem>
+
+                  <ListItem disablePadding>
                     <ListItemText
-                      primary={"Type: " + project.type}
+                      primary={
+                        "Start date: " +
+                        moment(project.startDate).format("DD.MM.YYYY")
+                      }
                     />
                   </ListItem>
 
-                    <ListItem disablePadding>
-                      <ListItemText
-                        primary={"Start date: " + moment(project.startDate).format('DD.MM.YYYY')}
-                      />
-                    </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={
+                        "End date: " +
+                        moment(project.endDate).format("DD.MM.YYYY")
+                      }
+                    />
+                  </ListItem>
 
-                    <ListItem disablePadding>
-                      <ListItemText
-                        primary={"End date: " + moment(project.endDate).format('DD.MM.YYYY')}
-                      />
-                    </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={
+                        "Project responsible: " +
+                        project.frresp?.firstName +
+                        " " +
+                        project.frresp?.lastName
+                      }
+                    />
+                  </ListItem>
 
+                  {/* TODO: user.maxAuthLevel >= 3 
+                  || (user.maxAuthLevel >= 2 && user is responsible for that project) 
+                  || (user.maxAuthLevel >= 1 && user is project member) */}
+                  {user?.maxAuthLevel >= 3 && (
                     <ListItem disablePadding>
                       <ListItemText
-                        primary={"Fr responsible: " + project.frresp?.firstName + " " + project.frresp?.lastName}
+                        primary={"Project goal: " + project.frgoal}
                       />
                     </ListItem>
+                  )}
 
+                  {/* TODO: user.maxAuthLevel >= 3 
+                  || (user.maxAuthLevel >= 2 && user is responsible for that project) 
+                  || (user.maxAuthLevel >= 1 && user is project member) */}
+                  {user?.maxAuthLevel >= 3 && (
                     <ListItem disablePadding>
                       <ListItemText
-                        primary={"Fr goal: " + project.frgoal}
+                        primary={
+                          "First ping date: " +
+                          (project.firstPingDate
+                            ? moment(project.firstPingDate).format("DD.MM.YYYY")
+                            : "")
+                        }
                       />
                     </ListItem>
+                  )}
 
+                  {/* TODO: user.maxAuthLevel >= 3 
+                  || (user.maxAuthLevel >= 2 && user is responsible for that project) 
+                  || (user.maxAuthLevel >= 1 && user is project member) */}
+                  {user?.maxAuthLevel >= 3 && (
                     <ListItem disablePadding>
                       <ListItemText
-                        primary={"First ping date: " + (project.firstPingDate ? moment(project.firstPingDate).format('DD.MM.YYYY') : "")}
+                        primary={
+                          "Second ping date: " +
+                          (project.secondPingDate
+                            ? moment(project.secondPingDate).format(
+                                "DD.MM.YYYY"
+                              )
+                            : "")
+                        }
                       />
                     </ListItem>
-
-                    <ListItem disablePadding>
-                      <ListItemText
-                        primary={"Second ping date: " + (project.secondPingDate ? moment(project.secondPingDate).format('DD.MM.YYYY') : "")}
-                      />
-                    </ListItem>
+                  )}
                 </List>
               </AccordionDetails>
             </Accordion>
 
-            <Accordion
-              sx={{
-                marginBlock: 2,
-              }}
-            >
+            <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography
                   sx={{
                     textTransform: "uppercase",
                   }}
                 >
-                  TEAM MEMBERS
+                  Project members
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                {project.frTeamMembers?.map((frTeamMember) => (
-                  <Box key={frTeamMember.id} sx={{ marginBlock: 2 }}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography>
-                        {frTeamMember.firstName + " " + frTeamMember.lastName}
-                      </Typography>
-                      <Box>
-                        <IconButton
-                          aria-label="delete frTeamMember"
-                          onClick={(e) => handleRemoveProjectMember(e, frTeamMember.id)}
-                          sx={{
-                            width: 20,
-                            height: 20,
+                {project.frTeamMembers?.length > 0 ? (
+                  <List dense>
+                    {project.frTeamMembers.map((member) => (
+                      <ListItem key={member.id} disableGutters disablePadding>
+                        <ListItemText
+                          primary={member.firstName + " " + member.lastName}
+                        />
 
-                            margin: 0.125,
-
-                            color: "white",
-                            backgroundColor: "#1976d2",
-                            borderRadius: 1,
-                          }}
-                        >
-                          <RemoveIcon
+                        {/* TODO: user.maxAuthLevel >= 4 
+                      || (user.maxAuthLevel >= 3 && user is creator of that project) 
+                      || (user.maxAuthLevel >= 2 && user is project responsible for that project) */}
+                        {user?.maxAuthLevel >= 4 && (
+                          <IconButton
+                            onClick={handleRemoveProjectMember(member.id)}
+                            size={"small"}
                             sx={{
-                              width: 15,
-                              height: 15,
+                              width: 20,
+                              height: 20,
+
+                              color: "white",
+                              backgroundColor: "#1976d2",
+                              borderRadius: 1,
                             }}
-                          />
-                        </IconButton>
-                      </Box>
-                    </Box>
+                          >
+                            <RemoveIcon />
+                          </IconButton>
+                        )}
+                      </ListItem>
+                    ))}
+                  </List>
+                ) : (
+                  <Typography variant="h6" align="center" gutterBottom>
+                    {"No project members :("}
+                  </Typography>
+                )}
+
+                {/* TODO: user.maxAuthLevel >= 4 
+                || (user.maxAuthLevel >= 3 && user is creator of that project) 
+                || (user.maxAuthLevel >= 2 && user is project responsible for that project) */}
+                {user?.maxAuthLevel >= 4 && (
+                  <Box sx={{ display: "grid", placeItems: "center" }}>
+                    <Button
+                      variant="contained"
+                      startIcon={<AddCircleIcon />}
+                      onClick={() => setOpenContactFormModal(true)}
+                    >
+                      Add project member
+                    </Button>
                   </Box>
-                ))}
+                )}
               </AccordionDetails>
             </Accordion>
           </Container>
@@ -362,39 +396,61 @@ export default function Project() {
               setSearchResults={setSearchResults}
             />
 
-            <Button
-              variant="contained"
-              size="medium"
-              startIcon={<AddCircleIcon />}
-              onClick={() => {
-                setCollaboration();
-                setOpenCollaborationFormModal(true);
-              }}
-            >
-              Add collaboration
-            </Button>
-          </Container>
-
-          <Container maxWidth="false">
-            {loading ? (
-              <Box sx={{ display: "grid", placeItems: "center" }}>
-                <CircularProgress size={100} />
-              </Box>
-            ) : project.collaborations?.length <= 0 ? (
-              <Typography variant="h4" align="center">
-                {"No collaborations :("}
-              </Typography>
-            ) : (
-              <TableComponent
-                tableColumns={tableColumns}
-                searchResults={searchResults}
-                setSearchResults={setSearchResults}
-                // TODO: handleView={handleView} when we add activites
-                handleEdit={handleEditCollaboration}
-                handleDelete={handleDeleteCollaboration}
-              ></TableComponent>
+            {/* TODO: user.maxAuthLevel >= 4 
+            || (user.maxAuthLevel >= 3 && user is creator of that project) 
+            || (user.maxAuthLevel >= 2 && user is project responsible for that project) */}
+            {user?.maxAuthLevel >= 4 && (
+              <Button
+                variant="contained"
+                size="medium"
+                startIcon={<AddCircleIcon />}
+                onClick={() => {
+                  setCollaboration();
+                  setOpenCollaborationFormModal(true);
+                }}
+              >
+                Add collaboration
+              </Button>
             )}
           </Container>
+
+          {/* TODO: user.maxAuthLevel >= 3 
+          || (user.maxAuthLevel >= 2 && user is responsible for that project) 
+          || (user.maxAuthLevel >= 1 && user is project member) */}
+          {user?.maxAuthLevel >= 3 && (
+            <Container maxWidth="false">
+              {loading ? (
+                <Box sx={{ display: "grid", placeItems: "center" }}>
+                  <CircularProgress size={100} />
+                </Box>
+              ) : project.collaborations?.length > 0 ? (
+                <TableComponent
+                  tableColumns={tableColumns}
+                  searchResults={searchResults}
+                  setSearchResults={setSearchResults}
+                  // TODO: handleView={handleView} when we add activites
+
+                  // TODO: user.maxAuthLevel >= 4
+                  // || (user.maxAuthLevel >= 3 && user is creator of that project)
+                  // || (user.maxAuthLevel >= 2 && user is project responsible for that project)
+                  // || (user.maxAuthLevel >= 1 && user is responsible for the company in that collaboration)
+                  handleEdit={
+                    user?.maxAuthLevel >= 4 && handleEditCollaboration
+                  }
+                  // TODO: user.maxAuthLevel >= 4
+                  // || (user.maxAuthLevel >= 3 && user is creator of that project)
+                  // || (user.maxAuthLevel >= 2 && user is project responsible for that project)
+                  handleDelete={
+                    user?.maxAuthLevel >= 4 && handleDeleteCollaboration
+                  }
+                />
+              ) : (
+                <Typography variant="h4" align="center">
+                  {"No collaborations :("}
+                </Typography>
+              )}
+            </Container>
+          )}
         </Box>
       </Box>
     </>

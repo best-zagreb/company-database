@@ -5,38 +5,74 @@ import {
   Typography,
   Container,
   Button,
-  Link,
   Box,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
-  IconButton,
   CircularProgress,
 } from "@mui/material";
 import {
   KeyboardArrowLeft as KeyboardArrowLeftIcon,
   ExpandMore as ExpandMoreIcon,
-  Email as EmailIcon,
-  Phone as PhoneIcon,
-  Work as WorkIcon,
-  Description as DescriptionIcon,
-  AddCircle as AddCircleIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
 } from "@mui/icons-material/";
 
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import UserContext from "../../context/UserContext";
 import ToastContext from "../../context/ToastContext";
 import DeleteAlertContext from "../../context/DeleteAlertContext";
 
-import ContactForm from "../forms/ContactForm";
-import CollaborationForm from "../forms/CollaborationForm";
-
 import SearchBar from "./partial/SearchBar";
 import TableComponent from "./partial/TableComponent";
+
+const userTemplateInfo = {
+  loginEmail: "john.doe@gmail.com",
+  authority: "ADMINISTRATOR",
+  firstName: "John",
+  lastName: "Doe",
+  notificationEmail: "john.doe@gmail.com",
+  description: "Default humanoid being.",
+  nickname: "JD",
+  responsibilities: [
+    {
+      projectName: "Some project name",
+      function: "Project member",
+    },
+    {
+      projectName: "Some other project",
+      function: "Project responsible",
+    },
+  ],
+  collaborations: [
+    {
+      id: 1,
+      companyName: "Company",
+      projectName: "Project",
+      responsible: "John Doe",
+      contact: "Jane Smith",
+      priority: false,
+      category: "FINANCIAL",
+      status: "CONTACTED",
+      comment:
+        "Sample comment 1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa a daw dawdawwd awdawda dwd ",
+      achievedValue: 75,
+    },
+    {
+      id: 2,
+      companyName: "Company name other",
+      projectName: "Project other",
+      responsible: "John Doe",
+      contact: "Jane Smith",
+      priority: true,
+      category: "FINANCIAL",
+      status: "CONTACTED",
+      comment:
+        "Sample comment 1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa a daw dawdawwd awdawda dwd ",
+      achievedValue: 75,
+    },
+  ],
+};
 
 const tableColumns = [
   {
@@ -84,42 +120,17 @@ const tableColumns = [
   },
 ];
 
-const userInfo = {
-  loginEmail: "john.doe@gmail.com",
-  authority: "ADMINISTRATOR",
-  firstName: "John",
-  lastName: "Doe",
-  notificationEmail: "john.doe@gmail.com",
-  description: "Default humanoid being.",
-  nickname: "JD",
-  projects: [
-    {
-      id: 1,
-      name: "Javor",
-      authority: "Member",
-    }
-  ],
-  collaborations: [
-    {
-      id: 1,
-      companyName: "Company",
-      projectName: "Project",
-      responsible: "John Doe",
-      contact: "Jane Smith",
-      priority: false,
-      category: "FINANCIAL",
-      status: "CONTACTED",
-      comment:
-        "Sample comment 1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa a daw dawdawwd awdawda dwd ",
-      achievedValue: 75,
-    }
-  ],
-};
+function filterCollabsColumns(columnsArray) {
+  const keysToKeep = ["companyName", "projectName"];
+
+  return columnsArray.filter((obj) => keysToKeep.includes(obj.key));
+}
 
 export default function User() {
   const { userId } = useParams();
   const navigate = useNavigate();
 
+  const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
   const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
     useContext(DeleteAlertContext);
@@ -130,7 +141,7 @@ export default function User() {
     useState(false);
   const [collaboration, setCollaboration] = useState();
 
-  const [user, setUser] = useState([]);
+  const [userInfo, setUserInfo] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -141,17 +152,14 @@ export default function User() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch(
-        "/api/users/" + userId,
-        {
-          method: "GET",
-          headers: { googleTokenEncoded: JWToken.credential },
-        }
-      );
+      const serverResponse = await fetch("/api/users/" + userId, {
+        method: "GET",
+        headers: { googleTokenEncoded: JWToken.credential },
+      });
       if (serverResponse.ok) {
         const json = await serverResponse.json();
 
-        setUser(json);
+        setUserInfo(json);
         setSearchResults(
           json.collaborations
             .map((collaboration) => {
@@ -192,26 +200,12 @@ export default function User() {
     fetchUser();
 
     setSearchResults(
-      userInfo.collaborations.sort((a, b) => (b.priority ? 1 : -1))
+      userTemplateInfo.collaborations.sort((a, b) => (b.priority ? 1 : -1))
     ); // TODO: remove when backend is connected
   }, []);
 
   return (
     <>
-      <ContactForm
-        contact={contact}
-        openModal={openContactFormModal}
-        setOpenModal={setOpenContactFormModal}
-        fetchData={fetchUser}
-      />
-
-      <CollaborationForm
-        collaboration={collaboration}
-        openModal={openCollaborationFormModal}
-        setOpenModal={setOpenCollaborationFormModal}
-        fetchData={fetchUser}
-      />
-
       <Box
         sx={{
           display: "flex",
@@ -257,10 +251,10 @@ export default function User() {
                 textTransform: "uppercase",
               }}
             >
-              {userInfo.firstName + ' ' + userInfo.lastName}
+              {userTemplateInfo.firstName + " " + userTemplateInfo.lastName}
             </Typography>
 
-            <Accordion defaultExpanded sx={{ marginBlock: 2 }}>
+            <Accordion defaultExpanded>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography
                   sx={{
@@ -273,28 +267,35 @@ export default function User() {
               <AccordionDetails>
                 <List dense>
                   <ListItem disablePadding>
-                    <ListItemText primary={"Login email: " + userInfo.loginEmail} />
-                  </ListItem>
-
-                  <ListItem disablePadding>
                     <ListItemText
-                      primary={"Authority: " + userInfo.authority}
+                      primary={"Login email: " + userTemplateInfo.loginEmail}
                     />
                   </ListItem>
 
                   <ListItem disablePadding>
                     <ListItemText
-                      primary={"Notification email: " + userInfo.notificationEmail}
+                      primary={"Authority: " + userTemplateInfo.authority}
                     />
                   </ListItem>
 
                   <ListItem disablePadding>
-                    <ListItemText primary={"Nickname: " + userInfo.nickname} />
+                    <ListItemText
+                      primary={
+                        "Notification email: " +
+                        userTemplateInfo.notificationEmail
+                      }
+                    />
                   </ListItem>
 
                   <ListItem disablePadding>
                     <ListItemText
-                      primary={"Description: " + userInfo.description}
+                      primary={"Nickname: " + userTemplateInfo.nickname}
+                    />
+                  </ListItem>
+
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={"Description: " + userTemplateInfo.description}
                       sx={{ maxHeight: 60, overflowY: "auto" }}
                     />
                   </ListItem>
@@ -302,45 +303,38 @@ export default function User() {
               </AccordionDetails>
             </Accordion>
 
-            <Accordion
-              sx={{
-                marginBlock: 2,
-              }}
-            >
+            <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography
                   sx={{
                     textTransform: "uppercase",
                   }}
                 >
-                  PROJECTS
+                  Responsibilities
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                {userInfo.projects?.map((project) => (
-                  <Box key={project.id} sx={{ marginBlock: 2 }}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography>
-                        {project.name}
-                      </Typography>
-                    </Box>
-
-                    <List dense>
-                      <ListItem>
+                {userTemplateInfo.responsibilities?.length > 0 ? (
+                  <List dense>
+                    {userTemplateInfo.responsibilities.map((responsibility) => (
+                      <ListItem
+                        key={responsibility.projectName}
+                        disableGutters
+                        disablePadding
+                      >
                         <ListItemText
-                          primary={"    - " + project.authority}
-                          sx={{ overflow: "hidden" }}
+                          primary={responsibility.projectName}
+                          secondary={responsibility.function}
+                          secondaryTypographyProps={{ sx: { paddingLeft: 2 } }}
                         />
                       </ListItem>
-                    </List>
-                  </Box>
-                ))}
+                    ))}
+                  </List>
+                ) : (
+                  <Typography variant="h6" align="center" gutterBottom>
+                    {"No responsibilities :("}
+                  </Typography>
+                )}
               </AccordionDetails>
             </Accordion>
           </Container>
@@ -367,21 +361,9 @@ export default function User() {
           >
             <SearchBar
               type="collaborations"
-              data={userInfo.collaborations}
+              data={userTemplateInfo.collaborations}
               setSearchResults={setSearchResults}
             />
-
-            <Button
-              variant="contained"
-              size="medium"
-              startIcon={<AddCircleIcon />}
-              onClick={() => {
-                setCollaboration();
-                setOpenCollaborationFormModal(true);
-              }}
-            >
-              Add collaboration
-            </Button>
           </Container>
 
           <Container maxWidth="false">
@@ -389,19 +371,34 @@ export default function User() {
               <Box sx={{ display: "grid", placeItems: "center" }}>
                 <CircularProgress size={100} />
               </Box>
-            ) : userInfo.collaborations?.length <= 0 ? (
-              <Typography variant="h4" align="center">
-                {"No collaborations :("}
-              </Typography>
-            ) : (
+            ) : userTemplateInfo.collaborations?.length > 0 ? (
               <TableComponent
-                tableColumns={tableColumns}
+                // TODO: user.maxAuthLevel >= 3
+                // || (user.maxAuthLevel >= 0 && user himself)
+                tableColumns={
+                  user?.maxAuthLevel >= 3
+                    ? tableColumns
+                    : filterCollabsColumns(tableColumns)
+                }
                 searchResults={searchResults}
                 setSearchResults={setSearchResults}
                 // TODO: handleView={handleView} when we add activites
-                handleEdit={handleEditCollaboration}
-                handleDelete={handleDeleteCollaboration}
-              ></TableComponent>
+                // TODO: user.maxAuthLevel >= 4
+                // || (user.maxAuthLevel >= 3 && user is creator of that project)
+                // || (user.maxAuthLevel >= 2 && user is project responsible for that project)
+                // || (user.maxAuthLevel >= 1 && user is responsible for the company in that collaboration)
+                handleEdit={user?.maxAuthLevel >= 4 && handleEditCollaboration}
+                // TODO: user.maxAuthLevel >= 4
+                // || (user.maxAuthLevel >= 3 && user is creator of that project)
+                // || (user.maxAuthLevel >= 2 && user is project responsible for that project)
+                handleDelete={
+                  user?.maxAuthLevel >= 4 && handleDeleteCollaboration
+                }
+              />
+            ) : (
+              <Typography variant="h4" align="center">
+                {"No collaborations :("}
+              </Typography>
             )}
           </Container>
         </Box>

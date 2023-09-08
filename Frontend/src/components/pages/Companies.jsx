@@ -10,6 +10,7 @@ import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
+import UserContext from "../../context/UserContext";
 import ToastContext from "../../context/ToastContext";
 import DeleteAlertContext from "../../context/DeleteAlertContext";
 
@@ -31,11 +32,13 @@ const tableColumns = [
     key: "abcCategory",
     label: "ABC categorization",
     xsHide: true,
+    minAuthLevel: 2,
   },
   {
     key: "budgetPlanningMonth",
     label: "Budget planning month",
     xsHide: true,
+    minAuthLevel: 2,
   },
   {
     key: "webUrl",
@@ -47,6 +50,7 @@ const tableColumns = [
 export default function Companies() {
   const navigate = useNavigate();
 
+  const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
   const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
     useContext(DeleteAlertContext);
@@ -138,17 +142,19 @@ export default function Companies() {
           setSearchResults={setSearchResults}
         />
 
-        <Button
-          variant="contained"
-          size="medium"
-          startIcon={<AddCircleIcon />}
-          onClick={() => {
-            setCompany();
-            setOpenFormModal(true);
-          }}
-        >
-          Add company
-        </Button>
+        {user?.maxAuthLevel >= 2 && (
+          <Button
+            variant="contained"
+            size="medium"
+            startIcon={<AddCircleIcon />}
+            onClick={() => {
+              setCompany();
+              setOpenFormModal(true);
+            }}
+          >
+            Add company
+          </Button>
+        )}
       </Container>
 
       <Container maxWidth="false">
@@ -156,19 +162,19 @@ export default function Companies() {
           <Box sx={{ display: "grid", placeItems: "center" }}>
             <CircularProgress size={100} />
           </Box>
-        ) : data?.length <= 0 ? (
-          <Typography variant="h4" align="center">
-            {"No companies :("}
-          </Typography>
-        ) : (
+        ) : data?.length > 0 ? (
           <TableComponent
             tableColumns={tableColumns}
             searchResults={searchResults}
             setSearchResults={setSearchResults}
-            handleView={handleView}
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
-          ></TableComponent>
+            handleView={user.maxAuthLevel >= 2 && handleView}
+            handleEdit={user.maxAuthLevel >= 3 && handleEdit}
+            handleDelete={user.maxAuthLevel >= 3 && handleDelete}
+          />
+        ) : (
+          <Typography variant="h4" align="center">
+            {"No companies :("}
+          </Typography>
         )}
       </Container>
     </>

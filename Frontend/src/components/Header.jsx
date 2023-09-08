@@ -51,6 +51,7 @@ export default function Header({ setUserIsLoggedIn }) {
   };
 
   const handleOpenUserMenu = (event) => {
+    console.log(user);
     setAnchorElUser(event.currentTarget);
   };
   const handleCloseUserMenu = () => {
