@@ -20,10 +20,10 @@ import SearchBar from "./partial/SearchBar";
 import TableComponent from "./partial/TableComponent";
 
 const tableColumns = [
-  { key: "name", label: "Project name", minAuthLevel: 0 },
-  { key: "category", label: "Category", xsHide: true, minAuthLevel: 0 },
-  { key: "frresp", label: "Project responsible", minAuthLevel: 0 },
-  { key: "endDate", label: "Project end date", xsHide: true, minAuthLevel: 0 },
+  { key: "name", label: "Project name" },
+  { key: "category", label: "Category", xsHide: true },
+  { key: "frresp", label: "Project responsible" },
+  { key: "endDate", label: "Project end date", xsHide: true },
   { key: "frgoal", label: "Project goal", xsHide: true, minAuthLevel: 3 },
 ];
 

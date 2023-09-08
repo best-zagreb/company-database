@@ -19,10 +19,10 @@ import SearchBar from "./partial/SearchBar";
 import TableComponent from "./partial/TableComponent";
 
 const tableColumns = [
-  { key: "firstName", label: "Name", minAuthLevel: 0 },
-  { key: "lastName", label: "Surname", minAuthLevel: 0 },
-  { key: "nickname", label: "Nickname", xsHide: true, minAuthLevel: 0 },
-  { key: "loginEmail", label: "E-mail", xsHide: true, minAuthLevel: 0 },
+  { key: "firstName", label: "Name" },
+  { key: "lastName", label: "Surname" },
+  { key: "nickname", label: "Nickname", xsHide: true },
+  { key: "loginEmail", label: "E-mail", xsHide: true },
   {
     key: "authority",
     label: "Max authorization",
