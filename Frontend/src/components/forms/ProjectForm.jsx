@@ -82,7 +82,7 @@ export default function ProjectForm({
       } else {
         handleOpenToast({
           type: "error",
-          info: "A server error occurred whilst fetching users for FR responsible input field.",
+          info: "A server error occurred whilst fetching users for Project responsible input field.",
         });
       }
     } catch (error) {
@@ -459,7 +459,7 @@ export default function ProjectForm({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="FR responsible"
+                    label="Project responsible"
                     required
                     fullWidth
                     margin="dense"
