@@ -145,7 +145,7 @@ export default function Project() {
 
   function handleDeleteProject() {
     setObject({ type: "Project", name: project.name });
-    setEndpoint("/projects/" + project.id);
+    setEndpoint("/api/projects/" + project.id);
     setFetchUpdatedData({ function: navigateProjects });
 
     setOpenDeleteAlert(true);
@@ -195,7 +195,7 @@ export default function Project() {
 
   function handleDeleteCollaboration(collaboration) {
     setObject({ type: "Collaboration", name: collaboration.name });
-    setEndpoint("/collaborations/" + collaboration.id);
+    setEndpoint("/api/collaborations/" + collaboration.id);
     setFetchUpdatedData({ function: fetchProject });
 
     setOpenDeleteAlert(true);

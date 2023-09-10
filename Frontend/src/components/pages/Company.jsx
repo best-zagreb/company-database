@@ -158,7 +158,7 @@ export default function Company() {
 
   function handleDeleteCompany() {
     setObject({ type: "Company", name: company.name });
-    setEndpoint("/companies/" + company.id);
+    setEndpoint("/api/companies/" + company.id);
     setFetchUpdatedData({ function: navigateCompanies });
 
     setOpenDeleteAlert(true);

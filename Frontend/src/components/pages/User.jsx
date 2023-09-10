@@ -174,7 +174,7 @@ export default function User() {
 
   function handleDeleteUser() {
     setObject({ type: "User", name: user.firstName + " " + user.lastName });
-    setEndpoint("/users/" + user.id);
+    setEndpoint("/api/users/" + user.id);
     setFetchUpdatedData({ function: navigateUsers });
 
     setOpenDeleteAlert(true);
@@ -224,7 +224,7 @@ export default function User() {
 
   function handleDeleteCollaboration(collaboration) {
     setObject({ type: "Collaboration", name: collaboration.name });
-    setEndpoint("/collaborations/" + collaboration.id);
+    setEndpoint("/api/collaborations/" + collaboration.id);
     setFetchUpdatedData({ function: fetchUser });
 
     setOpenDeleteAlert(true);
