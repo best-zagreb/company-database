@@ -1,6 +1,7 @@
 package com.example.backend.user.controller;
 
 import com.example.backend.user.controller.dto.UserDTO;
+import com.example.backend.user.model.AUTHORITY;
 import com.example.backend.user.model.AppUser;
 import com.example.backend.user.service.UserService;
 import com.example.backend.util.JwtVerifier;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin

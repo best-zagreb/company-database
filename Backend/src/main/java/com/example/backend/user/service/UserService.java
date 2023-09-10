@@ -1,7 +1,6 @@
 package com.example.backend.user.service;
 
 
-import com.example.backend.project.model.Project;
 import com.example.backend.user.controller.dto.UserDTO;
 import com.example.backend.user.model.AUTHORITY;
 import com.example.backend.user.model.AppUser;
@@ -9,9 +8,6 @@ import com.example.backend.user.repo.UserRepository;
 import com.example.backend.util.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityNotFoundException;
-import java.util.HashSet;
 import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Optional;
@@ -62,9 +58,9 @@ public class UserService {
         else throw new EntityNotFoundException("User under id " + id + "not found.");
     }
 
-    public Boolean softLockUser(Long id) throws EntityNotFoundException
+    public Boolean softLockUser(Long id)
     {
-        AppUser user = getValue(userRepository.findById(id));
+        AppUser user = userRepository.findById(id).get();
         boolean newSoftLock = user.getSoftLock() == null || !user.getSoftLock();
         user.setSoftLock(newSoftLock);
         userRepository.save(user);

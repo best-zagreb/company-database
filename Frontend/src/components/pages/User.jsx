@@ -203,7 +203,7 @@ export default function User() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
     try {
       const serverResponse = await fetch(
-        "/companies/softLock/" + user.id,
+        "/api/companies/softLock/" + user.id,
         {
           method: "PUT",
           headers: { googleTokenEncoded: JWToken.credential },

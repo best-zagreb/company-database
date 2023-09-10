@@ -25,7 +25,7 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Lock as LockIcon,
-  LockOpen as LockOpenIcon
+  LockOpen as LockOpenIcon,
   Clear as RemoveIcon
 } from "@mui/icons-material/";
 
@@ -169,7 +169,7 @@ export default function Project() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
     try {
       const serverResponse = await fetch(
-        "/projects/softLock/" + project.id,
+        "/api/projects/softLock/" + project.id,
         {
           method: "PUT",
           headers: { googleTokenEncoded: JWToken.credential },

@@ -5,17 +5,17 @@ import com.example.backend.companies.service.CompanyService;
 import com.example.backend.project.controller.dto.CollaborationDTO;
 import com.example.backend.project.controller.dto.ProjectDTO;
 import com.example.backend.project.service.ProjectService;
+import com.example.backend.user.model.AUTHORITY;
 import com.example.backend.user.model.AppUser;
 import com.example.backend.user.service.UserService;
 import com.example.backend.util.JwtVerifier;
-import com.example.backend.util.exceptions.*;
+import com.example.backend.util.exceptions.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
-import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
 @SuppressWarnings("ALL")
