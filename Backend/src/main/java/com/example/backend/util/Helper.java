@@ -18,7 +18,7 @@ public class Helper {
 
     public static void checkUserAuthorities(AppUser user, List<AUTHORITY> authorities) throws AuthenticationException {
         if (user == null) throw new AuthenticationException("You don't have access to CDB.");
-        if (authorities.contains(user.getAuthority())){
+        if (!authorities.contains(user.getAuthority())){
             throw new AuthenticationException("You do not have permission to execute this command.");
         }
     }
