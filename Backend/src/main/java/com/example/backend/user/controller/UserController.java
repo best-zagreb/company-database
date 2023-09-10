@@ -30,7 +30,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/softLock/{userId}")
+    @PatchMapping("/{userId}/softLock")
     @ResponseBody
     public ResponseEntity<Boolean> softLockUser(@RequestHeader String googleTokenEncoded, @PathVariable Long userId){
         AppUser user = getUser(googleTokenEncoded);

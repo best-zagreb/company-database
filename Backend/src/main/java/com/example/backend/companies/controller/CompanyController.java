@@ -102,7 +102,7 @@ public class CompanyController
         }
     }
 
-    @PutMapping("/softLock/{companyId}")
+    @PatchMapping("/{companyId}/softLock")
     @ResponseBody
     public ResponseEntity<Boolean> softLockCompany(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId){
         AppUser user = getUser(googleTokenEncoded);

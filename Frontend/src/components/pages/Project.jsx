@@ -5,11 +5,9 @@ import {
   Typography,
   Container,
   Button,
-  Link,
   Box,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
   IconButton,
   CircularProgress,
@@ -18,10 +16,6 @@ import {
 import {
   KeyboardArrowLeft as KeyboardArrowLeftIcon,
   ExpandMore as ExpandMoreIcon,
-  Email as EmailIcon,
-  Phone as PhoneIcon,
-  Work as WorkIcon,
-  Description as DescriptionIcon,
   AddCircle as AddCircleIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -30,7 +24,7 @@ import {
   Clear as RemoveIcon,
 } from "@mui/icons-material/";
 
-import * as moment from "moment";
+import moment from "moment";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -106,11 +100,9 @@ export default function Project() {
 
   const [searchResults, setSearchResults] = useState([]);
 
-  const [loading, setLoading] = useState(true);
+  const [loadingSoftLockButton, setLoadingSoftLockButton] = useState(false);
 
   async function fetchProject() {
-    setLoading(true);
-
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
@@ -141,12 +133,9 @@ export default function Project() {
         info: "An error occurred whilst trying to connect to server.",
       });
     }
-
-    setLoading(false);
   }
 
-  async function handleEditProject() {
-    setProject(project);
+  function handleEditProject() {
     setOpenProjectFormModal(true);
   }
 
@@ -154,7 +143,7 @@ export default function Project() {
     navigate("/projects");
   }
 
-  async function handleDeleteProject() {
+  function handleDeleteProject() {
     setObject({ type: "Project", name: project.name });
     setEndpoint("/projects/" + project.id);
     setFetchUpdatedData({ function: navigateProjects });
@@ -163,19 +152,26 @@ export default function Project() {
   }
 
   async function handleSoftLockProject() {
-    setLoading(true);
+    setLoadingSoftLockButton(true);
+
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+
     try {
       const serverResponse = await fetch(
-        "/api/projects/softLock/" + project.id,
+        "/api/projects/" + project.id + "/softLock",
         {
-          method: "PUT",
+          method: "PATCH",
           headers: { googleTokenEncoded: JWToken.credential },
         }
       );
       if (serverResponse.ok) {
         const json = await serverResponse.json();
         project.softLocked = json;
+
+        handleOpenToast({
+          type: "success",
+          info: `Project ${project.name} soft locked.`,
+        });
       } else {
         handleOpenToast({
           type: "error",
@@ -188,7 +184,8 @@ export default function Project() {
         info: "An error occurred whilst trying to connect to server.",
       });
     }
-    setLoading(false);
+
+    setLoadingSoftLockButton(false);
   }
 
   function handleEditCollaboration(collaboration) {
@@ -239,115 +236,105 @@ export default function Project() {
             overflowY: "auto",
           }}
         >
-          <Button
-            variant="contained"
-            startIcon={<KeyboardArrowLeftIcon />}
-            onClick={() => {
-              navigate("/projects");
-            }}
-            sx={{
-              borderTopLeftRadius: 0,
-              borderBottomLeftRadius: 0,
-
-              marginBlock: 2,
-            }}
-          >
-            Projects
-          </Button>
-
           <Box
-            display="inline"
             sx={{
-              paddingBlock: 2,
-              float: "right",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 0.5,
             }}
           >
-            <Tooltip title="Soft lock" key="Soft lock">
-              <IconButton
-                size="small"
-                aria-label="soft lock project"
-                onClick={(e) => handleSoftLockProject(e)}
-                sx={{
-                  width: 40,
-                  height: 40,
+            <Button
+              variant="contained"
+              startIcon={<KeyboardArrowLeftIcon />}
+              onClick={() => {
+                navigate("/projects");
+              }}
+              sx={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
 
-                  margin: 0.125,
+                marginBlock: 2,
+              }}
+            >
+              Projects
+            </Button>
 
-                  color: "white",
-                  backgroundColor: "#1976d2",
-                  borderRadius: 1,
-                }}
+            <Box
+              sx={{
+                marginRight: 2,
+
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 0.5,
+              }}
+            >
+              <Tooltip
+                title={project.softLocked ? "Soft unlock" : "Soft lock"}
+                key="Soft lock"
               >
-                {project.softLocked ? (
-                  <LockOpenIcon
-                    sx={{
-                      width: 30,
-                      height: 30,
-                    }}
-                  />
-                ) : (
-                  <LockIcon
-                    sx={{
-                      width: 30,
-                      height: 30,
-                    }}
-                  />
-                )}
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Edit" key="Edit">
-              <IconButton
-                disabled={project.softLocked}
-                aria-label="edit project"
-                onClick={(e) => handleEditProject(e)}
-                sx={{
-                  width: 40,
-                  height: 40,
-
-                  margin: 0.125,
-
-                  color: "white",
-                  backgroundColor: "#1976d2",
-                  borderRadius: 1,
-                }}
-              >
-                <EditIcon
+                <IconButton
+                  size="small"
+                  onClick={handleSoftLockProject}
                   sx={{
-                    width: 30,
-                    height: 30,
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
                   }}
-                />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Delete" key="Delete">
-              <IconButton
-                disabled={project.softLocked}
-                aria-label="delete project"
-                onClick={(e) => handleDeleteProject(e)}
-                sx={{
-                  width: 40,
-                  height: 40,
-
-                  margin: 0.125,
-
-                  color: "white",
-                  backgroundColor: "#1976d2",
-                  borderRadius: 1,
-                }}
-              >
-                <DeleteIcon
+                >
+                  {loadingSoftLockButton ? (
+                    <CircularProgress
+                      size={17}
+                      sx={{
+                        color: "white",
+                      }}
+                    />
+                  ) : project.softLocked ? (
+                    <LockOpenIcon />
+                  ) : (
+                    <LockIcon />
+                  )}
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Edit" key="Edit">
+                <IconButton
+                  size="small"
+                  disabled={project.softLocked}
+                  onClick={handleEditProject}
                   sx={{
-                    width: 30,
-                    height: 30,
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
                   }}
-                />
-              </IconButton>
-            </Tooltip>
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Delete" key="Delete">
+                <IconButton
+                  size="small"
+                  disabled={project.softLocked}
+                  onClick={handleDeleteProject}
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Box>
 
-          <Container
+          <Box
             sx={{
               marginBottom: 2,
+              marginInline: 2,
             }}
           >
             <Typography
@@ -498,7 +485,7 @@ export default function Project() {
                 ))}
               </AccordionDetails>
             </Accordion>
-          </Container>
+          </Box>
         </Box>
 
         {/* collaborations */}
@@ -540,11 +527,7 @@ export default function Project() {
           </Container>
 
           <Container maxWidth="false">
-            {loading ? (
-              <Box sx={{ display: "grid", placeItems: "center" }}>
-                <CircularProgress size={100} />
-              </Box>
-            ) : project.collaborations?.length <= 0 ? (
+            {project.collaborations?.length <= 0 ? (
               <Typography variant="h4" align="center">
                 {"No collaborations :("}
               </Typography>

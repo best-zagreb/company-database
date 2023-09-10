@@ -135,7 +135,7 @@ public class ProjectService {
 
     public Boolean softLockProject(AppUser user, Long id) throws AuthenticationException, EntityNotFoundException
     {
-        Helper.checkUserAuthorities(user, List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER));
+        Helper.checkUserAuthorities(user, List.of(AUTHORITY.ADMINISTRATOR));
 
         String errorMessage = "Project with id " + id + " does not exist";
         Project project = Helper.getValue(projectRepository.findById(id), errorMessage);

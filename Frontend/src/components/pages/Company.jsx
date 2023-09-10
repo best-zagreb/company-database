@@ -113,11 +113,9 @@ export default function Company() {
 
   const [searchResults, setSearchResults] = useState([]);
 
-  const [loading, setLoading] = useState(true);
+  const [loadingSoftLockButton, setLoadingSoftLockButton] = useState(false);
 
   async function fetchCompany() {
-    setLoading(true);
-
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
@@ -148,12 +146,9 @@ export default function Company() {
         info: "An error occurred whilst trying to connect to server.",
       });
     }
-
-    setLoading(false);
   }
 
-  async function handleEditCompany() {
-    setCompany(company);
+  function handleEditCompany() {
     setOpenCompanyFormModal(true);
   }
 
@@ -161,7 +156,7 @@ export default function Company() {
     navigate("/companies");
   }
 
-  async function handleDeleteCompany() {
+  function handleDeleteCompany() {
     setObject({ type: "Company", name: company.name });
     setEndpoint("/companies/" + company.id);
     setFetchUpdatedData({ function: navigateCompanies });
@@ -170,19 +165,26 @@ export default function Company() {
   }
 
   async function handleSoftLockCompany() {
-    setLoading(true);
+    setLoadingSoftLockButton(true);
+
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+
     try {
       const serverResponse = await fetch(
-        "/api/companies/softLock/" + company.id,
+        "/api/companies/" + company.id + "/softLock",
         {
-          method: "PUT",
+          method: "PATCH",
           headers: { googleTokenEncoded: JWToken.credential },
         }
       );
       if (serverResponse.ok) {
         const json = await serverResponse.json();
         company.softLocked = json;
+
+        handleOpenToast({
+          type: "success",
+          info: `Company ${company.name} soft locked.`,
+        });
       } else {
         handleOpenToast({
           type: "error",
@@ -195,7 +197,8 @@ export default function Company() {
         info: "An error occurred whilst trying to connect to server.",
       });
     }
-    setLoading(false);
+
+    setLoadingSoftLockButton(false);
   }
 
   function handleEditCollaboration(collaboration) {
@@ -253,115 +256,105 @@ export default function Company() {
             overflowY: "auto",
           }}
         >
-          <Button
-            variant="contained"
-            startIcon={<KeyboardArrowLeftIcon />}
-            onClick={() => {
-              navigate("/companies");
-            }}
-            sx={{
-              borderTopLeftRadius: 0,
-              borderBottomLeftRadius: 0,
-
-              marginBlock: 2,
-            }}
-          >
-            Companies
-          </Button>
-
           <Box
-            display="inline"
             sx={{
-              paddingBlock: 2,
-              float: "right",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 0.5,
             }}
           >
-            <Tooltip title="Soft lock" key="Soft lock">
-              <IconButton
-                size="small"
-                aria-label="soft lock company"
-                onClick={(e) => handleSoftLockCompany(e)}
-                sx={{
-                  width: 40,
-                  height: 40,
+            <Button
+              variant="contained"
+              startIcon={<KeyboardArrowLeftIcon />}
+              onClick={() => {
+                navigate("/companies");
+              }}
+              sx={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
 
-                  margin: 0.125,
+                marginBlock: 2,
+              }}
+            >
+              Companies
+            </Button>
 
-                  color: "white",
-                  backgroundColor: "#1976d2",
-                  borderRadius: 1,
-                }}
+            <Box
+              sx={{
+                marginRight: 2,
+
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 0.5,
+              }}
+            >
+              <Tooltip
+                title={company.softLocked ? "Soft unlock" : "Soft lock"}
+                key="Soft lock"
               >
-                {company.softLocked ? (
-                  <LockOpenIcon
-                    sx={{
-                      width: 30,
-                      height: 30,
-                    }}
-                  />
-                ) : (
-                  <LockIcon
-                    sx={{
-                      width: 30,
-                      height: 30,
-                    }}
-                  />
-                )}
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Edit" key="Edit">
-              <IconButton
-                disabled={company.softLocked}
-                aria-label="edit company"
-                onClick={(e) => handleEditCompany(e)}
-                sx={{
-                  width: 40,
-                  height: 40,
-
-                  margin: 0.125,
-
-                  color: "white",
-                  backgroundColor: "#1976d2",
-                  borderRadius: 1,
-                }}
-              >
-                <EditIcon
+                <IconButton
+                  size="small"
+                  onClick={handleSoftLockCompany}
                   sx={{
-                    width: 30,
-                    height: 30,
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
                   }}
-                />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Delete" key="Delete">
-              <IconButton
-                disabled={company.softLocked}
-                aria-label="delete company"
-                onClick={(e) => handleDeleteCompany(e)}
-                sx={{
-                  width: 40,
-                  height: 40,
-
-                  margin: 0.125,
-
-                  color: "white",
-                  backgroundColor: "#1976d2",
-                  borderRadius: 1,
-                }}
-              >
-                <DeleteIcon
+                >
+                  {loadingSoftLockButton ? (
+                    <CircularProgress
+                      size={17}
+                      sx={{
+                        color: "white",
+                      }}
+                    />
+                  ) : company.softLocked ? (
+                    <LockOpenIcon />
+                  ) : (
+                    <LockIcon />
+                  )}
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Edit" key="Edit">
+                <IconButton
+                  size="small"
+                  disabled={company.softLocked}
+                  onClick={handleEditCompany}
                   sx={{
-                    width: 30,
-                    height: 30,
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
                   }}
-                />
-              </IconButton>
-            </Tooltip>
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Delete" key="Delete">
+                <IconButton
+                  size="small"
+                  disabled={company.softLocked}
+                  onClick={handleDeleteCompany}
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Box>
 
-          <Container
+          <Box
             sx={{
               marginBottom: 2,
+              marginInline: 2,
             }}
           >
             <Typography
@@ -594,7 +587,7 @@ export default function Company() {
                 </Box>
               </AccordionDetails>
             </Accordion>
-          </Container>
+          </Box>
         </Box>
 
         {/* collaborations */}
@@ -621,26 +614,10 @@ export default function Company() {
               data={company.collaborations}
               setSearchResults={setSearchResults}
             />
-
-            <Button
-              variant="contained"
-              size="medium"
-              startIcon={<AddCircleIcon />}
-              onClick={() => {
-                setCollaboration();
-                setOpenCollaborationFormModal(true);
-              }}
-            >
-              Add collaboration
-            </Button>
           </Container>
 
           <Container maxWidth="false">
-            {loading ? (
-              <Box sx={{ display: "grid", placeItems: "center" }}>
-                <CircularProgress size={100} />
-              </Box>
-            ) : company.collaborations?.length <= 0 ? (
+            {company.collaborations?.length <= 0 ? (
               <Typography variant="h4" align="center">
                 {"No collaborations :("}
               </Typography>

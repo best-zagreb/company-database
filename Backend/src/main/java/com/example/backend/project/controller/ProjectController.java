@@ -41,7 +41,7 @@ public class ProjectController {
         }
     }
 
-    @PutMapping("/softLock/{projectId}")
+    @PatchMapping("/{projectId}/softLock")
     public ResponseEntity<Boolean> softLockProject(@RequestHeader String googleTokenEncoded, @PathVariable Long projectId){
         AppUser user = getUser(googleTokenEncoded);
         try

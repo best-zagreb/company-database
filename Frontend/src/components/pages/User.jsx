@@ -164,8 +164,7 @@ export default function User() {
     }
   }
 
-  async function handleEditUser() {
-    setUser(user);
+  function handleEditUser() {
     setOpenUserFormModal(true);
   }
 
@@ -173,7 +172,7 @@ export default function User() {
     navigate("/users");
   }
 
-  async function handleDeleteUser() {
+  function handleDeleteUser() {
     setObject({ type: "User", name: user.firstName + " " + user.lastName });
     setEndpoint("/users/" + user.id);
     setFetchUpdatedData({ function: navigateUsers });
@@ -187,10 +186,13 @@ export default function User() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("/api/users/softLock/" + user.id, {
-        method: "PUT",
-        headers: { googleTokenEncoded: JWToken.credential },
-      });
+      const serverResponse = await fetch(
+        "/api/users/" + user.id + "/softLock",
+        {
+          method: "PATCH",
+          headers: { googleTokenEncoded: JWToken.credential },
+        }
+      );
 
       if (serverResponse.ok) {
         const json = await serverResponse.json();
@@ -293,12 +295,12 @@ export default function User() {
 
             <Box
               sx={{
+                marginRight: 2,
+
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 0.5,
-
-                paddingRight: 3,
               }}
             >
               <Tooltip
@@ -362,9 +364,10 @@ export default function User() {
             </Box>
           </Box>
 
-          <Container
+          <Box
             sx={{
               marginBottom: 2,
+              marginInline: 2,
             }}
           >
             <Typography
@@ -464,7 +467,7 @@ export default function User() {
                 ))}
               </AccordionDetails>
             </Accordion>
-          </Container>
+          </Box>
         </Box>
 
         {/* collaborations */}

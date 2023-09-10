@@ -38,7 +38,7 @@ public class CompanyService
 
     public Boolean softLockCompany(AppUser user, Long id) throws AuthenticationException, EntityNotFoundException
     {
-        Helper.checkUserAuthorities(user, List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER));
+        Helper.checkUserAuthorities(user, List.of(AUTHORITY.ADMINISTRATOR));
 
         String errorMessage = "Company with id " + id + " does not exist";
         Company company = Helper.getValue(companyRepository.findById(id), errorMessage);
