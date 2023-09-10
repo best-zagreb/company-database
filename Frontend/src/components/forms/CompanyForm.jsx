@@ -55,7 +55,6 @@ export default function CompanyForm({
 
   const [existingCompanies, setExistingCompanies] = useState([]);
   const [countriesFromAPI, setCountriesFromAPI] = useState([]);
-  // const [townsFromAPI, setTownsFromAPI] = useState([]);
   const [loadingButton, setLoadingButton] = useState(false);
 
   const [name, setName] = useState();
@@ -63,8 +62,7 @@ export default function CompanyForm({
   const [abcCategorization, setAbcCategorization] = useState();
   const [budgetPlanningMonth, setBudgetPlanningMonth] = useState();
   const [country, setCountry] = useState();
-  // const [townName, setTownName] = useState();
-  const [zipCode, setZipCode] = useState();
+  const [townName, setTownName] = useState();
   const [address, setAddress] = useState();
   const [url, setUrl] = useState();
   const [description, setDescription] = useState();
@@ -76,8 +74,7 @@ export default function CompanyForm({
   const [budgetPlanningMonthIsValid, setBudgetPlanningMonthIsValid] =
     useState();
   const [countryIsValid, setCountryIsValid] = useState(false);
-  // const [townNameIsValid, setTownNameIsValid] = useState(false);
-  const [zipCodeIsValid, setZipCodeIsValid] = useState(false);
+  const [townNameIsValid, setTownNameIsValid] = useState(false);
   const [addressIsValid, setAddressIsValid] = useState(false);
   const [urlIsValid, setUrlIsValid] = useState(false);
   const [descriptionIsValid, setDescriptionIsValid] = useState(false);
@@ -87,7 +84,7 @@ export default function CompanyForm({
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("/companies/", {
+      const serverResponse = await fetch("/api/companies/", {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
@@ -137,39 +134,6 @@ export default function CompanyForm({
       });
     }
   }
-  async function fetchTownsFromAPI(inputValue) {
-    try {
-      const serverResponse = await fetch(
-        "http://api.geonames.org/postalCodeSearchJSON?maxRows=250&username=crazyfreak" +
-          "&placename_startsWith=" +
-          encodeURIComponent(inputValue || " ") +
-          "&country=" +
-          encodeURIComponent(
-            countriesFromAPI.find((c) => c.name.common === country)?.cca2 || ""
-          ),
-        {
-          method: "GET",
-        }
-      );
-
-      if (serverResponse.ok) {
-        const json = await serverResponse.json();
-
-        // console.log(json.postalCodes);
-        // setTownsFromAPI(json.postalCodes);
-      } else {
-        handleOpenToast({
-          type: "error",
-          info: "A server error occurred whilst fetching companies for Town input field.",
-        });
-      }
-    } catch (error) {
-      handleOpenToast({
-        type: "error",
-        info: "An error occurred whilst trying to connect to server.",
-      });
-    }
-  }
 
   async function submit() {
     if (
@@ -178,8 +142,8 @@ export default function CompanyForm({
       !abcCategorizationIsValid ||
       !budgetPlanningMonthIsValid ||
       !countryIsValid ||
-      // !townNameIsValid ||
-      !zipCodeIsValid ||
+      !townNameIsValid ||
+      // !zipCodeIsValid ||
       !addressIsValid ||
       !descriptionIsValid ||
       !contactInFutureIsValid
@@ -191,7 +155,7 @@ export default function CompanyForm({
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
     const companyData = {
       name: name.trim(),
-      domain: sector.trim(),
+      sector: sector.trim(),
       abcCategory:
         abcCategorization === abcCategories[0].value
           ? null
@@ -201,8 +165,7 @@ export default function CompanyForm({
           ? null
           : budgetPlanningMonth.toUpperCase(),
       country: country,
-      // townName: townName,
-      zipCode: zipCode,
+      townName: townName,
       address: address,
       webUrl: url,
       description: description,
@@ -219,7 +182,7 @@ export default function CompanyForm({
     };
 
     const serverResponse = await fetch(
-      `/companies/${company?.id ?? ""}`,
+      `/api/companies/${company?.id ?? ""}`,
       request
     );
 
@@ -244,7 +207,7 @@ export default function CompanyForm({
     } else if (serverResponse.status === 403) {
       handleOpenToast({
         type: "error",
-        info: "FR responsible privileges are required for manipulating companies.",
+        info: "Project responsible privileges are required for manipulating companies.",
       });
     } else if (serverResponse.status === 404) {
       handleOpenToast({
@@ -266,12 +229,11 @@ export default function CompanyForm({
 
   useEffect(() => {
     setName(company?.name);
-    setSector(company?.domain);
+    setSector(company?.sector);
     setAbcCategorization(company?.abcCategorization || abcCategories[0].value);
     setBudgetPlanningMonth(company?.budgetMonth || months[0].value);
     setCountry(company?.country);
-    // setTown(company?.townName);
-    setZipCode(company?.zipCode);
+    setTownName(company?.townName);
     setAddress(company?.address);
     setUrl(company?.url);
     setDescription(company?.description);
@@ -282,8 +244,7 @@ export default function CompanyForm({
     setAbcCategorizationIsValid(true);
     setBudgetPlanningMonthIsValid(true);
     setCountryIsValid(company ? true : false);
-    // setTownNameIsValid(company ? true : false);
-    setZipCodeIsValid(company ? true : false);
+    setTownNameIsValid(company ? true : false);
     setAddressIsValid(company ? true : false);
     setUrlIsValid(true);
     setDescriptionIsValid(true);
@@ -291,7 +252,6 @@ export default function CompanyForm({
 
     fetchExistingCompanies();
     fetchCountriesFromAPI();
-    // fetchTownsFromAPI();
   }, [openModal]);
 
   return (
@@ -363,9 +323,9 @@ export default function CompanyForm({
 
               <Autocomplete
                 options={existingCompanies
-                  .map((company) => company.domain)
+                  .map((company) => company.sector)
                   .filter(
-                    (domain, index, array) => array.indexOf(domain) === index
+                    (sector, index, array) => array.indexOf(sector) === index
                   )
                   .sort((a, b) => {
                     return a.localeCompare(b);
@@ -486,13 +446,12 @@ export default function CompanyForm({
                 )}
               />
 
-              {/* TODO: Replace zip (and town entity) with townName on backend then use this */}
-              {/* <Autocomplete
-                options={townsFromAPI
-                  .map((town) => town.placeName)
+              <Autocomplete
+                options={existingCompanies
+                  .map((company) => company.townName)
                   .filter(
-                    (placeName, index, array) =>
-                      array.indexOf(placeName) === index
+                    (townName, index, array) =>
+                      array.indexOf(townName) === index
                   )
                   .sort((a, b) => {
                     return a.localeCompare(b);
@@ -508,18 +467,20 @@ export default function CompanyForm({
                 inputValue={townName || ""}
                 onInputChange={(event, value) => {
                   setTownName(value);
-                  if (country === "")
-                    setCountry(
-                      countriesFromAPI.find(
-                        (c) =>
-                          c.cca2 ===
-                          townsFromAPI.find(
-                            (town) => town.placeName === value
-                          )?.countryCode
-                      )?.name.common || ""
-                    ); // set country based on chosen town
-                  fetchCitiesFromAPI(value);
-                  // setTownIsValid(value.length >= 2 && value.length <= 115);
+                  setTownNameIsValid(value.length >= 2 && value.length <= 115);
+
+                  // set country based on chosen town
+                  if (!country || country === "") {
+                    const countryFromCity = existingCompanies.find(
+                      (company) => company.townName === value
+                    ).country;
+
+                    const matchedCountryInApi = countriesFromAPI.find(
+                      (country) => country.name.common === countryFromCity
+                    )?.name.common;
+
+                    setCountry(matchedCountryInApi || "");
+                  }
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -531,36 +492,7 @@ export default function CompanyForm({
                     margin="dense"
                   />
                 )}
-              /> */}
-              <TextInput
-                labelText={"Postal (ZIP) code"}
-                isRequired
-                inputType={"number"}
-                placeholderText={"51300"}
-                helperText={{
-                  error: "Postal (ZIP) code must be between 1 and 999999",
-                  details: "",
-                }}
-                inputProps={{
-                  min: 1,
-                  max: 999999,
-                  minLength: 1,
-                  maxLength: 6,
-                }}
-                validationFunction={(input) => {
-                  return (
-                    input >= 1 &&
-                    input <= 999999 &&
-                    input.length >= 1 &&
-                    input.length <= 6
-                  );
-                }}
-                value={zipCode}
-                setValue={setZipCode}
-                valueIsValid={zipCodeIsValid}
-                setValueIsValid={setZipCodeIsValid}
-              ></TextInput>
-
+              />
               <TextInput
                 labelText={"Address"}
                 isRequired
@@ -678,8 +610,8 @@ export default function CompanyForm({
                     abcCategorizationIsValid &&
                     budgetPlanningMonthIsValid &&
                     countryIsValid &&
-                    // townNameIsValid &&
-                    zipCodeIsValid &&
+                    townNameIsValid &&
+                    //zipCodeIsValid &&
                     addressIsValid &&
                     urlIsValid &&
                     contactInFutureIsValid

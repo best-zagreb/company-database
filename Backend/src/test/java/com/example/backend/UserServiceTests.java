@@ -12,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.naming.AuthenticationException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,7 +25,7 @@ public class UserServiceTests {
     UserService userService;
 
     @Test
-    public void addUserTest() {
+    public void addUserTest() throws AuthenticationException {
         UserDTO userDTO = new UserDTO(
                 "peroperic@gmail.com",
                 AUTHORITY.ADMINISTRATOR,
@@ -45,7 +47,7 @@ public class UserServiceTests {
 
         Mockito.when(userRepository.save(Mockito.any())).thenReturn(test);
 
-        AppUser user = userService.addUser(userDTO);
+        AppUser user = userService.addUser(userDTO, test);
 
         assertThat(user).isSameAs(test);
     }

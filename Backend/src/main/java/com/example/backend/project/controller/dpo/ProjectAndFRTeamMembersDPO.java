@@ -1,5 +1,6 @@
 package com.example.backend.project.controller.dpo;
 
+import com.example.backend.project.model.Project;
 import com.example.backend.project.model.enums.TYPE;
 import com.example.backend.user.model.AppUser;
 import lombok.AllArgsConstructor;
@@ -24,5 +25,20 @@ public class ProjectAndFRTeamMembersDPO {
     private Long FRGoal;
     private Date firstPingDate;
     private Date secondPingDate;
-    private Set<FRTeamMemberDPO> frTeamMembers;
+    private Set<FRTeamMemberDPO> frTeamMemberDPOS;
+
+    public ProjectAndFRTeamMembersDPO(Project project, Set<FRTeamMemberDPO> frTeamMemberDPOS){
+        this.id = project.getId();
+        this.idCreator = project.getIdCreator();
+        this.name = project.getName();
+        this.category = project.getCategory();
+        this.type = project.getType();
+        this.startDate = project.getStartDate();
+        this.endDate = project.getEndDate();
+        this.FRResp = project.getFRResp();
+        this.FRGoal = project.getFRGoal();
+        this.firstPingDate = project.getFirstPingDate();
+        this.secondPingDate = project.getSecondPingDate();
+        this.frTeamMemberDPOS = frTeamMemberDPOS;
+    }
 }

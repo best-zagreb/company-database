@@ -18,7 +18,7 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/companies")
+@RequestMapping("/api/companies")
 public class CompanyController
 {
     private final CompanyService companyService;
@@ -75,7 +75,7 @@ public class CompanyController
         }
     }
 
-    @PostMapping("{companyId}/contacts")
+    @PostMapping("/{companyId}/contacts")
     @ResponseBody
     public ResponseEntity<Contact> addContact(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId, @RequestBody ContactDto contactDto){
         AppUser user = getUser(googleTokenEncoded);
@@ -145,7 +145,7 @@ public class CompanyController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("{companyId}/contacts/{contactId}")
+    @PutMapping("/{companyId}/contacts/{contactId}")
     @ResponseBody
     public ResponseEntity<Contact> editContact(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId, @PathVariable Long contactId, @RequestBody ContactDto contactDto){
         AppUser user = getUser(googleTokenEncoded);
@@ -161,7 +161,7 @@ public class CompanyController
         }
     }
 
-    @DeleteMapping("{companyId}/contacts/{contactId}")
+    @DeleteMapping("/{companyId}/contacts/{contactId}")
     @ResponseBody
     public ResponseEntity deleteContact(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId, @PathVariable Long contactId){
         AppUser user = getUser(googleTokenEncoded);

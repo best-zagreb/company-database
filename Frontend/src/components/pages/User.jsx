@@ -95,7 +95,7 @@ const userInfo = {
   softLock: false,
   notificationEmail: "john.doe@gmail.com",
   description: "Default humanoid being.",
-  nickname: "id 1",
+  nickname: "JD",
   projects: [
     {
       id: 1,
@@ -147,7 +147,7 @@ export default function User() {
 
     try {
       const serverResponse = await fetch(
-        "/users/" + userId,
+        "/api/users/" + userId,
         {
           method: "GET",
           headers: { googleTokenEncoded: JWToken.credential },

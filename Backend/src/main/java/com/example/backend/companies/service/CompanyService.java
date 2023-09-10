@@ -36,7 +36,7 @@ public class CompanyService
 
     public List<Company> getAllCompanies(AppUser user) throws AuthenticationException
     {
-        if (user == null) throw new AuthenticationException();
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
         return companyRepository.findAll();
     }
 
@@ -58,25 +58,25 @@ public class CompanyService
 
     public Company getCompany(AppUser user, Long id) throws AuthenticationException
     {
-        if (user == null) throw new AuthenticationException();
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
         if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
-            throw new AuthenticationException();
+            throw new AuthenticationException("You do not have permission to execute this command.");
         }
         if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
             if (!isFrTeamMemberOrResponsibleOnCompany(user, id)){
-                throw new AuthenticationException();
+                throw new AuthenticationException("You do not have permission to execute this command.");
             }
         }
         Optional<Company> company = companyRepository.findById(id);
         if (!company.isPresent()){
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("Company under id " + id + " not found.");
         }
         return company.get();
     }
 
     public Company createCompany(AppUser user, CompanyDto companyDto) throws AuthenticationException
     {
-        if (user == null) throw new AuthenticationException();
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
         if (List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
             throw new AuthenticationException();
         }
@@ -85,13 +85,13 @@ public class CompanyService
 
     public Company editCompany(AppUser user, Long companyId, CompanyDto companyDto) throws AuthenticationException
     {
-        if (user == null) throw new AuthenticationException();
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
         if (List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
-            throw new AuthenticationException();
+            throw new AuthenticationException("You do not have permission to execute this command.");
         }
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         if (optionalCompany.isEmpty()){
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("Company under id " + companyId + " not found.");
         }
         Company company = optionalCompany.get();
         company.updateWith(companyDto);
@@ -101,32 +101,32 @@ public class CompanyService
 
     public void deleteCompany(AppUser user, Long companyId) throws AuthenticationException
     {
-        if (user == null) throw new AuthenticationException();
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
         if (List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
-            throw new AuthenticationException();
+            throw new AuthenticationException("You do not have permission to execute this command.");
         }
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         if (optionalCompany.isEmpty()){
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("Company under id " + companyId + " not found.");
         }
         companyRepository.deleteCompanyById(companyId);
     }
 
     public Contact addContactToCompany(AppUser user, Long companyId, ContactDto contactDto) throws AuthenticationException
     {
-        if (user == null) throw new AuthenticationException();
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
         if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
-            throw new AuthenticationException();
+            throw new AuthenticationException("You do not have permission to execute this command.");
         }
         if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
             if (!isFrTeamMemberOrResponsibleOnCompany(user, companyId)){
-                throw new AuthenticationException();
+                throw new AuthenticationException("You do not have permission to execute this command.");
             }
         }
 
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         if (optionalCompany.isEmpty()){
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("Company under id " + companyId + " not found.");
         }
         Company company = optionalCompany.get();
         Contact contact = contactDto.toContact();
@@ -136,22 +136,22 @@ public class CompanyService
 
     public Contact editContact(AppUser user, Long companyId, Long contactId, ContactDto contactDto) throws AuthenticationException
     {
-        if (user == null) throw new AuthenticationException();
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
         if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
-            throw new AuthenticationException();
+            throw new AuthenticationException("You do not have permission to execute this command.");
         }
         if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
             if (!isFrTeamMemberOrResponsibleOnCompany(user, companyId)){
-                throw new AuthenticationException();
+                throw new AuthenticationException("You do not have permission to execute this command.");
             }
         }
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         if (optionalCompany.isEmpty()){
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("Company under id " + companyId + " not found.");
         }
         Optional<Contact> optionalContact = contactRepository.findById(contactId);
         if (optionalContact.isEmpty()){
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("Contact under id " + contactId + " not found.");
         }
         Contact contact = optionalContact.get();
         if (contact.getCompany().getId() != companyId){
@@ -163,23 +163,23 @@ public class CompanyService
 
     public void deleteContact(AppUser user, Long companyId, Long contactId) throws AuthenticationException
     {
-        if (user == null) throw new AuthenticationException();
+        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
         if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
-            throw new AuthenticationException();
+            throw new AuthenticationException("You do not have permission to execute this command.");
         }
         if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
             if (!isFrTeamMemberOrResponsibleOnCompany(user, companyId)){
-                throw new AuthenticationException();
+                throw new AuthenticationException("You do not have permission to execute this command.");
             }
         }
 
         Optional<Company> optionalCompany = companyRepository.findById(companyId);
         if (optionalCompany.isEmpty()){
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("Company under id " + companyId + " not found.");
         }
         Optional<Contact> optionalContact = contactRepository.findById(contactId);
         if (optionalContact.isEmpty()){
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("Contact under id " + contactId + " not found.");
         }
         Contact contact = optionalContact.get();
         if (contact.getCompany().getId() != companyId){

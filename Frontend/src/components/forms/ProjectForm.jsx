@@ -69,7 +69,7 @@ export default function ProjectForm({
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("/users/", {
+      const serverResponse = await fetch("/api/users/", {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
@@ -82,7 +82,7 @@ export default function ProjectForm({
       } else {
         handleOpenToast({
           type: "error",
-          info: "A server error occurred whilst fetching users for FR responsible input field.",
+          info: "A server error occurred whilst fetching users for Project responsible input field.",
         });
       }
     } catch (error) {
@@ -97,7 +97,7 @@ export default function ProjectForm({
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("/projects/", {
+      const serverResponse = await fetch("/api/projects/", {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
@@ -108,6 +108,7 @@ export default function ProjectForm({
         // console.log(json);
         setExistingProjects(json);
       } else {
+        console.log(serverResponse);
         handleOpenToast({
           type: "error",
           info: "A server error occurred whilst fetching projects for Category input field.",
@@ -160,7 +161,7 @@ export default function ProjectForm({
     };
 
     const serverResponse = await fetch(
-      `/projects/${project?.id ?? ""}`,
+      `/api/projects/${project?.id ?? ""}`,
       request
     );
 
@@ -458,7 +459,7 @@ export default function ProjectForm({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="FR responsible"
+                    label="Project responsible"
                     required
                     fullWidth
                     margin="dense"

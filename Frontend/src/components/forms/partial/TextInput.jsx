@@ -16,7 +16,7 @@ export default function TextInput({
   validationFunction,
 }) {
   const [valueDirty, setValueDirty] = useState(false);
-  const handleChange = (e) => {
+  function handleChange(e) {
     let input = e.target.value;
 
     if (validationFunction(input)) {
@@ -26,7 +26,7 @@ export default function TextInput({
     }
 
     setValue(input);
-  };
+  }
 
   useEffect(() => {}, [value]);
 
