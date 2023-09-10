@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import javax.naming.AuthenticationException;
 import java.util.*;
 
@@ -42,18 +43,17 @@ public class ProjectController {
 
     @PutMapping("/softLock/{projectId}")
     public ResponseEntity<Boolean> softLockProject(@RequestHeader String googleTokenEncoded, @PathVariable Long projectId){
-        List<AUTHORITY> authorities = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR);
-        String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
-        if (email == null)
-            return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
-        AppUser user = userService.findByEmail(email);
-        if (user == null)
-            return new ResponseEntity("You don't have access to CDB", HttpStatus.UNAUTHORIZED);
-        if (!authorities.contains(user.getAuthority()))
-            return new ResponseEntity("You don't have premission to this resource", HttpStatus.UNAUTHORIZED);
-
-        if (!projectService.existsById(projectId)) return new ResponseEntity("Project not found", HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(projectService.softLockProject(projectId), HttpStatus.OK);
+        AppUser user = getUser(googleTokenEncoded);
+        try
+        {
+            return new ResponseEntity<>(projectService.softLockProject(user, projectId), HttpStatus.OK);
+        } catch (AuthenticationException e)
+        {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e)
+        {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/{id}")

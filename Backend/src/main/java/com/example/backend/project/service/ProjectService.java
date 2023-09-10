@@ -14,6 +14,7 @@ import com.example.backend.util.exceptions.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.backend.util.Helper;
 
 import javax.naming.AuthenticationException;
 import java.util.HashSet;
@@ -71,13 +72,10 @@ public class ProjectService {
     }
 
     public Project updateProject(ProjectDTO projectDTO, Long id, AppUser user) throws AuthenticationException, EntityNotFoundException {
-        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
-        if (!List.of(AUTHORITY.ADMINISTRATOR, AUTHORITY.MODERATOR).contains(user.getAuthority())) throw new AuthenticationException("You do not have permission to execute this command.");
+        Helper.checkUserAuthorities(user, List.of(AUTHORITY.ADMINISTRATOR, AUTHORITY.MODERATOR));
 
-
-        Project project;
-        if (projectRepository.findById(id).isPresent()) project = projectRepository.findById(id).get();
-        else throw new EntityNotFoundException("User under id " + id + " not found.");
+        Project project = Helper.getValue(projectRepository.findById(id), "Project under id " + id + " not found.");
+        Helper.checkSoftLocked(project);
 
         project.setIdCreator(projectDTO.getIdCreator());
         project.setName(projectDTO.getName());
@@ -135,13 +133,16 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    public Boolean softLockProject(Long id)
+    public Boolean softLockProject(AppUser user, Long id) throws AuthenticationException, EntityNotFoundException
     {
-        Project project = projectRepository.findById(id).get();
-        boolean newSoftLock = project.getSoftLock() == null || !project.getSoftLock();
-        project.setSoftLock(newSoftLock);
+        Helper.checkUserAuthorities(user, List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER));
+
+        String errorMessage = "Project with id " + id + " does not exist";
+        Project project = Helper.getValue(projectRepository.findById(id), errorMessage);
+        boolean newSoftLocked = project.getSoftLocked() == null || !project.getSoftLocked();
+        project.setSoftLocked(newSoftLocked);
         projectRepository.save(project);
-        return newSoftLock;
+        return newSoftLocked;
     }
 
     public Project deleteFrTeamMember(Long projectId, Long teamMemberId, AppUser user) throws AuthenticationException, EntityNotFoundException {
@@ -163,10 +164,10 @@ public class ProjectService {
     }
 
     public void deleteProject(Long id, AppUser user) throws AuthenticationException, EntityNotFoundException {
-        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
-        if (!List.of(AUTHORITY.ADMINISTRATOR, AUTHORITY.MODERATOR).contains(user.getAuthority())) throw new AuthenticationException("You do not have permission to execute this command.");
+        Helper.checkUserAuthorities(user, List.of(AUTHORITY.ADMINISTRATOR, AUTHORITY.MODERATOR));
 
-        if (!projectRepository.existsById(id)) throw new EntityNotFoundException("Project under id " + id + " not found.");
+        Project project = Helper.getValue(projectRepository.findById(id), "Project under id " + id + " not found.");
+        Helper.checkSoftLocked(project);
 
         projectRepository.deleteById(id);
     }

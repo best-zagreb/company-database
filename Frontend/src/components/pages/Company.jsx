@@ -12,6 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
   IconButton,
+  Tooltip,
   CircularProgress,
 } from "@mui/material";
 import {
@@ -184,7 +185,7 @@ export default function Company() {
       );
       if (serverResponse.ok) {
           const json = await serverResponse.json();
-          company.softLock = json;
+          company.softLocked = json;
       } else {
           handleOpenToast({
             type: "error",
@@ -277,7 +278,41 @@ export default function Company() {
                 float: 'right'
               }}
           >
+            <Tooltip title="Soft lock" key="Soft lock">
               <IconButton
+                  size="small"
+                  aria-label="soft lock company"
+                  onClick={(e) => handleSoftLockCompany(e)}
+                  sx={{
+                      width: 40,
+                      height: 40,
+
+                      margin: 0.125,
+
+                      color: "white",
+                      backgroundColor: "#1976d2",
+                      borderRadius: 1,
+                  }}
+              >
+                  { company.softLocked ?
+                  <LockOpenIcon
+                      sx={{
+                        width: 30,
+                        height: 30,
+                      }}
+                  /> :
+                  <LockIcon
+                      sx={{
+                        width: 30,
+                        height: 30,
+                      }}
+                  />
+                  }
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Edit" key="Edit">
+              <IconButton
+                disabled={company.softLocked}
                 aria-label="edit company"
                 onClick={(e) => handleEditCompany(e)}
                 sx={{
@@ -298,8 +333,10 @@ export default function Company() {
                   }}
                 />
               </IconButton>
-
+            </Tooltip>
+            <Tooltip title="Delete" key="Delete">
               <IconButton
+                disabled={company.softLocked}
                 aria-label="delete company"
                 onClick={(e) => handleDeleteCompany(e)}
                 sx={{
@@ -320,37 +357,8 @@ export default function Company() {
                   }}
                 />
               </IconButton>
-
-              <IconButton
-                  aria-label="soft lock company"
-                  onClick={(e) => handleSoftLockCompany(e)}
-                  sx={{
-                    width: 40,
-                    height: 40,
-
-                    margin: 0.125,
-
-                    color: "white",
-                    backgroundColor: "#1976d2",
-                    borderRadius: 1,
-                  }}
-              >
-                { company.softLock ?
-                <LockOpenIcon
-                    sx={{
-                      width: 30,
-                      height: 30,
-                    }}
-                /> :
-                <LockIcon
-                    sx={{
-                      width: 30,
-                      height: 30,
-                    }}
-                />
-                }
-              </IconButton>
-            </Box>
+            </Tooltip>
+          </Box>
 
           <Container
             sx={{
@@ -484,6 +492,7 @@ export default function Company() {
                       </Typography>
                       <Box>
                         <IconButton
+                          disabled={company.softLocked}
                           aria-label="edit contact"
                           onClick={(e) => handleEditContact(e, contact.id)}
                           sx={{
@@ -506,6 +515,7 @@ export default function Company() {
                         </IconButton>
 
                         <IconButton
+                          disabled={company.softLocked}
                           aria-label="delete contact"
                           onClick={(e) => handleDeleteContact(e, contact.id)}
                           sx={{

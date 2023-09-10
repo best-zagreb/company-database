@@ -1,29 +1,23 @@
 package com.example.backend.user.controller;
 
 import com.example.backend.user.controller.dto.UserDTO;
-import com.example.backend.user.model.AUTHORITY;
 import com.example.backend.user.model.AppUser;
 import com.example.backend.user.service.UserService;
 import com.example.backend.util.JwtVerifier;
-
 import com.example.backend.util.exceptions.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.naming.AuthenticationException;
-import java.util.List;
-import java.util.Optional;
 
+@SuppressWarnings("ALL")
 @CrossOrigin
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @PostMapping()
     @ResponseBody
@@ -39,18 +33,17 @@ public class UserController {
     @PutMapping("/softLock/{userId}")
     @ResponseBody
     public ResponseEntity<Boolean> softLockUser(@RequestHeader String googleTokenEncoded, @PathVariable Long userId){
-        List<AUTHORITY> authorities = List.of(AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR);
-        String email = JwtVerifier.verifyAndReturnEmail(googleTokenEncoded);
-        if (email == null)
-            return new ResponseEntity("Token is missing or invalid", HttpStatus.UNAUTHORIZED);
-        AppUser user = userService.findByEmail(email);
-        if (user == null)
-            return new ResponseEntity("You don't have access to CDB", HttpStatus.UNAUTHORIZED);
-        if (!authorities.contains(user.getAuthority()))
-            return new ResponseEntity("You don't have premission to this resource", HttpStatus.UNAUTHORIZED);
-
-        if (!userService.existsById(userId)) return new ResponseEntity("User not found", HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(userService.softLockUser(userId), HttpStatus.OK);
+        AppUser user = getUser(googleTokenEncoded);
+        try
+        {
+            return new ResponseEntity<>(userService.softLockUser(user, userId), HttpStatus.OK);
+        } catch (AuthenticationException e)
+        {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e)
+        {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/{id}")
@@ -75,6 +68,8 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (AuthenticationException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -31,8 +31,8 @@ public class CollaborationsService {
     private final ContactRepository contactRepository;
 
 
-    public List<Collaboration> getCollaborationsForCompany(Long id) {
-        if (companyRepository.findById(id).isEmpty()) throw new javax.persistence.EntityNotFoundException();
+    public List<Collaboration> getCollaborationsForCompany(Long id) throws EntityNotFoundException {
+        if (companyRepository.findById(id).isEmpty()) throw new EntityNotFoundException();
         return collaborationsRepository.findAllByCollaborationId_Company(companyRepository.findById(id).get());
     }
 

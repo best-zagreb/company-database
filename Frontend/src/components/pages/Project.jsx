@@ -13,6 +13,7 @@ import {
   ListItemText,
   IconButton,
   CircularProgress,
+  Tooltip
 } from "@mui/material";
 import {
   KeyboardArrowLeft as KeyboardArrowLeftIcon,
@@ -177,7 +178,7 @@ export default function Project() {
       );
       if (serverResponse.ok) {
           const json = await serverResponse.json();
-          project.softLock = json;
+          project.softLocked = json;
       } else {
           handleOpenToast({
             type: "error",
@@ -263,7 +264,41 @@ export default function Project() {
                 float: 'right'
               }}
           >
+            <Tooltip title="Soft lock" key="Soft lock">
               <IconButton
+                  size="small"
+                  aria-label="soft lock project"
+                  onClick={(e) => handleSoftLockProject(e)}
+                  sx={{
+                      width: 40,
+                      height: 40,
+
+                      margin: 0.125,
+
+                      color: "white",
+                      backgroundColor: "#1976d2",
+                      borderRadius: 1,
+                  }}
+              >
+                  { project.softLocked ?
+                  <LockOpenIcon
+                      sx={{
+                        width: 30,
+                        height: 30,
+                      }}
+                  /> :
+                  <LockIcon
+                      sx={{
+                        width: 30,
+                        height: 30,
+                      }}
+                  />
+                  }
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Edit" key="Edit">
+              <IconButton
+                disabled={project.softLocked}
                 aria-label="edit project"
                 onClick={(e) => handleEditProject(e)}
                 sx={{
@@ -284,8 +319,10 @@ export default function Project() {
                   }}
                 />
               </IconButton>
-
+            </Tooltip>
+            <Tooltip title="Delete" key="Delete">
               <IconButton
+                disabled={project.softLocked}
                 aria-label="delete project"
                 onClick={(e) => handleDeleteProject(e)}
                 sx={{
@@ -306,36 +343,7 @@ export default function Project() {
                   }}
                 />
               </IconButton>
-
-              <IconButton
-                  aria-label="soft lock project"
-                  onClick={(e) => handleSoftLockProject(e)}
-                  sx={{
-                    width: 40,
-                    height: 40,
-
-                    margin: 0.125,
-
-                    color: "white",
-                    backgroundColor: "#1976d2",
-                    borderRadius: 1,
-                  }}
-              >
-                { project.softLock ?
-                <LockOpenIcon
-                    sx={{
-                      width: 30,
-                      height: 30,
-                    }}
-                /> :
-                <LockIcon
-                    sx={{
-                      width: 30,
-                      height: 30,
-                    }}
-                />
-                }
-              </IconButton>
+            </Tooltip>
           </Box>
 
           <Container
@@ -445,6 +453,7 @@ export default function Project() {
                       </Typography>
                       <Box>
                         <IconButton
+                          disabled={project.softLocked}
                           aria-label="delete frTeamMember"
                           onClick={(e) => handleRemoveProjectMember(e, frTeamMember.id)}
                           sx={{

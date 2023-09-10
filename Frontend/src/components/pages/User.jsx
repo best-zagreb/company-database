@@ -13,6 +13,7 @@ import {
   ListItemText,
   IconButton,
   CircularProgress,
+  Tooltip
 } from "@mui/material";
 import {
   KeyboardArrowLeft as KeyboardArrowLeftIcon,
@@ -92,7 +93,7 @@ const userInfo = {
   authority: "ADMINISTRATOR",
   firstName: "John",
   lastName: "Doe",
-  softLock: false,
+  softLocked: false,
   notificationEmail: "john.doe@gmail.com",
   description: "Default humanoid being.",
   nickname: "JD",
@@ -203,7 +204,7 @@ export default function User() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
     try {
       const serverResponse = await fetch(
-        "/api/companies/softLock/" + user.id,
+        "/api/users/softLock/" + user.id,
         {
           method: "PUT",
           headers: { googleTokenEncoded: JWToken.credential },
@@ -211,7 +212,7 @@ export default function User() {
       );
       if (serverResponse.ok) {
           const json = await serverResponse.json();
-          user.softLock = json;
+          user.softLocked = json;
       } else {
           handleOpenToast({
             type: "error",
@@ -308,7 +309,41 @@ export default function User() {
                   float: 'right'
                 }}
             >
+              <Tooltip title="Soft lock" key="Soft lock">
                 <IconButton
+                    size="small"
+                    aria-label="soft lock user"
+                    onClick={(e) => handleSoftLockUser(e)}
+                    sx={{
+                      width: 40,
+                      height: 40,
+
+                      margin: 0.125,
+
+                      color: "white",
+                      backgroundColor: "#1976d2",
+                      borderRadius: 1,
+                    }}
+                >
+                  { user.softLocked ?
+                  <LockOpenIcon
+                      sx={{
+                        width: 30,
+                        height: 30,
+                      }}
+                  /> :
+                  <LockIcon
+                      sx={{
+                        width: 30,
+                        height: 30,
+                      }}
+                  />
+                  }
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Edit" key="Edit">
+                <IconButton
+                  disabled={user.softLocked}
                   aria-label="edit user"
                   onClick={(e) => handleEditUser(e)}
                   sx={{
@@ -329,8 +364,10 @@ export default function User() {
                     }}
                   />
                 </IconButton>
-
+              </Tooltip>
+              <Tooltip title="Delete" key="Delete">
                 <IconButton
+                  disabled={user.softLocked}
                   aria-label="delete user"
                   onClick={(e) => handleDeleteUser(e)}
                   sx={{
@@ -351,36 +388,7 @@ export default function User() {
                     }}
                   />
                 </IconButton>
-
-                <IconButton
-                    aria-label="soft lock user"
-                    onClick={(e) => handleSoftLockUser(e)}
-                    sx={{
-                      width: 40,
-                      height: 40,
-
-                      margin: 0.125,
-
-                      color: "white",
-                      backgroundColor: "#1976d2",
-                      borderRadius: 1,
-                    }}
-                >
-                  { user.softLock ?
-                  <LockOpenIcon
-                      sx={{
-                        width: 30,
-                        height: 30,
-                      }}
-                  /> :
-                  <LockIcon
-                      sx={{
-                        width: 30,
-                        height: 30,
-                      }}
-                  />
-                  }
-                </IconButton>
+              </Tooltip>
             </Box>
 
           <Container

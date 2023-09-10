@@ -11,28 +11,24 @@ import com.example.backend.companies.repo.ContactRepository;
 import com.example.backend.project.model.Project;
 import com.example.backend.user.model.AUTHORITY;
 import com.example.backend.user.model.AppUser;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.example.backend.util.Helper;
 
 import javax.naming.AuthenticationException;
-import javax.persistence.EntityNotFoundException;
+import com.example.backend.util.exceptions.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 @Service @Transactional
+@RequiredArgsConstructor
 public class CompanyService
 {
     private final CompanyRepository companyRepository;
     private final ContactRepository contactRepository;
     private final CollaborationsService collaborationsService;
-
-    public CompanyService(CompanyRepository companyRepository, ContactRepository contactRepository, CollaborationsService collaborationsService)
-    {
-        this.companyRepository = companyRepository;
-        this.contactRepository = contactRepository;
-        this.collaborationsService = collaborationsService;
-    }
 
     public List<Company> getAllCompanies(AppUser user) throws AuthenticationException
     {
@@ -40,23 +36,19 @@ public class CompanyService
         return companyRepository.findAll();
     }
 
-    private <T> T getValue(Optional<T> obj) throws EntityNotFoundException{
-        if(obj.isEmpty()) {
-            throw new EntityNotFoundException();
-        }
-        return obj.get();
-    }
-
-    public Boolean softLockCompany(Long id) throws EntityNotFoundException
+    public Boolean softLockCompany(AppUser user, Long id) throws AuthenticationException, EntityNotFoundException
     {
-        Company company = getValue(companyRepository.findById(id));
-        boolean newSoftLock = company.getSoftLock() == null || !company.getSoftLock();
-        company.setSoftLock(newSoftLock);
+        Helper.checkUserAuthorities(user, List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER));
+
+        String errorMessage = "Company with id " + id + " does not exist";
+        Company company = Helper.getValue(companyRepository.findById(id), errorMessage);
+        boolean newSoftLocked = company.getSoftLocked() == null || !company.getSoftLocked();
+        company.setSoftLocked(newSoftLocked);
         companyRepository.save(company);
-        return newSoftLock;
+        return newSoftLocked;
     }
 
-    public Company getCompany(AppUser user, Long id) throws AuthenticationException
+    public Company getCompany(AppUser user, Long id) throws AuthenticationException, EntityNotFoundException
     {
         if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
         if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
@@ -83,36 +75,28 @@ public class CompanyService
         return companyRepository.save(companyDto.toCompany());
     }
 
-    public Company editCompany(AppUser user, Long companyId, CompanyDto companyDto) throws AuthenticationException
+    public Company editCompany(AppUser user, Long companyId, CompanyDto companyDto) throws AuthenticationException, EntityNotFoundException
     {
-        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
-        if (List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
-            throw new AuthenticationException("You do not have permission to execute this command.");
-        }
-        Optional<Company> optionalCompany = companyRepository.findById(companyId);
-        if (optionalCompany.isEmpty()){
-            throw new EntityNotFoundException("Company under id " + companyId + " not found.");
-        }
-        Company company = optionalCompany.get();
+        Helper.checkUserAuthorities(user, List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER));
+
+        Company company = Helper.getValue(companyRepository.findById(companyId), "Company under id " + companyId + " not found.");
+        Helper.checkSoftLocked(company);
+
         company.updateWith(companyDto);
         companyRepository.save(company);
         return company;
     }
 
-    public void deleteCompany(AppUser user, Long companyId) throws AuthenticationException
+    public void deleteCompany(AppUser user, Long companyId) throws AuthenticationException, EntityNotFoundException
     {
-        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
-        if (List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
-            throw new AuthenticationException("You do not have permission to execute this command.");
-        }
-        Optional<Company> optionalCompany = companyRepository.findById(companyId);
-        if (optionalCompany.isEmpty()){
-            throw new EntityNotFoundException("Company under id " + companyId + " not found.");
-        }
+        Helper.checkUserAuthorities(user, List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER));
+
+        Company company = Helper.getValue(companyRepository.findById(companyId), "Company under id " + companyId + " not found.");
+        Helper.checkSoftLocked(company);
         companyRepository.deleteCompanyById(companyId);
     }
 
-    public Contact addContactToCompany(AppUser user, Long companyId, ContactDto contactDto) throws AuthenticationException
+    public Contact addContactToCompany(AppUser user, Long companyId, ContactDto contactDto) throws AuthenticationException, EntityNotFoundException
     {
         if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
         if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
@@ -134,61 +118,46 @@ public class CompanyService
         return contactRepository.save(contact);
     }
 
-    public Contact editContact(AppUser user, Long companyId, Long contactId, ContactDto contactDto) throws AuthenticationException
+    public Contact editContact(AppUser user, Long companyId, Long contactId, ContactDto contactDto) throws AuthenticationException, EntityNotFoundException
     {
-        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
-        if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
-            throw new AuthenticationException("You do not have permission to execute this command.");
-        }
+        Helper.checkUserAuthorities(user, List.of(AUTHORITY.OBSERVER));
         if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
             if (!isFrTeamMemberOrResponsibleOnCompany(user, companyId)){
                 throw new AuthenticationException("You do not have permission to execute this command.");
             }
         }
-        Optional<Company> optionalCompany = companyRepository.findById(companyId);
-        if (optionalCompany.isEmpty()){
-            throw new EntityNotFoundException("Company under id " + companyId + " not found.");
-        }
-        Optional<Contact> optionalContact = contactRepository.findById(contactId);
-        if (optionalContact.isEmpty()){
-            throw new EntityNotFoundException("Contact under id " + contactId + " not found.");
-        }
-        Contact contact = optionalContact.get();
-        if (contact.getCompany().getId() != companyId){
+
+        Company company = Helper.getValue(companyRepository.findById(companyId), "Company under id " + companyId + " not found.");
+        Helper.checkSoftLocked(company);
+
+        Contact contact = Helper.getValue(contactRepository.findById(contactId), "Contact under id " + contactId + " not found.");
+        if (!contact.getCompany().getId().equals(companyId)){
             throw new EntityNotFoundException();
         }
         contact.updateWith(contactDto);
         return contactRepository.save(contact);
     }
 
-    public void deleteContact(AppUser user, Long companyId, Long contactId) throws AuthenticationException
+    public void deleteContact(AppUser user, Long companyId, Long contactId) throws AuthenticationException, EntityNotFoundException
     {
-        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
-        if (List.of(AUTHORITY.OBSERVER).contains(user.getAuthority())){
-            throw new AuthenticationException("You do not have permission to execute this command.");
-        }
+        Helper.checkUserAuthorities(user, List.of(AUTHORITY.OBSERVER));
         if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
             if (!isFrTeamMemberOrResponsibleOnCompany(user, companyId)){
                 throw new AuthenticationException("You do not have permission to execute this command.");
             }
         }
 
-        Optional<Company> optionalCompany = companyRepository.findById(companyId);
-        if (optionalCompany.isEmpty()){
-            throw new EntityNotFoundException("Company under id " + companyId + " not found.");
-        }
-        Optional<Contact> optionalContact = contactRepository.findById(contactId);
-        if (optionalContact.isEmpty()){
-            throw new EntityNotFoundException("Contact under id " + contactId + " not found.");
-        }
-        Contact contact = optionalContact.get();
-        if (contact.getCompany().getId() != companyId){
+        Company company = Helper.getValue(companyRepository.findById(companyId), "Company under id " + companyId + " not found.");
+        Helper.checkSoftLocked(company);
+
+        Contact contact = Helper.getValue(contactRepository.findById(contactId), "Contact under id " + contactId + " not found.");
+        if (!contact.getCompany().getId().equals(companyId)){
             throw new EntityNotFoundException();
         }
         contactRepository.deleteContactById(contactId);
     }
 
-    private boolean isFrTeamMemberOrResponsibleOnCompany(AppUser user, Long companyId){
+    private boolean isFrTeamMemberOrResponsibleOnCompany(AppUser user, Long companyId) throws EntityNotFoundException{
         List<Collaboration> collaborations = collaborationsService.getCollaborationsForCompany(companyId);
         for(Collaboration collaboration : collaborations){
             Project project = collaboration.getCollaborationId().getProject();

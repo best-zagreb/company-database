@@ -1,6 +1,7 @@
 package com.example.backend.companies.model;
 
 import com.example.backend.companies.controller.dto.CompanyDto;
+import com.example.backend.util.SoftLockedInterface;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,8 +12,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @Getter @Setter
-
-public class Company
+public class Company implements SoftLockedInterface
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -48,10 +48,10 @@ public class Company
     @Column(name = "description", length = 480)
     private String description;
 
-    @Column(name = "softLock")
+    @Column(name = "softLocked")
     @Getter
     @Setter
-    private Boolean softLock = false;
+    private Boolean softLocked = false;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
     private Set<Contact> contacts;
@@ -68,7 +68,7 @@ public class Company
         this.webUrl = webUrl;
         this.contactInFuture = contactInFuture;
         this.description = description;
-        this.softLock = false;
+        this.softLocked = false;
     }
 
     public Company(String name, String sector, Character abcCategory, String budgetPlanningMonth, String country, String townName, String address, String webUrl, boolean contactInFuture, String description) {
@@ -82,7 +82,7 @@ public class Company
         this.webUrl = webUrl;
         this.contactInFuture = contactInFuture;
         this.description = description;
-        this.softLock = false;
+        this.softLocked = false;
     }
 
     public boolean shouldContactInFuture()
