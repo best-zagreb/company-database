@@ -13,7 +13,7 @@ import {
   ListItemText,
   IconButton,
   CircularProgress,
-  Tooltip
+  Tooltip,
 } from "@mui/material";
 import {
   KeyboardArrowLeft as KeyboardArrowLeftIcon,
@@ -27,10 +27,10 @@ import {
   Delete as DeleteIcon,
   Lock as LockIcon,
   LockOpen as LockOpenIcon,
-  Clear as RemoveIcon
+  Clear as RemoveIcon,
 } from "@mui/icons-material/";
 
-import * as moment from "moment"
+import * as moment from "moment";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -95,15 +95,15 @@ export default function Project() {
   const navigate = useNavigate();
 
   const { handleOpenToast } = useContext(ToastContext);
-  const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
+  const { setOpenDeleteAlert, setObject, setEndpoint, setFetchUpdatedData } =
     useContext(DeleteAlertContext);
 
+  const [openProjectFormModal, setOpenProjectFormModal] = useState(false);
+  const [project, setProject] = useState([]);
   const [openCollaborationFormModal, setOpenCollaborationFormModal] =
     useState(false);
-  const [openProjectFormModal, setOpenProjectFormModal] = useState(false);
   const [collaboration, setCollaboration] = useState();
 
-  const [project, setProject] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -114,13 +114,10 @@ export default function Project() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch(
-        "/api/projects/" + projectId,
-        {
-          method: "GET",
-          headers: { googleTokenEncoded: JWToken.credential },
-        }
-      );
+      const serverResponse = await fetch("/api/projects/" + projectId, {
+        method: "GET",
+        headers: { googleTokenEncoded: JWToken.credential },
+      });
       if (serverResponse.ok) {
         const json = await serverResponse.json();
 
@@ -149,20 +146,20 @@ export default function Project() {
   }
 
   async function handleEditProject() {
-      setProject(project);
-      setOpenProjectFormModal(true);
+    setProject(project);
+    setOpenProjectFormModal(true);
   }
 
   function navigateProjects() {
-      navigate("/projects")
+    navigate("/projects");
   }
 
   async function handleDeleteProject() {
-      setObject({ type: "Project", name: project.name });
-      setEndpoint("/projects/" + project.id);
-      setPopulateObjects({ function: navigateProjects });
+    setObject({ type: "Project", name: project.name });
+    setEndpoint("/projects/" + project.id);
+    setFetchUpdatedData({ function: navigateProjects });
 
-      setOpenDeleteAlert(true);
+    setOpenDeleteAlert(true);
   }
 
   async function handleSoftLockProject() {
@@ -177,19 +174,19 @@ export default function Project() {
         }
       );
       if (serverResponse.ok) {
-          const json = await serverResponse.json();
-          project.softLocked = json;
+        const json = await serverResponse.json();
+        project.softLocked = json;
       } else {
-          handleOpenToast({
-            type: "error",
-            info: "A server error occurred whilst soft locking.",
-          });
-      }
-    } catch (error) {
         handleOpenToast({
           type: "error",
-          info: "An error occurred whilst trying to connect to server.",
+          info: "A server error occurred whilst soft locking.",
         });
+      }
+    } catch (error) {
+      handleOpenToast({
+        type: "error",
+        info: "An error occurred whilst trying to connect to server.",
+      });
     }
     setLoading(false);
   }
@@ -202,7 +199,7 @@ export default function Project() {
   function handleDeleteCollaboration(collaboration) {
     setObject({ type: "Collaboration", name: collaboration.name });
     setEndpoint("/collaborations/" + collaboration.id);
-    setPopulateObjects({ function: fetchProject });
+    setFetchUpdatedData({ function: fetchProject });
 
     setOpenDeleteAlert(true);
   }
@@ -214,17 +211,17 @@ export default function Project() {
   return (
     <>
       <ProjectForm
-        project={project}
-        populateProjects={fetchProject}
+        object={project}
         openModal={openProjectFormModal}
         setOpenModal={setOpenProjectFormModal}
+        fetchUpdatedData={fetchProject}
       />
 
       <CollaborationForm
-        collaboration={collaboration}
+        object={collaboration}
         openModal={openCollaborationFormModal}
         setOpenModal={setOpenCollaborationFormModal}
-        fetchData={fetchProject}
+        fetchUpdatedData={fetchProject}
       />
 
       <Box
@@ -258,42 +255,44 @@ export default function Project() {
             Projects
           </Button>
 
-          <Box display="inline"
-              sx = {{
-                paddingBlock: 2,
-                float: 'right'
-              }}
+          <Box
+            display="inline"
+            sx={{
+              paddingBlock: 2,
+              float: "right",
+            }}
           >
             <Tooltip title="Soft lock" key="Soft lock">
               <IconButton
-                  size="small"
-                  aria-label="soft lock project"
-                  onClick={(e) => handleSoftLockProject(e)}
-                  sx={{
-                      width: 40,
-                      height: 40,
+                size="small"
+                aria-label="soft lock project"
+                onClick={(e) => handleSoftLockProject(e)}
+                sx={{
+                  width: 40,
+                  height: 40,
 
-                      margin: 0.125,
+                  margin: 0.125,
 
-                      color: "white",
-                      backgroundColor: "#1976d2",
-                      borderRadius: 1,
-                  }}
+                  color: "white",
+                  backgroundColor: "#1976d2",
+                  borderRadius: 1,
+                }}
               >
-                  { project.softLocked ?
+                {project.softLocked ? (
                   <LockOpenIcon
-                      sx={{
-                        width: 30,
-                        height: 30,
-                      }}
-                  /> :
-                  <LockIcon
-                      sx={{
-                        width: 30,
-                        height: 30,
-                      }}
+                    sx={{
+                      width: 30,
+                      height: 30,
+                    }}
                   />
-                  }
+                ) : (
+                  <LockIcon
+                    sx={{
+                      width: 30,
+                      height: 30,
+                    }}
+                  />
+                )}
               </IconButton>
             </Tooltip>
             <Tooltip title="Edit" key="Edit">
@@ -380,46 +379,63 @@ export default function Project() {
                   </ListItem>
 
                   <ListItem disablePadding>
+                    <ListItemText primary={"Type: " + project.type} />
+                  </ListItem>
+
+                  <ListItem disablePadding>
                     <ListItemText
-                      primary={"Type: " + project.type}
+                      primary={
+                        "Start date: " +
+                        moment(project.startDate).format("DD.MM.YYYY")
+                      }
                     />
                   </ListItem>
 
-                    <ListItem disablePadding>
-                      <ListItemText
-                        primary={"Start date: " + moment(project.startDate).format('DD.MM.YYYY')}
-                      />
-                    </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={
+                        "End date: " +
+                        moment(project.endDate).format("DD.MM.YYYY")
+                      }
+                    />
+                  </ListItem>
 
-                    <ListItem disablePadding>
-                      <ListItemText
-                        primary={"End date: " + moment(project.endDate).format('DD.MM.YYYY')}
-                      />
-                    </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={
+                        "Fr responsible: " +
+                        project.frresp?.firstName +
+                        " " +
+                        project.frresp?.lastName
+                      }
+                    />
+                  </ListItem>
 
-                    <ListItem disablePadding>
-                      <ListItemText
-                        primary={"Fr responsible: " + project.frresp?.firstName + " " + project.frresp?.lastName}
-                      />
-                    </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemText primary={"Fr goal: " + project.frgoal} />
+                  </ListItem>
 
-                    <ListItem disablePadding>
-                      <ListItemText
-                        primary={"Fr goal: " + project.frgoal}
-                      />
-                    </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={
+                        "First ping date: " +
+                        (project.firstPingDate
+                          ? moment(project.firstPingDate).format("DD.MM.YYYY")
+                          : "")
+                      }
+                    />
+                  </ListItem>
 
-                    <ListItem disablePadding>
-                      <ListItemText
-                        primary={"First ping date: " + (project.firstPingDate ? moment(project.firstPingDate).format('DD.MM.YYYY') : "")}
-                      />
-                    </ListItem>
-
-                    <ListItem disablePadding>
-                      <ListItemText
-                        primary={"Second ping date: " + (project.secondPingDate ? moment(project.secondPingDate).format('DD.MM.YYYY') : "")}
-                      />
-                    </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={
+                        "Second ping date: " +
+                        (project.secondPingDate
+                          ? moment(project.secondPingDate).format("DD.MM.YYYY")
+                          : "")
+                      }
+                    />
+                  </ListItem>
                 </List>
               </AccordionDetails>
             </Accordion>
@@ -455,7 +471,9 @@ export default function Project() {
                         <IconButton
                           disabled={project.softLocked}
                           aria-label="delete frTeamMember"
-                          onClick={(e) => handleRemoveProjectMember(e, frTeamMember.id)}
+                          onClick={(e) =>
+                            handleRemoveProjectMember(e, frTeamMember.id)
+                          }
                           sx={{
                             width: 20,
                             height: 20,

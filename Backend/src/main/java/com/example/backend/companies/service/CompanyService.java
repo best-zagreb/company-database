@@ -69,7 +69,7 @@ public class CompanyService
     public Company createCompany(AppUser user, CompanyDto companyDto) throws AuthenticationException
     {
         if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
-        if (List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
+        if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR).contains(user.getAuthority())){
             throw new AuthenticationException();
         }
         return companyRepository.save(companyDto.toCompany());
@@ -77,7 +77,7 @@ public class CompanyService
 
     public Company editCompany(AppUser user, Long companyId, CompanyDto companyDto) throws AuthenticationException, EntityNotFoundException
     {
-        Helper.checkUserAuthorities(user, List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER));
+        Helper.checkUserAuthorities(user, List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR));
 
         Company company = Helper.getValue(companyRepository.findById(companyId), "Company under id " + companyId + " not found.");
         Helper.checkSoftLocked(company);

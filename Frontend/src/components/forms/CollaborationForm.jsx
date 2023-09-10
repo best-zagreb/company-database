@@ -33,10 +33,10 @@ const projectTypes = [
 ];
 
 export default function CollaborationForm({
-  collaboration,
-  fetchData,
+  object: collaboration,
   openModal,
   setOpenModal,
+  fetchUpdatedData,
 }) {
   // TODO: create collaboration form, this is only used as placeholder
   const { user } = useContext(UserContext);
@@ -177,7 +177,7 @@ export default function CollaborationForm({
       });
 
       setOpenModal(false);
-      fetchData();
+      fetchUpdatedData();
     } else if (serverResponse.status === 400) {
       handleOpenToast({
         type: "error",

@@ -46,10 +46,10 @@ const months = [
 ];
 
 export default function CompanyForm({
-  company,
+  object: company,
   openModal,
   setOpenModal,
-  populateCompanies,
+  fetchUpdatedData,
 }) {
   const { handleOpenToast } = useContext(ToastContext);
 
@@ -143,7 +143,6 @@ export default function CompanyForm({
       !budgetPlanningMonthIsValid ||
       !countryIsValid ||
       !townNameIsValid ||
-      // !zipCodeIsValid ||
       !addressIsValid ||
       !descriptionIsValid ||
       !contactInFutureIsValid
@@ -198,7 +197,7 @@ export default function CompanyForm({
       });
 
       setOpenModal(false);
-      populateCompanies();
+      fetchUpdatedData();
     } else if (serverResponse.status === 400) {
       handleOpenToast({
         type: "error",
@@ -611,7 +610,6 @@ export default function CompanyForm({
                     budgetPlanningMonthIsValid &&
                     countryIsValid &&
                     townNameIsValid &&
-                    //zipCodeIsValid &&
                     addressIsValid &&
                     urlIsValid &&
                     contactInFutureIsValid

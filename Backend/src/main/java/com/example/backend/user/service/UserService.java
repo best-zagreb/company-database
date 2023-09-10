@@ -60,12 +60,12 @@ public class UserService {
         if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
         Optional<AppUser> appUserOpt = userRepository.findById(id);
         if (appUserOpt.isPresent()) return appUserOpt.get();
-        else throw new EntityNotFoundException("User under id " + id + "not found.");
+        else throw new EntityNotFoundException("User with id " + id + "not found.");
     }
 
     public Boolean softLockUser(AppUser user, Long id) throws AuthenticationException, EntityNotFoundException
     {
-        Helper.checkUserAuthorities(user, List.of(AUTHORITY.OBSERVER, AUTHORITY.FR_TEAM_MEMBER));
+        Helper.checkUserAuthorities(user, List.of(AUTHORITY.ADMINISTRATOR));
         Helper.checkSoftLocked(user);
 
         String errorMessage = "User with id " + id + " does not exist";

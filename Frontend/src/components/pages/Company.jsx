@@ -26,7 +26,7 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Lock as LockIcon,
-  LockOpen as LockOpenIcon
+  LockOpen as LockOpenIcon,
 } from "@mui/icons-material/";
 
 import { useEffect, useState, useContext } from "react";
@@ -100,17 +100,17 @@ export default function Company() {
   const navigate = useNavigate();
 
   const { handleOpenToast } = useContext(ToastContext);
-  const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
+  const { setOpenDeleteAlert, setObject, setEndpoint, setFetchUpdatedData } =
     useContext(DeleteAlertContext);
 
-  const [openContactFormModal, setOpenContactFormModal] = useState(false);
   const [openCompanyFormModal, setOpenCompanyFormModal] = useState(false);
+  const [company, setCompany] = useState([]);
+  const [openContactFormModal, setOpenContactFormModal] = useState(false);
   const [contact, setContact] = useState();
   const [openCollaborationFormModal, setOpenCollaborationFormModal] =
     useState(false);
   const [collaboration, setCollaboration] = useState();
 
-  const [company, setCompany] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -121,13 +121,10 @@ export default function Company() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch(
-        "/api/companies/" + companyId,
-        {
-          method: "GET",
-          headers: { googleTokenEncoded: JWToken.credential },
-        }
-      );
+      const serverResponse = await fetch("/api/companies/" + companyId, {
+        method: "GET",
+        headers: { googleTokenEncoded: JWToken.credential },
+      });
       if (serverResponse.ok) {
         const json = await serverResponse.json();
 
@@ -156,20 +153,20 @@ export default function Company() {
   }
 
   async function handleEditCompany() {
-      setCompany(company);
-      setOpenCompanyFormModal(true);
+    setCompany(company);
+    setOpenCompanyFormModal(true);
   }
 
   function navigateCompanies() {
-      navigate("/companies")
+    navigate("/companies");
   }
 
   async function handleDeleteCompany() {
-      setObject({ type: "Company", name: company.name });
-      setEndpoint("/companies/" + company.id);
-      setPopulateObjects({ function: navigateCompanies });
+    setObject({ type: "Company", name: company.name });
+    setEndpoint("/companies/" + company.id);
+    setFetchUpdatedData({ function: navigateCompanies });
 
-      setOpenDeleteAlert(true);
+    setOpenDeleteAlert(true);
   }
 
   async function handleSoftLockCompany() {
@@ -184,19 +181,19 @@ export default function Company() {
         }
       );
       if (serverResponse.ok) {
-          const json = await serverResponse.json();
-          company.softLocked = json;
+        const json = await serverResponse.json();
+        company.softLocked = json;
       } else {
-          handleOpenToast({
-            type: "error",
-            info: "A server error occurred whilst soft locking.",
-          });
-      }
-    } catch (error) {
         handleOpenToast({
           type: "error",
-          info: "An error occurred whilst trying to connect to server.",
+          info: "A server error occurred whilst soft locking.",
         });
+      }
+    } catch (error) {
+      handleOpenToast({
+        type: "error",
+        info: "An error occurred whilst trying to connect to server.",
+      });
     }
     setLoading(false);
   }
@@ -209,7 +206,7 @@ export default function Company() {
   function handleDeleteCollaboration(collaboration) {
     setObject({ type: "Collaboration", name: collaboration.name });
     setEndpoint("/api/collaborations/" + collaboration.id);
-    setPopulateObjects({ function: fetchCompany });
+    setFetchUpdatedData({ function: fetchCompany });
 
     setOpenDeleteAlert(true);
   }
@@ -221,24 +218,24 @@ export default function Company() {
   return (
     <>
       <CompanyForm
-        company={company}
+        object={company}
         openModal={openCompanyFormModal}
         setOpenModal={setOpenCompanyFormModal}
-        populateCompanies={fetchCompany}
+        fetchUpdatedData={fetchCompany}
       />
 
       <ContactForm
-        contact={contact}
+        object={contact}
         openModal={openContactFormModal}
         setOpenModal={setOpenContactFormModal}
-        fetchData={fetchCompany}
+        fetchUpdatedData={fetchCompany}
       />
 
       <CollaborationForm
-        collaboration={collaboration}
+        object={collaboration}
         openModal={openCollaborationFormModal}
         setOpenModal={setOpenCollaborationFormModal}
-        fetchData={fetchCompany}
+        fetchUpdatedData={fetchCompany}
       />
 
       <Box
@@ -272,42 +269,44 @@ export default function Company() {
             Companies
           </Button>
 
-          <Box display="inline"
-              sx = {{
-                paddingBlock: 2,
-                float: 'right'
-              }}
+          <Box
+            display="inline"
+            sx={{
+              paddingBlock: 2,
+              float: "right",
+            }}
           >
             <Tooltip title="Soft lock" key="Soft lock">
               <IconButton
-                  size="small"
-                  aria-label="soft lock company"
-                  onClick={(e) => handleSoftLockCompany(e)}
-                  sx={{
-                      width: 40,
-                      height: 40,
+                size="small"
+                aria-label="soft lock company"
+                onClick={(e) => handleSoftLockCompany(e)}
+                sx={{
+                  width: 40,
+                  height: 40,
 
-                      margin: 0.125,
+                  margin: 0.125,
 
-                      color: "white",
-                      backgroundColor: "#1976d2",
-                      borderRadius: 1,
-                  }}
+                  color: "white",
+                  backgroundColor: "#1976d2",
+                  borderRadius: 1,
+                }}
               >
-                  { company.softLocked ?
+                {company.softLocked ? (
                   <LockOpenIcon
-                      sx={{
-                        width: 30,
-                        height: 30,
-                      }}
-                  /> :
-                  <LockIcon
-                      sx={{
-                        width: 30,
-                        height: 30,
-                      }}
+                    sx={{
+                      width: 30,
+                      height: 30,
+                    }}
                   />
-                  }
+                ) : (
+                  <LockIcon
+                    sx={{
+                      width: 30,
+                      height: 30,
+                    }}
+                  />
+                )}
               </IconButton>
             </Tooltip>
             <Tooltip title="Edit" key="Edit">
@@ -402,8 +401,7 @@ export default function Company() {
                   <ListItem disablePadding>
                     <ListItemText
                       primary={
-                        "Budget planning month: " +
-                        company.budgetPlanningMonth
+                        "Budget planning month: " + company.budgetPlanningMonth
                       }
                     />
                   </ListItem>

@@ -33,10 +33,10 @@ const projectTypes = [
 ];
 
 export default function ProjectForm({
-  project,
-  populateProjects,
+  object: project,
   openModal,
   setOpenModal,
+  fetchUpdatedData,
 }) {
   const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
@@ -177,7 +177,7 @@ export default function ProjectForm({
       });
 
       setOpenModal(false);
-      populateProjects();
+      fetchUpdatedData();
     } else if (serverResponse.status === 400) {
       handleOpenToast({
         type: "error",
