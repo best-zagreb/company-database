@@ -116,13 +116,10 @@ export default function Company() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch(
-        "/api/companies/" + companyId,
-        {
-          method: "GET",
-          headers: { googleTokenEncoded: JWToken.credential },
-        }
-      );
+      const serverResponse = await fetch("/api/companies/" + companyId, {
+        method: "GET",
+        headers: { googleTokenEncoded: JWToken.credential },
+      });
       if (serverResponse.ok) {
         const json = await serverResponse.json();
 
@@ -256,8 +253,7 @@ export default function Company() {
                   <ListItem disablePadding>
                     <ListItemText
                       primary={
-                        "Budget planning month: " +
-                        company.budgetPlanningMonth
+                        "Budget planning month: " + company.budgetPlanningMonth
                       }
                     />
                   </ListItem>

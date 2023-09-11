@@ -319,7 +319,7 @@ export default function CompanyForm({
                 setValue={setName}
                 valueIsValid={nameIsValid}
                 setValueIsValid={setNameIsValid}
-              ></TextInput>
+              />
 
               <Autocomplete
                 options={existingCompanies
@@ -508,7 +508,7 @@ export default function CompanyForm({
                 setValue={setAddress}
                 valueIsValid={addressIsValid}
                 setValueIsValid={setAddressIsValid}
-              ></TextInput>
+              />
 
               <TextInput
                 labelText={"Webpage URL"}
@@ -538,7 +538,7 @@ export default function CompanyForm({
                 setValue={setUrl}
                 valueIsValid={urlIsValid}
                 setValueIsValid={setUrlIsValid}
-              ></TextInput>
+              />
 
               <TextInput
                 labelText={"Description"}
@@ -559,7 +559,7 @@ export default function CompanyForm({
                 setValue={setDescription}
                 valueIsValid={descriptionIsValid}
                 setValueIsValid={setDescriptionIsValid}
-              ></TextInput>
+              />
 
               <FormLabel component="legend">Contact in future</FormLabel>
               <RadioGroup

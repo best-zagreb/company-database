@@ -53,7 +53,7 @@ export default function UserForm({
   const [loadingButton, setLoadingButton] = useState(false);
 
   const [formData, setFormData] = useState({
-    user: {
+    entity: {
       firstName: null,
       lastName: null,
       nickname: null,
@@ -98,7 +98,7 @@ export default function UserForm({
       useDifferentEmails,
       authLevel,
       description,
-    } = formData.user;
+    } = formData.entity;
 
     const userData = {
       firstName: firstName?.trim(),
@@ -176,7 +176,7 @@ export default function UserForm({
     } = user || {};
 
     setFormData({
-      user: {
+      entity: {
         firstName: firstName,
         lastName: lastName,
         nickname: nickname,
@@ -270,7 +270,7 @@ export default function UserForm({
                   }}
                   formData={formData}
                   setFormData={setFormData}
-                ></TextInputNew>
+                />
 
                 <TextInputNew
                   labelText={"Last name"}
@@ -288,7 +288,7 @@ export default function UserForm({
                   }}
                   formData={formData}
                   setFormData={setFormData}
-                ></TextInputNew>
+                />
 
                 <TextInputNew
                   labelText={"Nickname"}
@@ -310,7 +310,7 @@ export default function UserForm({
                   }}
                   formData={formData}
                   setFormData={setFormData}
-                ></TextInputNew>
+                />
 
                 <TextInputNew
                   labelText={"Login email"}
@@ -327,28 +327,28 @@ export default function UserForm({
                     maxLength: 55,
                   }}
                   validationFunction={(input) => {
-                    const mailformat =
+                    const mailFormat =
                       /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
                     return (
                       input.trim().length >= 6 &&
                       input.trim().length <= 55 &&
-                      input.trim().match(mailformat)
+                      input.trim().match(mailFormat)
                     );
                   }}
                   formData={formData}
                   setFormData={setFormData}
-                ></TextInputNew>
+                />
 
                 {!user && (
                   <FormControlLabel
                     label="Use different email for notifications"
                     control={
                       <Checkbox
-                        checked={formData.user.useDifferentEmails}
+                        checked={formData.entity.useDifferentEmails}
                         onChange={(e) => {
                           setFormData((prevData) => ({
-                            user: {
-                              ...prevData.user,
+                            entity: {
+                              ...prevData.entity,
                               useDifferentEmails: e.target.checked,
                             },
                             validation: {
@@ -363,7 +363,7 @@ export default function UserForm({
                   />
                 )}
 
-                {formData.user.useDifferentEmails && (
+                {formData.entity.useDifferentEmails && (
                   <TextInputNew
                     labelText={"Notification email"}
                     isRequired
@@ -381,7 +381,7 @@ export default function UserForm({
                       const mailformat =
                         /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
                       return (
-                        !formData.user.useDifferentEmails ||
+                        !formData.entity.useDifferentEmails ||
                         (input.trim().length >= 6 &&
                           input.trim().length <= 55 &&
                           input.trim().match(mailformat))
@@ -389,7 +389,7 @@ export default function UserForm({
                     }}
                     formData={formData}
                     setFormData={setFormData}
-                  ></TextInputNew>
+                  />
                 )}
 
                 <TextField
@@ -405,14 +405,14 @@ export default function UserForm({
                   inputProps={{
                     name: "authLevel",
                   }}
-                  value={formData.user.authLevel}
+                  value={formData.entity.authLevel}
                   error={!formData.validation.authLevelIsValid}
                   onChange={(e) => {
                     const inputValue = e.target.value;
 
                     setFormData((prevData) => ({
-                      user: {
-                        ...prevData.user,
+                      entity: {
+                        ...prevData.entity,
                         authLevel: inputValue,
                       },
                       validation: {
@@ -455,7 +455,7 @@ export default function UserForm({
                   }}
                   formData={formData}
                   setFormData={setFormData}
-                ></TextInputNew>
+                />
               </Box>
 
               <Box

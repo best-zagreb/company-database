@@ -308,7 +308,7 @@ export default function CollaborationForm({
                 setValue={setName}
                 valueIsValid={nameIsValid}
                 setValueIsValid={setNameIsValid}
-              ></TextInput>
+              />
 
               <Autocomplete
                 options={existingProjects
@@ -499,7 +499,7 @@ export default function CollaborationForm({
                 setValue={setFRGoal}
                 valueIsValid={FRGoalIsValid}
                 setValueIsValid={setFRGoalIsValid}
-              ></TextInput>
+              />
 
               <DatePicker
                 label="First ping date"

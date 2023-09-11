@@ -21,8 +21,8 @@ export default function TextInput({
     const inputValue = e.target.value;
 
     setFormData((prevData) => ({
-      user: {
-        ...prevData.user,
+      entity: {
+        ...prevData.entity,
         [inputProps.name]: inputValue,
       },
       validation: {
@@ -38,7 +38,7 @@ export default function TextInput({
       type={inputType || "text"}
       fullWidth
       margin="dense"
-      value={formData.user[inputProps.name] || ""}
+      value={formData.entity[inputProps.name] || ""}
       required={isRequired}
       placeholder={placeholderText}
       inputProps={inputProps}

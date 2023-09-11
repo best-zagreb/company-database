@@ -304,7 +304,7 @@ export default function ProjectForm({
                 setValue={setName}
                 valueIsValid={nameIsValid}
                 setValueIsValid={setNameIsValid}
-              ></TextInput>
+              />
 
               <Autocomplete
                 options={existingProjects
@@ -495,7 +495,7 @@ export default function ProjectForm({
                 setValue={setFRGoal}
                 valueIsValid={FRGoalIsValid}
                 setValueIsValid={setFRGoalIsValid}
-              ></TextInput>
+              />
 
               <DatePicker
                 label="First ping date"
