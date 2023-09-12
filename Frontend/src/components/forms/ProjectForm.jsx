@@ -245,11 +245,7 @@ export default function ProjectForm({
         open={openModal}
         closeAfterTransition
         // submit on Enter key
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            submit();
-          }
-        }}
+
         // close on Escape key
         onClose={() => {
           setOpenModal(false);

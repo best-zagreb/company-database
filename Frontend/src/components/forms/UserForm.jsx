@@ -17,7 +17,7 @@ import { useState, useContext, useEffect } from "react";
 
 import ToastContext from "../../context/ToastContext";
 
-import TextInputNew from "./partial/TextInputNew";
+import CustomTextField from "./partial/CustomTextField";
 
 const authLevels = [
   {
@@ -183,9 +183,9 @@ export default function UserForm({
         loginEmail: loginEmail,
         notificationEmail: notificationEmail,
         useDifferentEmails: user ? true : false,
-        authLevel:
-          authority?.charAt(0) + authority?.slice(1).toLowerCase() ||
-          authLevels[0].value,
+        authLevel: user
+          ? authority.charAt(0) + authority.slice(1).toLowerCase()
+          : authLevels[0].value,
         description: description,
       },
       validation: {
@@ -250,7 +250,7 @@ export default function UserForm({
                   overflowY: "auto",
                 }}
               >
-                <TextInputNew
+                <CustomTextField
                   labelText={"First name"}
                   isRequired
                   placeholderText={"Jane"}
@@ -272,7 +272,7 @@ export default function UserForm({
                   setFormData={setFormData}
                 />
 
-                <TextInputNew
+                <CustomTextField
                   labelText={"Last name"}
                   isRequired
                   placeholderText={"Doe"}
@@ -290,7 +290,7 @@ export default function UserForm({
                   setFormData={setFormData}
                 />
 
-                <TextInputNew
+                <CustomTextField
                   labelText={"Nickname"}
                   isRequired
                   placeholderText={"JD"}
@@ -312,7 +312,7 @@ export default function UserForm({
                   setFormData={setFormData}
                 />
 
-                <TextInputNew
+                <CustomTextField
                   labelText={"Login email"}
                   isRequired
                   placeholderText={"jane.doe@gmail.com"}
@@ -359,12 +359,12 @@ export default function UserForm({
                         }}
                       />
                     }
-                    sx={{ margin: "0", width: "100%" }}
+                    sx={{ margin: "0" }}
                   />
                 )}
 
                 {formData.entity.useDifferentEmails && (
-                  <TextInputNew
+                  <CustomTextField
                     labelText={"Notification email"}
                     isRequired
                     placeholderText={"jane.doe@gmail.com"}
@@ -438,7 +438,7 @@ export default function UserForm({
                   ))}
                 </TextField>
 
-                <TextInputNew
+                <CustomTextField
                   labelText={"Description"}
                   textFieldProps={{
                     multiline: true,

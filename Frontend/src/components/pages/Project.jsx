@@ -24,10 +24,10 @@ import {
   AddCircle as AddCircleIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-  Clear as RemoveIcon
+  Clear as RemoveIcon,
 } from "@mui/icons-material/";
 
-import * as moment from "moment"
+import * as moment from "moment";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -109,13 +109,10 @@ export default function Project() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch(
-        "/api/projects/" + projectId,
-        {
-          method: "GET",
-          headers: { googleTokenEncoded: JWToken.credential },
-        }
-      );
+      const serverResponse = await fetch("/api/projects/" + projectId, {
+        method: "GET",
+        headers: { googleTokenEncoded: JWToken.credential },
+      });
       if (serverResponse.ok) {
         const json = await serverResponse.json();
         console.log(json);
@@ -168,6 +165,8 @@ export default function Project() {
         openModal={openCollaborationFormModal}
         setOpenModal={setOpenCollaborationFormModal}
         fetchData={fetchProject}
+        project={project}
+        company={null}
       />
 
       <Box
@@ -235,46 +234,63 @@ export default function Project() {
                   </ListItem>
 
                   <ListItem disablePadding>
+                    <ListItemText primary={"Type: " + project.type} />
+                  </ListItem>
+
+                  <ListItem disablePadding>
                     <ListItemText
-                      primary={"Type: " + project.type}
+                      primary={
+                        "Start date: " +
+                        moment(project.startDate).format("DD.MM.YYYY")
+                      }
                     />
                   </ListItem>
 
-                    <ListItem disablePadding>
-                      <ListItemText
-                        primary={"Start date: " + moment(project.startDate).format('DD.MM.YYYY')}
-                      />
-                    </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={
+                        "End date: " +
+                        moment(project.endDate).format("DD.MM.YYYY")
+                      }
+                    />
+                  </ListItem>
 
-                    <ListItem disablePadding>
-                      <ListItemText
-                        primary={"End date: " + moment(project.endDate).format('DD.MM.YYYY')}
-                      />
-                    </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={
+                        "Fr responsible: " +
+                        project.frresp?.firstName +
+                        " " +
+                        project.frresp?.lastName
+                      }
+                    />
+                  </ListItem>
 
-                    <ListItem disablePadding>
-                      <ListItemText
-                        primary={"Fr responsible: " + project.frresp?.firstName + " " + project.frresp?.lastName}
-                      />
-                    </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemText primary={"Fr goal: " + project.frgoal} />
+                  </ListItem>
 
-                    <ListItem disablePadding>
-                      <ListItemText
-                        primary={"Fr goal: " + project.frgoal}
-                      />
-                    </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={
+                        "First ping date: " +
+                        (project.firstPingDate
+                          ? moment(project.firstPingDate).format("DD.MM.YYYY")
+                          : "")
+                      }
+                    />
+                  </ListItem>
 
-                    <ListItem disablePadding>
-                      <ListItemText
-                        primary={"First ping date: " + (project.firstPingDate ? moment(project.firstPingDate).format('DD.MM.YYYY') : "")}
-                      />
-                    </ListItem>
-
-                    <ListItem disablePadding>
-                      <ListItemText
-                        primary={"Second ping date: " + (project.secondPingDate ? moment(project.secondPingDate).format('DD.MM.YYYY') : "")}
-                      />
-                    </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={
+                        "Second ping date: " +
+                        (project.secondPingDate
+                          ? moment(project.secondPingDate).format("DD.MM.YYYY")
+                          : "")
+                      }
+                    />
+                  </ListItem>
                 </List>
               </AccordionDetails>
             </Accordion>
@@ -309,7 +325,9 @@ export default function Project() {
                       <Box>
                         <IconButton
                           aria-label="delete frTeamMember"
-                          onClick={(e) => handleRemoveProjectMember(e, frTeamMember.id)}
+                          onClick={(e) =>
+                            handleRemoveProjectMember(e, frTeamMember.id)
+                          }
                           sx={{
                             width: 20,
                             height: 20,

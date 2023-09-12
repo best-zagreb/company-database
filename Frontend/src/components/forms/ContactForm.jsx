@@ -14,7 +14,7 @@ import { useState, useContext, useEffect } from "react";
 
 import ToastContext from "../../context/ToastContext";
 
-import TextInputNew from "./partial/TextInputNew";
+import CustomTextField from "./partial/CustomTextField";
 
 export default function ContactForm({
   openModal,
@@ -147,11 +147,7 @@ export default function ContactForm({
         open={openModal}
         closeAfterTransition
         // submit on Enter key
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            submit();
-          }
-        }}
+
         // close on Escape key
         onClose={() => {
           setOpenModal(false);
@@ -190,7 +186,7 @@ export default function ContactForm({
                 overflowY: "auto",
               }}
             >
-              <TextInputNew
+              <CustomTextField
                 labelText={"First name"}
                 isRequired
                 placeholderText={"Jane"}
@@ -210,7 +206,7 @@ export default function ContactForm({
                 setFormData={setFormData}
               />
 
-              <TextInputNew
+              <CustomTextField
                 labelText={"Last name"}
                 isRequired
                 placeholderText={"Doe"}
@@ -226,7 +222,7 @@ export default function ContactForm({
                 setFormData={setFormData}
               />
 
-              <TextInputNew
+              <CustomTextField
                 labelText={"Email"}
                 isRequired
                 placeholderText={"jane.doe@gmail.com"}
@@ -252,7 +248,7 @@ export default function ContactForm({
                 setFormData={setFormData}
               />
 
-              <TextInputNew
+              <CustomTextField
                 labelText={"Tel"}
                 placeholderText={"+385987654321"}
                 helperText={{
@@ -277,7 +273,7 @@ export default function ContactForm({
                 setFormData={setFormData}
               />
 
-              <TextInputNew
+              <CustomTextField
                 labelText={"Position"}
                 placeholderText={"PR"}
                 helperText={{
@@ -295,7 +291,7 @@ export default function ContactForm({
                 setFormData={setFormData}
               />
 
-              <TextInputNew
+              <CustomTextField
                 labelText={"Description"}
                 textFieldProps={{
                   multiline: true,
