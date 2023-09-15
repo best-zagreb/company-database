@@ -52,6 +52,8 @@ export default function UserForm({
 
   const [loadingButton, setLoadingButton] = useState(false);
 
+  const [shouldSetup, setShouldSetup] = useState(false);
+
   const [formData, setFormData] = useState({
     user: {
       firstName: null,
@@ -74,6 +76,76 @@ export default function UserForm({
       descriptionIsValid: true,
     },
   });
+
+  async function shouldSetupFunc() {
+    try {
+      const serverResponse = await fetch(
+        "/api/users/shouldSetup",
+        {
+          method: "GET",
+        }
+      );
+
+      if (serverResponse.ok) {
+        const json = await serverResponse.json();
+
+        if(json == true) {
+          setShouldSetup(true);
+        }
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "A server error occurred whilst fetching data.",
+        });
+      }
+    } catch (error) {
+      handleOpenToast({
+        type: "error",
+        info: "An error occurred whilst trying to connect to server.",
+      });
+    }
+
+    setupUserForm();
+  }
+
+  function setupUserForm() {
+      // object destructuring
+      const {
+        firstName,
+        lastName,
+        nickname,
+        loginEmail,
+        notificationEmail,
+        authority,
+        description,
+      } = user || {};
+
+      var defaultAuthLevel = shouldSetup ? authLevels[4].value : authLevels[0].value
+
+      setFormData({
+        user: {
+          firstName: firstName,
+          lastName: lastName,
+          nickname: nickname,
+          loginEmail: loginEmail,
+          notificationEmail: notificationEmail,
+          useDifferentEmails: user ? true : false,
+          authLevel:
+            authority?.charAt(0) + authority?.slice(1).toLowerCase() ||
+            defaultAuthLevel,
+          description: description,
+        },
+        validation: {
+          firstNameIsValid: user ? true : false,
+          lastNameIsValid: user ? true : false,
+          nicknameIsValid: user ? true : false,
+          loginEmailIsValid: user ? true : false,
+          notificationEmailIsValid: true,
+          authLevelIsValid: true,
+          descriptionIsValid: true,
+        },
+      });
+  }
 
   async function submit() {
     const isFormValid = Object.values(formData.validation).every(Boolean); // all validation rules are fulfilled
@@ -113,12 +185,16 @@ export default function UserForm({
         description && description?.trim() !== "" ? description?.trim() : null,
     };
 
-    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+    var JWToken = null;
+    if (localStorage.getItem("loginInfo") != null)
+    {
+        JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+    }
 
     const request = {
       method: user ? "PUT" : "POST",
       headers: {
-        googleTokenEncoded: JWToken.credential,
+        googleTokenEncoded: JWToken?.credential,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(userData),
@@ -164,40 +240,7 @@ export default function UserForm({
   }
 
   useEffect(() => {
-    // object destructuring
-    const {
-      firstName,
-      lastName,
-      nickname,
-      loginEmail,
-      notificationEmail,
-      authority,
-      description,
-    } = user || {};
-
-    setFormData({
-      user: {
-        firstName: firstName,
-        lastName: lastName,
-        nickname: nickname,
-        loginEmail: loginEmail,
-        notificationEmail: notificationEmail,
-        useDifferentEmails: user ? true : false,
-        authLevel:
-          authority?.charAt(0) + authority?.slice(1).toLowerCase() ||
-          authLevels[0].value,
-        description: description,
-      },
-      validation: {
-        firstNameIsValid: user ? true : false,
-        lastNameIsValid: user ? true : false,
-        nicknameIsValid: user ? true : false,
-        loginEmailIsValid: user ? true : false,
-        notificationEmailIsValid: true,
-        authLevelIsValid: true,
-        descriptionIsValid: true,
-      },
-    });
+    shouldSetupFunc();
   }, [openModal]);
 
   return (
@@ -430,7 +473,8 @@ export default function UserForm({
                       value={option.value}
                       // TODO: auth level can only be changed to a higher level when project responsible or member
                       disabled={
-                        option === authLevels[1] || option === authLevels[2]
+                        option === authLevels[1] || option === authLevels[2] || (shouldSetup == true &&
+                        (option == authLevels[0] || option == authLevels[3]))
                       }
                     >
                       {option.label}

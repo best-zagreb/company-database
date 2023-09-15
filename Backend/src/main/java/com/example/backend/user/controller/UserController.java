@@ -19,6 +19,12 @@ import javax.naming.AuthenticationException;
 public class UserController {
     private final UserService userService;
 
+    @GetMapping("/shouldSetup")
+    @ResponseBody
+    public ResponseEntity getShouldSetup() {
+        return new ResponseEntity(userService.shouldSetup(), HttpStatus.OK);
+    }
+
     @PostMapping()
     @ResponseBody
     public ResponseEntity addUser(@RequestHeader String googleTokenEncoded, @RequestBody UserDTO userDTO) {

@@ -1,10 +1,45 @@
-import { useEffect } from "react";
+import { useEffect, useState, useContext } from "react";
 
 import { Typography, Box, CircularProgress } from "@mui/material";
+import ToastContext from "../../context/ToastContext";
+import UserForm from "../forms/UserForm";
 
 export default function Login({ loginUser, loading }) {
+  const [openFormModal, setOpenFormModal] = useState(false);
+  const { handleOpenToast } = useContext(ToastContext);
+
+
   function handleCallbackResponse(response) {
     loginUser(response);
+  }
+
+  async function shouldSetup() {
+      try {
+        const serverResponse = await fetch(
+          "/api/users/shouldSetup",
+          {
+            method: "GET",
+          }
+        );
+
+        if (serverResponse.ok) {
+          const json = await serverResponse.json();
+
+          if(json == true) {
+            setOpenFormModal(true);
+          }
+        } else {
+          handleOpenToast({
+            type: "error",
+            info: "A server error occurred whilst fetching data.",
+          });
+        }
+      } catch (error) {
+        handleOpenToast({
+          type: "error",
+          info: "An error occurred whilst trying to connect to server.",
+        });
+      }
   }
 
   useEffect(() => {
@@ -29,9 +64,24 @@ export default function Login({ loginUser, loading }) {
     );
 
     google.accounts.id.prompt();
+
+    shouldSetup();
   }, []);
 
+  useEffect(() => {
+      if(openFormModal == false) {
+        shouldSetup();
+      }
+  }, [openFormModal]);
+
   return (
+    <>
+    <UserForm
+      object={null}
+      openModal={openFormModal}
+      setOpenModal={setOpenFormModal}
+      fetchUpdatedData={function() {}}
+    />
     <Box
       sx={{
         height: "100%",
@@ -57,5 +107,6 @@ export default function Login({ loginUser, loading }) {
         id="signInWithGoogleButton"
       ></Box>
     </Box>
+    </>
   );
 }
