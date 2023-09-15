@@ -39,6 +39,11 @@ public class CompanyService
     public Boolean softLockCompany(AppUser user, Long id) throws AuthenticationException, EntityNotFoundException
     {
         Helper.checkUserAuthorities(user, List.of(AUTHORITY.ADMINISTRATOR));
+        if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.FR_TEAM_MEMBER).contains(user.getAuthority())){
+            if (!isFrTeamMemberOrResponsibleOnCompany(user, id)){
+                throw new AuthenticationException("You do not have permission to execute this command.");
+            }
+        }
 
         String errorMessage = "Company with id " + id + " does not exist";
         Company company = Helper.getValue(companyRepository.findById(id), errorMessage);

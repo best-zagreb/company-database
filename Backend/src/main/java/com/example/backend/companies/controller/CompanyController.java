@@ -111,7 +111,7 @@ public class CompanyController
             return new ResponseEntity<>(companyService.softLockCompany(user, companyId), HttpStatus.OK);
         } catch (AuthenticationException e)
         {
-            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
         } catch (EntityNotFoundException e)
         {
             return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
