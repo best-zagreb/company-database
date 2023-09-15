@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter @Setter
 public class FRTeamMemberDPO{
     private Long id;
-    private String name;
+    private String firstName;
     private String lastName;
 }

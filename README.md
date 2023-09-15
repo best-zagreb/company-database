@@ -18,7 +18,7 @@ Licensed under GNU GPL v3 license.
 2. Create postgreSQL database with name `your_database_name` (for example `cdb-dev`)
 3. Open Backend folder as project using your favorite editor
 4. Add environment variables to project
-    - In [Intellij IDEA](https://www.twilio.com/blog/set-up-env-variables-intellij-idea-java) (`SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/your_database_name; SPRING_DATASOURCE_USERNAME=your_superuser_username; SPRING_DATASOURCE_PASSWORD=your_superuser_password`)
+    - In [Intellij IDEA](https://www.twilio.com/blog/set-up-env-variables-intellij-idea-java) (`SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/your_database_name; SPRING_DATASOURCE_USERNAME=your_superuser_username; SPRING_DATASOURCE_PASSWORD=your_superuser_password;`)
     - In [Eclipse](https://examples.javacodegeeks.com/java-development/desktop-java/ide/eclipse/eclipse-environment-variable-setup-example/)
 5. Run and stop `BackendApplication` class in `src/main/java/com.example.backend` to create all relations (tables) in the database
 6. Add initial user to database with command `INSERT INTO app_user (id, firstname, lastname, nickname, loginmail, notificationemail, authority, description) VALUES (0, 'YourName', 'YourSurname', 'YourNickname', 'IMPORTANTYourEmail@gmail.com',  'IMPORTANTYourEmail@gmail.com', 0, null);`

@@ -33,10 +33,10 @@ const projectTypes = [
 ];
 
 export default function ProjectForm({
-  project,
-  populateProjects,
+  object: project,
   openModal,
   setOpenModal,
+  fetchUpdatedData,
 }) {
   const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
@@ -69,7 +69,7 @@ export default function ProjectForm({
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("/users/", {
+      const serverResponse = await fetch("/api/users/", {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
@@ -82,7 +82,7 @@ export default function ProjectForm({
       } else {
         handleOpenToast({
           type: "error",
-          info: "A server error occurred whilst fetching users for FR responsible input field.",
+          info: "A server error occurred whilst fetching users for Project responsible input field.",
         });
       }
     } catch (error) {
@@ -97,7 +97,7 @@ export default function ProjectForm({
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("/projects/", {
+      const serverResponse = await fetch("/api/projects/", {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
@@ -108,6 +108,7 @@ export default function ProjectForm({
         // console.log(json);
         setExistingProjects(json);
       } else {
+        console.log(serverResponse);
         handleOpenToast({
           type: "error",
           info: "A server error occurred whilst fetching projects for Category input field.",
@@ -160,7 +161,7 @@ export default function ProjectForm({
     };
 
     const serverResponse = await fetch(
-      `/projects/${project?.id ?? ""}`,
+      `/api/projects/${project?.id ?? ""}`,
       request
     );
 
@@ -176,7 +177,7 @@ export default function ProjectForm({
       });
 
       setOpenModal(false);
-      populateProjects();
+      fetchUpdatedData();
     } else if (serverResponse.status === 400) {
       handleOpenToast({
         type: "error",
@@ -209,12 +210,12 @@ export default function ProjectForm({
     setName(project?.name);
     setCategory(project?.category);
     setType(
-      project?.type.charAt(0) + project?.type.slice(1).toLowerCase() ||
+      project?.type?.charAt(0) + project?.type?.slice(1).toLowerCase() ||
         projectTypes[0].value
     );
     setStartDate(project ? moment(project.startDate) : moment());
     setEndDate(project ? moment(project.endDate) : moment().add(6, "months"));
-    setFRRespID(project?.frresp.id);
+    setFRRespID(project?.frresp?.id);
     setFRGoal(project?.frgoal);
     setFirstPingDate(
       (project?.firstPingDate && moment(project.firstPingDate)) || null
@@ -458,7 +459,7 @@ export default function ProjectForm({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="FR responsible"
+                    label="Project responsible"
                     required
                     fullWidth
                     margin="dense"

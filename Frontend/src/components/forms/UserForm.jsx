@@ -6,7 +6,6 @@ import {
   TextField,
   MenuItem,
   Typography,
-  FormGroup,
   FormControl,
   FormControlLabel,
   Checkbox,
@@ -18,7 +17,7 @@ import { useState, useContext, useEffect } from "react";
 
 import ToastContext from "../../context/ToastContext";
 
-import TextInput from "./partial/TextInput";
+import TextInputNew from "./partial/TextInputNew";
 
 const authLevels = [
   {
@@ -26,12 +25,12 @@ const authLevels = [
     label: "Observer",
   },
   {
-    value: "FR team member",
-    label: "FR team member",
+    value: "Project member",
+    label: "Project member",
   },
   {
-    value: "FR responsible",
-    label: "FR responsible",
+    value: "Project responsible",
+    label: "Project responsible",
   },
   {
     value: "Moderator",
@@ -44,42 +43,42 @@ const authLevels = [
 ];
 
 export default function UserForm({
-  user,
-  openUserFormModal,
-  setOpenUserFormModal,
-  populateUsers,
+  object: user,
+  openModal,
+  setOpenModal,
+  fetchUpdatedData,
 }) {
   const { handleOpenToast } = useContext(ToastContext);
 
   const [loadingButton, setLoadingButton] = useState(false);
 
-  const [name, setName] = useState();
-  const [surname, setSurname] = useState();
-  const [nickname, setNickname] = useState();
-  const [loginEmail, setLoginEmail] = useState();
-  const [notificationEmail, setNotificationEmail] = useState();
-  const [useDifferentEmails, setUseDifferentEmails] = useState();
-  const [authLevel, setAuthLevel] = useState();
-  const [description, setDescription] = useState();
-
-  const [nameIsValid, setNameIsValid] = useState();
-  const [surnameIsValid, setSurnameIsValid] = useState();
-  const [nicknameIsValid, setNicknameIsValid] = useState();
-  const [loginEmailIsValid, setLoginEmailIsValid] = useState();
-  const [notificationEmailIsValid, setNotificationEmailIsValid] = useState();
-  const [authLevelIsValid, setAuthLevelIsValid] = useState();
-  const [descriptionIsValid, setDescriptionIsValid] = useState();
+  const [formData, setFormData] = useState({
+    user: {
+      firstName: null,
+      lastName: null,
+      nickname: null,
+      loginEmail: null,
+      notificationEmail: null,
+      useDifferentEmails: false,
+      authLevel: authLevels[0].value,
+      description: null,
+    },
+    validation: {
+      // optional and predefined fields are valid by default
+      firstNameIsValid: false,
+      lastNameIsValid: false,
+      nicknameIsValid: false,
+      loginEmailIsValid: false,
+      notificationEmailIsValid: true,
+      authLevelIsValid: true,
+      descriptionIsValid: true,
+    },
+  });
 
   async function submit() {
-    if (
-      !nameIsValid ||
-      !surnameIsValid ||
-      !nicknameIsValid ||
-      !loginEmailIsValid ||
-      !notificationEmailIsValid ||
-      !authLevelIsValid ||
-      !descriptionIsValid
-    ) {
+    const isFormValid = Object.values(formData.validation).every(Boolean); // all validation rules are fulfilled
+
+    if (!isFormValid) {
       handleOpenToast({
         type: "error",
         info: "Invalid user details.",
@@ -89,23 +88,35 @@ export default function UserForm({
 
     setLoadingButton(true);
 
+    // object destructuring
+    const {
+      firstName,
+      lastName,
+      nickname,
+      loginEmail,
+      notificationEmail,
+      useDifferentEmails,
+      authLevel,
+      description,
+    } = formData.user;
+
+    const userData = {
+      firstName: firstName?.trim(),
+      lastName: lastName?.trim(),
+      nickname: nickname?.trim(),
+      loginEmail: loginEmail?.trim(),
+      notificationEmail: useDifferentEmails
+        ? notificationEmail?.trim()
+        : loginEmail?.trim(),
+      authority: authLevel?.trim().toUpperCase(),
+      description:
+        description && description?.trim() !== "" ? description?.trim() : null,
+    };
+
     const JWToken = null;
     if (localStorage.getItem("loginInfo")) {
         const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
     }
-
-    const newUser = {
-      firstName: name.trim(),
-      lastName: surname.trim(),
-      nickname: nickname && nickname !== "" ? nickname.trim() : null,
-      loginEmail: loginEmail.trim(),
-      notificationEmail: useDifferentEmails
-        ? notificationEmail.trim()
-        : loginEmail.trim(),
-      authority: authLevel.trim().toUpperCase(),
-      description:
-        description && description !== "" ? description.trim() : null,
-    };
 
     var serverResponse;
 
@@ -117,7 +128,7 @@ export default function UserForm({
           },
           body: JSON.stringify(newUser),
         };
-        serverResponse = await fetch(`/users/setup`, request);
+        serverResponse = await fetch(`/api/users/setup`, request);
     }
     else {
         const request = {
@@ -126,20 +137,21 @@ export default function UserForm({
             googleTokenEncoded: JWToken.credential,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(newUser),
+          body: JSON.stringify(userData),
         };
-        serverResponse = await fetch(`/users/${user?.id ?? ""}`, request);
+
+        serverResponse = await fetch(`/api/users/${user?.id ?? ""}`, request);
     }
 
     if (serverResponse.ok) {
       handleOpenToast({
         type: "success",
-        info: `User ${newUser.firstName} ${newUser.lastName} ${
+        info: `User ${userData.firstName} ${userData.lastName} ${
           user ? "updated" : "added"
         }.`,
       });
-      setOpenUserFormModal(false);
-      populateUsers();
+      setOpenModal(false);
+      fetchUpdatedData();
     } else if (serverResponse.status === 400) {
       handleOpenToast({
         type: "error",
@@ -169,33 +181,47 @@ export default function UserForm({
   }
 
   useEffect(() => {
-    setName(user?.firstName);
-    setSurname(user?.lastName);
-    setNickname(user?.nickname || "");
-    setLoginEmail(user?.loginEmail);
-    setNotificationEmail(user?.notificationEmail);
-    setUseDifferentEmails(user ? true : false);
-    setAuthLevel(
-      user?.authority.charAt(0) + user?.authority.slice(1).toLowerCase() ||
-        authLevels[0].value
-    );
-    setDescription(user?.description);
+    // object destructuring
+    const {
+      firstName,
+      lastName,
+      nickname,
+      loginEmail,
+      notificationEmail,
+      authority,
+      description,
+    } = user || {};
 
-    // optional and predefined fields are always valid
-    setNameIsValid(user ? true : false);
-    setSurnameIsValid(user ? true : false);
-    setNicknameIsValid(true);
-    setLoginEmailIsValid(user ? true : false);
-    setNotificationEmailIsValid(true);
-    setAuthLevelIsValid(true);
-    setDescriptionIsValid(true);
-  }, [openUserFormModal]);
+    setFormData({
+      user: {
+        firstName: firstName,
+        lastName: lastName,
+        nickname: nickname,
+        loginEmail: loginEmail,
+        notificationEmail: notificationEmail,
+        useDifferentEmails: user ? true : false,
+        authLevel:
+          authority?.charAt(0) + authority?.slice(1).toLowerCase() ||
+          authLevels[0].value,
+        description: description,
+      },
+      validation: {
+        firstNameIsValid: user ? true : false,
+        lastNameIsValid: user ? true : false,
+        nicknameIsValid: user ? true : false,
+        loginEmailIsValid: user ? true : false,
+        notificationEmailIsValid: true,
+        authLevelIsValid: true,
+        descriptionIsValid: true,
+      },
+    });
+  }, [openModal]);
 
   return (
     <>
-      <Backdrop open={openUserFormModal}>
+      <Backdrop open={openModal}>
         <Modal
-          open={openUserFormModal}
+          open={openModal}
           closeAfterTransition
           // submit on Enter key
           onKeyDown={(e) => {
@@ -205,10 +231,10 @@ export default function UserForm({
           }}
           // close on Escape key
           onClose={() => {
-            setOpenUserFormModal(false);
+            setOpenModal(false);
           }}
         >
-          <Fade in={openUserFormModal}>
+          <Fade in={openModal}>
             <FormControl
               sx={{
                 position: "absolute",
@@ -241,96 +267,121 @@ export default function UserForm({
                   overflowY: "auto",
                 }}
               >
-                <TextInput
-                  labelText={"Name"}
+                <TextInputNew
+                  labelText={"First name"}
                   isRequired
                   placeholderText={"Jane"}
                   helperText={{
-                    error: "Name must be between 2 and 35 characters",
+                    error: "First name must be between 2 and 35 characters",
                     details: "",
                   }}
-                  inputProps={{ minLength: 2, maxLength: 35 }}
-                  validationFunction={(input) => {
-                    return input.length >= 2 && input.length <= 35;
+                  inputProps={{
+                    name: "firstName",
+                    minLength: 2,
+                    maxLength: 35,
                   }}
-                  value={name}
-                  setValue={setName}
-                  valueIsValid={nameIsValid}
-                  setValueIsValid={setNameIsValid}
-                ></TextInput>
-                <TextInput
-                  labelText={"Surname"}
+                  validationFunction={(input) => {
+                    return (
+                      input.trim().length >= 2 && input.trim().length <= 35
+                    );
+                  }}
+                  formData={formData}
+                  setFormData={setFormData}
+                ></TextInputNew>
+
+                <TextInputNew
+                  labelText={"Last name"}
                   isRequired
                   placeholderText={"Doe"}
                   helperText={{
-                    error: "Surname must be between 2 and 35 characters",
+                    error: "Last name must be between 2 and 35 characters",
                     details: "",
                   }}
-                  inputProps={{ minLength: 2, maxLength: 35 }}
+                  inputProps={{ name: "lastName", minLength: 2, maxLength: 35 }}
                   validationFunction={(input) => {
-                    return input.length >= 2 && input.length <= 35;
+                    return (
+                      input.trim().length >= 2 && input.trim().length <= 35
+                    );
                   }}
-                  value={surname}
-                  setValue={setSurname}
-                  valueIsValid={surnameIsValid}
-                  setValueIsValid={setSurnameIsValid}
-                ></TextInput>
-                <TextInput
-                  labelText={"Nickname"}
-                  helperText={{
-                    error: "Nickname must be under 35 characters",
-                    details: "",
-                  }}
-                  inputProps={{ maxLength: 35 }}
-                  validationFunction={(input) => {
-                    return input.length <= 35;
-                  }}
-                  value={nickname}
-                  setValue={setNickname}
-                  valueIsValid={nicknameIsValid}
-                  setValueIsValid={setNicknameIsValid}
-                ></TextInput>
+                  formData={formData}
+                  setFormData={setFormData}
+                ></TextInputNew>
 
-                <TextInput
+                <TextInputNew
+                  labelText={"Nickname"}
+                  isRequired
+                  placeholderText={"JD"}
+                  helperText={{
+                    error: "Nickname must be between 2 and 35 characters",
+                    details: "",
+                  }}
+                  inputProps={{
+                    name: "nickname",
+                    minLength: 2,
+                    maxLength: 35,
+                  }}
+                  validationFunction={(input) => {
+                    return (
+                      input.trim().length >= 2 && input.trim().length <= 35
+                    );
+                  }}
+                  formData={formData}
+                  setFormData={setFormData}
+                ></TextInputNew>
+
+                <TextInputNew
                   labelText={"Login email"}
                   isRequired
-                  readOnly={useDifferentEmails}
                   placeholderText={"jane.doe@gmail.com"}
                   helperText={{
                     error: "Invalid email or email length",
-                    details: "User will login to CDB with this email",
+                    details:
+                      "Login access to CDB will be granted through this email",
                   }}
-                  inputProps={{ minLength: 6, maxLength: 55 }}
+                  inputProps={{
+                    name: "loginEmail",
+                    minLength: 6,
+                    maxLength: 55,
+                  }}
                   validationFunction={(input) => {
                     const mailformat =
                       /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
                     return (
-                      input.length >= 6 &&
-                      input.length <= 55 &&
-                      input.match(mailformat)
+                      input.trim().length >= 6 &&
+                      input.trim().length <= 55 &&
+                      input.trim().match(mailformat)
                     );
                   }}
-                  value={loginEmail}
-                  setValue={setLoginEmail}
-                  valueIsValid={loginEmailIsValid}
-                  setValueIsValid={setLoginEmailIsValid}
-                ></TextInput>
+                  formData={formData}
+                  setFormData={setFormData}
+                ></TextInputNew>
 
-                <FormControlLabel
-                  label="Use separate emails for notifications."
-                  control={
-                    <Checkbox
-                      checked={useDifferentEmails}
-                      onChange={(e) => {
-                        setUseDifferentEmails(e.target.checked);
-                      }}
-                    />
-                  }
-                  sx={{ margin: "0", width: "100%" }}
-                />
+                {!user && (
+                  <FormControlLabel
+                    label="Use different email for notifications"
+                    control={
+                      <Checkbox
+                        checked={formData.user.useDifferentEmails}
+                        onChange={(e) => {
+                          setFormData((prevData) => ({
+                            user: {
+                              ...prevData.user,
+                              useDifferentEmails: e.target.checked,
+                            },
+                            validation: {
+                              ...prevData.validation,
+                              notificationEmailIsValid: false,
+                            },
+                          }));
+                        }}
+                      />
+                    }
+                    sx={{ margin: "0", width: "100%" }}
+                  />
+                )}
 
-                {useDifferentEmails && (
-                  <TextInput
+                {formData.user.useDifferentEmails && (
+                  <TextInputNew
                     labelText={"Notification email"}
                     isRequired
                     placeholderText={"jane.doe@gmail.com"}
@@ -338,22 +389,24 @@ export default function UserForm({
                       error: "Invalid email or email length",
                       details: "App notifications will be sent to this email",
                     }}
-                    inputProps={{ minLength: 6, maxLength: 55 }}
+                    inputProps={{
+                      name: "notificationEmail",
+                      minLength: 6,
+                      maxLength: 55,
+                    }}
                     validationFunction={(input) => {
                       const mailformat =
                         /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
                       return (
-                        !useDifferentEmails ||
-                        (input.length >= 6 &&
-                          input.length <= 55 &&
-                          input.match(mailformat))
+                        !formData.user.useDifferentEmails ||
+                        (input.trim().length >= 6 &&
+                          input.trim().length <= 55 &&
+                          input.trim().match(mailformat))
                       );
                     }}
-                    value={notificationEmail}
-                    setValue={setNotificationEmail}
-                    valueIsValid={notificationEmailIsValid}
-                    setValueIsValid={setNotificationEmailIsValid}
-                  ></TextInput>
+                    formData={formData}
+                    setFormData={setFormData}
+                  ></TextInputNew>
                 )}
 
                 <TextField
@@ -363,28 +416,36 @@ export default function UserForm({
                   select
                   margin="dense"
                   helperText={
-                    !authLevelIsValid && "Invalid authorization level"
+                    !formData.validation.authLevelIsValid &&
+                    "Invalid authorization level"
                   }
-                  value={authLevel}
-                  error={!authLevelIsValid}
+                  inputProps={{
+                    name: "authLevel",
+                  }}
+                  value={formData.user.authLevel}
+                  error={!formData.validation.authLevelIsValid}
                   onChange={(e) => {
-                    const input = e.target.value;
-                    if (
-                      authLevels.map((option) => option.value).includes(input)
-                    ) {
-                      setAuthLevelIsValid(true);
-                    } else {
-                      setAuthLevelIsValid(false);
-                    }
+                    const inputValue = e.target.value;
 
-                    setAuthLevel(input);
+                    setFormData((prevData) => ({
+                      user: {
+                        ...prevData.user,
+                        authLevel: inputValue,
+                      },
+                      validation: {
+                        ...prevData.validation,
+                        authLevelIsValid: authLevels.find(
+                          (option) => option.value === inputValue
+                        ),
+                      },
+                    }));
                   }}
                 >
                   {authLevels.map((option) => (
                     <MenuItem
                       key={option.value}
                       value={option.value}
-                      // temporary solution for not being able to change when FR levels
+                      // TODO: auth level can only be changed to a higher level when project responsible or member
                       disabled={
                         option === authLevels[1] || option === authLevels[2]
                       }
@@ -394,7 +455,7 @@ export default function UserForm({
                   ))}
                 </TextField>
 
-                <TextInput
+                <TextInputNew
                   labelText={"Description"}
                   textFieldProps={{
                     multiline: true,
@@ -405,15 +466,13 @@ export default function UserForm({
                     error: "Description must be under 475 characters",
                     details: "",
                   }}
-                  inputProps={{ maxLength: 475 }}
+                  inputProps={{ name: "description", maxLength: 475 }}
                   validationFunction={(input) => {
-                    return input.length <= 475;
+                    return input.trim().length <= 475;
                   }}
-                  value={description}
-                  setValue={setDescription}
-                  valueIsValid={descriptionIsValid}
-                  setValueIsValid={setDescriptionIsValid}
-                ></TextInput>
+                  formData={formData}
+                  setFormData={setFormData}
+                ></TextInputNew>
               </Box>
 
               <Box
@@ -428,7 +487,7 @@ export default function UserForm({
                 <Button
                   variant="outlined"
                   onClick={() => {
-                    setOpenUserFormModal(false);
+                    setOpenModal(false);
                   }}
                 >
                   Cancel
@@ -438,17 +497,9 @@ export default function UserForm({
                   variant="contained"
                   onClick={submit}
                   loading={loadingButton}
-                  disabled={
-                    !(
-                      nameIsValid &&
-                      surnameIsValid &&
-                      nicknameIsValid &&
-                      loginEmailIsValid &&
-                      notificationEmailIsValid &&
-                      authLevelIsValid &&
-                      descriptionIsValid
-                    )
-                  }
+                  disabled={Object.keys(formData.validation).some(
+                    (key) => !formData.validation[key]
+                  )}
                 >
                   {/* span needed because of bug */}
                   <span>{!user ? "Add user" : "Update user"}</span>

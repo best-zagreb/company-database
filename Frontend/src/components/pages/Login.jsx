@@ -46,7 +46,7 @@ export default function Login({ loginUser, loading }) {
     /* global google */
     google.accounts.id.initialize({
       client_id:
-        "56088533156-igg1fia7dcuntrlp1gn1m3qns48hbp41.apps.googleusercontent.com",
+        "752759618287-1lja8mifkd72vo7250c2e9rl0b18mkic.apps.googleusercontent.com",
       callback: handleCallbackResponse,
 
       // TODO: use redirect instead of popup

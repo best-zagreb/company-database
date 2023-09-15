@@ -19,6 +19,8 @@ import Users from "./components/pages/Users";
 import Projects from "./components/pages/Projects";
 import Companies from "./components/pages/Companies";
 import Company from "./components/pages/Company";
+import User from "./components/pages/User";
+import Project from "./components/pages/Project";
 
 import Header from "./components/Header";
 import Toast from "./components/Toast";
@@ -40,7 +42,7 @@ export default function App() {
     setLoadingUser(true);
 
     try {
-      const serverResponse = await fetch("/users/login", {
+      const serverResponse = await fetch("/api/users/login", {
         method: "GET",
         headers: {
           googleTokenEncoded: JWToken.credential,
@@ -134,19 +136,19 @@ export default function App() {
             <Route path="users">
               <Route index element={<Users />} />
 
-              <Route path=":userNickname" element={<Company />} />
+              <Route path=":userId" element={<User />} />
             </Route>
 
             <Route path="projects">
               <Route index element={<Projects />} />
 
-              <Route path=":projectName" element={<Company />} />
+              <Route path=":projectId" element={<Project />} />
             </Route>
 
             <Route path="companies">
               <Route index element={<Companies />} />
 
-              <Route path=":companyName" element={<Company />} />
+              <Route path=":companyId" element={<Company />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />
@@ -160,9 +162,9 @@ export default function App() {
         </Routes>
       )}
 
-      <Toast></Toast>
+      <Toast />
 
-      <DeleteAlert></DeleteAlert>
+      <DeleteAlert />
     </>
   );
 }

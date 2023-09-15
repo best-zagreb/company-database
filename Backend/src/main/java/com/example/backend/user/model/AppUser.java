@@ -1,6 +1,7 @@
 package com.example.backend.user.model;
 
 import com.example.backend.project.model.Project;
+import com.example.backend.util.SoftLockedInterface;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @Getter @Setter
-public class AppUser {
+public class AppUser implements SoftLockedInterface {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -44,6 +45,11 @@ public class AppUser {
     @JsonIgnore
     private Set<Project> projects;
 
+    @Column(name = "softLocked")
+    @Getter
+    @Setter
+    private Boolean softLocked = false;
+
     public AppUser(String loginEmail,
                    AUTHORITY authority,
                    String firstName,
@@ -59,5 +65,6 @@ public class AppUser {
         this.description = description;
         this.nickname = nickname;
         this.projects = new HashSet<>();
+        this.softLocked = false;
     }
 }

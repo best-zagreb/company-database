@@ -30,7 +30,7 @@ export default function Users() {
   const navigate = useNavigate();
 
   const { handleOpenToast } = useContext(ToastContext);
-  const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
+  const { setOpenDeleteAlert, setObject, setEndpoint, setFetchUpdatedData } =
     useContext(DeleteAlertContext);
 
   const [openFormModal, setOpenFormModal] = useState(false);
@@ -47,7 +47,7 @@ export default function Users() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("/users/", {
+      const serverResponse = await fetch("/api/users/", {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
@@ -84,8 +84,8 @@ export default function Users() {
 
   function handleDelete(user) {
     setObject({ type: "User", name: user.firstName + " " + user.lastName });
-    setEndpoint("/users/" + user.id);
-    setPopulateObjects({ function: populateTable });
+    setEndpoint("/api/users/" + user.id);
+    setFetchUpdatedData({ function: populateTable });
 
     setOpenDeleteAlert(true);
   }
@@ -97,10 +97,10 @@ export default function Users() {
   return (
     <>
       <UserForm
-        user={user}
-        openUserFormModal={openFormModal}
-        setOpenUserFormModal={setOpenFormModal}
-        populateUsers={populateTable}
+        object={user}
+        openModal={openFormModal}
+        setOpenModal={setOpenFormModal}
+        fetchUpdatedData={populateTable}
       />
 
       <Container

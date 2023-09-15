@@ -7,11 +7,11 @@ import "./Form.css";
 // TODO: needs to be completely redone using TextInput like the other forms
 
 export default function ContactForm({
+  object: contact,
+  companyId,
   openModal,
   setOpenModal,
-  fetchData,
-  company,
-  contact,
+  fetchUpdatedData,
 }) {
   const [name, setName] = useState();
   const [surname, setSurname] = useState();
@@ -41,7 +41,7 @@ export default function ContactForm({
     // console.log(contactTemplate);
 
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-    // fetch("/companies/" + company.id + "/contacts", {
+    // fetch("/companies/" + companyId + "/contacts", {
     //   method: "POST",
     //   headers: {
     //     googleTokenEncoded: JWToken.credential,

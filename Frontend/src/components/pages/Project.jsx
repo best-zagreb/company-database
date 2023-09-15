@@ -5,39 +5,34 @@ import {
   Typography,
   Container,
   Button,
-  Link,
   Box,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
   IconButton,
-  Tooltip,
   CircularProgress,
+  Tooltip,
 } from "@mui/material";
 import {
   KeyboardArrowLeft as KeyboardArrowLeftIcon,
   ExpandMore as ExpandMoreIcon,
-  Email as EmailIcon,
-  Phone as PhoneIcon,
-  Work as WorkIcon,
-  Description as DescriptionIcon,
   AddCircle as AddCircleIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   Lock as LockIcon,
   LockOpen as LockOpenIcon,
+  Clear as RemoveIcon,
 } from "@mui/icons-material/";
 
+import moment from "moment";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import ToastContext from "../../context/ToastContext";
 import DeleteAlertContext from "../../context/DeleteAlertContext";
 
-import ContactForm from "../forms/ContactForm";
 import CollaborationForm from "../forms/CollaborationForm";
-import CompanyForm from "../forms/CompanyForm";
+import ProjectForm from "../forms/ProjectForm";
 
 import SearchBar from "./partial/SearchBar";
 import TableComponent from "./partial/TableComponent";
@@ -45,7 +40,7 @@ import TableComponent from "./partial/TableComponent";
 const tableColumns = [
   {
     key: "name",
-    label: "Project name",
+    label: "Company name",
   },
   {
     key: "responsible",
@@ -84,29 +79,21 @@ const tableColumns = [
   },
 ];
 
-function handleEditContact(e, id) {
-  // TODO: make a PUT request na /companies/{id}/contacts/{id} and then update contacts list
-  console.log("Editing a contact is not yet implemented!");
-  // setEditFormModal(true);
+function handleRemoveProjectMember(e, id) {
+  // TODO: make a DELETE request na /projects/{id}/teamMembers/{id} and then update frTeamMembers list
+  console.log("Deleting a team member is not yet implemented!");
 }
 
-function handleDeleteContact(e, id) {
-  // TODO: make a DELETE request na /companies/{id}/contacts/{id} and then update contacts list
-  console.log("Deleting a contact is not yet implemented!");
-}
-
-export default function Company() {
-  const { companyId } = useParams();
+export default function Project() {
+  const { projectId } = useParams();
   const navigate = useNavigate();
 
   const { handleOpenToast } = useContext(ToastContext);
   const { setOpenDeleteAlert, setObject, setEndpoint, setFetchUpdatedData } =
     useContext(DeleteAlertContext);
 
-  const [openCompanyFormModal, setOpenCompanyFormModal] = useState(false);
-  const [company, setCompany] = useState([]);
-  const [openContactFormModal, setOpenContactFormModal] = useState(false);
-  const [contact, setContact] = useState();
+  const [openProjectFormModal, setOpenProjectFormModal] = useState(false);
+  const [project, setProject] = useState([]);
   const [openCollaborationFormModal, setOpenCollaborationFormModal] =
     useState(false);
   const [collaboration, setCollaboration] = useState();
@@ -115,18 +102,18 @@ export default function Company() {
 
   const [loadingSoftLockButton, setLoadingSoftLockButton] = useState(false);
 
-  async function fetchCompany() {
+  async function fetchProject() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("/api/companies/" + companyId, {
+      const serverResponse = await fetch("/api/projects/" + projectId, {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
       if (serverResponse.ok) {
         const json = await serverResponse.json();
 
-        setCompany(json);
+        setProject(json);
         setSearchResults(
           json.collaborations
             .map((collaboration) => {
@@ -148,30 +135,30 @@ export default function Company() {
     }
   }
 
-  function handleEditCompany() {
-    setOpenCompanyFormModal(true);
+  function handleEditProject() {
+    setOpenProjectFormModal(true);
   }
 
-  function navigateCompanies() {
-    navigate("/companies");
+  function navigateProjects() {
+    navigate("/projects");
   }
 
-  function handleDeleteCompany() {
-    setObject({ type: "Company", name: company.name });
-    setEndpoint("/api/companies/" + company.id);
-    setFetchUpdatedData({ function: navigateCompanies });
+  function handleDeleteProject() {
+    setObject({ type: "Project", name: project.name });
+    setEndpoint("/api/projects/" + project.id);
+    setFetchUpdatedData({ function: navigateProjects });
 
     setOpenDeleteAlert(true);
   }
 
-  async function handleSoftLockCompany() {
+  async function handleSoftLockProject() {
     setLoadingSoftLockButton(true);
 
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
       const serverResponse = await fetch(
-        "/api/companies/" + company.id + "/softLock",
+        "/api/projects/" + project.id + "/softLock",
         {
           method: "PATCH",
           headers: { googleTokenEncoded: JWToken.credential },
@@ -179,11 +166,11 @@ export default function Company() {
       );
       if (serverResponse.ok) {
         const json = await serverResponse.json();
-        company.softLocked = json;
+        project.softLocked = json;
 
         handleOpenToast({
           type: "success",
-          info: `Company ${company.name} soft locked.`,
+          info: `Project ${project.name} soft locked.`,
         });
       } else {
         handleOpenToast({
@@ -209,36 +196,29 @@ export default function Company() {
   function handleDeleteCollaboration(collaboration) {
     setObject({ type: "Collaboration", name: collaboration.name });
     setEndpoint("/api/collaborations/" + collaboration.id);
-    setFetchUpdatedData({ function: fetchCompany });
+    setFetchUpdatedData({ function: fetchProject });
 
     setOpenDeleteAlert(true);
   }
 
   useEffect(() => {
-    fetchCompany();
+    fetchProject();
   }, []);
 
   return (
     <>
-      <CompanyForm
-        object={company}
-        openModal={openCompanyFormModal}
-        setOpenModal={setOpenCompanyFormModal}
-        fetchUpdatedData={fetchCompany}
-      />
-
-      <ContactForm
-        object={contact}
-        openModal={openContactFormModal}
-        setOpenModal={setOpenContactFormModal}
-        fetchUpdatedData={fetchCompany}
+      <ProjectForm
+        object={project}
+        openModal={openProjectFormModal}
+        setOpenModal={setOpenProjectFormModal}
+        fetchUpdatedData={fetchProject}
       />
 
       <CollaborationForm
         object={collaboration}
         openModal={openCollaborationFormModal}
         setOpenModal={setOpenCollaborationFormModal}
-        fetchUpdatedData={fetchCompany}
+        fetchUpdatedData={fetchProject}
       />
 
       <Box
@@ -268,7 +248,7 @@ export default function Company() {
               variant="contained"
               startIcon={<KeyboardArrowLeftIcon />}
               onClick={() => {
-                navigate("/companies");
+                navigate("/projects");
               }}
               sx={{
                 borderTopLeftRadius: 0,
@@ -277,7 +257,7 @@ export default function Company() {
                 marginBlock: 2,
               }}
             >
-              Companies
+              Projects
             </Button>
 
             <Box
@@ -291,12 +271,12 @@ export default function Company() {
               }}
             >
               <Tooltip
-                title={company.softLocked ? "Soft unlock" : "Soft lock"}
+                title={project.softLocked ? "Soft unlock" : "Soft lock"}
                 key="Soft lock"
               >
                 <IconButton
                   size="small"
-                  onClick={handleSoftLockCompany}
+                  onClick={handleSoftLockProject}
                   sx={{
                     color: "white",
                     backgroundColor: "#1976d2",
@@ -311,7 +291,7 @@ export default function Company() {
                         color: "white",
                       }}
                     />
-                  ) : company.softLocked ? (
+                  ) : project.softLocked ? (
                     <LockOpenIcon />
                   ) : (
                     <LockIcon />
@@ -321,8 +301,8 @@ export default function Company() {
               <Tooltip title="Edit" key="Edit">
                 <IconButton
                   size="small"
-                  disabled={company.softLocked}
-                  onClick={handleEditCompany}
+                  disabled={project.softLocked}
+                  onClick={handleEditProject}
                   sx={{
                     color: "white",
                     backgroundColor: "#1976d2",
@@ -336,8 +316,8 @@ export default function Company() {
               <Tooltip title="Delete" key="Delete">
                 <IconButton
                   size="small"
-                  disabled={company.softLocked}
-                  onClick={handleDeleteCompany}
+                  disabled={project.softLocked}
+                  onClick={handleDeleteProject}
                   sx={{
                     color: "white",
                     backgroundColor: "#1976d2",
@@ -366,7 +346,7 @@ export default function Company() {
                 textTransform: "uppercase",
               }}
             >
-              {company.name}
+              {project.name}
             </Typography>
 
             <Accordion defaultExpanded sx={{ marginBlock: 2 }}>
@@ -376,81 +356,74 @@ export default function Company() {
                     textTransform: "uppercase",
                   }}
                 >
-                  COMPANY INFO
+                  PROJECT INFO
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <List dense>
                   <ListItem disablePadding>
-                    <ListItemText primary={"Sector: " + company.sector} />
+                    <ListItemText primary={"Category: " + project.category} />
                   </ListItem>
 
                   <ListItem disablePadding>
-                    <ListItemText
-                      primary={"ABC Category: " + company.abcCategory}
-                    />
-                  </ListItem>
-
-                  <ListItem disablePadding>
-                    <ListItemText
-                      primary={
-                        "Budget planning month: " + company.budgetPlanningMonth
-                      }
-                    />
-                  </ListItem>
-
-                  <ListItem disablePadding>
-                    <ListItemText primary={"Country: " + company.country} />
-                  </ListItem>
-
-                  <ListItem disablePadding>
-                    <ListItemText primary={"Town: " + company.townName} />
-                  </ListItem>
-
-                  <ListItem disablePadding>
-                    <ListItemText primary={"Address: " + company.address} />
+                    <ListItemText primary={"Type: " + project.type} />
                   </ListItem>
 
                   <ListItem disablePadding>
                     <ListItemText
                       primary={
-                        <Typography sx={{ fontSize: 10.5 }}>
-                          Web:{" "}
-                          <Link
-                            href={company.webURL}
-                            underline="hover"
-                            target="_blank"
-                            rel="noopener"
-                          >
-                            {company.webURL}
-                          </Link>
-                        </Typography>
+                        "Start date: " +
+                        moment(project.startDate).format("DD.MM.YYYY")
                       }
                     />
                   </ListItem>
 
                   <ListItem disablePadding>
                     <ListItemText
-                      primary={"Description: " + company.description}
-                      sx={{ maxHeight: 60, overflowY: "auto" }}
+                      primary={
+                        "End date: " +
+                        moment(project.endDate).format("DD.MM.YYYY")
+                      }
+                    />
+                  </ListItem>
+
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={
+                        "Fr responsible: " +
+                        project.frresp?.firstName +
+                        " " +
+                        project.frresp?.lastName
+                      }
+                    />
+                  </ListItem>
+
+                  <ListItem disablePadding>
+                    <ListItemText primary={"Fr goal: " + project.frgoal} />
+                  </ListItem>
+
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={
+                        "First ping date: " +
+                        (project.firstPingDate
+                          ? moment(project.firstPingDate).format("DD.MM.YYYY")
+                          : "")
+                      }
+                    />
+                  </ListItem>
+
+                  <ListItem disablePadding>
+                    <ListItemText
+                      primary={
+                        "Second ping date: " +
+                        (project.secondPingDate
+                          ? moment(project.secondPingDate).format("DD.MM.YYYY")
+                          : "")
+                      }
                     />
                   </ListItem>
                 </List>
-
-                {company.contactInFuture === false && (
-                  <Typography
-                    sx={{
-                      marginTop: 1,
-
-                      fontWeight: 700,
-                      fontSize: "1.375rem",
-                      textAlign: "center",
-                      color: "red",
-                    }}
-                  >
-                    DO NOT CONTACT
-                  </Typography>
-                )}
               </AccordionDetails>
             </Accordion>
 
@@ -465,12 +438,12 @@ export default function Company() {
                     textTransform: "uppercase",
                   }}
                 >
-                  CONTACTS
+                  TEAM MEMBERS
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                {company.contacts?.map((contact) => (
-                  <Box key={contact.id} sx={{ marginBlock: 2 }}>
+                {project.frTeamMembers?.map((frTeamMember) => (
+                  <Box key={frTeamMember.id} sx={{ marginBlock: 2 }}>
                     <Box
                       sx={{
                         display: "flex",
@@ -479,13 +452,15 @@ export default function Company() {
                       }}
                     >
                       <Typography>
-                        {contact.firstName + " " + contact.lastName}
+                        {frTeamMember.firstName + " " + frTeamMember.lastName}
                       </Typography>
                       <Box>
                         <IconButton
-                          disabled={company.softLocked}
-                          aria-label="edit contact"
-                          onClick={(e) => handleEditContact(e, contact.id)}
+                          disabled={project.softLocked}
+                          aria-label="delete frTeamMember"
+                          onClick={(e) =>
+                            handleRemoveProjectMember(e, frTeamMember.id)
+                          }
                           sx={{
                             width: 20,
                             height: 20,
@@ -497,30 +472,7 @@ export default function Company() {
                             borderRadius: 1,
                           }}
                         >
-                          <EditIcon
-                            sx={{
-                              width: 15,
-                              height: 15,
-                            }}
-                          />
-                        </IconButton>
-
-                        <IconButton
-                          disabled={company.softLocked}
-                          aria-label="delete contact"
-                          onClick={(e) => handleDeleteContact(e, contact.id)}
-                          sx={{
-                            width: 20,
-                            height: 20,
-
-                            margin: 0.125,
-
-                            color: "white",
-                            backgroundColor: "#1976d2",
-                            borderRadius: 1,
-                          }}
-                        >
-                          <DeleteIcon
+                          <RemoveIcon
                             sx={{
                               width: 15,
                               height: 15,
@@ -529,62 +481,8 @@ export default function Company() {
                         </IconButton>
                       </Box>
                     </Box>
-
-                    <List dense>
-                      <ListItem disablePadding>
-                        <ListItemIcon sx={{ minWidth: 25 }}>
-                          <EmailIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={contact.email}
-                          sx={{
-                            overflow: "hidden",
-                          }}
-                        />
-                      </ListItem>
-
-                      <ListItem disablePadding>
-                        <ListItemIcon sx={{ minWidth: 25 }}>
-                          <PhoneIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={contact.tel}
-                          sx={{ overflow: "hidden" }}
-                        />
-                      </ListItem>
-
-                      <ListItem disablePadding>
-                        <ListItemIcon sx={{ minWidth: 25 }}>
-                          <WorkIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={contact.position}
-                          sx={{ overflow: "hidden" }}
-                        />
-                      </ListItem>
-
-                      <ListItem disablePadding>
-                        <ListItemIcon sx={{ minWidth: 25 }}>
-                          <DescriptionIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={contact.description}
-                          sx={{ overflow: "hidden" }}
-                        />
-                      </ListItem>
-                    </List>
                   </Box>
                 ))}
-
-                <Box sx={{ display: "grid", placeItems: "center" }}>
-                  <Button
-                    variant="contained"
-                    startIcon={<AddCircleIcon />}
-                    onClick={() => setOpenContactFormModal(true)}
-                  >
-                    Add contact
-                  </Button>
-                </Box>
               </AccordionDetails>
             </Accordion>
           </Box>
@@ -611,13 +509,25 @@ export default function Company() {
           >
             <SearchBar
               type="collaborations"
-              data={company.collaborations}
+              data={project.collaborations}
               setSearchResults={setSearchResults}
             />
+
+            <Button
+              variant="contained"
+              size="medium"
+              startIcon={<AddCircleIcon />}
+              onClick={() => {
+                setCollaboration();
+                setOpenCollaborationFormModal(true);
+              }}
+            >
+              Add collaboration
+            </Button>
           </Container>
 
           <Container maxWidth="false">
-            {company.collaborations?.length <= 0 ? (
+            {project.collaborations?.length <= 0 ? (
               <Typography variant="h4" align="center">
                 {"No collaborations :("}
               </Typography>

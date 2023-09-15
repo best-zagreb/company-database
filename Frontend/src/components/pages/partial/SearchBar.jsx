@@ -32,7 +32,7 @@ export default function SearchBar({ type, data, setSearchResults }) {
       onInputChange={(e, inputValue) => {
         handleChange(inputValue);
       }}
-      options={data.map((item) => ({
+      options={data?.map((item) => ({
         value: item.id,
         label:
           type === "users" ? `${item.firstName} ${item.lastName}` : item.name, // TODO: collaborations label?

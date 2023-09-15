@@ -21,7 +21,7 @@ import TableComponent from "./partial/TableComponent";
 const tableColumns = [
   { key: "name", label: "Project name" },
   { key: "category", label: "Category", xsHide: true },
-  { key: "frresp", label: "FR responsible" },
+  { key: "frresp", label: "Project responsible" },
   { key: "endDate", label: "Project end date", xsHide: true },
   { key: "frgoal", label: "FR goal", xsHide: true },
 ];
@@ -30,7 +30,7 @@ export default function Projects() {
   const navigate = useNavigate();
 
   const { handleOpenToast } = useContext(ToastContext);
-  const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
+  const { setOpenDeleteAlert, setObject, setEndpoint, setFetchUpdatedData } =
     useContext(DeleteAlertContext);
 
   const [openFormModal, setOpenFormModal] = useState(false);
@@ -47,7 +47,7 @@ export default function Projects() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("/projects/", {
+      const serverResponse = await fetch("/api/projects/", {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
@@ -84,8 +84,8 @@ export default function Projects() {
 
   function handleDelete(project) {
     setObject({ type: "Project", name: project.name });
-    setEndpoint("/projects/" + project.id);
-    setPopulateObjects({ function: populateTable });
+    setEndpoint("/api/projects/" + project.id);
+    setFetchUpdatedData({ function: populateTable });
 
     setOpenDeleteAlert(true);
   }
@@ -97,10 +97,10 @@ export default function Projects() {
   return (
     <>
       <ProjectForm
-        project={project}
+        object={project}
         openModal={openFormModal}
         setOpenModal={setOpenFormModal}
-        populateProjects={populateTable}
+        fetchUpdatedData={populateTable}
       />
 
       <Container

@@ -1,13 +1,15 @@
-.nav > *,
-.nav-menu-item > * {
+.desktop-nav > *,
+.mobile-nav-menu *,
+.secondary-nav-link {
   font-weight: 700;
 
   text-decoration: none;
 }
 
-.nav > * {
+.desktop-nav > *,
+.secondary-nav-link {
   color: white;
 }
-.nav-menu-item > * {
+.mobile-nav-menu * {
   color: #333;
 }

@@ -24,7 +24,7 @@ const tableColumns = [
     label: "Company name",
   },
   {
-    key: "domain",
+    key: "sector",
     label: "Sector",
   },
   {
@@ -48,7 +48,7 @@ export default function Companies() {
   const navigate = useNavigate();
 
   const { handleOpenToast } = useContext(ToastContext);
-  const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
+  const { setOpenDeleteAlert, setObject, setEndpoint, setFetchUpdatedData } =
     useContext(DeleteAlertContext);
 
   const [openFormModal, setOpenFormModal] = useState(false);
@@ -65,7 +65,7 @@ export default function Companies() {
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch("/companies/", {
+      const serverResponse = await fetch("/api/companies/", {
         method: "GET",
         headers: { googleTokenEncoded: JWToken.credential },
       });
@@ -92,7 +92,7 @@ export default function Companies() {
   }
 
   function handleView(company) {
-    navigate("/companies/" + encodeURIComponent(company.name));
+    navigate("/companies/" + company.id);
   }
 
   function handleEdit(company) {
@@ -102,8 +102,8 @@ export default function Companies() {
 
   function handleDelete(company) {
     setObject({ type: "Company", name: company.name });
-    setEndpoint("/companies/" + company.id);
-    setPopulateObjects({ function: populateTable });
+    setEndpoint("/api/companies/" + company.id);
+    setFetchUpdatedData({ function: populateTable });
 
     setOpenDeleteAlert(true);
   }
@@ -115,10 +115,10 @@ export default function Companies() {
   return (
     <>
       <CompanyForm
-        company={company}
+        object={company}
         openModal={openFormModal}
         setOpenModal={setOpenFormModal}
-        populateCompanies={populateTable}
+        fetchUpdatedData={populateTable}
       />
 
       <Container

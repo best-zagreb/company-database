@@ -10,14 +10,16 @@ import com.example.backend.companies.repo.ContactRepository;
 import com.example.backend.project.controller.dto.CollaborationDTO;
 import com.example.backend.project.model.Project;
 import com.example.backend.project.repo.ProjectRepository;
+import com.example.backend.user.model.AUTHORITY;
 import com.example.backend.user.model.AppUser;
 import com.example.backend.user.repo.UserRepository;
+import com.example.backend.util.exceptions.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import javax.naming.AuthenticationException;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -29,21 +31,35 @@ public class CollaborationsService {
     private final ContactRepository contactRepository;
 
 
-    public List<Collaboration> getCollaborationsForCompany(Long id) {
+    public List<Collaboration> getCollaborationsForCompany(Long id) throws EntityNotFoundException {
         if (companyRepository.findById(id).isEmpty()) throw new EntityNotFoundException();
         return collaborationsRepository.findAllByCollaborationId_Company(companyRepository.findById(id).get());
     }
 
-    public Collaboration addCollaboration(Long projectid, CollaborationDTO collaborationDTO) {
-        Project project = projectRepository.findById(projectid).get();
-        Company company = companyRepository.findById(collaborationDTO.getCompanyId()).get();
-        Contact contact = contactRepository.findById(collaborationDTO.getContactId()).get();
-        AppUser responsible = userRepository.findById(collaborationDTO.getContactResponsibleId()).get();
+    public Collaboration addCollaboration(Long projectid, CollaborationDTO collaborationDTO, AppUser user) throws AuthenticationException, EntityNotFoundException {
+        if (user == null) throw new AuthenticationException("You don't have access to CDB.");
+
+        Project project;
+        if (projectRepository.findById(projectid).isPresent()) project = projectRepository.findById(projectid).get();
+        else throw new EntityNotFoundException("Project under id: " + projectid + "not found.");
+        Company company;
+        if (companyRepository.findById(collaborationDTO.getCompanyId()).isPresent()) company = companyRepository.findById(collaborationDTO.getCompanyId()).get();
+        else throw new EntityNotFoundException("Company under id: " + collaborationDTO.getCompanyId() + "not found.");
+        Contact contact;
+        if (contactRepository.findById(collaborationDTO.getContactId()).isPresent()) contact = contactRepository.findById(collaborationDTO.getContactId()).get();
+        else throw new EntityNotFoundException("Contact under id: " + collaborationDTO.getContactId() + "not found.");
+        AppUser contactResp;
+        if (userRepository.findById(collaborationDTO.getContactResponsibleId()).isPresent()) contactResp = userRepository.findById(collaborationDTO.getContactResponsibleId()).get();
+        else throw new EntityNotFoundException("User under id: " + collaborationDTO.getContactResponsibleId() + "not found.");
+
+        if (user.getAuthority() == AUTHORITY.OBSERVER || user.getAuthority() == AUTHORITY.FR_TEAM_MEMBER ||
+                (user.getAuthority() == AUTHORITY.FR_RESPONSIBLE && !Objects.equals(project.getFRResp().getId(), user.getId())))
+            throw new AuthenticationException("You don't have access to this resource, only ADMINISTRATOR, MODERATOR and FR_RESPONSIBLE (on the requested project under id: " + projectid + ") have access.");
 
         Collaboration collaboration = new Collaboration(
                 new CollaborationId(project, company),
                 contact,
-                responsible,
+                contactResp,
                 collaborationDTO.isPriority(),
                 collaborationDTO.getCategory(),
                 collaborationDTO.getStatus(),
@@ -54,14 +70,25 @@ public class CollaborationsService {
         return collaborationsRepository.save(collaboration);
     }
 
-    public Collaboration updateCollaboration(Long projectId, Long companyId, CollaborationDTO collaborationDTO) {
-        CollaborationId collaborationId = new CollaborationId(projectRepository.findById(projectId).get(), companyRepository.findById(companyId).get());
+    public Collaboration updateCollaboration(Long projectId, Long companyId, CollaborationDTO collaborationDTO, AppUser user) throws AuthenticationException, EntityNotFoundException {
+        if (user == null) throw new AuthenticationException("You don't have access to CDB.");
 
-        if (!collaborationsRepository.existsById(collaborationId)) return null;
-        Collaboration collaboration = collaborationsRepository.findById(collaborationId).get();
+        CollaborationId collaborationId;
+        if (projectRepository.findById(projectId).isPresent() && companyRepository.findById(companyId).isPresent()){
+            collaborationId = new CollaborationId(projectRepository.findById(projectId).get(), companyRepository.findById(companyId).get());
+        } else if (projectRepository.findById(projectId).isEmpty()){
+            throw new EntityNotFoundException("Project under id: " + projectId + "not found.");
+        } else throw new EntityNotFoundException("Company under id: " + companyId + "not found.");
 
-        collaboration.setContactResponsible(userRepository.findById(collaborationDTO.getContactResponsibleId()).get());
-        collaboration.setContact(contactRepository.findById(collaborationDTO.getContactId()).get());
+        Collaboration collaboration;
+        if (collaborationsRepository.findById(collaborationId).isPresent()) {
+            collaboration = collaborationsRepository.findById(collaborationId).get();
+        } else throw new EntityNotFoundException("User under id: " + collaborationId + "not found.");
+
+        if (userRepository.findById(collaborationDTO.getContactResponsibleId()).isPresent()) collaboration.setContactResponsible(userRepository.findById(collaborationDTO.getContactResponsibleId()).get());
+        else throw new EntityNotFoundException("User under id: " + collaborationDTO.getContactResponsibleId() + "not found.");
+        if (contactRepository.findById(collaborationDTO.getContactId()).isPresent()) collaboration.setContact(contactRepository.findById(collaborationDTO.getContactId()).get());
+        else throw new EntityNotFoundException("Contact under id: " + collaborationDTO.getContactId() + "not found.");
         collaboration.setPriority(collaborationDTO.isPriority());
         collaboration.setCategories(collaborationDTO.getCategory());
         collaboration.setStatus(collaborationDTO.getStatus());
@@ -71,8 +98,21 @@ public class CollaborationsService {
         return collaborationsRepository.save(collaboration);
     }
 
-    public void deleteCollaboration(Long projectId, Long companyId) {
-        CollaborationId collaborationId = new CollaborationId(projectRepository.findById(projectId).get(), companyRepository.findById(companyId).get());
+    public void deleteCollaboration(Long projectId, Long companyId, AppUser user) throws AuthenticationException, EntityNotFoundException{
+        if (user == null) throw new AuthenticationException("You don't have access to CDB.");
+
+        Project project;
+        if (projectRepository.findById(projectId).isPresent()) project = projectRepository.findById(projectId).get();
+        else throw new EntityNotFoundException("Project under id: " + projectId + "not found.");
+        Company company;
+        if (companyRepository.findById(companyId).isPresent()) company = companyRepository.findById(companyId).get();
+        else throw new EntityNotFoundException("Company under id: " + companyId + "not found.");
+        if (user.getAuthority() == AUTHORITY.OBSERVER ||
+                (user.getAuthority() == AUTHORITY.FR_RESPONSIBLE && !Objects.equals(project.getFRResp().getId(), user.getId()))) {
+                throw new AuthenticationException();
+        }
+
+        CollaborationId collaborationId = new CollaborationId(project, company);
         collaborationsRepository.deleteById(collaborationId);
     }
 

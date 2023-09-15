@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -23,4 +24,20 @@ public class ProjectDTO {
     private Long FRgoal;
     private Date firstPingDate;
     private Date secondPingDate;
+
+    public Project toProject(){
+        return new Project(
+                idCreator,
+                name,
+                category,
+                type,
+                startDate,
+                endDate,
+                null,
+                new HashSet<>(),
+                FRgoal,
+                firstPingDate,
+                secondPingDate
+        );
+    }
 }
