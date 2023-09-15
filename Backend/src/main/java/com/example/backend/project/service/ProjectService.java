@@ -137,6 +137,12 @@ public class ProjectService {
     {
         Helper.checkUserAuthorities(user, List.of(AUTHORITY.ADMINISTRATOR));
 
+        if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.MODERATOR).contains(user.getAuthority())){
+            if (!isResponsibleOrModeratorOnProject(user, id)){
+                throw new AuthenticationException("You do not have permission to execute this command.");
+            }
+        }
+
         String errorMessage = "Project with id " + id + " does not exist";
         Project project = Helper.getValue(projectRepository.findById(id), errorMessage);
         boolean newSoftLocked = project.getSoftLocked() == null || !project.getSoftLocked();
@@ -174,5 +180,12 @@ public class ProjectService {
 
     public boolean existsById(Long id) {
         return projectRepository.existsById(id);
+    }
+
+    private boolean isResponsibleOrModeratorOnProject(AppUser user, Long id) throws EntityNotFoundException
+    {
+        String errorMessage = "Project with id " + id + " does not exist";
+        Project project = Helper.getValue(projectRepository.findById(id), errorMessage);
+        return project.getIdCreator().equals(user.getId()) || project.getFRResp().getId().equals(user.getId());
     }
 }
