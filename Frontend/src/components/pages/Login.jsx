@@ -16,7 +16,7 @@ export default function Login({ loginUser, loading }) {
   async function shouldSetup() {
       try {
         const serverResponse = await fetch(
-          "/users/shouldSetup",
+          "/api/users/shouldSetup",
           {
             method: "GET",
           }
@@ -77,10 +77,10 @@ export default function Login({ loginUser, loading }) {
   return (
     <>
     <UserForm
-      user={null}
-      openUserFormModal={openFormModal}
-      setOpenUserFormModal={setOpenFormModal}
-      populateUsers={function() {}}
+      object={null}
+      openModal={openFormModal}
+      setOpenModal={setOpenFormModal}
+      fetchUpdatedData={function() {}}
     />
     <Box
       sx={{

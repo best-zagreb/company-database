@@ -25,15 +25,6 @@ public class UserController {
         return new ResponseEntity(userService.shouldSetup(), HttpStatus.OK);
     }
 
-    @PostMapping("/setup")
-    @ResponseBody
-    public ResponseEntity addUserSetup(@RequestBody UserDTO userDTO) {
-        if (userService.shouldSetup()) {
-            return new ResponseEntity(userService.addUser(userDTO), HttpStatus.OK);
-        }
-        return new ResponseEntity("You can not add user with setup if there are 3 or more users", HttpStatus.FORBIDDEN);
-    }
-
     @PostMapping()
     @ResponseBody
     public ResponseEntity addUser(@RequestHeader String googleTokenEncoded, @RequestBody UserDTO userDTO) {

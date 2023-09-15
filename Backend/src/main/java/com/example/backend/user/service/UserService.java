@@ -34,8 +34,11 @@ public class UserService {
     }
 
     public AppUser addUser(UserDTO userDTO, AppUser user) throws AuthenticationException {
-        if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
-        if (!List.of(AUTHORITY.ADMINISTRATOR).contains(user.getAuthority())) throw new AuthenticationException("You do not have permission to execute this command.");
+        if (!shouldSetup()) {
+            if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
+            if (!List.of(AUTHORITY.ADMINISTRATOR).contains(user.getAuthority()))
+                throw new AuthenticationException("You do not have permission to execute this command.");
+        }
 
         return userRepository.save(userDTO.toAppUser());
     }
