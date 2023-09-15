@@ -43,10 +43,10 @@ const authLevels = [
 ];
 
 export default function UserForm({
-  user,
-  openUserFormModal,
-  setOpenUserFormModal,
-  populateUsers,
+  object: user,
+  openModal,
+  setOpenModal,
+  fetchUpdatedData,
 }) {
   const { handleOpenToast } = useContext(ToastContext);
 
@@ -133,8 +133,8 @@ export default function UserForm({
           user ? "updated" : "added"
         }.`,
       });
-      setOpenUserFormModal(false);
-      populateUsers();
+      setOpenModal(false);
+      fetchUpdatedData();
     } else if (serverResponse.status === 400) {
       handleOpenToast({
         type: "error",
@@ -198,13 +198,13 @@ export default function UserForm({
         descriptionIsValid: true,
       },
     });
-  }, [openUserFormModal]);
+  }, [openModal]);
 
   return (
     <>
-      <Backdrop open={openUserFormModal}>
+      <Backdrop open={openModal}>
         <Modal
-          open={openUserFormModal}
+          open={openModal}
           closeAfterTransition
           // submit on Enter key
           onKeyDown={(e) => {
@@ -214,10 +214,10 @@ export default function UserForm({
           }}
           // close on Escape key
           onClose={() => {
-            setOpenUserFormModal(false);
+            setOpenModal(false);
           }}
         >
-          <Fade in={openUserFormModal}>
+          <Fade in={openModal}>
             <FormControl
               sx={{
                 position: "absolute",
@@ -470,7 +470,7 @@ export default function UserForm({
                 <Button
                   variant="outlined"
                   onClick={() => {
-                    setOpenUserFormModal(false);
+                    setOpenModal(false);
                   }}
                 >
                   Cancel

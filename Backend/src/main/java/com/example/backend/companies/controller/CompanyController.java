@@ -9,29 +9,24 @@ import com.example.backend.user.model.AUTHORITY;
 import com.example.backend.user.model.AppUser;
 import com.example.backend.user.service.UserService;
 import com.example.backend.util.JwtVerifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.naming.AuthenticationException;
-import javax.persistence.EntityNotFoundException;
+import com.example.backend.util.exceptions.EntityNotFoundException;
 import java.util.List;
 
+@SuppressWarnings("ALL")
 @CrossOrigin
 @RestController
 @RequestMapping("/api/companies")
+@RequiredArgsConstructor
 public class CompanyController
 {
     private final CompanyService companyService;
     private final UserService userService;
     private final CollaborationsService collaborationsService;
-
-    public CompanyController(CompanyService companyService,
-                             UserService userService,
-                             CollaborationsService collaborationsService) {
-        this.companyService = companyService;
-        this.userService = userService;
-        this.collaborationsService = collaborationsService;
-    }
 
     @GetMapping
     @ResponseBody
@@ -104,6 +99,22 @@ public class CompanyController
         } catch (EntityNotFoundException e)
         {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PatchMapping("/{companyId}/softLock")
+    @ResponseBody
+    public ResponseEntity<Boolean> softLockCompany(@RequestHeader String googleTokenEncoded, @PathVariable Long companyId){
+        AppUser user = getUser(googleTokenEncoded);
+        try
+        {
+            return new ResponseEntity<>(companyService.softLockCompany(user, companyId), HttpStatus.OK);
+        } catch (AuthenticationException e)
+        {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e)
+        {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
