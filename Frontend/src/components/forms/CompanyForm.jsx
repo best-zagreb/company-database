@@ -260,7 +260,16 @@ export default function CompanyForm({
         open={openModal}
         closeAfterTransition
         // submit on Enter key
-
+        onKeyDown={(e) => {
+          if (
+            e.key === "Enter" &&
+            Object.keys(formData.validation).every(
+              (key) => formData.validation[key]
+            )
+          ) {
+            submit();
+          }
+        }}
         // close on Escape key
         onClose={() => {
           setOpenModal(false);

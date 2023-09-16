@@ -147,7 +147,16 @@ export default function ContactForm({
         open={openModal}
         closeAfterTransition
         // submit on Enter key
-
+        onKeyDown={(e) => {
+          if (
+            e.key === "Enter" &&
+            Object.keys(formData.validation).every(
+              (key) => formData.validation[key]
+            )
+          ) {
+            submit();
+          }
+        }}
         // close on Escape key
         onClose={() => {
           setOpenModal(false);
@@ -345,58 +354,5 @@ export default function ContactForm({
         </Fade>
       </Modal>
     </Backdrop>
-
-    //           <TextField
-    //             label="Surname"
-    //             type="text"
-    //             required
-    //             fullWidth
-    //             margin="dense"
-    //             placeholder="Doe"
-    //             inputProps={{ minLength: 2, maxLength: 35 }}
-    //             onChange={handleSurnameChange}
-    //           />
-
-    //           <TextField
-    //             label="Email"
-    //             type="text"
-    //             required
-    //             fullWidth
-    //             margin="dense"
-    //             placeholder="jane.doe@best.hr"
-    //             inputProps={{ minLength: 2, maxLength: 35 }}
-    //             onChange={handleEmailChange}
-    //           />
-
-    //           <TextField
-    //             label="Tel"
-    //             type="text"
-    //             fullWidth
-    //             margin="dense"
-    //             placeholder="0987654321"
-    //             inputProps={{ minLength: 2, maxLength: 35 }}
-    //             onChange={handleTelChange}
-    //           />
-
-    //           <TextField
-    //             label="Position"
-    //             type="text"
-    //             fullWidth
-    //             margin="dense"
-    //             placeholder="PR"
-    //             inputProps={{ minLength: 2, maxLength: 35 }}
-    //             onChange={handlePositionChange}
-    //           />
-
-    //           <TextField
-    //             label="Description"
-    //             fullWidth
-    //             multiline
-    //             minRows={2}
-    //             maxRows={4}
-    //             margin="dense"
-    //             inputProps={{ maxLength: 475 }}
-    //             onChange={handleDescriptionChange}
-    //           />
   );
 }
