@@ -19,6 +19,8 @@ import {
   AddCircle as AddCircleIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
+  Lock as LockIcon,
+  LockOpen as LockOpenIcon,
   Clear as RemoveIcon,
 } from "@mui/icons-material/";
 

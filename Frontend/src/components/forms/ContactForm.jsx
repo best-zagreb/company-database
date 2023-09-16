@@ -47,9 +47,9 @@ export default function ContactForm({
   });
 
   async function submit() {
-    const isFormValid = Object.values(formData.validation).every(Boolean); // all validation rules are fulfilled
+    const formIsValid = Object.values(formData.validation).every(Boolean); // all validation rules are fulfilled
 
-    if (!isFormValid) {
+    if (!formIsValid) {
       handleOpenToast({
         type: "error",
         info: "Invalid contact details.",
@@ -148,12 +148,9 @@ export default function ContactForm({
         closeAfterTransition
         // submit on Enter key
         onKeyDown={(e) => {
-          if (
-            e.key === "Enter" &&
-            Object.keys(formData.validation).every(
-              (key) => formData.validation[key]
-            )
-          ) {
+          const formIsValid = Object.values(formData.validation).every(Boolean);
+
+          if (e.key === "Enter" && formIsValid) {
             submit();
           }
         }}
@@ -342,8 +339,8 @@ export default function ContactForm({
                 variant="contained"
                 onClick={submit}
                 loading={loadingButton}
-                disabled={Object.keys(formData.validation).some(
-                  (key) => !formData.validation[key]
+                disabled={Object.values(formData.validation).some(
+                  (value) => !value
                 )}
               >
                 {/* span needed because of bug */}

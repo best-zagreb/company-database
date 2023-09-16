@@ -260,12 +260,13 @@ export default function CompanyForm({
         closeAfterTransition
         // submit on Enter key
         onKeyDown={(e) => {
-          if (
-            e.key === "Enter" &&
-            Object.keys(formData.validation).every(
-              (key) => formData.validation[key]
-            )
-          ) {
+          // TODO: replace when this form is refractored
+          // const formIsValid = Object.values(formData.validation).every(Boolean);
+
+          // if (e.key === "Enter" && formIsValid) {
+          //   submit();
+          // }
+          if (e.key === "Enter") {
             submit();
           }
         }}
@@ -620,6 +621,10 @@ export default function CompanyForm({
                     contactInFutureIsValid
                   )
                 }
+                // TODO: replace when this form is refractored
+                // disabled={Object.values(formData.validation).some(
+                //   (value) => !value
+                // )}
               >
                 {/* span needed because of bug */}
                 <span>{!company ? "Add company" : "Update company"}</span>

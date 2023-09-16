@@ -76,9 +76,9 @@ export default function UserForm({
   });
 
   async function submit() {
-    const isFormValid = Object.values(formData.validation).every(Boolean); // all validation rules are fulfilled
+    const formIsValid = Object.values(formData.validation).every(Boolean); // all validation rules are fulfilled
 
-    if (!isFormValid) {
+    if (!formIsValid) {
       handleOpenToast({
         type: "error",
         info: "Invalid user details.",
@@ -109,8 +109,7 @@ export default function UserForm({
         ? notificationEmail?.trim()
         : loginEmail?.trim(),
       authority: authLevel?.trim().toUpperCase(),
-      description:
-        description && description?.trim() !== "" ? description?.trim() : null,
+      description: description?.trim() !== "" ? description.trim() : null,
     };
 
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
@@ -207,12 +206,9 @@ export default function UserForm({
         closeAfterTransition
         // submit on Enter key
         onKeyDown={(e) => {
-          if (
-            e.key === "Enter" &&
-            Object.keys(formData.validation).every(
-              (key) => formData.validation[key]
-            )
-          ) {
+          const formIsValid = Object.values(formData.validation).every(Boolean);
+
+          if (e.key === "Enter" && formIsValid) {
             submit();
           }
         }}
@@ -477,8 +473,8 @@ export default function UserForm({
                 variant="contained"
                 onClick={submit}
                 loading={loadingButton}
-                disabled={Object.keys(formData.validation).some(
-                  (key) => !formData.validation[key]
+                disabled={Object.values(formData.validation).some(
+                  (value) => !value
                 )}
               >
                 {/* span needed because of bug */}
