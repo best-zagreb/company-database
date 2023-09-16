@@ -97,10 +97,10 @@ export default function Users() {
   return (
     <>
       <UserForm
-        object={user}
         openModal={openFormModal}
         setOpenModal={setOpenFormModal}
         fetchUpdatedData={populateTable}
+        object={user}
       />
 
       <Container

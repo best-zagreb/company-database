@@ -241,17 +241,10 @@ export default function User() {
   return (
     <>
       <UserForm
-        object={user}
         openModal={openUserFormModal}
         setOpenModal={setOpenUserFormModal}
         fetchUpdatedData={fetchUser}
-      />
-
-      <CollaborationForm
-        object={collaboration}
-        openModal={openCollaborationFormModal}
-        setOpenModal={setOpenCollaborationFormModal}
-        fetchUpdatedData={fetchUser}
+        object={user}
       />
 
       <Box

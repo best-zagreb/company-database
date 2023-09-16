@@ -115,10 +115,10 @@ export default function Companies() {
   return (
     <>
       <CompanyForm
-        object={company}
         openModal={openFormModal}
         setOpenModal={setOpenFormModal}
         fetchUpdatedData={populateTable}
+        object={company}
       />
 
       <Container

@@ -17,11 +17,12 @@ import ToastContext from "../../context/ToastContext";
 import CustomTextField from "./partial/CustomTextField";
 
 export default function ContactForm({
-  object: contact,
-  companyId,
   openModal,
   setOpenModal,
   fetchUpdatedData,
+
+  object: contact,
+  companyId,
 }) {
   const { handleOpenToast } = useContext(ToastContext);
 
@@ -84,7 +85,7 @@ export default function ContactForm({
     };
 
     const serverResponse = await fetch(
-      `/api/company/${company.id}/${contact?.id ?? ""}`,
+      `/api/company/${companyId}/${contact?.id ?? ""}`,
       request
     );
 
@@ -96,7 +97,7 @@ export default function ContactForm({
         }.`,
       });
       setOpenModal(false);
-      fetchData();
+      fetchUpdatedData();
     } else if (serverResponse.status === 400) {
       handleOpenToast({
         type: "error",

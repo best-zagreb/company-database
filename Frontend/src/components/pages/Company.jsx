@@ -221,24 +221,24 @@ export default function Company() {
   return (
     <>
       <CompanyForm
-        object={company}
         openModal={openCompanyFormModal}
         setOpenModal={setOpenCompanyFormModal}
         fetchUpdatedData={fetchCompany}
+        object={company}
       />
 
       <ContactForm
-        object={contact}
         openModal={openContactFormModal}
         setOpenModal={setOpenContactFormModal}
         fetchUpdatedData={fetchCompany}
+        object={contact}
       />
 
       <CollaborationForm
-        object={collaboration}
         openModal={openCollaborationFormModal}
         setOpenModal={setOpenCollaborationFormModal}
-        fetchData={fetchCompany}
+        fetchUpdatedData={fetchCompany}
+        object={collaboration}
         project={null}
         company={company}
       />

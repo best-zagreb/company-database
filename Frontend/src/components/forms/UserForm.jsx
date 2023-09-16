@@ -43,10 +43,11 @@ const authLevels = [
 ];
 
 export default function UserForm({
-  object: user,
   openModal,
   setOpenModal,
   fetchUpdatedData,
+
+  object: user,
 }) {
   const { handleOpenToast } = useContext(ToastContext);
 
@@ -109,7 +110,7 @@ export default function UserForm({
         ? notificationEmail?.trim()
         : loginEmail?.trim(),
       authority: authLevel?.trim().toUpperCase(),
-      description: description?.trim() !== "" ? description.trim() : null,
+      description: description?.trim(),
     };
 
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
@@ -183,7 +184,7 @@ export default function UserForm({
         notificationEmail: notificationEmail,
         useDifferentEmails: user ? true : false,
         authLevel: user
-          ? authority.charAt(0) + authority.slice(1).toLowerCase()
+          ? authority?.charAt(0) + authority?.slice(1).toLowerCase()
           : authLevels[0].value,
         description: description,
       },
@@ -200,9 +201,9 @@ export default function UserForm({
   }, [openModal]);
 
   return (
-    <Backdrop open={openUserFormModal}>
+    <Backdrop open={openModal}>
       <Modal
-        open={openUserFormModal}
+        open={openModal}
         closeAfterTransition
         // submit on Enter key
         onKeyDown={(e) => {
@@ -214,10 +215,10 @@ export default function UserForm({
         }}
         // close on Escape key
         onClose={() => {
-          setOpenUserFormModal(false);
+          setOpenModal(false);
         }}
       >
-        <Fade in={openUserFormModal}>
+        <Fade in={openModal}>
           <FormControl
             sx={{
               position: "absolute",
@@ -463,7 +464,7 @@ export default function UserForm({
               <Button
                 variant="outlined"
                 onClick={() => {
-                  setOpenUserFormModal(false);
+                  setOpenModal(false);
                 }}
               >
                 Cancel

@@ -209,17 +209,17 @@ export default function Project() {
   return (
     <>
       <ProjectForm
-        object={project}
         openModal={openProjectFormModal}
         setOpenModal={setOpenProjectFormModal}
         fetchUpdatedData={fetchProject}
+        object={project}
       />
 
       <CollaborationForm
-        object={collaboration}
         openModal={openCollaborationFormModal}
         setOpenModal={setOpenCollaborationFormModal}
-        fetchData={fetchProject}
+        fetchUpdatedData={fetchProject}
+        object={collaboration}
         project={project}
         company={null}
       />

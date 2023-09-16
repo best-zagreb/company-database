@@ -104,8 +104,9 @@ const categories = [
 export default function CollaborationForm({
   openModal,
   setOpenModal,
-  fetchData,
-  collaboration,
+  fetchUpdatedData,
+
+  object: collaboration,
   project,
   company,
 }) {
@@ -326,7 +327,7 @@ export default function CollaborationForm({
       idResponsible: responsible.id,
       category: category,
       status: status,
-      comment: comment?.trim() !== "" ? comment?.trim() : null,
+      comment: comment?.trim(),
       achievedValue: achievedValue?.trim() !== "" ? achievedValue?.trim() : 0,
       priority: priority,
     };
