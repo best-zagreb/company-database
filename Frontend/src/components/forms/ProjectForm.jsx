@@ -246,7 +246,12 @@ export default function ProjectForm({
         closeAfterTransition
         // submit on Enter key
         onKeyDown={(e) => {
-          if (e.key === "Enter") {
+          if (
+            e.key === "Enter" &&
+            Object.keys(formData.validation).every(
+              (key) => formData.validation[key]
+            )
+          ) {
             submit();
           }
         }}
@@ -304,7 +309,7 @@ export default function ProjectForm({
                 setValue={setName}
                 valueIsValid={nameIsValid}
                 setValueIsValid={setNameIsValid}
-              ></TextInput>
+              />
 
               <Autocomplete
                 options={existingProjects
@@ -495,7 +500,7 @@ export default function ProjectForm({
                 setValue={setFRGoal}
                 valueIsValid={FRGoalIsValid}
                 setValueIsValid={setFRGoalIsValid}
-              ></TextInput>
+              />
 
               <DatePicker
                 label="First ping date"

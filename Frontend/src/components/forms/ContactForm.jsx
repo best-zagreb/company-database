@@ -1,10 +1,20 @@
-import { useState } from "react";
+import {
+  Backdrop,
+  Box,
+  Modal,
+  FormControl,
+  Fade,
+  Button,
+  Typography,
+} from "@mui/material";
 
-import { Backdrop, Box, Modal, Fade, Button, TextField } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 
-import "./Form.css";
+import { useState, useContext, useEffect } from "react";
 
-// TODO: needs to be completely redone using TextInput like the other forms
+import ToastContext from "../../context/ToastContext";
+
+import CustomTextField from "./partial/CustomTextField";
 
 export default function ContactForm({
   object: contact,
@@ -13,187 +23,336 @@ export default function ContactForm({
   setOpenModal,
   fetchUpdatedData,
 }) {
-  const [name, setName] = useState();
-  const [surname, setSurname] = useState();
-  const [email, setEmail] = useState();
-  const [tel, setTel] = useState();
-  const [position, setPosition] = useState();
-  const [description, setDescription] = useState();
+  const { handleOpenToast } = useContext(ToastContext);
 
-  const contactTemplate = {
-    firstName: null,
-    lastName: null,
-    email: null,
-    tel: null,
-    position: null,
-    description: null,
-  };
+  const [loadingButton, setLoadingButton] = useState(false);
 
-  function onSubmit(e) {
-    e.preventDefault();
+  const [formData, setFormData] = useState({
+    entity: {
+      firstName: null,
+      lastName: null,
+      email: null,
+      tel: null,
+      position: null,
+      description: null,
+    },
+    validation: {
+      firstNameIsValid: false,
+      lastNameIsValid: false,
+      emailIsValid: false,
+      telIsValid: true,
+      positionIsValid: true,
+      descriptionIsValid: true,
+    },
+  });
 
-    contactTemplate.firstName = name;
-    contactTemplate.lastName = surname;
-    contactTemplate.email = email;
-    contactTemplate.tel = tel;
-    contactTemplate.position = position;
-    contactTemplate.description = description;
-    // console.log(contactTemplate);
+  async function submit() {
+    const isFormValid = Object.values(formData.validation).every(Boolean); // all validation rules are fulfilled
+
+    if (!isFormValid) {
+      handleOpenToast({
+        type: "error",
+        info: "Invalid contact details.",
+      });
+      return;
+    }
+
+    setLoadingButton(true);
+
+    // object destructuring
+    const { firstName, lastName, email, tel, position, description } =
+      formData.entity;
+
+    const contactData = {
+      firstName: firstName?.trim(),
+      lastName: lastName?.trim(),
+      email: email?.trim(),
+      tel: tel?.trim(),
+      position: position?.trim(),
+      description: description?.trim(),
+    };
 
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-    // fetch("/companies/" + companyId + "/contacts", {
-    //   method: "POST",
-    //   headers: {
-    //     googleTokenEncoded: JWToken.credential,
 
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(contact),
-    // })
-    //   .then((response) => response.json())
-    //   .then((json) => {
-    //     // if error display error toast
-    //     console.log(json);
+    const request = {
+      method: contact ? "PUT" : "POST",
+      headers: {
+        googleTokenEncoded: JWToken.credential,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(contactData),
+    };
 
-    //     // if success display success toast, close modal and update contacts list
-    //     setOpenModal(false);
-    //   });
+    const serverResponse = await fetch(
+      `/api/company/${company.id}/${contact?.id ?? ""}`,
+      request
+    );
+
+    if (serverResponse.ok) {
+      handleOpenToast({
+        type: "success",
+        info: `Contact ${contactData.firstName} ${contactData.lastName} ${
+          contact ? "updated" : "added"
+        }.`,
+      });
+      setOpenModal(false);
+      fetchData();
+    } else if (serverResponse.status === 400) {
+      handleOpenToast({
+        type: "error",
+        info: "Invalid contact details.",
+      });
+    } else if (serverResponse.status === 403) {
+      handleOpenToast({
+        type: "error",
+        info: "Project member privileges are required for manipulating contact.",
+      });
+    } else if (serverResponse.status === 404) {
+      handleOpenToast({
+        type: "error",
+        info: "Contact with id " + contact.id + " does not exist.",
+      });
+    } else {
+      handleOpenToast({
+        type: "error",
+        info:
+          "An unknown error occurred whilst trying to " +
+          (contact ? "update" : "add") +
+          " contact.",
+      });
+    }
+
+    setLoadingButton(false);
   }
 
-  const handleNameChange = (e) => {
-    const input = e.target.value;
-
-    setName(input);
-  };
-  const handleSurnameChange = (e) => {
-    const input = e.target.value;
-
-    setSurname(input);
-  };
-  const handleEmailChange = (e) => {
-    const input = e.target.value;
-
-    setEmail(input);
-  };
-  const handleTelChange = (e) => {
-    const input = e.target.value;
-
-    setTel(input);
-  };
-  const handlePositionChange = (e) => {
-    const input = e.target.value;
-
-    setPosition(input);
-  };
-  const handleDescriptionChange = (e) => {
-    const input = e.target.value;
-
-    setDescription(input);
-  };
+  useEffect(() => {
+    setFormData({
+      entity: {
+        ...contact,
+      },
+      validation: {
+        firstNameIsValid: contact ? true : false,
+        lastNameIsValid: contact ? true : false,
+        emailIsValid: contact ? true : false,
+        telIsValid: true,
+        positionIsValid: true,
+        descriptionIsValid: true,
+      },
+    });
+  }, [openModal]);
 
   return (
-    <div>
+    <Backdrop open={openModal}>
       <Modal
-        className="FormModal"
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
         open={openModal}
+        closeAfterTransition
+        // submit on Enter key
+        onKeyDown={(e) => {
+          if (
+            e.key === "Enter" &&
+            Object.keys(formData.validation).every(
+              (key) => formData.validation[key]
+            )
+          ) {
+            submit();
+          }
+        }}
+        // close on Escape key
         onClose={() => {
           setOpenModal(false);
         }}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
       >
         <Fade in={openModal}>
-          <Box className="Box">
-            <h2>Add new contact</h2>
+          <FormControl
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
 
-            <form onSubmit={onSubmit}>
-              <TextField
-                label="Name"
-                type="text"
-                required
-                fullWidth
-                margin="dense"
-                placeholder="Jane"
-                inputProps={{ minLength: 2, maxLength: 35 }}
-                onChange={handleNameChange}
+              maxWidth: "95%",
+              width: "30rem",
+
+              maxHeight: "95%",
+
+              borderRadius: "1.5rem",
+              padding: "1rem",
+
+              backgroundColor: "whitesmoke",
+              boxShadow: "#666 2px 2px 8px",
+            }}
+          >
+            <Typography
+              variant="h5"
+              gutterBottom
+              sx={{ textTransform: "uppercase", fontWeight: "bold" }}
+            >
+              {!contact ? "Add contact" : "Update contact"}
+            </Typography>
+
+            <Box
+              sx={{
+                overflowY: "auto",
+              }}
+            >
+              <CustomTextField
+                labelText={"First name"}
+                isRequired
+                placeholderText={"Jane"}
+                helperText={{
+                  error: "Name must be between 2 and 35 characters",
+                  details: "",
+                }}
+                inputProps={{
+                  name: "firstName",
+                  minLength: 2,
+                  maxLength: 35,
+                }}
+                validationFunction={(input) => {
+                  return input.trim().length >= 2 && input.trim().length <= 35;
+                }}
+                formData={formData}
+                setFormData={setFormData}
               />
 
-              <TextField
-                label="Surname"
-                type="text"
-                required
-                fullWidth
-                margin="dense"
-                placeholder="Doe"
-                inputProps={{ minLength: 2, maxLength: 35 }}
-                onChange={handleSurnameChange}
+              <CustomTextField
+                labelText={"Last name"}
+                isRequired
+                placeholderText={"Doe"}
+                helperText={{
+                  error: "Last name must be between 2 and 35 characters",
+                  details: "",
+                }}
+                inputProps={{ name: "lastName", minLength: 2, maxLength: 35 }}
+                validationFunction={(input) => {
+                  return input.trim().length >= 2 && input.trim().length <= 35;
+                }}
+                formData={formData}
+                setFormData={setFormData}
               />
 
-              <TextField
-                label="Email"
-                type="text"
-                required
-                fullWidth
-                margin="dense"
-                placeholder="jane.doe@best.hr"
-                inputProps={{ minLength: 2, maxLength: 35 }}
-                onChange={handleEmailChange}
+              <CustomTextField
+                labelText={"Email"}
+                isRequired
+                placeholderText={"jane.doe@gmail.com"}
+                helperText={{
+                  error: "Invalid email or email length",
+                  details: "",
+                }}
+                inputProps={{
+                  name: "email",
+                  minLength: 6,
+                  maxLength: 55,
+                }}
+                validationFunction={(input) => {
+                  const mailFormat =
+                    /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+                  return (
+                    input.trim().length >= 6 &&
+                    input.trim().length <= 55 &&
+                    input.trim().match(mailFormat)
+                  );
+                }}
+                formData={formData}
+                setFormData={setFormData}
               />
 
-              <TextField
-                label="Tel"
-                type="text"
-                fullWidth
-                margin="dense"
-                placeholder="0987654321"
-                inputProps={{ minLength: 2, maxLength: 35 }}
-                onChange={handleTelChange}
+              <CustomTextField
+                labelText={"Tel"}
+                placeholderText={"+385987654321"}
+                helperText={{
+                  error: "Invalid tel or tel length",
+                  details: "",
+                }}
+                inputProps={{
+                  name: "tel",
+                  minLength: 6,
+                  maxLength: 55,
+                }}
+                validationFunction={(input) => {
+                  const telFormat =
+                    /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{3,6}$/im;
+                  return (
+                    input.trim().length >= 6 &&
+                    input.trim().length <= 55 &&
+                    input.trim().match(telFormat)
+                  );
+                }}
+                formData={formData}
+                setFormData={setFormData}
               />
 
-              <TextField
-                label="Position"
-                type="text"
-                fullWidth
-                margin="dense"
-                placeholder="PR"
-                inputProps={{ minLength: 2, maxLength: 35 }}
-                onChange={handlePositionChange}
+              <CustomTextField
+                labelText={"Position"}
+                placeholderText={"PR"}
+                helperText={{
+                  error: "Position must be under 35 characters",
+                  details: "",
+                }}
+                inputProps={{
+                  name: "position",
+                  maxLength: 35,
+                }}
+                validationFunction={(input) => {
+                  return input.trim().length <= 35;
+                }}
+                formData={formData}
+                setFormData={setFormData}
               />
 
-              <TextField
-                label="Description"
-                fullWidth
-                multiline
-                minRows={2}
-                maxRows={4}
-                margin="dense"
-                inputProps={{ maxLength: 475 }}
-                onChange={handleDescriptionChange}
+              <CustomTextField
+                labelText={"Description"}
+                textFieldProps={{
+                  multiline: true,
+                  minRows: 2,
+                  maxRows: 5,
+                }}
+                helperText={{
+                  error: "Description must be under 475 characters",
+                  details: "",
+                }}
+                inputProps={{ name: "description", maxLength: 475 }}
+                validationFunction={(input) => {
+                  return input.trim().length <= 475;
+                }}
+                formData={formData}
+                setFormData={setFormData}
               />
+            </Box>
 
-              <div className="action-btns">
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    setOpenModal(false);
-                  }}
-                >
-                  Cancel
-                </Button>
+            <Box
+              sx={{
+                marginBlock: "3%",
 
-                <Button variant="contained" type="submit">
-                  Add contact
-                </Button>
-              </div>
-            </form>
-          </Box>
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 1,
+              }}
+            >
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setOpenModal(false);
+                }}
+              >
+                Cancel
+              </Button>
+
+              <LoadingButton
+                variant="contained"
+                onClick={submit}
+                loading={loadingButton}
+                disabled={Object.keys(formData.validation).some(
+                  (key) => !formData.validation[key]
+                )}
+              >
+                {/* span needed because of bug */}
+                <span>{!contact ? "Add contact" : "Update contact"}</span>
+              </LoadingButton>
+            </Box>
+          </FormControl>
         </Fade>
       </Modal>
-    </div>
+    </Backdrop>
   );
 }

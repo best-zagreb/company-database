@@ -19,12 +19,11 @@ import {
   AddCircle as AddCircleIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-  Lock as LockIcon,
-  LockOpen as LockOpenIcon,
   Clear as RemoveIcon,
 } from "@mui/icons-material/";
 
 import moment from "moment";
+
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -218,7 +217,9 @@ export default function Project() {
         object={collaboration}
         openModal={openCollaborationFormModal}
         setOpenModal={setOpenCollaborationFormModal}
-        fetchUpdatedData={fetchProject}
+        fetchData={fetchProject}
+        project={project}
+        company={null}
       />
 
       <Box
