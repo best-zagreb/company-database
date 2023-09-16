@@ -33,10 +33,10 @@ const projectTypes = [
 ];
 
 export default function ProjectForm({
-  project,
-  populateProjects,
+  object: project,
   openModal,
   setOpenModal,
+  fetchUpdatedData,
 }) {
   const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
@@ -177,7 +177,7 @@ export default function ProjectForm({
       });
 
       setOpenModal(false);
-      populateProjects();
+      fetchUpdatedData();
     } else if (serverResponse.status === 400) {
       handleOpenToast({
         type: "error",
@@ -210,12 +210,12 @@ export default function ProjectForm({
     setName(project?.name);
     setCategory(project?.category);
     setType(
-      project?.type.charAt(0) + project?.type.slice(1).toLowerCase() ||
+      project?.type?.charAt(0) + project?.type?.slice(1).toLowerCase() ||
         projectTypes[0].value
     );
     setStartDate(project ? moment(project.startDate) : moment());
     setEndDate(project ? moment(project.endDate) : moment().add(6, "months"));
-    setFRRespID(project?.frresp.id);
+    setFRRespID(project?.frresp?.id);
     setFRGoal(project?.frgoal);
     setFirstPingDate(
       (project?.firstPingDate && moment(project.firstPingDate)) || null

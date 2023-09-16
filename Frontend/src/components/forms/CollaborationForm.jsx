@@ -361,7 +361,7 @@ export default function CollaborationForm({
         ${collaboration ? "updated" : "added"}.`,
       });
       setOpenModal(false);
-      fetchData();
+      fetchUpdatedData();
     } else if (serverResponse.status === 400) {
       handleOpenToast({
         type: "error",

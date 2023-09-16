@@ -6,7 +6,7 @@ export function DeleteAlertProvider({ children }) {
   const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
   const [object, setObject] = useState();
   const [endpoint, setEndpoint] = useState();
-  const [populateObjects, setPopulateObjects] = useState();
+  const [fetchUpdatedData, setFetchUpdatedData] = useState();
 
   return (
     <DeleteAlertContext.Provider
@@ -20,8 +20,8 @@ export function DeleteAlertProvider({ children }) {
         endpoint,
         setEndpoint,
 
-        populateObjects,
-        setPopulateObjects,
+        fetchUpdatedData,
+        setFetchUpdatedData,
       }}
     >
       {children}

@@ -17,11 +17,11 @@ import ToastContext from "../../context/ToastContext";
 import CustomTextField from "./partial/CustomTextField";
 
 export default function ContactForm({
+  object: contact,
+  companyId,
   openModal,
   setOpenModal,
-  fetchData,
-  company,
-  contact,
+  fetchUpdatedData,
 }) {
   const { handleOpenToast } = useContext(ToastContext);
 

@@ -5,25 +5,21 @@ import {
   Typography,
   Container,
   Button,
-  Link,
   Box,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
   IconButton,
   CircularProgress,
+  Tooltip,
 } from "@mui/material";
 import {
   KeyboardArrowLeft as KeyboardArrowLeftIcon,
   ExpandMore as ExpandMoreIcon,
-  Email as EmailIcon,
-  Phone as PhoneIcon,
-  Work as WorkIcon,
-  Description as DescriptionIcon,
-  AddCircle as AddCircleIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
+  Lock as LockIcon,
+  LockOpen as LockOpenIcon,
 } from "@mui/icons-material/";
 
 import { useEffect, useState, useContext } from "react";
@@ -32,8 +28,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import ToastContext from "../../context/ToastContext";
 import DeleteAlertContext from "../../context/DeleteAlertContext";
 
-import ContactForm from "../forms/ContactForm";
 import CollaborationForm from "../forms/CollaborationForm";
+import UserForm from "../forms/UserForm";
 
 import SearchBar from "./partial/SearchBar";
 import TableComponent from "./partial/TableComponent";
@@ -89,6 +85,7 @@ const userInfo = {
   authority: "ADMINISTRATOR",
   firstName: "John",
   lastName: "Doe",
+  softLocked: false,
   notificationEmail: "john.doe@gmail.com",
   description: "Default humanoid being.",
   nickname: "JD",
@@ -97,7 +94,7 @@ const userInfo = {
       id: 1,
       name: "Javor",
       authority: "Member",
-    }
+    },
   ],
   collaborations: [
     {
@@ -112,7 +109,7 @@ const userInfo = {
       comment:
         "Sample comment 1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa a daw dawdawwd awdawda dwd ",
       achievedValue: 75,
-    }
+    },
   ],
 };
 
@@ -121,33 +118,27 @@ export default function User() {
   const navigate = useNavigate();
 
   const { handleOpenToast } = useContext(ToastContext);
-  const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
+  const { setOpenDeleteAlert, setObject, setEndpoint, setFetchUpdatedData } =
     useContext(DeleteAlertContext);
 
-  const [openContactFormModal, setOpenContactFormModal] = useState(false);
-  const [contact, setContact] = useState();
+  const [openUserFormModal, setOpenUserFormModal] = useState(false);
+  const [user, setUser] = useState([]);
   const [openCollaborationFormModal, setOpenCollaborationFormModal] =
     useState(false);
   const [collaboration, setCollaboration] = useState();
 
-  const [user, setUser] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
-  const [loading, setLoading] = useState(true);
+  const [loadingSoftLockButton, setLoadingSoftLockButton] = useState(false);
 
   async function fetchUser() {
-    setLoading(true);
-
     const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     try {
-      const serverResponse = await fetch(
-        "/api/users/" + userId,
-        {
-          method: "GET",
-          headers: { googleTokenEncoded: JWToken.credential },
-        }
-      );
+      const serverResponse = await fetch("/api/users/" + userId, {
+        method: "GET",
+        headers: { googleTokenEncoded: JWToken.credential },
+      });
       if (serverResponse.ok) {
         const json = await serverResponse.json();
 
@@ -171,8 +162,59 @@ export default function User() {
         info: "An error occurred whilst trying to connect to server.",
       });
     }
+  }
 
-    setLoading(false);
+  function handleEditUser() {
+    setOpenUserFormModal(true);
+  }
+
+  function navigateUsers() {
+    navigate("/users");
+  }
+
+  function handleDeleteUser() {
+    setObject({ type: "User", name: user.firstName + " " + user.lastName });
+    setEndpoint("/api/users/" + user.id);
+    setFetchUpdatedData({ function: navigateUsers });
+
+    setOpenDeleteAlert(true);
+  }
+
+  async function handleSoftLockUser() {
+    setLoadingSoftLockButton(true);
+
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+
+    try {
+      const serverResponse = await fetch(
+        "/api/users/" + user.id + "/softLock",
+        {
+          method: "PATCH",
+          headers: { googleTokenEncoded: JWToken.credential },
+        }
+      );
+
+      if (serverResponse.ok) {
+        const json = await serverResponse.json();
+        user.softLocked = json;
+
+        handleOpenToast({
+          type: "success",
+          info: `User ${user.firstName} ${user.lastName} soft locked.`,
+        });
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "A server error occurred whilst soft locking.",
+        });
+      }
+    } catch (error) {
+      handleOpenToast({
+        type: "error",
+        info: "An error occurred whilst trying to connect to server.",
+      });
+    }
+    setLoadingSoftLockButton(false);
   }
 
   function handleEditCollaboration(collaboration) {
@@ -182,8 +224,8 @@ export default function User() {
 
   function handleDeleteCollaboration(collaboration) {
     setObject({ type: "Collaboration", name: collaboration.name });
-    setEndpoint("/collaborations/" + collaboration.id);
-    setPopulateObjects({ function: fetchUser });
+    setEndpoint("/api/collaborations/" + collaboration.id);
+    setFetchUpdatedData({ function: fetchUser });
 
     setOpenDeleteAlert(true);
   }
@@ -198,18 +240,18 @@ export default function User() {
 
   return (
     <>
-      <ContactForm
-        contact={contact}
-        openModal={openContactFormModal}
-        setOpenModal={setOpenContactFormModal}
-        fetchData={fetchUser}
+      <UserForm
+        object={user}
+        openModal={openUserFormModal}
+        setOpenModal={setOpenUserFormModal}
+        fetchUpdatedData={fetchUser}
       />
 
       <CollaborationForm
-        collaboration={collaboration}
+        object={collaboration}
         openModal={openCollaborationFormModal}
         setOpenModal={setOpenCollaborationFormModal}
-        fetchData={fetchUser}
+        fetchUpdatedData={fetchUser}
       />
 
       <Box
@@ -227,25 +269,105 @@ export default function User() {
             overflowY: "auto",
           }}
         >
-          <Button
-            variant="contained"
-            startIcon={<KeyboardArrowLeftIcon />}
-            onClick={() => {
-              navigate("/users");
-            }}
+          <Box
             sx={{
-              borderTopLeftRadius: 0,
-              borderBottomLeftRadius: 0,
-
-              marginBlock: 2,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 0.5,
             }}
           >
-            Users
-          </Button>
+            <Button
+              variant="contained"
+              startIcon={<KeyboardArrowLeftIcon />}
+              onClick={() => {
+                navigate("/users");
+              }}
+              sx={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
 
-          <Container
+                marginBlock: 2,
+              }}
+            >
+              Users
+            </Button>
+
+            <Box
+              sx={{
+                marginRight: 2,
+
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 0.5,
+              }}
+            >
+              <Tooltip
+                title={user.softLocked ? "Soft unlock" : "Soft lock"}
+                key="Soft lock"
+              >
+                <IconButton
+                  size="small"
+                  onClick={handleSoftLockUser}
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
+                  }}
+                >
+                  {loadingSoftLockButton ? (
+                    <CircularProgress
+                      size={17}
+                      sx={{
+                        color: "white",
+                      }}
+                    />
+                  ) : user.softLocked ? (
+                    <LockOpenIcon />
+                  ) : (
+                    <LockIcon />
+                  )}
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Edit" key="Edit">
+                <IconButton
+                  size="small"
+                  disabled={user.softLocked}
+                  onClick={handleEditUser}
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Delete" key="Delete">
+                <IconButton
+                  size="small"
+                  disabled={user.softLocked}
+                  onClick={handleDeleteUser}
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          </Box>
+
+          <Box
             sx={{
               marginBottom: 2,
+              marginInline: 2,
             }}
           >
             <Typography
@@ -257,7 +379,7 @@ export default function User() {
                 textTransform: "uppercase",
               }}
             >
-              {userInfo.firstName + ' ' + userInfo.lastName}
+              {userInfo.firstName + " " + userInfo.lastName}
             </Typography>
 
             <Accordion defaultExpanded sx={{ marginBlock: 2 }}>
@@ -273,7 +395,9 @@ export default function User() {
               <AccordionDetails>
                 <List dense>
                   <ListItem disablePadding>
-                    <ListItemText primary={"Login email: " + userInfo.loginEmail} />
+                    <ListItemText
+                      primary={"Login email: " + userInfo.loginEmail}
+                    />
                   </ListItem>
 
                   <ListItem disablePadding>
@@ -284,7 +408,9 @@ export default function User() {
 
                   <ListItem disablePadding>
                     <ListItemText
-                      primary={"Notification email: " + userInfo.notificationEmail}
+                      primary={
+                        "Notification email: " + userInfo.notificationEmail
+                      }
                     />
                   </ListItem>
 
@@ -326,9 +452,7 @@ export default function User() {
                         alignItems: "center",
                       }}
                     >
-                      <Typography>
-                        {project.name}
-                      </Typography>
+                      <Typography>{project.name}</Typography>
                     </Box>
 
                     <List dense>
@@ -343,7 +467,7 @@ export default function User() {
                 ))}
               </AccordionDetails>
             </Accordion>
-          </Container>
+          </Box>
         </Box>
 
         {/* collaborations */}
@@ -370,26 +494,10 @@ export default function User() {
               data={userInfo.collaborations}
               setSearchResults={setSearchResults}
             />
-
-            <Button
-              variant="contained"
-              size="medium"
-              startIcon={<AddCircleIcon />}
-              onClick={() => {
-                setCollaboration();
-                setOpenCollaborationFormModal(true);
-              }}
-            >
-              Add collaboration
-            </Button>
           </Container>
 
           <Container maxWidth="false">
-            {loading ? (
-              <Box sx={{ display: "grid", placeItems: "center" }}>
-                <CircularProgress size={100} />
-              </Box>
-            ) : userInfo.collaborations?.length <= 0 ? (
+            {userInfo.collaborations?.length <= 0 ? (
               <Typography variant="h4" align="center">
                 {"No collaborations :("}
               </Typography>

@@ -43,10 +43,10 @@ const authLevels = [
 ];
 
 export default function UserForm({
-  user,
-  openUserFormModal,
-  setOpenUserFormModal,
-  populateUsers,
+  object: user,
+  openModal,
+  setOpenModal,
+  fetchUpdatedData,
 }) {
   const { handleOpenToast } = useContext(ToastContext);
 
@@ -133,8 +133,8 @@ export default function UserForm({
           user ? "updated" : "added"
         }.`,
       });
-      setOpenUserFormModal(false);
-      populateUsers();
+      setOpenModal(false);
+      fetchUpdatedData();
     } else if (serverResponse.status === 400) {
       handleOpenToast({
         type: "error",
@@ -198,7 +198,7 @@ export default function UserForm({
         descriptionIsValid: true,
       },
     });
-  }, [openUserFormModal]);
+  }, [openModal]);
 
   return (
     <Backdrop open={openUserFormModal}>
@@ -248,7 +248,6 @@ export default function UserForm({
             >
               {!user ? "Add user" : "Update user"}
             </Typography>
-
             <Box
               sx={{
                 overflowY: "auto",

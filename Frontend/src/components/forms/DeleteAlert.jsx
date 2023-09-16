@@ -21,7 +21,7 @@ export default function DeleteAlert() {
     setOpenDeleteAlert,
     object,
     endpoint,
-    populateObjects,
+    fetchUpdatedData,
   } = useContext(DeleteAlertContext);
 
   const [loadingButton, setLoadingButton] = useState(false);
@@ -45,7 +45,7 @@ export default function DeleteAlert() {
         info: object?.type + " " + object?.name + " deleted.",
       });
 
-      populateObjects.function();
+      fetchUpdatedData.function();
       setOpenDeleteAlert(false);
     } else if (serverResponse.status === 403) {
       handleOpenToast({
@@ -58,12 +58,11 @@ export default function DeleteAlert() {
     } else if (serverResponse.status === 404) {
       handleOpenToast({
         type: "error",
-        info: object?.type + " " + object?.name + " does not exists.",
+        info: object?.type + " " + object?.name + " does not exist.",
       });
 
-      populateObjects.function();
+      fetchUpdatedData.function();
       setOpenDeleteAlert(false);
-      // console.log(await populateObjectsFunction);
     } else {
       handleOpenToast({
         type: "error",
