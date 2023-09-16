@@ -1,97 +1,186 @@
 import {
   Backdrop,
+  Box,
   Modal,
+  FormControl,
   Fade,
   Button,
+  Typography,
   TextField,
   Autocomplete,
+  FormControlLabel,
+  Checkbox,
+  FormGroup,
+  FormLabel,
+  FormHelperText,
   MenuItem,
-  Typography,
-  FormControl,
-  Box,
+  Grid,
 } from "@mui/material";
+import {
+  PaidOutlined as PaidOutlinedIcon,
+  Paid as PaidIcon,
+  ShoppingBagOutlined as ShoppingBagOutlinedIcon,
+  ShoppingBag as ShoppingBagIcon,
+  SchoolOutlined as SchoolOutlinedIcon,
+  School as SchoolIcon,
+  GradeOutlined as GradeOutlinedIcon,
+  Grade as GradeIcon,
+  AttachMoney as AttachMoneyIcon,
+  MoneyOff as MoneyOffIcon,
+  Repeat as RepeatIcon,
+  Email as EmailIcon,
+  AssignmentTurnedIn as AssignmentTurnedInIcon,
+  Call as CallIcon,
+  Work as WorkIcon,
+} from "@mui/icons-material";
+
 import { LoadingButton } from "@mui/lab";
 
 import { useState, useContext, useEffect } from "react";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import moment from "moment";
 
-import UserContext from "../../context/UserContext";
 import ToastContext from "../../context/ToastContext";
 
-import TextInput from "./partial/TextInput";
+import CustomTextField from "./partial/CustomTextField";
+import CustomAutocomplete from "./partial/CustomAutocomplete";
 
-const projectTypes = [
+const statuses = [
   {
-    value: "External",
-    label: "External",
+    value: "TODO",
+    label: "Todo",
+    icon: <AssignmentTurnedInIcon sx={{ color: "#666" }} />,
   },
   {
-    value: "Internal",
-    label: "Internal",
+    value: "CONTACTED",
+    label: "Contacted",
+    icon: <CallIcon sx={{ color: "#666" }} />,
+  },
+  {
+    value: "PINGED",
+    label: "Pinged",
+    icon: <RepeatIcon sx={{ color: "#666" }} />,
+  },
+  {
+    value: "OFFER_SENT",
+    label: "Offer sent",
+    icon: <EmailIcon sx={{ color: "#666" }} />,
+  },
+  {
+    value: "MEETING_HELD",
+    label: "Meeting held",
+    icon: <WorkIcon sx={{ color: "#666" }} />,
+  },
+  {
+    value: "SUCCESSFUL",
+    label: "Successful",
+    icon: <AttachMoneyIcon sx={{ color: "#666" }} />,
+  },
+  {
+    value: "UNSUCCESSFUL",
+    label: "Unsuccessful",
+    icon: <MoneyOffIcon sx={{ color: "#666" }} />,
+  },
+];
+
+const categories = [
+  {
+    value: "FINANCIAL",
+    label: "Financial",
+    checked: <PaidIcon />,
+    unchecked: <PaidOutlinedIcon />,
+  },
+  {
+    value: "MATERIAL",
+    label: "Material",
+    checked: <ShoppingBagIcon />,
+    unchecked: <ShoppingBagOutlinedIcon />,
+  },
+  {
+    value: "ACADEMIC",
+    label: "Academic",
+    checked: <SchoolIcon />,
+    unchecked: <SchoolOutlinedIcon />,
   },
 ];
 
 export default function CollaborationForm({
-  collaboration,
-  fetchData,
   openModal,
   setOpenModal,
+  fetchData,
+  collaboration,
+  project,
+  company,
 }) {
-  // TODO: create collaboration form, this is only used as placeholder
-  const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
 
-  const [existingUsers, setExistingUsers] = useState([]);
   const [existingProjects, setExistingProjects] = useState([]);
+  const [existingCompanies, setExistingCompanies] = useState([]);
+  const [existingUsers, setExistingUsers] = useState([]);
+  const [companyContacts, setCompanyContacts] = useState([]);
+
   const [loadingButton, setLoadingButton] = useState(false);
 
-  const [name, setName] = useState();
-  const [category, setCategory] = useState();
-  const [type, setType] = useState();
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
-  const [FRRespID, setFRRespID] = useState();
-  const [FRGoal, setFRGoal] = useState();
-  const [firstPingDate, setFirstPingDate] = useState();
-  const [secondPingDate, setSecondPingDate] = useState();
+  const [formData, setFormData] = useState({
+    entity: {
+      projectId: null,
+      companyId: null,
+      contactId: null,
+      responsibleId: null,
+      category: null,
+      status: statuses[0].value,
+      comment: null,
+      achievedValue: 0,
+      priority: false,
+    },
+    validation: {
+      projectIdIsValid: false,
+      companyIdIsValid: false,
+      contactIdIsValid: true,
+      responsibleIdIsValid: true,
+      categoryIsValid: false,
+      statusIsValid: true,
+      commentIsValid: true,
+      achievedValueIsValid: true,
+      priorityIsValid: true,
+    },
+  });
 
-  const [nameIsValid, setNameIsValid] = useState();
-  const [categoryIsValid, setCategoryIsValid] = useState();
-  const [typeIsValid, setTypeIsValid] = useState();
-  const [startDateIsValid, setStartDateIsValid] = useState();
-  const [endDateIsValid, setEndDateIsValid] = useState();
-  const [FRRespIDIsValid, setFRRespIDIsValid] = useState();
-  const [FRGoalIsValid, setFRGoalIsValid] = useState();
-  const [firstPingDateIsValid, setFirstPingDateIsValid] = useState();
-  const [secondPingDateIsValid, setSecondPingDateIsValid] = useState();
+  function updateCategory(prevData, category) {
+    let updatedData = { ...prevData };
 
-  async function fetchExistingUsers() {
-    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+    let currentCategories = updatedData.entity.category
+      ? updatedData.entity.category.split("_")
+      : [];
 
-    try {
-      const serverResponse = await fetch("/api/users/", {
-        method: "GET",
-        headers: { googleTokenEncoded: JWToken.credential },
-      });
-
-      if (serverResponse.ok) {
-        const json = await serverResponse.json();
-
-        // console.log(json);
-        setExistingUsers(json);
-      } else {
-        handleOpenToast({
-          type: "error",
-          info: "A server error occurred whilst fetching users for Project responsible input field.",
-        });
-      }
-    } catch (error) {
-      handleOpenToast({
-        type: "error",
-        info: "An error occurred whilst trying to connect to server.",
-      });
+    // Add the category if it's not already in the list
+    if (!currentCategories.includes(category.value)) {
+      currentCategories.push(category.value);
+    } else {
+      // Remove the category if it is
+      const index = currentCategories.indexOf(category.value);
+      currentCategories.splice(index, 1);
     }
+
+    // Sort the categories to ensure consistent ordering.
+    const categoryOrder = ["FINANCIAL", "MATERIAL", "ACADEMIC"];
+    currentCategories = currentCategories.sort((a, b) => {
+      return categoryOrder.indexOf(a) - categoryOrder.indexOf(b);
+    });
+
+    // Convert the list of categories back into the enum string format.
+    let newCategoryEnum = currentCategories.join("_");
+
+    // If the newCategoryEnum is empty, set it to null.
+    if (newCategoryEnum === "") {
+      newCategoryEnum = null;
+    }
+
+    // Validate if we have at least one category selected.
+    const categoryIsValid = currentCategories.length > 0;
+
+    updatedData.entity.category = newCategoryEnum;
+    updatedData.validation.categoryIsValid = categoryIsValid;
+
+    return updatedData; // return the updated data
   }
 
   async function fetchExistingProjects() {
@@ -106,12 +195,95 @@ export default function CollaborationForm({
       if (serverResponse.ok) {
         const json = await serverResponse.json();
 
-        // console.log(json);
         setExistingProjects(json);
       } else {
         handleOpenToast({
           type: "error",
-          info: "A server error occurred whilst fetching projects for Category input field.",
+          info: "A server error occurred whilst fetching projects.",
+        });
+      }
+    } catch (error) {
+      handleOpenToast({
+        type: "error",
+        info: "An error occurred whilst trying to connect to server.",
+      });
+    }
+  }
+
+  async function fetchExistingCompanies() {
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+
+    try {
+      const serverResponse = await fetch("/api/companies/", {
+        method: "GET",
+        headers: { googleTokenEncoded: JWToken.credential },
+      });
+
+      if (serverResponse.ok) {
+        const json = await serverResponse.json();
+
+        setExistingCompanies(json);
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "A server error occurred whilst fetching companies.",
+        });
+      }
+    } catch (error) {
+      handleOpenToast({
+        type: "error",
+        info: "An error occurred whilst trying to connect to server.",
+      });
+    }
+  }
+
+  async function fetchExistingUsers() {
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+
+    try {
+      const serverResponse = await fetch("/api/users/", {
+        method: "GET",
+        headers: { googleTokenEncoded: JWToken.credential },
+      });
+
+      if (serverResponse.ok) {
+        const json = await serverResponse.json();
+
+        setExistingUsers(json);
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "A server error occurred whilst fetching companies.",
+        });
+      }
+    } catch (error) {
+      handleOpenToast({
+        type: "error",
+        info: "An error occurred whilst trying to connect to server.",
+      });
+    }
+  }
+
+  async function fetchCompanyContacts() {
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+
+    try {
+      const serverResponse = await fetch(
+        "/api/companies/" + formData.companyId,
+        {
+          method: "GET",
+          headers: { googleTokenEncoded: JWToken.credential },
+        }
+      );
+
+      if (serverResponse.ok) {
+        const json = await serverResponse.json();
+
+        setCompanyContacts(json.contacts);
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "A server error occurred whilst fetching selected company contacts.",
         });
       }
     } catch (error) {
@@ -123,33 +295,49 @@ export default function CollaborationForm({
   }
 
   async function submit() {
-    if (
-      !nameIsValid ||
-      !categoryIsValid ||
-      !startDateIsValid ||
-      !endDateIsValid ||
-      !FRRespIDIsValid ||
-      !FRGoalIsValid ||
-      !firstPingDateIsValid ||
-      !secondPingDateIsValid
-    ) {
+    const isFormValid = Object.values(formData.validation).every(Boolean); // all validation rules are fulfilled
+
+    if (!isFormValid) {
+      handleOpenToast({
+        type: "error",
+        info: "Invalid collaboration details.",
+      });
       return;
     }
 
     setLoadingButton(true);
-    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
-    const projectData = {
-      idCreator: user.id,
-      name: name.trim(),
-      category: category.trim(),
-      type: type.trim().toUpperCase(),
-      startDate: startDate,
-      endDate: endDate,
-      idFRResp: FRRespID,
-      frgoal: FRGoal !== "" ? FRGoal : null,
-      firstPingDate: firstPingDate,
-      secondPingDate: secondPingDate,
+
+    // object destructuring
+    const {
+      projectId: project,
+      companyId: company,
+      contactId: contact,
+      responsibleId: responsible,
+      category,
+      status,
+      comment,
+      achievedValue,
+      priority,
+    } = formData.entity;
+
+    const collaborationData = {
+      idProject: project.id,
+      idCompany: company.id,
+      idContact: contact.id,
+      idResponsible: responsible.id,
+      category: category,
+      status: status,
+      comment: comment && comment?.trim() !== "" ? comment?.trim() : null,
+      achievedValue:
+        achievedValue && achievedValue?.trim() !== ""
+          ? achievedValue?.trim()
+          : null,
+      priority: priority,
     };
+
+    // console.log(collaborationData);
+
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
 
     const request = {
       method: collaboration ? "PUT" : "POST",
@@ -157,41 +345,37 @@ export default function CollaborationForm({
         googleTokenEncoded: JWToken.credential,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(projectData),
+      body: JSON.stringify(collaborationData),
     };
 
     const serverResponse = await fetch(
-      `/api/projects/${collaboration?.id ?? ""}`,
+      `/api/collaboration/${collaboration?.id ?? ""}`,
       request
     );
 
     if (serverResponse.ok) {
       handleOpenToast({
         type: "success",
-        info:
-          "Project " +
-          projectData.name +
-          " " +
-          (collaboration ? "updated" : "added") +
-          ".",
+        info: `Collaboration between ${formData.project.name} 
+        and ${formData.company.name} 
+        ${collaboration ? "updated" : "added"}.`,
       });
-
       setOpenModal(false);
       fetchData();
     } else if (serverResponse.status === 400) {
       handleOpenToast({
         type: "error",
-        info: "Invalid project details.",
+        info: "Invalid collaboration details.",
       });
     } else if (serverResponse.status === 403) {
       handleOpenToast({
         type: "error",
-        info: "Moderator privileges are required for manipulating projects.",
+        info: "Project member privileges are required for manipulating collaborations.",
       });
     } else if (serverResponse.status === 404) {
       handleOpenToast({
         type: "error",
-        info: "Project with id " + collaboration.id + " does not exist.",
+        info: "Collaboration with id " + collaboration.id + " does not exist.",
       });
     } else {
       handleOpenToast({
@@ -199,7 +383,7 @@ export default function CollaborationForm({
         info:
           "An unknown error occurred whilst trying to " +
           (collaboration ? "update" : "add") +
-          " project.",
+          " collaboration.",
       });
     }
 
@@ -207,40 +391,48 @@ export default function CollaborationForm({
   }
 
   useEffect(() => {
-    setName(collaboration?.name);
-    setCategory(collaboration?.category);
-    setType(
-      collaboration?.type.charAt(0) +
-        collaboration?.type.slice(1).toLowerCase() || projectTypes[0].value
-    );
-    setStartDate(collaboration ? moment(collaboration.startDate) : moment());
-    setEndDate(
-      collaboration ? moment(collaboration.endDate) : moment().add(6, "months")
-    );
-    setFRRespID(collaboration?.frresp.id);
-    setFRGoal(collaboration?.frgoal);
-    setFirstPingDate(
-      (collaboration?.firstPingDate && moment(collaboration.firstPingDate)) ||
-        null
-    );
-    setSecondPingDate(
-      (collaboration?.secondPingDate && moment(collaboration.secondPingDate)) ||
-        null
-    );
+    // object destructuring
+    const {
+      projectId,
+      companyId,
+      contactId,
+      responsibleId,
+      category,
+      status,
+      comment,
+      achievedValue,
+      priority,
+    } = collaboration || {};
 
-    // optional and predefined fields are always valid
-    setNameIsValid(collaboration ? true : false);
-    setCategoryIsValid(collaboration ? true : false);
-    setTypeIsValid(true);
-    setStartDateIsValid(true);
-    setEndDateIsValid(true);
-    setFRRespIDIsValid(collaboration ? true : false);
-    setFRGoalIsValid(true);
-    setFirstPingDateIsValid(true);
-    setSecondPingDateIsValid(true);
+    setFormData({
+      entity: {
+        projectId: collaboration ? projectId : project?.id,
+        companyId: collaboration ? companyId : company?.id,
+        contactId: contactId,
+        responsibleId: responsibleId,
+        category: collaboration ? category : null,
+        status: collaboration ? status : statuses[0].value,
+        comment: comment,
+        achievedValue: achievedValue,
+        priority: collaboration ? priority : false,
+      },
+      validation: {
+        projectIdIsValid: project ? true : project ? true : false,
+        companyIdIsValid: company ? true : company ? true : false,
+        contactIdIsValid: true,
+        responsibleIdIsValid: true,
+        categoryIsValid: false,
+        statusIsValid: true,
+        commentIsValid: true,
+        achievedValueIsValid: true,
+        priorityIsValid: true,
+      },
+    });
 
-    fetchExistingUsers();
     fetchExistingProjects();
+    fetchExistingCompanies();
+    fetchExistingUsers();
+    fetchCompanyContacts();
   }, [openModal]);
 
   return (
@@ -250,7 +442,12 @@ export default function CollaborationForm({
         closeAfterTransition
         // submit on Enter key
         onKeyDown={(e) => {
-          if (e.key === "Enter") {
+          if (
+            e.key === "Enter" &&
+            Object.keys(formData.validation).every(
+              (key) => formData.validation[key]
+            )
+          ) {
             submit();
           }
         }}
@@ -292,276 +489,200 @@ export default function CollaborationForm({
                 overflowY: "auto",
               }}
             >
-              <TextInput
-                labelText={"Project name"}
-                placeholderText={"Severus"}
-                isRequired
-                helperText={{
-                  error: "Project name must be between 2 and 35 characters",
-                  details: "",
-                }}
-                inputProps={{ minLength: 2, maxLength: 35 }}
-                validationFunction={(input) => {
-                  return input.length >= 2 && input.length <= 35;
-                }}
-                value={name}
-                setValue={setName}
-                valueIsValid={nameIsValid}
-                setValueIsValid={setNameIsValid}
+              <CustomAutocomplete
+                options={existingProjects}
+                entityKey="projectId"
+                validationKey="projectIdIsValid"
+                label="Project"
+                formatter={(option) => option.name}
+                disabledCondition={project ? true : false}
+                formData={formData}
+                setFormData={setFormData}
               />
 
-              <Autocomplete
-                options={existingProjects
-                  .map((project) => project.category)
-                  .filter(
-                    (category, index, array) =>
-                      array.indexOf(category) === index
-                  )
-                  .sort((a, b) => {
-                    return a.localeCompare(b);
-                  })}
-                filterOptions={(options, { inputValue }) =>
-                  options.filter((option) =>
-                    option.toLowerCase().includes(inputValue.toLowerCase())
-                  )
-                }
-                clearOnEscape
-                openOnFocus
-                freeSolo
-                inputValue={category || ""}
-                onInputChange={(event, value) => {
-                  setCategory(value);
-                  setCategoryIsValid(value.length >= 2 && value.length <= 35);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Category"
-                    placeholder="Hackathon"
-                    required
-                    fullWidth
-                    margin="dense"
-                  />
-                )}
+              <CustomAutocomplete
+                options={existingCompanies}
+                entityKey="companyId"
+                validationKey="companyIdIsValid"
+                label="Company"
+                formatter={(option) => option.name}
+                disabledCondition={company ? true : false}
+                formData={formData}
+                setFormData={setFormData}
+              />
+
+              <CustomAutocomplete
+                options={existingUsers}
+                entityKey="responsibleId"
+                validationKey="responsibleIdIsValid"
+                label="Collaboration responsible"
+                formatter={(option) => option.firstName + " " + option.lastName}
+                formData={formData}
+                setFormData={setFormData}
               />
 
               <TextField
-                label="Project type"
+                label="Status"
                 required
                 fullWidth
                 select
                 margin="dense"
-                helperText={!typeIsValid && "Invalid project type"}
-                value={type}
-                error={!typeIsValid}
+                helperText={
+                  !formData.validation.statusIsValid && "Invalid status"
+                }
+                inputProps={{
+                  name: "status",
+                }}
+                value={formData.entity.status}
+                error={!formData.validation.statusIsValid}
                 onChange={(e) => {
-                  const input = e.target.value;
-                  if (
-                    input === projectTypes[0].value ||
-                    input === projectTypes[1].value
-                  ) {
-                    setTypeIsValid(true);
-                  } else {
-                    setTypeIsValid(false);
-                  }
+                  const inputValue = e.target.value;
 
-                  setType(input);
+                  setFormData((prevData) => ({
+                    entity: {
+                      ...prevData.entity,
+                      status: inputValue,
+                    },
+                    validation: {
+                      ...prevData.validation,
+                      statusIsValid: statuses.some(
+                        (option) => option.value === inputValue
+                      ),
+                    },
+                  }));
                 }}
               >
-                {projectTypes.map((option) => (
+                {statuses.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                    <Grid container spacing={1}>
+                      <Grid item>{option.icon}</Grid>
+                      <Grid item>
+                        {/* better vertical alignment with typography */}
+                        <Typography>{option.label}</Typography>
+                      </Grid>
+                    </Grid>
                   </MenuItem>
                 ))}
               </TextField>
 
-              <DatePicker
-                label="Start date"
-                displayWeekNumber
-                format="DD.MM.YYYY."
-                minDate={moment("1980-01-01")}
-                maxDate={moment().add(2, "years")}
-                value={startDate}
-                onChange={(date) => {
-                  const input = date;
-                  if (
-                    input.isAfter(moment("1980-01-01")) &&
-                    input.isBefore(moment().add(2, "years"))
-                  ) {
-                    setStartDateIsValid(true);
-                  } else {
-                    setStartDateIsValid(false);
-                  }
-
-                  setStartDate(input);
-                }}
-                slotProps={{
-                  textField: {
-                    fullWidth: true,
-                    required: true,
-                    margin: "dense",
-                    helperText: !startDateIsValid && "Invalid start date",
-                    error: !startDateIsValid,
-                  },
-                }}
-              />
-              <DatePicker
-                label="End date"
-                displayWeekNumber
-                format="DD.MM.YYYY."
-                minDate={startDate}
-                maxDate={moment().add(2, "years")}
-                value={endDate}
-                onChange={(date) => {
-                  const input = date;
-                  if (
-                    input.isAfter(startDate) &&
-                    input.isBefore(moment().add(2, "years"))
-                  ) {
-                    setEndDateIsValid(true);
-                  } else {
-                    setEndDateIsValid(false);
-                  }
-
-                  setEndDate(input);
-                }}
-                slotProps={{
-                  textField: {
-                    fullWidth: true,
-                    required: true,
-                    margin: "dense",
-                    helperText: !endDateIsValid && "Invalid end date",
-                    error: !endDateIsValid,
-                  },
-                }}
+              <CustomAutocomplete
+                options={companyContacts}
+                entityKey="contactId"
+                validationKey="contactIdIsValid"
+                label="Contact in company"
+                formatter={(option) => option.firstName + " " + option.lastName}
+                disabledCondition={!formData.validation.companyIdIsValid}
+                helperTextCondition={!formData.validation.companyIdIsValid}
+                helperText="Select a company to change contact"
+                formData={formData}
+                setFormData={setFormData}
               />
 
-              <Autocomplete
-                options={existingUsers}
-                clearOnEscape
-                openOnFocus
-                value={existingUsers.find((u) => u.id === FRRespID) || null}
-                getOptionLabel={(option) =>
-                  option.firstName + " " + option.lastName
-                }
-                isOptionEqualToValue={(option, value) => option.id === value.id}
-                filterOptions={(options, { inputValue }) =>
-                  options.filter((option) =>
-                    (option.firstName + " " + option.lastName)
-                      .toLowerCase()
-                      .includes(inputValue.toLowerCase())
-                  )
-                }
-                onChange={(e, inputValue) => {
-                  setFRRespID(inputValue?.id);
-                  setFRRespIDIsValid(
-                    existingUsers
-                      .map((option) => option.id)
-                      .includes(inputValue?.id)
-                  );
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Project responsible"
-                    required
-                    fullWidth
-                    margin="dense"
-                  />
-                )}
-              />
+              <FormControl fullWidth>
+                <FormLabel component="legend" required sx={{ marginLeft: 1 }}>
+                  Categories
+                </FormLabel>
+                <FormGroup
+                  row
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                  }}
+                >
+                  {categories.map((category) => (
+                    <FormControlLabel
+                      key={category.label}
+                      label={category.label}
+                      control={
+                        <Checkbox
+                          checked={
+                            formData.entity.category?.includes(
+                              category.value
+                            ) || false
+                          }
+                          icon={category.unchecked}
+                          checkedIcon={category.checked}
+                          onChange={(e) => {
+                            // const isChecked = e.target.checked;
 
-              <TextInput
-                labelText={"FR goal"}
-                inputType={"number"}
-                placeholderText={"10000"}
-                helperText={{
-                  error: "FR goal (if present) must be between 1 and 999999",
-                  details: "",
-                }}
+                            setFormData((prevData) => {
+                              return updateCategory(prevData, category);
+                            });
+                          }}
+                        />
+                      }
+                      sx={{ margin: 0 }}
+                    />
+                  ))}
+                </FormGroup>
+                <FormHelperText>Select at least one category</FormHelperText>
+              </FormControl>
+
+              <CustomTextField
+                labelText={"Achieved value"}
                 inputProps={{
-                  min: 1,
-                  max: 999999,
-                  minLength: 1,
-                  maxLength: 6,
+                  name: "achievedValue",
+                  minLength: 0,
+                  maxLength: 5,
+                }}
+                helperText={{
+                  error:
+                    "Achieved value (if present) must be a number between 1 and 99999",
+                  details:
+                    "Value from this collaboration is summed towards the project goal",
                 }}
                 validationFunction={(input) => {
                   return (
-                    input === null ||
-                    input === "" ||
-                    (input >= 1 &&
-                      input <= 999999 &&
-                      input.length >= 1 &&
-                      input.length <= 6)
+                    (input !== null && input >= 1 && input <= 99999) ||
+                    input.trim().length === 0
                   );
                 }}
-                value={FRGoal}
-                setValue={setFRGoal}
-                valueIsValid={FRGoalIsValid}
-                setValueIsValid={setFRGoalIsValid}
+                formData={formData}
+                setFormData={setFormData}
               />
 
-              <DatePicker
-                label="First ping date"
-                displayWeekNumber
-                format="DD.MM.YYYY."
-                value={firstPingDate}
-                minDate={startDate}
-                maxDate={endDate}
-                onChange={(date) => {
-                  const input = date;
-                  if (
-                    input === null ||
-                    (input.isAfter(startDate) && input.isBefore(endDate))
-                  ) {
-                    setFirstPingDateIsValid(true);
-                  } else {
-                    setFirstPingDateIsValid(false);
-                  }
-
-                  setFirstPingDate(input);
+              <CustomTextField
+                labelText={"Comment"}
+                textFieldProps={{
+                  multiline: true,
+                  minRows: 2,
+                  maxRows: 5,
                 }}
-                slotProps={{
-                  textField: {
-                    fullWidth: true,
-                    margin: "dense",
-                    helperText:
-                      !firstPingDateIsValid &&
-                      "Date must be between project start and end date",
-                    error: !firstPingDateIsValid,
-                  },
+                helperText={{
+                  error: "Comment must be under 475 characters",
+                  details: "",
                 }}
+                inputProps={{ name: "comment", maxLength: 475 }}
+                validationFunction={(input) => {
+                  return input.trim().length <= 475;
+                }}
+                formData={formData}
+                setFormData={setFormData}
               />
-              <DatePicker
-                label="Second ping date"
-                displayWeekNumber
-                format="DD.MM.YYYY."
-                value={secondPingDate}
-                minDate={firstPingDate || startDate}
-                maxDate={endDate}
-                onChange={(date) => {
-                  const input = date;
-                  if (
-                    input === null ||
-                    (input.isAfter(startDate) && input.isBefore(endDate))
-                  ) {
-                    setSecondPingDateIsValid(true);
-                  } else {
-                    setSecondPingDateIsValid(false);
-                  }
 
-                  setSecondPingDate(input);
-                }}
-                slotProps={{
-                  textField: {
-                    fullWidth: true,
-                    margin: "dense",
-                    helperText:
-                      !secondPingDateIsValid &&
-                      "Date must be between project start and end date",
-                    error: !secondPingDateIsValid,
-                  },
-                }}
+              <FormControlLabel
+                label="Collaboration is a priority"
+                control={
+                  <Checkbox
+                    checked={formData.entity.priority}
+                    icon={<GradeOutlinedIcon />}
+                    checkedIcon={<GradeIcon />}
+                    onChange={(e) => {
+                      setFormData((prevData) => ({
+                        entity: {
+                          ...prevData.entity,
+                          priority: e.target.checked,
+                        },
+                        validation: {
+                          ...prevData.validation,
+                          priorityIsValid: true,
+                        },
+                      }));
+                    }}
+                  />
+                }
+                sx={{ margin: 0 }}
               />
             </Box>
 
@@ -587,18 +708,9 @@ export default function CollaborationForm({
                 variant="contained"
                 onClick={submit}
                 loading={loadingButton}
-                disabled={
-                  !(
-                    nameIsValid &&
-                    categoryIsValid &&
-                    startDateIsValid &&
-                    endDateIsValid &&
-                    FRRespIDIsValid &&
-                    FRGoalIsValid &&
-                    firstPingDateIsValid &&
-                    secondPingDateIsValid
-                  )
-                }
+                disabled={Object.keys(formData.validation).some(
+                  (key) => !formData.validation[key]
+                )}
               >
                 {/* span needed because of bug */}
                 <span>
