@@ -7,7 +7,6 @@ import {
   Button,
   Typography,
   TextField,
-  Autocomplete,
   FormControlLabel,
   Checkbox,
   FormGroup,
@@ -123,23 +122,23 @@ export default function CollaborationForm({
     entity: {
       projectId: null,
       companyId: null,
-      contactId: null,
       responsibleId: null,
-      category: null,
       status: statuses[0].value,
-      comment: null,
+      contactId: null,
+      category: null,
       achievedValue: 0,
+      comment: null,
       priority: false,
     },
     validation: {
       projectIdIsValid: false,
       companyIdIsValid: false,
-      contactIdIsValid: true,
-      responsibleIdIsValid: true,
-      categoryIsValid: false,
+      responsibleIdIsValid: false,
       statusIsValid: true,
-      commentIsValid: true,
+      contactIdIsValid: false,
+      categoryIsValid: false,
       achievedValueIsValid: true,
+      commentIsValid: true,
       priorityIsValid: true,
     },
   });
@@ -327,11 +326,8 @@ export default function CollaborationForm({
       idResponsible: responsible.id,
       category: category,
       status: status,
-      comment: comment && comment?.trim() !== "" ? comment?.trim() : null,
-      achievedValue:
-        achievedValue && achievedValue?.trim() !== ""
-          ? achievedValue?.trim()
-          : null,
+      comment: comment?.trim() !== "" ? comment?.trim() : null,
+      achievedValue: achievedValue?.trim() !== "" ? achievedValue?.trim() : 0,
       priority: priority,
     };
 
@@ -395,12 +391,12 @@ export default function CollaborationForm({
     const {
       projectId,
       companyId,
-      contactId,
       responsibleId,
-      category,
       status,
-      comment,
+      contactId,
+      category,
       achievedValue,
+      comment,
       priority,
     } = collaboration || {};
 
@@ -408,23 +404,23 @@ export default function CollaborationForm({
       entity: {
         projectId: collaboration ? projectId : project?.id,
         companyId: collaboration ? companyId : company?.id,
-        contactId: contactId,
         responsibleId: responsibleId,
-        category: collaboration ? category : null,
         status: collaboration ? status : statuses[0].value,
-        comment: comment,
+        contactId: contactId,
+        category: collaboration ? category : null,
         achievedValue: achievedValue,
+        comment: comment,
         priority: collaboration ? priority : false,
       },
       validation: {
-        projectIdIsValid: project ? true : project ? true : false,
-        companyIdIsValid: company ? true : company ? true : false,
-        contactIdIsValid: true,
-        responsibleIdIsValid: true,
-        categoryIsValid: false,
+        projectIdIsValid: collaboration ? true : project ? true : false,
+        companyIdIsValid: collaboration ? true : company ? true : false,
+        responsibleIdIsValid: collaboration ? true : false,
         statusIsValid: true,
-        commentIsValid: true,
+        contactIdIsValid: collaboration ? true : false,
+        categoryIsValid: collaboration ? true : false,
         achievedValueIsValid: true,
+        commentIsValid: true,
         priorityIsValid: true,
       },
     });
@@ -442,12 +438,9 @@ export default function CollaborationForm({
         closeAfterTransition
         // submit on Enter key
         onKeyDown={(e) => {
-          if (
-            e.key === "Enter" &&
-            Object.keys(formData.validation).every(
-              (key) => formData.validation[key]
-            )
-          ) {
+          const formIsValid = Object.values(formData.validation).every(Boolean);
+
+          if (e.key === "Enter" && formIsValid) {
             submit();
           }
         }}
@@ -628,13 +621,13 @@ export default function CollaborationForm({
                 }}
                 helperText={{
                   error:
-                    "Achieved value (if present) must be a number between 1 and 99999",
+                    "Achieved value (if present) must be a number between 0 and 99999",
                   details:
                     "Value from this collaboration is summed towards the project goal",
                 }}
                 validationFunction={(input) => {
                   return (
-                    (input !== null && input >= 1 && input <= 99999) ||
+                    (input !== null && input >= 0 && input <= 99999) ||
                     input.trim().length === 0
                   );
                 }}
@@ -708,8 +701,8 @@ export default function CollaborationForm({
                 variant="contained"
                 onClick={submit}
                 loading={loadingButton}
-                disabled={Object.keys(formData.validation).some(
-                  (key) => !formData.validation[key]
+                disabled={Object.values(formData.validation).some(
+                  (value) => !value
                 )}
               >
                 {/* span needed because of bug */}

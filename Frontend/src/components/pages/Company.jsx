@@ -238,7 +238,9 @@ export default function Company() {
         object={collaboration}
         openModal={openCollaborationFormModal}
         setOpenModal={setOpenCollaborationFormModal}
-        fetchUpdatedData={fetchCompany}
+        fetchData={fetchCompany}
+        project={null}
+        company={company}
       />
 
       <Box
@@ -614,6 +616,18 @@ export default function Company() {
               data={company.collaborations}
               setSearchResults={setSearchResults}
             />
+
+            <Button
+              variant="contained"
+              size="medium"
+              startIcon={<AddCircleIcon />}
+              onClick={() => {
+                setCollaboration();
+                setOpenCollaborationFormModal(true);
+              }}
+            >
+              Add collaboration
+            </Button>
           </Container>
 
           <Container maxWidth="false">
