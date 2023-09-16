@@ -2,6 +2,7 @@ package com.example.backend.project.model;
 
 import com.example.backend.project.model.enums.TYPE;
 import com.example.backend.user.model.AppUser;
+import com.example.backend.util.SoftLockedInterface;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter @Setter
 
-public class Project {
+public class Project implements SoftLockedInterface {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -59,6 +60,11 @@ public class Project {
     @Column(name = "secondpingdate")
     private Date secondPingDate;
 
+    @Column(name = "softLocked")
+    @Getter
+    @Setter
+    private Boolean softLocked = false;
+
     public Project(Long idCreator,
                    String name,
                    String category,
@@ -81,6 +87,7 @@ public class Project {
         this.FRGoal = FRGoal;
         this.firstPingDate = firstPingDate;
         this.secondPingDate = secondPingDate;
+        this.softLocked = false;
     }
 
     public void addFrTeamMember(AppUser user){

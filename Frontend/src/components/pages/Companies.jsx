@@ -52,7 +52,7 @@ export default function Companies() {
 
   const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
-  const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
+  const { setOpenDeleteAlert, setObject, setEndpoint, setFetchUpdatedData } =
     useContext(DeleteAlertContext);
 
   const [openFormModal, setOpenFormModal] = useState(false);
@@ -107,7 +107,7 @@ export default function Companies() {
   function handleDelete(company) {
     setObject({ type: "Company", name: company.name });
     setEndpoint("/api/companies/" + company.id);
-    setPopulateObjects({ function: populateTable });
+    setFetchUpdatedData({ function: populateTable });
 
     setOpenDeleteAlert(true);
   }
@@ -119,10 +119,10 @@ export default function Companies() {
   return (
     <>
       <CompanyForm
-        company={company}
         openModal={openFormModal}
         setOpenModal={setOpenFormModal}
-        populateCompanies={populateTable}
+        fetchUpdatedData={populateTable}
+        object={company}
       />
 
       <Container

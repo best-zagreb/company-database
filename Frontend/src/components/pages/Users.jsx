@@ -34,7 +34,7 @@ export default function Users() {
   const navigate = useNavigate();
 
   const { handleOpenToast } = useContext(ToastContext);
-  const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
+  const { setOpenDeleteAlert, setObject, setEndpoint, setFetchUpdatedData } =
     useContext(DeleteAlertContext);
 
   const [openFormModal, setOpenFormModal] = useState(false);
@@ -89,7 +89,7 @@ export default function Users() {
   function handleDelete(user) {
     setObject({ type: "User", name: user.firstName + " " + user.lastName });
     setEndpoint("/api/users/" + user.id);
-    setPopulateObjects({ function: populateTable });
+    setFetchUpdatedData({ function: populateTable });
 
     setOpenDeleteAlert(true);
   }
@@ -101,10 +101,10 @@ export default function Users() {
   return (
     <>
       <UserForm
-        user={user}
-        openUserFormModal={openFormModal}
-        setOpenUserFormModal={setOpenFormModal}
-        populateUsers={populateTable}
+        openModal={openFormModal}
+        setOpenModal={setOpenFormModal}
+        fetchUpdatedData={populateTable}
+        object={user}
       />
 
       <Container

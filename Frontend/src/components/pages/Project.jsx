@@ -11,15 +11,21 @@ import {
   ListItemText,
   IconButton,
   CircularProgress,
+  Tooltip,
 } from "@mui/material";
 import {
   KeyboardArrowLeft as KeyboardArrowLeftIcon,
   ExpandMore as ExpandMoreIcon,
   AddCircle as AddCircleIcon,
-  Clear as RemoveIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Lock as LockIcon,
+  LockOpen as LockOpenIcon,
+  Clear as ClearIcon,
 } from "@mui/icons-material/";
 
-import * as moment from "moment";
+import moment from "moment";
+
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -28,6 +34,7 @@ import ToastContext from "../../context/ToastContext";
 import DeleteAlertContext from "../../context/DeleteAlertContext";
 
 import CollaborationForm from "../forms/CollaborationForm";
+import ProjectForm from "../forms/ProjectForm";
 
 import SearchBar from "./partial/SearchBar";
 import TableComponent from "./partial/TableComponent";
@@ -85,17 +92,19 @@ export default function Project() {
 
   const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
-  const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
+  const { setOpenDeleteAlert, setObject, setEndpoint, setFetchUpdatedData } =
     useContext(DeleteAlertContext);
 
+  const [openProjectFormModal, setOpenProjectFormModal] = useState(false);
+  const [project, setProject] = useState([]);
   const [openCollaborationFormModal, setOpenCollaborationFormModal] =
     useState(false);
   const [collaboration, setCollaboration] = useState();
 
-  const [project, setProject] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
   const [loading, setLoading] = useState(true);
+  const [loadingSoftLockButton, setLoadingSoftLockButton] = useState(false);
 
   async function fetchProject() {
     setLoading(true);
@@ -134,6 +143,59 @@ export default function Project() {
     setLoading(false);
   }
 
+  function handleEditProject() {
+    setOpenProjectFormModal(true);
+  }
+
+  function navigateProjects() {
+    navigate("/projects");
+  }
+
+  function handleDeleteProject() {
+    setObject({ type: "Project", name: project.name });
+    setEndpoint("/api/projects/" + project.id);
+    setFetchUpdatedData({ function: navigateProjects });
+
+    setOpenDeleteAlert(true);
+  }
+
+  async function handleSoftLockProject() {
+    setLoadingSoftLockButton(true);
+
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+
+    try {
+      const serverResponse = await fetch(
+        "/api/projects/" + project.id + "/softLock",
+        {
+          method: "PATCH",
+          headers: { googleTokenEncoded: JWToken.credential },
+        }
+      );
+      if (serverResponse.ok) {
+        const json = await serverResponse.json();
+        project.softLocked = json;
+
+        handleOpenToast({
+          type: "success",
+          info: `Project ${project.name} soft locked.`,
+        });
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "A server error occurred whilst soft locking.",
+        });
+      }
+    } catch (error) {
+      handleOpenToast({
+        type: "error",
+        info: "An error occurred whilst trying to connect to server.",
+      });
+    }
+
+    setLoadingSoftLockButton(false);
+  }
+
   function handleEditCollaboration(collaboration) {
     setCollaboration(collaboration);
     setOpenCollaborationFormModal(true);
@@ -141,8 +203,8 @@ export default function Project() {
 
   function handleDeleteCollaboration(collaboration) {
     setObject({ type: "Collaboration", name: collaboration.name });
-    setEndpoint("/collaborations/" + collaboration.id);
-    setPopulateObjects({ function: fetchProject });
+    setEndpoint("/api/collaborations/" + collaboration.id);
+    setFetchUpdatedData({ function: fetchProject });
 
     setOpenDeleteAlert(true);
   }
@@ -153,11 +215,20 @@ export default function Project() {
 
   return (
     <>
+      <ProjectForm
+        openModal={openProjectFormModal}
+        setOpenModal={setOpenProjectFormModal}
+        fetchUpdatedData={fetchProject}
+        object={project}
+      />
+
       <CollaborationForm
-        collaboration={collaboration}
         openModal={openCollaborationFormModal}
         setOpenModal={setOpenCollaborationFormModal}
-        fetchData={fetchProject}
+        fetchUpdatedData={fetchProject}
+        object={collaboration}
+        project={project}
+        company={null}
       />
 
       <Box
@@ -175,25 +246,105 @@ export default function Project() {
             overflowY: "auto",
           }}
         >
-          <Button
-            variant="contained"
-            startIcon={<KeyboardArrowLeftIcon />}
-            onClick={() => {
-              navigate("/projects");
-            }}
+          <Box
             sx={{
-              borderTopLeftRadius: 0,
-              borderBottomLeftRadius: 0,
-
-              marginBlock: 2,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 0.5,
             }}
           >
-            Projects
-          </Button>
+            <Button
+              variant="contained"
+              startIcon={<KeyboardArrowLeftIcon />}
+              onClick={() => {
+                navigate("/projects");
+              }}
+              sx={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
 
-          <Container
+                marginBlock: 2,
+              }}
+            >
+              Projects
+            </Button>
+
+            <Box
+              sx={{
+                marginRight: 2,
+
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 0.5,
+              }}
+            >
+              <Tooltip
+                title={project.softLocked ? "Soft unlock" : "Soft lock"}
+                key="Soft lock"
+              >
+                <IconButton
+                  size="small"
+                  onClick={handleSoftLockProject}
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
+                  }}
+                >
+                  {loadingSoftLockButton ? (
+                    <CircularProgress
+                      size={17}
+                      sx={{
+                        color: "white",
+                      }}
+                    />
+                  ) : project.softLocked ? (
+                    <LockOpenIcon />
+                  ) : (
+                    <LockIcon />
+                  )}
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Edit" key="Edit">
+                <IconButton
+                  size="small"
+                  disabled={project.softLocked}
+                  onClick={handleEditProject}
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Delete" key="Delete">
+                <IconButton
+                  size="small"
+                  disabled={project.softLocked}
+                  onClick={handleDeleteProject}
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          </Box>
+
+          <Box
             sx={{
               marginBottom: 2,
+              marginInline: 2,
             }}
           >
             <Typography
@@ -340,7 +491,7 @@ export default function Project() {
                               borderRadius: 1,
                             }}
                           >
-                            <RemoveIcon />
+                            <ClearIcon />
                           </IconButton>
                         )}
                       </ListItem>
@@ -368,7 +519,7 @@ export default function Project() {
                 )}
               </AccordionDetails>
             </Accordion>
-          </Container>
+          </Box>
         </Box>
 
         {/* collaborations */}

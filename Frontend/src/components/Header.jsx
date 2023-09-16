@@ -8,6 +8,7 @@ import {
   Container,
   Button,
   Tooltip,
+  Typography,
 } from "@mui/material";
 
 import {
@@ -17,15 +18,18 @@ import {
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material/";
 
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 
 import "./Header.css";
 
 import UserContext from "../context/UserContext";
 import ToastContext from "../context/ToastContext";
+import { auto } from "@popperjs/core";
 
 export default function Header({ setUserIsLoggedIn }) {
+  const navigate = useNavigate();
+
   const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
 
@@ -74,7 +78,7 @@ export default function Header({ setUserIsLoggedIn }) {
               </Tooltip>
 
               <Menu
-                id="menu-appbar"
+                className="mobile-nav-menu"
                 anchorEl={anchorElNav}
                 anchorOrigin={{
                   vertical: "bottom",
@@ -91,35 +95,23 @@ export default function Header({ setUserIsLoggedIn }) {
                   display: { xs: "block", sm: "none" },
                 }}
               >
-                <MenuItem
-                  className="nav-menu-item"
-                  onClick={handleCloseNavMenu}
-                >
+                <MenuItem onClick={handleCloseNavMenu}>
                   <Link to="/">CDB</Link>
                 </MenuItem>
-                <MenuItem
-                  className="nav-menu-item"
-                  onClick={handleCloseNavMenu}
-                >
+                <MenuItem onClick={handleCloseNavMenu}>
                   <Link to="/projects">Projects</Link>
                 </MenuItem>
-                <MenuItem
-                  className="nav-menu-item"
-                  onClick={handleCloseNavMenu}
-                >
+                <MenuItem onClick={handleCloseNavMenu}>
                   <Link to="/companies">Companies</Link>
                 </MenuItem>
-                <MenuItem
-                  className="nav-menu-item"
-                  onClick={handleCloseNavMenu}
-                >
+                <MenuItem onClick={handleCloseNavMenu}>
                   <Link to="/users">Users</Link>
                 </MenuItem>
               </Menu>
             </Box>
 
             <Box
-              className="nav"
+              className="desktop-nav"
               sx={{
                 flexGrow: 1,
                 display: { xs: "none", sm: "flex" },
@@ -141,24 +133,36 @@ export default function Header({ setUserIsLoggedIn }) {
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open account menu">
-                <Button
-                  variant="text"
-                  onClick={handleOpenUserMenu}
-                  endIcon={<ExpandMoreIcon />}
-                  sx={{ color: "#fff" }}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 1,
+                }}
+              >
+                <Link
+                  className="secondary-nav-link"
+                  to={"/users/" + user?.id}
+                  underline="hover"
                 >
                   {!user
                     ? "Unknown user"
                     : user.nickname
                     ? user.nickname
                     : user.firstName + " " + user.lastName}
-                </Button>
-              </Tooltip>
+                </Link>
+
+                <Tooltip title="Open account menu">
+                  <ExpandMoreIcon
+                    onClick={handleOpenUserMenu}
+                    sx={{ cursor: "pointer" }}
+                  />
+                </Tooltip>
+              </Box>
 
               <Menu
                 sx={{ mt: "45px" }}
-                id="menu-appbar"
                 anchorEl={anchorElUser}
                 anchorOrigin={{
                   vertical: "top",
@@ -182,6 +186,7 @@ export default function Header({ setUserIsLoggedIn }) {
                     Settings
                   </Button>
                 </MenuItem> */}
+
                 <MenuItem onClick={(handleCloseUserMenu, logoutUser)}>
                   <Button
                     variant="text"

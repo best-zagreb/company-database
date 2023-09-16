@@ -33,10 +33,10 @@ const projectTypes = [
 ];
 
 export default function ProjectForm({
-  project,
-  populateProjects,
+  object: project,
   openModal,
   setOpenModal,
+  fetchUpdatedData,
 }) {
   const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
@@ -177,7 +177,7 @@ export default function ProjectForm({
       });
 
       setOpenModal(false);
-      populateProjects();
+      fetchUpdatedData();
     } else if (serverResponse.status === 400) {
       handleOpenToast({
         type: "error",
@@ -210,12 +210,12 @@ export default function ProjectForm({
     setName(project?.name);
     setCategory(project?.category);
     setType(
-      project?.type.charAt(0) + project?.type.slice(1).toLowerCase() ||
+      project?.type?.charAt(0) + project?.type?.slice(1).toLowerCase() ||
         projectTypes[0].value
     );
     setStartDate(project ? moment(project.startDate) : moment());
     setEndDate(project ? moment(project.endDate) : moment().add(6, "months"));
-    setFRRespID(project?.frresp.id);
+    setFRRespID(project?.frresp?.id);
     setFRGoal(project?.frgoal);
     setFirstPingDate(
       (project?.firstPingDate && moment(project.firstPingDate)) || null
@@ -246,6 +246,12 @@ export default function ProjectForm({
         closeAfterTransition
         // submit on Enter key
         onKeyDown={(e) => {
+          // TODO: replace when this form is refractored
+          // const formIsValid = Object.values(formData.validation).every(Boolean);
+
+          // if (e.key === "Enter" && formIsValid) {
+          //   submit();
+          // }
           if (e.key === "Enter") {
             submit();
           }
@@ -304,7 +310,7 @@ export default function ProjectForm({
                 setValue={setName}
                 valueIsValid={nameIsValid}
                 setValueIsValid={setNameIsValid}
-              ></TextInput>
+              />
 
               <Autocomplete
                 options={existingProjects
@@ -495,7 +501,7 @@ export default function ProjectForm({
                 setValue={setFRGoal}
                 valueIsValid={FRGoalIsValid}
                 setValueIsValid={setFRGoalIsValid}
-              ></TextInput>
+              />
 
               <DatePicker
                 label="First ping date"
@@ -595,6 +601,10 @@ export default function ProjectForm({
                     secondPingDateIsValid
                   )
                 }
+                // TODO: replace when this form is refractored
+                // disabled={Object.values(formData.validation).some(
+                //   (value) => !value
+                // )}
               >
                 {/* span needed because of bug */}
                 <span>{!project ? "Add project" : "Update project"}</span>

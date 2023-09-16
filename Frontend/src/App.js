@@ -184,9 +184,9 @@ export default function App() {
         </Routes>
       )}
 
-      <Toast></Toast>
+      <Toast />
 
-      <DeleteAlert></DeleteAlert>
+      <DeleteAlert />
     </>
   );
 }

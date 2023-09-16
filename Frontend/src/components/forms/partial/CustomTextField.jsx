@@ -3,7 +3,6 @@ import { useState } from "react";
 
 export default function TextInput({
   labelText,
-  inputType,
   isRequired,
   placeholderText,
   helperText,
@@ -20,9 +19,14 @@ export default function TextInput({
   function handleChange(e) {
     const inputValue = e.target.value;
 
+    // disable/remove leading whitespaces
+    if (inputValue === " ") {
+      inputValue = inputValue.trim();
+    }
+
     setFormData((prevData) => ({
-      user: {
-        ...prevData.user,
+      entity: {
+        ...prevData.entity,
         [inputProps.name]: inputValue,
       },
       validation: {
@@ -35,10 +39,9 @@ export default function TextInput({
   return (
     <TextField
       label={labelText}
-      type={inputType || "text"}
       fullWidth
       margin="dense"
-      value={formData.user[inputProps.name] || ""}
+      value={formData.entity[inputProps.name] || ""}
       required={isRequired}
       placeholder={placeholderText}
       inputProps={inputProps}

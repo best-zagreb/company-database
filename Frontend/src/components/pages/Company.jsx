@@ -12,6 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
   IconButton,
+  Tooltip,
   CircularProgress,
 } from "@mui/material";
 import {
@@ -24,6 +25,8 @@ import {
   AddCircle as AddCircleIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
+  Lock as LockIcon,
+  LockOpen as LockOpenIcon,
 } from "@mui/icons-material/";
 
 import { useEffect, useState, useContext } from "react";
@@ -35,6 +38,7 @@ import DeleteAlertContext from "../../context/DeleteAlertContext";
 
 import ContactForm from "../forms/ContactForm";
 import CollaborationForm from "../forms/CollaborationForm";
+import CompanyForm from "../forms/CompanyForm";
 
 import SearchBar from "./partial/SearchBar";
 import TableComponent from "./partial/TableComponent";
@@ -98,19 +102,21 @@ export default function Company() {
 
   const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
-  const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
+  const { setOpenDeleteAlert, setObject, setEndpoint, setFetchUpdatedData } =
     useContext(DeleteAlertContext);
 
+  const [openCompanyFormModal, setOpenCompanyFormModal] = useState(false);
+  const [company, setCompany] = useState([]);
   const [openContactFormModal, setOpenContactFormModal] = useState(false);
   const [contact, setContact] = useState();
   const [openCollaborationFormModal, setOpenCollaborationFormModal] =
     useState(false);
   const [collaboration, setCollaboration] = useState();
 
-  const [company, setCompany] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
   const [loading, setLoading] = useState(true);
+  const [loadingSoftLockButton, setLoadingSoftLockButton] = useState(false);
 
   async function fetchCompany() {
     setLoading(true);
@@ -149,6 +155,59 @@ export default function Company() {
     setLoading(false);
   }
 
+  function handleEditCompany() {
+    setOpenCompanyFormModal(true);
+  }
+
+  function navigateCompanies() {
+    navigate("/companies");
+  }
+
+  function handleDeleteCompany() {
+    setObject({ type: "Company", name: company.name });
+    setEndpoint("/api/companies/" + company.id);
+    setFetchUpdatedData({ function: navigateCompanies });
+
+    setOpenDeleteAlert(true);
+  }
+
+  async function handleSoftLockCompany() {
+    setLoadingSoftLockButton(true);
+
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+
+    try {
+      const serverResponse = await fetch(
+        "/api/companies/" + company.id + "/softLock",
+        {
+          method: "PATCH",
+          headers: { googleTokenEncoded: JWToken.credential },
+        }
+      );
+      if (serverResponse.ok) {
+        const json = await serverResponse.json();
+        company.softLocked = json;
+
+        handleOpenToast({
+          type: "success",
+          info: `Company ${company.name} soft locked.`,
+        });
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "A server error occurred whilst soft locking.",
+        });
+      }
+    } catch (error) {
+      handleOpenToast({
+        type: "error",
+        info: "An error occurred whilst trying to connect to server.",
+      });
+    }
+
+    setLoadingSoftLockButton(false);
+  }
+
   function handleEditCollaboration(collaboration) {
     setCollaboration(collaboration);
     setOpenCollaborationFormModal(true);
@@ -157,7 +216,7 @@ export default function Company() {
   function handleDeleteCollaboration(collaboration) {
     setObject({ type: "Collaboration", name: collaboration.name });
     setEndpoint("/api/collaborations/" + collaboration.id);
-    setPopulateObjects({ function: fetchCompany });
+    setFetchUpdatedData({ function: fetchCompany });
 
     setOpenDeleteAlert(true);
   }
@@ -168,18 +227,27 @@ export default function Company() {
 
   return (
     <>
+      <CompanyForm
+        openModal={openCompanyFormModal}
+        setOpenModal={setOpenCompanyFormModal}
+        fetchUpdatedData={fetchCompany}
+        object={company}
+      />
+
       <ContactForm
-        contact={contact}
         openModal={openContactFormModal}
         setOpenModal={setOpenContactFormModal}
-        fetchData={fetchCompany}
+        fetchUpdatedData={fetchCompany}
+        object={contact}
       />
 
       <CollaborationForm
-        collaboration={collaboration}
         openModal={openCollaborationFormModal}
         setOpenModal={setOpenCollaborationFormModal}
-        fetchData={fetchCompany}
+        fetchUpdatedData={fetchCompany}
+        object={collaboration}
+        project={null}
+        company={company}
       />
 
       <Box
@@ -197,25 +265,105 @@ export default function Company() {
             overflowY: "auto",
           }}
         >
-          <Button
-            variant="contained"
-            startIcon={<KeyboardArrowLeftIcon />}
-            onClick={() => {
-              navigate("/companies");
-            }}
+          <Box
             sx={{
-              borderTopLeftRadius: 0,
-              borderBottomLeftRadius: 0,
-
-              marginBlock: 2,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 0.5,
             }}
           >
-            Companies
-          </Button>
+            <Button
+              variant="contained"
+              startIcon={<KeyboardArrowLeftIcon />}
+              onClick={() => {
+                navigate("/companies");
+              }}
+              sx={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
 
-          <Container
+                marginBlock: 2,
+              }}
+            >
+              Companies
+            </Button>
+
+            <Box
+              sx={{
+                marginRight: 2,
+
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 0.5,
+              }}
+            >
+              <Tooltip
+                title={company.softLocked ? "Soft unlock" : "Soft lock"}
+                key="Soft lock"
+              >
+                <IconButton
+                  size="small"
+                  onClick={handleSoftLockCompany}
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
+                  }}
+                >
+                  {loadingSoftLockButton ? (
+                    <CircularProgress
+                      size={17}
+                      sx={{
+                        color: "white",
+                      }}
+                    />
+                  ) : company.softLocked ? (
+                    <LockOpenIcon />
+                  ) : (
+                    <LockIcon />
+                  )}
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Edit" key="Edit">
+                <IconButton
+                  size="small"
+                  disabled={company.softLocked}
+                  onClick={handleEditCompany}
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Delete" key="Delete">
+                <IconButton
+                  size="small"
+                  disabled={company.softLocked}
+                  onClick={handleDeleteCompany}
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          </Box>
+
+          <Box
             sx={{
               marginBottom: 2,
+              marginInline: 2,
             }}
           >
             <Typography
@@ -353,6 +501,7 @@ export default function Company() {
                           || (user.maxAuthLevel >= 1 && user is responsible for that company) */}
                             {user?.maxAuthLevel >= 3 && (
                               <IconButton
+                                disabled={company.softLocked}
                                 onClick={handleEditContact(contact.id)}
                                 sx={{
                                   width: 20,
@@ -379,6 +528,7 @@ export default function Company() {
                           || (user.maxAuthLevel >= 1 && user is responsible for that company) */}
                             {user?.maxAuthLevel >= 3 && (
                               <IconButton
+                                disabled={company.softLocked}
                                 onClick={handleDeleteContact(contact.id)}
                                 sx={{
                                   width: 20,
@@ -470,7 +620,7 @@ export default function Company() {
                 </AccordionDetails>
               </Accordion>
             )}
-          </Container>
+          </Box>
         </Box>
 
         {/* collaborations */}

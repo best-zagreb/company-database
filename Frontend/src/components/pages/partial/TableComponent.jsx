@@ -18,6 +18,7 @@ import {
   MoneyOff as MoneyOffIcon,
   Repeat as RepeatIcon,
   Email as EmailIcon,
+  AssignmentTurnedIn as AssignmentTurnedInIcon,
   Call as CallIcon,
   Work as WorkIcon,
   Error as ErrorIcon,
@@ -94,6 +95,9 @@ function getFormatedCellValue(column, value) {
       .join(" ");
 
     switch (value) {
+      case "TODO":
+        icon = <AssignmentTurnedInIcon {...iconAttributes} />;
+        break;
       case "CONTACTED":
         icon = <CallIcon {...iconAttributes} />;
         break;

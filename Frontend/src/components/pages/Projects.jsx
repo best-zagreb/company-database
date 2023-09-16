@@ -32,7 +32,7 @@ export default function Projects() {
 
   const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
-  const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
+  const { setOpenDeleteAlert, setObject, setEndpoint, setFetchUpdatedData } =
     useContext(DeleteAlertContext);
 
   const [openFormModal, setOpenFormModal] = useState(false);
@@ -87,7 +87,7 @@ export default function Projects() {
   function handleDelete(project) {
     setObject({ type: "Project", name: project.name });
     setEndpoint("/api/projects/" + project.id);
-    setPopulateObjects({ function: populateTable });
+    setFetchUpdatedData({ function: populateTable });
 
     setOpenDeleteAlert(true);
   }
@@ -99,10 +99,10 @@ export default function Projects() {
   return (
     <>
       <ProjectForm
-        project={project}
+        object={project}
         openModal={openFormModal}
         setOpenModal={setOpenFormModal}
-        populateProjects={populateTable}
+        fetchUpdatedData={populateTable}
       />
 
       <Container

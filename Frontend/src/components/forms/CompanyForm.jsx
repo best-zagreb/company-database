@@ -46,10 +46,10 @@ const months = [
 ];
 
 export default function CompanyForm({
-  company,
+  object: company,
   openModal,
   setOpenModal,
-  populateCompanies,
+  fetchUpdatedData,
 }) {
   const { handleOpenToast } = useContext(ToastContext);
 
@@ -143,7 +143,6 @@ export default function CompanyForm({
       !budgetPlanningMonthIsValid ||
       !countryIsValid ||
       !townNameIsValid ||
-      // !zipCodeIsValid ||
       !addressIsValid ||
       !descriptionIsValid ||
       !contactInFutureIsValid
@@ -198,7 +197,7 @@ export default function CompanyForm({
       });
 
       setOpenModal(false);
-      populateCompanies();
+      fetchUpdatedData();
     } else if (serverResponse.status === 400) {
       handleOpenToast({
         type: "error",
@@ -261,6 +260,12 @@ export default function CompanyForm({
         closeAfterTransition
         // submit on Enter key
         onKeyDown={(e) => {
+          // TODO: replace when this form is refractored
+          // const formIsValid = Object.values(formData.validation).every(Boolean);
+
+          // if (e.key === "Enter" && formIsValid) {
+          //   submit();
+          // }
           if (e.key === "Enter") {
             submit();
           }
@@ -319,7 +324,7 @@ export default function CompanyForm({
                 setValue={setName}
                 valueIsValid={nameIsValid}
                 setValueIsValid={setNameIsValid}
-              ></TextInput>
+              />
 
               <Autocomplete
                 options={existingCompanies
@@ -508,7 +513,7 @@ export default function CompanyForm({
                 setValue={setAddress}
                 valueIsValid={addressIsValid}
                 setValueIsValid={setAddressIsValid}
-              ></TextInput>
+              />
 
               <TextInput
                 labelText={"Webpage URL"}
@@ -538,7 +543,7 @@ export default function CompanyForm({
                 setValue={setUrl}
                 valueIsValid={urlIsValid}
                 setValueIsValid={setUrlIsValid}
-              ></TextInput>
+              />
 
               <TextInput
                 labelText={"Description"}
@@ -559,7 +564,7 @@ export default function CompanyForm({
                 setValue={setDescription}
                 valueIsValid={descriptionIsValid}
                 setValueIsValid={setDescriptionIsValid}
-              ></TextInput>
+              />
 
               <FormLabel component="legend">Contact in future</FormLabel>
               <RadioGroup
@@ -611,12 +616,15 @@ export default function CompanyForm({
                     budgetPlanningMonthIsValid &&
                     countryIsValid &&
                     townNameIsValid &&
-                    //zipCodeIsValid &&
                     addressIsValid &&
                     urlIsValid &&
                     contactInFutureIsValid
                   )
                 }
+                // TODO: replace when this form is refractored
+                // disabled={Object.values(formData.validation).some(
+                //   (value) => !value
+                // )}
               >
                 {/* span needed because of bug */}
                 <span>{!company ? "Add company" : "Update company"}</span>

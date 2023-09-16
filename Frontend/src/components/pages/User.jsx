@@ -9,11 +9,17 @@ import {
   List,
   ListItem,
   ListItemText,
+  IconButton,
   CircularProgress,
+  Tooltip,
 } from "@mui/material";
 import {
   KeyboardArrowLeft as KeyboardArrowLeftIcon,
   ExpandMore as ExpandMoreIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Lock as LockIcon,
+  LockOpen as LockOpenIcon,
 } from "@mui/icons-material/";
 
 import { useEffect, useState, useContext } from "react";
@@ -22,6 +28,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import UserContext from "../../context/UserContext";
 import ToastContext from "../../context/ToastContext";
 import DeleteAlertContext from "../../context/DeleteAlertContext";
+
+import UserForm from "../forms/UserForm";
 
 import SearchBar from "./partial/SearchBar";
 import TableComponent from "./partial/TableComponent";
@@ -132,19 +140,18 @@ export default function User() {
 
   const { user } = useContext(UserContext);
   const { handleOpenToast } = useContext(ToastContext);
-  const { setOpenDeleteAlert, setObject, setEndpoint, setPopulateObjects } =
+  const { setOpenDeleteAlert, setObject, setEndpoint, setFetchUpdatedData } =
     useContext(DeleteAlertContext);
 
-  const [openContactFormModal, setOpenContactFormModal] = useState(false);
-  const [contact, setContact] = useState();
+  const [openUserFormModal, setOpenUserFormModal] = useState(false);
   const [openCollaborationFormModal, setOpenCollaborationFormModal] =
     useState(false);
   const [collaboration, setCollaboration] = useState();
 
-  const [userInfo, setUserInfo] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
   const [loading, setLoading] = useState(true);
+  const [loadingSoftLockButton, setLoadingSoftLockButton] = useState(false);
 
   async function fetchUser() {
     setLoading(true);
@@ -183,6 +190,59 @@ export default function User() {
     setLoading(false);
   }
 
+  function handleEditUser() {
+    setOpenUserFormModal(true);
+  }
+
+  function navigateUsers() {
+    navigate("/users");
+  }
+
+  function handleDeleteUser() {
+    setObject({ type: "User", name: user.firstName + " " + user.lastName });
+    setEndpoint("/api/users/" + user.id);
+    setFetchUpdatedData({ function: navigateUsers });
+
+    setOpenDeleteAlert(true);
+  }
+
+  async function handleSoftLockUser() {
+    setLoadingSoftLockButton(true);
+
+    const JWToken = JSON.parse(localStorage.getItem("loginInfo")).JWT;
+
+    try {
+      const serverResponse = await fetch(
+        "/api/users/" + user.id + "/softLock",
+        {
+          method: "PATCH",
+          headers: { googleTokenEncoded: JWToken.credential },
+        }
+      );
+
+      if (serverResponse.ok) {
+        const json = await serverResponse.json();
+        user.softLocked = json;
+
+        handleOpenToast({
+          type: "success",
+          info: `User ${user.firstName} ${user.lastName} soft locked.`,
+        });
+      } else {
+        handleOpenToast({
+          type: "error",
+          info: "A server error occurred whilst soft locking.",
+        });
+      }
+    } catch (error) {
+      handleOpenToast({
+        type: "error",
+        info: "An error occurred whilst trying to connect to server.",
+      });
+    }
+    setLoadingSoftLockButton(false);
+  }
+
   function handleEditCollaboration(collaboration) {
     setCollaboration(collaboration);
     setOpenCollaborationFormModal(true);
@@ -190,8 +250,8 @@ export default function User() {
 
   function handleDeleteCollaboration(collaboration) {
     setObject({ type: "Collaboration", name: collaboration.name });
-    setEndpoint("/collaborations/" + collaboration.id);
-    setPopulateObjects({ function: fetchUser });
+    setEndpoint("/api/collaborations/" + collaboration.id);
+    setFetchUpdatedData({ function: fetchUser });
 
     setOpenDeleteAlert(true);
   }
@@ -206,6 +266,13 @@ export default function User() {
 
   return (
     <>
+      <UserForm
+        openModal={openUserFormModal}
+        setOpenModal={setOpenUserFormModal}
+        fetchUpdatedData={fetchUser}
+        object={user}
+      />
+
       <Box
         sx={{
           display: "flex",
@@ -221,25 +288,105 @@ export default function User() {
             overflowY: "auto",
           }}
         >
-          <Button
-            variant="contained"
-            startIcon={<KeyboardArrowLeftIcon />}
-            onClick={() => {
-              navigate("/users");
-            }}
+          <Box
             sx={{
-              borderTopLeftRadius: 0,
-              borderBottomLeftRadius: 0,
-
-              marginBlock: 2,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 0.5,
             }}
           >
-            Users
-          </Button>
+            <Button
+              variant="contained"
+              startIcon={<KeyboardArrowLeftIcon />}
+              onClick={() => {
+                navigate("/users");
+              }}
+              sx={{
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
 
-          <Container
+                marginBlock: 2,
+              }}
+            >
+              Users
+            </Button>
+
+            <Box
+              sx={{
+                marginRight: 2,
+
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 0.5,
+              }}
+            >
+              <Tooltip
+                title={user.softLocked ? "Soft unlock" : "Soft lock"}
+                key="Soft lock"
+              >
+                <IconButton
+                  size="small"
+                  onClick={handleSoftLockUser}
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
+                  }}
+                >
+                  {loadingSoftLockButton ? (
+                    <CircularProgress
+                      size={17}
+                      sx={{
+                        color: "white",
+                      }}
+                    />
+                  ) : user.softLocked ? (
+                    <LockOpenIcon />
+                  ) : (
+                    <LockIcon />
+                  )}
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Edit" key="Edit">
+                <IconButton
+                  size="small"
+                  disabled={user.softLocked}
+                  onClick={handleEditUser}
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Delete" key="Delete">
+                <IconButton
+                  size="small"
+                  disabled={user.softLocked}
+                  onClick={handleDeleteUser}
+                  sx={{
+                    color: "white",
+                    backgroundColor: "#1976d2",
+
+                    borderRadius: 1,
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          </Box>
+
+          <Box
             sx={{
               marginBottom: 2,
+              marginInline: 2,
             }}
           >
             <Typography
@@ -337,7 +484,7 @@ export default function User() {
                 )}
               </AccordionDetails>
             </Accordion>
-          </Container>
+          </Box>
         </Box>
 
         {/* collaborations */}
