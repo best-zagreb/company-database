@@ -10,6 +10,8 @@ import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { AuthorityEnum }from "../../constants/Authority";
+
 import UserContext from "../../context/UserContext";
 import ToastContext from "../../context/ToastContext";
 import DeleteAlertContext from "../../context/DeleteAlertContext";
@@ -32,7 +34,7 @@ const tableColumns = [
     key: "abcCategory",
     label: "ABC categorization",
     xsHide: true,
-    minAuthLevel: 2,
+    minAuthLevel: AuthorityEnum.PROJECT_RESPONSIBLE,
   },
   {
     key: "budgetPlanningMonth",
