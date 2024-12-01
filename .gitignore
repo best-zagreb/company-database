@@ -1,5 +1,7 @@
 #### Backend ####
 
+.env
+
 Backend/HELP.md
 Backend/.gradle
 Backend/target/

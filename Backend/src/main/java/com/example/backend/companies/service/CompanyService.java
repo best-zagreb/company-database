@@ -74,7 +74,7 @@ public class CompanyService
     public Company createCompany(AppUser user, CompanyDto companyDto) throws AuthenticationException
     {
         if (user == null) throw new AuthenticationException("You do not have permission to access CDB.");
-        if (List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR).contains(user.getAuthority())){
+        if (!List.of(AUTHORITY.FR_RESPONSIBLE, AUTHORITY.MODERATOR, AUTHORITY.ADMINISTRATOR).contains(user.getAuthority())){
             throw new AuthenticationException();
         }
         return companyRepository.save(companyDto.toCompany());
