@@ -25,7 +25,6 @@ import "./Header.css";
 
 import UserContext from "../context/UserContext";
 import ToastContext from "../context/ToastContext";
-import { auto } from "@popperjs/core";
 
 export default function Header({ setUserIsLoggedIn }) {
   const navigate = useNavigate();
